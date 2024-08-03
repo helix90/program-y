@@ -10,7 +10,8 @@ class KikConfigurationTests(unittest.TestCase):
     def test_init(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         kik:
           bot_name: testbot
           webhook: https://localhost:5000
@@ -19,7 +20,10 @@ class KikConfigurationTests(unittest.TestCase):
           debug: false
           unknown_command: Sorry, that is not a command I have been taught yet!
           unknown_command_srai: YKIK_UNKNOWN_COMMAND
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         kik_config = KikConfiguration()
         kik_config.load_configuration(yaml, ".")
@@ -29,15 +33,22 @@ class KikConfigurationTests(unittest.TestCase):
         self.assertEqual("127.0.0.1", kik_config.host)
         self.assertEqual(5000, kik_config.port)
         self.assertEqual(False, kik_config.debug)
-        self.assertEqual(kik_config.unknown_command, "Sorry, that is not a command I have been taught yet!")
+        self.assertEqual(
+            kik_config.unknown_command,
+            "Sorry, that is not a command I have been taught yet!",
+        )
         self.assertEqual(kik_config.unknown_command_srai, "YKIK_UNKNOWN_COMMAND")
 
     def test_init_no_values(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         kik:
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         kik_config = KikConfiguration()
         kik_config.load_configuration(yaml, ".")
@@ -51,9 +62,13 @@ class KikConfigurationTests(unittest.TestCase):
     def test_init_no_data(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         client:
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         kik_config = KikConfiguration()
         kik_config.load_configuration(yaml, ".")
@@ -70,17 +85,21 @@ class KikConfigurationTests(unittest.TestCase):
         data = {}
         config.to_yaml(data, True)
 
-        self.assertEqual(data['bot_name'], "program-y")
-        self.assertEqual(data['webhook'], "https://666666666.ngrok.io")
-        self.assertEqual(data['unknown_command'], "Unknown command")
-        self.assertEqual(data['unknown_command_srai'], 'KIKUNKNONWCOMMAND')
+        self.assertEqual(data["bot_name"], "program-y")
+        self.assertEqual(data["webhook"], "https://666666666.ngrok.io")
+        self.assertEqual(data["unknown_command"], "Unknown command")
+        self.assertEqual(data["unknown_command_srai"], "KIKUNKNONWCOMMAND")
 
-        self.assertEqual(data['bot_selector'], "programy.clients.botfactory.DefaultBotSelector")
-        self.assertEqual(data['renderer'], "programy.clients.render.text.TextRenderer")
+        self.assertEqual(
+            data["bot_selector"], "programy.clients.botfactory.DefaultBotSelector"
+        )
+        self.assertEqual(data["renderer"], "programy.clients.render.text.TextRenderer")
 
-        self.assertTrue('bots' in data)
-        self.assertTrue('bot' in data['bots'])
-        self.assertEqual(data['bot_selector'], "programy.clients.botfactory.DefaultBotSelector")
+        self.assertTrue("bots" in data)
+        self.assertTrue("bot" in data["bots"])
+        self.assertEqual(
+            data["bot_selector"], "programy.clients.botfactory.DefaultBotSelector"
+        )
 
-        self.assertTrue('brains' in data['bots']['bot'])
-        self.assertTrue('brain' in data['bots']['bot']['brains'])
+        self.assertTrue("brains" in data["bots"]["bot"])
+        self.assertTrue("brain" in data["bots"]["bot"]["brains"])

@@ -1,10 +1,14 @@
 import unittest
 from unittest.mock import patch
+
 import programytest.storage.engines as Engines
+from programytest.storage.asserts.store.assert_postprocessors import (
+    PostProcessorsStoreAsserts,
+)
+
 from programy.storage.stores.nosql.mongo.config import MongoStorageConfiguration
 from programy.storage.stores.nosql.mongo.engine import MongoStorageEngine
 from programy.storage.stores.nosql.mongo.store.processors import MongoPostProcessorStore
-from programytest.storage.asserts.store.assert_postprocessors import PostProcessorsStoreAsserts
 
 
 class MongoPostProcessorStoreTests(PostProcessorsStoreAsserts):
@@ -31,7 +35,10 @@ class MongoPostProcessorStoreTests(PostProcessorsStoreAsserts):
         raise Exception("Mock Exception")
 
     @unittest.skipIf(Engines.mongo is False, Engines.mongo_disabled)
-    @patch("programy.utils.classes.loader.ClassLoader.instantiate_class", patch_instantiate_class)
+    @patch(
+        "programy.utils.classes.loader.ClassLoader.instantiate_class",
+        patch_instantiate_class,
+    )
     def test_load_exception(self):
         config = MongoStorageConfiguration()
         engine = MongoStorageEngine(config)
@@ -62,7 +69,10 @@ class MongoPostProcessorStoreTests(PostProcessorsStoreAsserts):
         raise Exception("Mock Exception")
 
     @unittest.skipIf(Engines.mongo is False, Engines.mongo_disabled)
-    @patch("programy.storage.stores.nosql.mongo.store.processors.MongoProcessorStore._load_processors_from_file", patch_load_processors_from_file)
+    @patch(
+        "programy.storage.stores.nosql.mongo.store.processors.MongoProcessorStore._load_processors_from_file",
+        patch_load_processors_from_file,
+    )
     def test_upload_from_file_exception(self):
         config = MongoStorageConfiguration()
         engine = MongoStorageEngine(config)

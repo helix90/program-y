@@ -1,7 +1,7 @@
 import unittest
 
-from programy.dialog.tokenizer.tokenizer import Tokenizer
 from programy.config.brain.tokenizer import BrainTokenizerConfiguration
+from programy.dialog.tokenizer.tokenizer import Tokenizer
 
 
 class TokenizerTests(unittest.TestCase):
@@ -13,13 +13,19 @@ class TokenizerTests(unittest.TestCase):
         self.assertEqual([], tokenizer.texts_to_words(""))
         self.assertEqual(["Hello"], tokenizer.texts_to_words("Hello"))
         self.assertEqual(["Hello", "World"], tokenizer.texts_to_words("Hello World"))
-        self.assertEqual(["Hello", "World"], tokenizer.texts_to_words(" Hello   World "))
+        self.assertEqual(
+            ["Hello", "World"], tokenizer.texts_to_words(" Hello   World ")
+        )
 
         self.assertEqual("", tokenizer.words_to_texts([]))
         self.assertEqual("Hello", tokenizer.words_to_texts(["Hello"]))
         self.assertEqual("Hello World", tokenizer.words_to_texts(["Hello", "World"]))
-        self.assertEqual("Hello World", tokenizer.words_to_texts(["Hello", "", "World"]))
-        self.assertEqual("Hello World", tokenizer.words_to_texts([" Hello ", " World "]))
+        self.assertEqual(
+            "Hello World", tokenizer.words_to_texts(["Hello", "", "World"])
+        )
+        self.assertEqual(
+            "Hello World", tokenizer.words_to_texts([" Hello ", " World "])
+        )
 
     def test_words_from_current_pos(self):
         tokenizer = Tokenizer()

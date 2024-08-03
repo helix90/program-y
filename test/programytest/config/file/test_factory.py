@@ -1,7 +1,7 @@
 import unittest
 
-from programy.config.file.factory import ConfigurationFactory
 from programy.clients.events.console.config import ConsoleConfiguration
+from programy.config.file.factory import ConfigurationFactory
 
 
 class ConfigurationFactoryTests(unittest.TestCase):
@@ -36,6 +36,10 @@ class ConfigurationFactoryTests(unittest.TestCase):
 
     def test_load_configuration_from_file(self):
         with self.assertRaises(Exception):
-            ConfigurationFactory.load_configuration_from_file(ConsoleConfiguration(), "file.txt", file_format=None)
+            ConfigurationFactory.load_configuration_from_file(
+                ConsoleConfiguration(), "file.txt", file_format=None
+            )
         with self.assertRaises(Exception):
-            ConfigurationFactory.load_configuration_from_file(ConsoleConfiguration(), "file.txt", file_format="")
+            ConfigurationFactory.load_configuration_from_file(
+                ConsoleConfiguration(), "file.txt", file_format=""
+            )

@@ -1,9 +1,10 @@
 import unittest
 
+from programytest.client import TestClient
+
 from programy.dialog.conversation import Conversation
 from programy.dialog.question import Question
 from programy.storage.entities.conversation import ConversationStore
-from programytest.client import TestClient
 
 
 class ConversationStoreTests(unittest.TestCase):

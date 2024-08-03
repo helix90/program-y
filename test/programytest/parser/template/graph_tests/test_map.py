@@ -1,19 +1,24 @@
 import xml.etree.ElementTree as ET
 
+from programytest.parser.template.graph_tests.graph_test_client import (
+    TemplateGraphTestClient,
+)
+
 from programy.parser.exceptions import ParserException
 from programy.parser.template.nodes.base import TemplateNode
 from programy.parser.template.nodes.map import TemplateMapNode
-from programytest.parser.template.graph_tests.graph_test_client import TemplateGraphTestClient
 
 
 class TemplateGraphMapTests(TemplateGraphTestClient):
 
     def test_map_name_as_attrib(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
 			<template>
 				<map name="somemap">sometext</map>
 			</template>
-			""")
+			"""
+        )
         ast = self._graph.parse_template_expression(template)
         self.assertIsNotNone(ast)
         self.assertIsInstance(ast, TemplateNode)
@@ -31,11 +36,13 @@ class TemplateGraphMapTests(TemplateGraphTestClient):
         self.assertEqual(set_node.children[0].resolve(self._client_context), "sometext")
 
     def test_map_name_as_child(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
 			<template>
 				<map><name>somemap</name>sometext</map>
 			</template>
-			""")
+			"""
+        )
         ast = self._graph.parse_template_expression(template)
         self.assertIsNotNone(ast)
         self.assertIsInstance(ast, TemplateNode)
@@ -53,10 +60,12 @@ class TemplateGraphMapTests(TemplateGraphTestClient):
         self.assertEqual(set_node.children[0].resolve(self._client_context), "sometext")
 
     def test_map_no_name(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
 			<template>
 				<map>sometext</map>
 			</template>
-			""")
+			"""
+        )
         with self.assertRaises(ParserException):
             ast = self._graph.parse_template_expression(template)

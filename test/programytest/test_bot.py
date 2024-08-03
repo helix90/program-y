@@ -1,5 +1,7 @@
 import unittest.mock
 
+from programytest.client import TestClient
+
 from programy.bot import Bot
 from programy.brain import Brain
 from programy.clients.events.console.config import ConsoleConfiguration
@@ -7,7 +9,6 @@ from programy.config.bot.bot import BotConfiguration
 from programy.config.programy import ProgramyConfiguration
 from programy.context import ClientContext
 from programy.dialog.sentence import Sentence
-from programytest.client import TestClient
 
 
 class MockTriggerManager:
@@ -31,7 +32,9 @@ class MockBrain(Brain):
 
 class MockBot(Bot):
 
-    def __init__(self, config: BotConfiguration, client, pre_processed=None, post_processed=None):
+    def __init__(
+        self, config: BotConfiguration, client, pre_processed=None, post_processed=None
+    ):
         Bot.__init__(self, config, client)
         self._pre_processed = pre_processed
         self._post_processed = post_processed
@@ -59,7 +62,7 @@ class BotTests(unittest.TestCase):
         self._client_context = client.create_client_context("testid")
 
     def test_bot_init_blank(self):
-        
+
         client = TestClient()
         bot = Bot(BotConfiguration(), client)
 
@@ -77,18 +80,18 @@ class BotTests(unittest.TestCase):
         self.assertIsNotNone(bot.get_version_string)
 
     def test_bot_init_with_config(self):
-        
+
         bot_config = BotConfiguration()
-        bot_config._bot_root              = BotConfiguration.DEFAULT_ROOT
-        bot_config._default_response      = BotConfiguration.DEFAULT_RESPONSE
-        bot_config._exit_response         = BotConfiguration.DEFAULT_EXIT_RESPONSE
-        bot_config._initial_question      = BotConfiguration.DEFAULT_INITIAL_QUESTION
-        bot_config._empty_string          = BotConfiguration.DEFAULT_EMPTY_STRING
-        bot_config._override_properties   = BotConfiguration.DEFAULT_OVERRIDE_PREDICATES
+        bot_config._bot_root = BotConfiguration.DEFAULT_ROOT
+        bot_config._default_response = BotConfiguration.DEFAULT_RESPONSE
+        bot_config._exit_response = BotConfiguration.DEFAULT_EXIT_RESPONSE
+        bot_config._initial_question = BotConfiguration.DEFAULT_INITIAL_QUESTION
+        bot_config._empty_string = BotConfiguration.DEFAULT_EMPTY_STRING
+        bot_config._override_properties = BotConfiguration.DEFAULT_OVERRIDE_PREDICATES
         bot_config._max_question_recursion = 1000
-        bot_config._max_question_timeout   = 60
-        bot_config._max_search_depth       = 100
-        bot_config._max_search_timeout     = 60
+        bot_config._max_question_timeout = 60
+        bot_config._max_search_depth = 100
+        bot_config._max_search_timeout = 60
 
         client = TestClient()
         bot = Bot(bot_config, client)
@@ -110,9 +113,11 @@ class BotTests(unittest.TestCase):
         client = TestClient()
         bot = Bot(bot_config, client)
 
-        self._client_context.brain.properties.add_property("name", 'bot'),
+        self._client_context.brain.properties.add_property("name", "bot"),
         self._client_context.brain.properties.add_property("version", "1.9.3"),
-        self._client_context.brain.properties.add_property("birthdate", "1st January 2019")
+        self._client_context.brain.properties.add_property(
+            "birthdate", "1st January 2019"
+        )
 
         version = bot.get_version_string(self._client_context)
 
@@ -125,15 +130,19 @@ class BotTests(unittest.TestCase):
         client = TestClient()
         bot = Bot(bot_config, client)
 
-        self._client_context.brain.properties.add_property("name", 'bot'),
+        self._client_context.brain.properties.add_property("name", "bot"),
         self._client_context.brain.properties.add_property("app_version", "1.9.3"),
         self._client_context.brain.properties.add_property("grammar_version", "37"),
-        self._client_context.brain.properties.add_property("birthdate", "1st January 2019")
+        self._client_context.brain.properties.add_property(
+            "birthdate", "1st January 2019"
+        )
 
         version = bot.get_version_string(self._client_context)
 
         self.assertIsNotNone(version)
-        self.assertEqual("bot, App: v1.9.3 Grammar v37, initiated 1st January 2019", version)
+        self.assertEqual(
+            "bot, App: v1.9.3 Grammar v37, initiated 1st January 2019", version
+        )
 
     def test_bot_init_no_spellchecker_configuration(self):
         bot_config = BotConfiguration()
@@ -164,7 +173,9 @@ class BotTests(unittest.TestCase):
 
     def test_bot_init_with_valid_spellchecker(self):
         bot_config = BotConfiguration()
-        bot_config.spelling._classname = "programy.spelling.textblob_spelling.TextBlobSpellingChecker"
+        bot_config.spelling._classname = (
+            "programy.spelling.textblob_spelling.TextBlobSpellingChecker"
+        )
         client = TestClient()
         bot = Bot(bot_config, client)
 
@@ -200,7 +211,9 @@ class BotTests(unittest.TestCase):
 
     def test_bot_init_with_valid_splitterr(self):
         bot_config = BotConfiguration()
-        bot_config.splitter._classname = "programy.dialog.splitter.splitter.SentenceSplitter"
+        bot_config.splitter._classname = (
+            "programy.dialog.splitter.splitter.SentenceSplitter"
+        )
         client = TestClient()
         bot = Bot(bot_config, client)
 
@@ -267,8 +280,12 @@ class BotTests(unittest.TestCase):
 
     def test_bot_init_with_invalid_translatorr(self):
         bot_config = BotConfiguration()
-        bot_config.from_translator._classname = "programy.spelling.checker.SpellingCheckerX"
-        bot_config.to_translator._classname = "programy.spelling.checker.SpellingCheckerX"
+        bot_config.from_translator._classname = (
+            "programy.spelling.checker.SpellingCheckerX"
+        )
+        bot_config.to_translator._classname = (
+            "programy.spelling.checker.SpellingCheckerX"
+        )
         client = TestClient()
         bot = Bot(bot_config, client)
 
@@ -278,8 +295,12 @@ class BotTests(unittest.TestCase):
 
     def test_bot_init_with_valid_translatorr(self):
         bot_config = BotConfiguration()
-        bot_config.from_translator._classname = "programy.nlp.translate.textblob_translator.TextBlobTranslator"
-        bot_config.to_translator._classname = "programy.nlp.translate.textblob_translator.TextBlobTranslator"
+        bot_config.from_translator._classname = (
+            "programy.nlp.translate.textblob_translator.TextBlobTranslator"
+        )
+        bot_config.to_translator._classname = (
+            "programy.nlp.translate.textblob_translator.TextBlobTranslator"
+        )
         client = TestClient()
         bot = Bot(bot_config, client)
 
@@ -307,7 +328,9 @@ class BotTests(unittest.TestCase):
 
     def test_bot_init_with_invalid_sentiment_analyserr(self):
         bot_config = BotConfiguration()
-        bot_config.sentiment_analyser._classname = "programy.spelling.checker.SpellingCheckerX"
+        bot_config.sentiment_analyser._classname = (
+            "programy.spelling.checker.SpellingCheckerX"
+        )
         client = TestClient()
         bot = Bot(bot_config, client)
 
@@ -316,7 +339,9 @@ class BotTests(unittest.TestCase):
 
     def test_bot_init_with_valid_sentiment_analyserr(self):
         bot_config = BotConfiguration()
-        bot_config.sentiment_analyser._classname = "programy.nlp.sentiment.textblob_sentiment.TextBlobSentimentAnalyser"
+        bot_config.sentiment_analyser._classname = (
+            "programy.nlp.sentiment.textblob_sentiment.TextBlobSentimentAnalyser"
+        )
         client = TestClient()
         bot = Bot(bot_config, client)
 
@@ -347,10 +372,14 @@ class BotTests(unittest.TestCase):
         configuration = ProgramyConfiguration(ConsoleConfiguration())
         self.assertIsNotNone(configuration)
         self.assertIsNotNone(configuration.client_configuration.configurations[0])
-        self.assertIsNotNone(configuration.client_configuration.configurations[0].configurations[0])
+        self.assertIsNotNone(
+            configuration.client_configuration.configurations[0].configurations[0]
+        )
 
         configuration.client_configuration.configurations[0].prompt = ":"
-        configuration.client_configuration.configurations[0].default_response = "No answer for that"
+        configuration.client_configuration.configurations[0].default_response = (
+            "No answer for that"
+        )
         configuration.client_configuration.configurations[0].exit_response = "See ya!"
 
         client = TestClient()
@@ -389,7 +418,9 @@ class BotTests(unittest.TestCase):
         bot = Bot(BotConfiguration(), client)
         self.assertIsNotNone(bot)
         self.assertIsInstance(bot, Bot)
-        bot.configuration._default_response = "Sorry, I don't have an answer for that right now"
+        bot.configuration._default_response = (
+            "Sorry, I don't have an answer for that right now"
+        )
 
         response = bot.ask_question(self._client_context, "hello")
         self.assertIsNotNone(response)
@@ -406,21 +437,47 @@ class BotTests(unittest.TestCase):
         conversation = bot.get_conversation(self._client_context)
         self.assertIsNotNone(conversation)
 
-        self.assertEqual(conversation.previous_nth_question(2).sentence(0).text(self._client_context), "hello")
-        self.assertEqual(conversation.previous_nth_question(2).sentence(0).response, "Sorry, I don't have an answer for that right now")
+        self.assertEqual(
+            conversation.previous_nth_question(2)
+            .sentence(0)
+            .text(self._client_context),
+            "hello",
+        )
+        self.assertEqual(
+            conversation.previous_nth_question(2).sentence(0).response,
+            "Sorry, I don't have an answer for that right now",
+        )
 
-        self.assertEqual(conversation.previous_nth_question(1).sentence(0).text(self._client_context), "hello again")
-        self.assertEqual(conversation.previous_nth_question(1).sentence(0).response, "Sorry, I don't have an answer for that right now")
+        self.assertEqual(
+            conversation.previous_nth_question(1)
+            .sentence(0)
+            .text(self._client_context),
+            "hello again",
+        )
+        self.assertEqual(
+            conversation.previous_nth_question(1).sentence(0).response,
+            "Sorry, I don't have an answer for that right now",
+        )
 
-        self.assertEqual(conversation.previous_nth_question(0).sentence(0).text(self._client_context), "goodbye")
-        self.assertEqual(conversation.previous_nth_question(0).sentence(0).response, "Sorry, I don't have an answer for that right now")
+        self.assertEqual(
+            conversation.previous_nth_question(0)
+            .sentence(0)
+            .text(self._client_context),
+            "goodbye",
+        )
+        self.assertEqual(
+            conversation.previous_nth_question(0).sentence(0).response,
+            "Sorry, I don't have an answer for that right now",
+        )
 
     def test_max_recusion(self):
 
         client = TestClient()
         bot = Bot(BotConfiguration(), client)
         self.assertIsNotNone(bot)
-        bot.configuration._default_response = "Sorry, I don't have an answer for that right now"
+        bot.configuration._default_response = (
+            "Sorry, I don't have an answer for that right now"
+        )
         bot.configuration._max_question_recursion = 0
 
         with self.assertRaises(Exception):
@@ -448,7 +505,9 @@ class BotTests(unittest.TestCase):
         bot = Bot(bot_config, client)
         self.assertIsNotNone(bot)
 
-        self.assertEqual("Default response!", bot.get_default_response(self._client_context))
+        self.assertEqual(
+            "Default response!", bot.get_default_response(self._client_context)
+        )
 
     def test_get_default_response_default_response_srai_no_match(self):
 
@@ -462,7 +521,9 @@ class BotTests(unittest.TestCase):
         bot = Bot(bot_config, client)
         self.assertIsNotNone(bot)
 
-        self.assertEqual("Default response!", bot.get_default_response(self._client_context))
+        self.assertEqual(
+            "Default response!", bot.get_default_response(self._client_context)
+        )
 
     def test_get_default_response_default_response_srai_match(self):
 
@@ -520,7 +581,9 @@ class BotTests(unittest.TestCase):
         bot = Bot(bot_config, client)
         self.assertIsNotNone(bot)
 
-        self.assertEqual("Default response!", bot.get_initial_question(self._client_context))
+        self.assertEqual(
+            "Default response!", bot.get_initial_question(self._client_context)
+        )
 
     def test_get_initial_question_initial_question_srai_no_match(self):
 
@@ -534,7 +597,9 @@ class BotTests(unittest.TestCase):
         bot = Bot(bot_config, client)
         self.assertIsNotNone(bot)
 
-        self.assertEqual("Default response!", bot.get_initial_question(self._client_context))
+        self.assertEqual(
+            "Default response!", bot.get_initial_question(self._client_context)
+        )
 
     def test_get_initial_question_initial_question_srai_match(self):
 
@@ -550,7 +615,9 @@ class BotTests(unittest.TestCase):
         client_context2._brain = MockBrain(bot, bot.configuration.configurations[0])
         client_context2._brain._response = "Y DEFAULT RESPONSE"
 
-        self.assertEqual("Y DEFAULT RESPONSE", bot.get_initial_question(client_context2))
+        self.assertEqual(
+            "Y DEFAULT RESPONSE", bot.get_initial_question(client_context2)
+        )
 
     def test_get_initial_question_no_srai(self):
 
@@ -588,7 +655,9 @@ class BotTests(unittest.TestCase):
         bot = Bot(bot_config, client)
         self.assertIsNotNone(bot)
 
-        self.assertEqual("Default response!", bot.get_exit_response(self._client_context))
+        self.assertEqual(
+            "Default response!", bot.get_exit_response(self._client_context)
+        )
 
     def test_get_exit_response_exit_response_srai_no_match(self):
 
@@ -602,7 +671,9 @@ class BotTests(unittest.TestCase):
         bot = Bot(bot_config, client)
         self.assertIsNotNone(bot)
 
-        self.assertEqual("Default response!", bot.get_exit_response(self._client_context))
+        self.assertEqual(
+            "Default response!", bot.get_exit_response(self._client_context)
+        )
 
     def test_get_exit_response_exit_response_srai_match(self):
 
@@ -714,6 +785,8 @@ class BotTests(unittest.TestCase):
         bot = MockBot(bot_config, client, post_processed=None)
         bot.configuration._default_response = "Default Hello"
 
-        result = bot.handle_none_response(self._client_context, Sentence(self._client_context, "Hello", None), None)
+        result = bot.handle_none_response(
+            self._client_context, Sentence(self._client_context, "Hello", None), None
+        )
         self.assertIsNotNone(result)
         self.assertEqual("Default Hello", result)

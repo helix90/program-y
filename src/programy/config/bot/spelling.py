@@ -15,9 +15,8 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
-from programy.utils.logging.ylogger import YLogger
-
 from programy.config.base import BaseConfigurationData
+from programy.utils.logging.ylogger import YLogger
 from programy.utils.substitutions.substitues import Substitutions
 
 
@@ -46,28 +45,38 @@ class BotSpellingConfiguration(BaseConfigurationData):
     def check_and_retry(self):
         return self._check_and_retry
 
-    def load_config_section(self, configuration_file, configuration, bot_root, subs: Substitutions = None):
+    def load_config_section(
+        self, configuration_file, configuration, bot_root, subs: Substitutions = None
+    ):
         del bot_root
         spelling = configuration_file.get_section(self._section_name, configuration)
         if spelling is not None:
-            self._classname = configuration_file.get_option(spelling, "classname", missing_value=None, subs=subs)
-            self._alphabet = configuration_file.get_option(spelling, "alphabet", missing_value=None, subs=subs)
-            self._check_before = configuration_file.get_bool_option(spelling, "check_before", missing_value=False,
-                                                                    subs=subs)
-            self._check_and_retry = configuration_file.get_bool_option(spelling, "check_and_retry", missing_value=False,
-                                                                       subs=subs)
+            self._classname = configuration_file.get_option(
+                spelling, "classname", missing_value=None, subs=subs
+            )
+            self._alphabet = configuration_file.get_option(
+                spelling, "alphabet", missing_value=None, subs=subs
+            )
+            self._check_before = configuration_file.get_bool_option(
+                spelling, "check_before", missing_value=False, subs=subs
+            )
+            self._check_and_retry = configuration_file.get_bool_option(
+                spelling, "check_and_retry", missing_value=False, subs=subs
+            )
         else:
-            YLogger.warning(self, "'spelling' section missing from bot config, using defaults")
+            YLogger.warning(
+                self, "'spelling' section missing from bot config, using defaults"
+            )
 
     def to_yaml(self, data, defaults=True):
         if defaults is True:
-            data['classname'] = "programy.spelling.norvig.NorvigSpellingChecker"
-            data['alphabet'] = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-            data['check_before'] = False
-            data['check_and_retry'] = False
+            data["classname"] = "programy.spelling.norvig.NorvigSpellingChecker"
+            data["alphabet"] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            data["check_before"] = False
+            data["check_and_retry"] = False
 
         else:
-            data['classname'] = self._classname
-            data['alphabet'] = self._alphabet
-            data['check_before'] = self._check_before
-            data['check_and_retry'] = self._check_and_retry
+            data["classname"] = self._classname
+            data["alphabet"] = self._alphabet
+            data["check_before"] = self._check_before
+            data["check_and_retry"] = self._check_and_retry

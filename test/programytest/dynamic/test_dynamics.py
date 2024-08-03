@@ -4,11 +4,11 @@ from programy.clients.events.console.config import ConsoleConfiguration
 from programy.config.brain.dynamic import BrainDynamicsConfiguration
 from programy.config.file.yaml_file import YamlConfigurationFile
 from programy.dynamic.dynamics import DynamicsCollection
-from programy.dynamic.sets.numeric import IsNumeric
 from programy.dynamic.maps.plural import PluralMap
-from programy.dynamic.maps.singular import SingularMap
 from programy.dynamic.maps.predecessor import PredecessorMap
+from programy.dynamic.maps.singular import SingularMap
 from programy.dynamic.maps.successor import SuccessorMap
+from programy.dynamic.sets.numeric import IsNumeric
 from programy.dynamic.variables.variable import DynamicSettableVariable
 
 
@@ -52,10 +52,14 @@ class DynamicsCollectionTests(unittest.TestCase):
 
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         brain:
             dynamic:
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         brain_config = yaml.get_section("brain")
 
@@ -90,7 +94,8 @@ class DynamicsCollectionTests(unittest.TestCase):
 
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         brain:
             dynamic:
                 variables:
@@ -99,7 +104,10 @@ class DynamicsCollectionTests(unittest.TestCase):
                     roman: programy.dynamic.sets.roman.IsRomanNumeral
                 maps:
                     romantodec: programy.dynamic.maps.roman.MapRomanToDecimal
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         brain_config = yaml.get_section("brain")
 
@@ -184,7 +192,9 @@ class DynamicsCollectionTests(unittest.TestCase):
 
         self.assertEquals({}, collection.dynamic_sets)
 
-        collection._dynamic_vars["MOCK"] = MockDynamicSettableVariable(None, set_exception=True)
+        collection._dynamic_vars["MOCK"] = MockDynamicSettableVariable(
+            None, set_exception=True
+        )
 
         self.assertIsNone(collection.dynamic_var(None, "MOCK"))
 

@@ -1,10 +1,11 @@
 import xml.etree.ElementTree as ET
 
+from programytest.parser.base import ParserTestsBaseClass
+
 from programy.dialog.conversation import Conversation
 from programy.dialog.question import Question
 from programy.parser.template.nodes.base import TemplateNode
 from programy.parser.template.nodes.that import TemplateThatNode
-from programytest.parser.base import ParserTestsBaseClass
 
 
 class MockTemplateThatNode(TemplateThatNode):
@@ -86,7 +87,9 @@ class TemplateThatNodeTests(ParserTestsBaseClass):
         question.current_sentence()._response = "Very well thanks"
         conversation.record_dialog(question)
 
-        self._client_context.bot._conversation_mgr._conversations["testid"] = conversation
+        self._client_context.bot._conversation_mgr._conversations["testid"] = (
+            conversation
+        )
 
         self.assertEqual("Hello matey", node.resolve(self._client_context))
 
@@ -113,7 +116,9 @@ class TemplateThatNodeTests(ParserTestsBaseClass):
         question.current_sentence()._response = "Very well thanks"
         conversation.record_dialog(question)
 
-        self._client_context.bot._conversation_mgr._conversations["testid"] = conversation
+        self._client_context.bot._conversation_mgr._conversations["testid"] = (
+            conversation
+        )
 
         self.assertEqual("Hello matey", node.resolve(self._client_context))
 
@@ -140,7 +145,9 @@ class TemplateThatNodeTests(ParserTestsBaseClass):
         question.current_sentence()._response = "Very well thanks"
         conversation.record_dialog(question)
 
-        self._client_context.bot._conversation_mgr._conversations["testid"] = conversation
+        self._client_context.bot._conversation_mgr._conversations["testid"] = (
+            conversation
+        )
 
         self.assertEqual("Hello matey", node.resolve(self._client_context))
 
@@ -167,7 +174,9 @@ class TemplateThatNodeTests(ParserTestsBaseClass):
         question.current_sentence()._response = "Very well thanks"
         conversation.record_dialog(question)
 
-        self._client_context.bot._conversation_mgr._conversations["testid"] = conversation
+        self._client_context.bot._conversation_mgr._conversations["testid"] = (
+            conversation
+        )
 
         self.assertEqual("", node.resolve(self._client_context))
 

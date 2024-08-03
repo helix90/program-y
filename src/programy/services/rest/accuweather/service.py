@@ -14,12 +14,13 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-import urllib.parse
+
 import os
-from programy.utils.logging.ylogger import YLogger
+import urllib.parse
+
 from programy.services.base import ServiceQuery
-from programy.services.rest.base import RESTService
-from programy.services.rest.base import RESTServiceException
+from programy.services.rest.base import RESTService, RESTServiceException
+from programy.utils.logging.ylogger import YLogger
 
 
 class AccuWeatherPostCodeSearchServiceQuery(ServiceQuery):
@@ -30,7 +31,9 @@ class AccuWeatherPostCodeSearchServiceQuery(ServiceQuery):
 
     def parse_matched(self, matched):
         self._postcode = ServiceQuery._get_matched_var(matched, 0, "postcode")
-        self._country = ServiceQuery._get_matched_var(matched, 1, "country", optional=True)
+        self._country = ServiceQuery._get_matched_var(
+            matched, 1, "country", optional=True
+        )
 
     def __init__(self, service):
         ServiceQuery.__init__(self, service)
@@ -54,7 +57,9 @@ class AccuWeatherTextSearchServiceQuery(ServiceQuery):
 
     def parse_matched(self, matched):
         self._location = ServiceQuery._get_matched_var(matched, 0, "location")
-        self._country = ServiceQuery._get_matched_var(matched, 1, "country", optional=True)
+        self._country = ServiceQuery._get_matched_var(
+            matched, 1, "country", optional=True
+        )
 
     def __init__(self, service):
         ServiceQuery.__init__(self, service)
@@ -88,20 +93,23 @@ class AccuWeatherConditionsServiceQuery(ServiceQuery):
 
     def aiml_response(self, response):
         try:
-            payload = response['response']['payload'][0]
+            payload = response["response"]["payload"][0]
             result = "EPOC {0} WEATHERTEXT {1} HASPRECIPITATION {2} PRECIPITATIONTYPE {3} ISDAYTIME {4} TEMP {5} UNIT {6}".format(
-                    payload['EpochTime'],
-                    payload['WeatherText'],
-                    payload['HasPrecipitation'],
-                    payload['PrecipitationType'],
-                    payload['IsDayTime'],
-                    payload['Temperature']['Metric']['Value'],
-                    payload['Temperature']['Metric']['Unit'])
+                payload["EpochTime"],
+                payload["WeatherText"],
+                payload["HasPrecipitation"],
+                payload["PrecipitationType"],
+                payload["IsDayTime"],
+                payload["Temperature"]["Metric"]["Value"],
+                payload["Temperature"]["Metric"]["Unit"],
+            )
             YLogger.debug(self, result)
             return result
 
         except Exception as error:
-            YLogger.exception(self, "Failed to parse Accuweather response to AIML", error)
+            YLogger.exception(
+                self, "Failed to parse Accuweather response to AIML", error
+            )
 
         return None
 
@@ -113,18 +121,24 @@ class AccuWeatherServiceException(RESTServiceException):
 
 
 class AccuWeatherService(RESTService):
-    """
-    """
+    """ """
+
     PATTERNS = [
         [r"TEXTSEARCH\sLOCATION\s(.+)", AccuWeatherTextSearchServiceQuery],
-        [r"CONDITIONS\sLOCATION\s(.+)", AccuWeatherConditionsServiceQuery]
+        [r"CONDITIONS\sLOCATION\s(.+)", AccuWeatherConditionsServiceQuery],
     ]
 
-    POSTCODESEARCH_BASE_URL="http://dataservice.accuweather.com/locations/v1/postalcodes/search"
-    POSTCODESEARCH_COUNTRY_BASE_URL="http://dataservice.accuweather.com/locations/v1/postalcodes/{0}/search"
-    TEXTSEARCH_BASE_URL="http://dataservice.accuweather.com/locations/v1/search"
-    TEXTSEARCH_COUNTRY_BASE_URL="http://dataservice.accuweather.com/locations/v1/{0}/search"
-    CONDITIONS_BASE_URL="http://dataservice.accuweather.com/currentconditions/v1/"
+    POSTCODESEARCH_BASE_URL = (
+        "http://dataservice.accuweather.com/locations/v1/postalcodes/search"
+    )
+    POSTCODESEARCH_COUNTRY_BASE_URL = (
+        "http://dataservice.accuweather.com/locations/v1/postalcodes/{0}/search"
+    )
+    TEXTSEARCH_BASE_URL = "http://dataservice.accuweather.com/locations/v1/search"
+    TEXTSEARCH_COUNTRY_BASE_URL = (
+        "http://dataservice.accuweather.com/locations/v1/{0}/search"
+    )
+    CONDITIONS_BASE_URL = "http://dataservice.accuweather.com/currentconditions/v1/"
 
     def __init__(self, configuration):
         RESTService.__init__(self, configuration)
@@ -134,9 +148,12 @@ class AccuWeatherService(RESTService):
         return AccuWeatherService.PATTERNS
 
     def initialise(self, client):
-        self._api_key = client.license_keys.get_key('ACCUWEATHER_APIKEY')
+        self._api_key = client.license_keys.get_key("ACCUWEATHER_APIKEY")
         if self._api_key is None:
-            YLogger.error(self, "ACCUWEATHER_APIKEY missing from license.keys, service will not function correctly!")
+            YLogger.error(
+                self,
+                "ACCUWEATHER_APIKEY missing from license.keys, service will not function correctly!",
+            )
 
     def get_default_aiml_file(self):
         return os.path.dirname(__file__) + os.sep + "accuweather.aiml"
@@ -145,7 +162,9 @@ class AccuWeatherService(RESTService):
     def get_default_conf_file():
         return os.path.dirname(__file__) + os.sep + "accuweather.conf"
 
-    def _build_postcodesearch_url(self, postcode, country, language=None, details=None, offset=None, alias=None):
+    def _build_postcodesearch_url(
+        self, postcode, country, language=None, details=None, offset=None, alias=None
+    ):
         if country is None:
             url = AccuWeatherService.POSTCODESEARCH_BASE_URL
         else:
@@ -162,12 +181,24 @@ class AccuWeatherService(RESTService):
             url += "&alias={0}".format(alias)
         return url
 
-    def postcodesearch(self, postcode, country=None, language=None, details=None, offset=None, alias=None):
-        url = self._build_postcodesearch_url(urllib.parse.quote_plus(postcode), country, language, details, offset, alias)
-        response = self.query('postcodesearch', url)
+    def postcodesearch(
+        self,
+        postcode,
+        country=None,
+        language=None,
+        details=None,
+        offset=None,
+        alias=None,
+    ):
+        url = self._build_postcodesearch_url(
+            urllib.parse.quote_plus(postcode), country, language, details, offset, alias
+        )
+        response = self.query("postcodesearch", url)
         return response
 
-    def _build_textsearch_url(self, postcode, country, language=None, details=None, offset=None, alias=None):
+    def _build_textsearch_url(
+        self, postcode, country, language=None, details=None, offset=None, alias=None
+    ):
         if country is None:
             url = AccuWeatherService.TEXTSEARCH_BASE_URL
         else:
@@ -184,9 +215,19 @@ class AccuWeatherService(RESTService):
             url += "&alias={0}".format(alias)
         return url
 
-    def textsearch(self, location, country=None, language=None, details=None, offset=None, alias=None):
-        url = self._build_textsearch_url(urllib.parse.quote_plus(location), country, language, details, offset, alias)
-        response = self.query('textsearch', url)
+    def textsearch(
+        self,
+        location,
+        country=None,
+        language=None,
+        details=None,
+        offset=None,
+        alias=None,
+    ):
+        url = self._build_textsearch_url(
+            urllib.parse.quote_plus(location), country, language, details, offset, alias
+        )
+        response = self.query("textsearch", url)
         return response
 
     def _build_conditions_url(self, location, language=None, details=None):
@@ -201,7 +242,7 @@ class AccuWeatherService(RESTService):
 
     def conditions(self, location, language=None, details=None):
         url = self._build_conditions_url(location, language, details)
-        response = self.query('conditions', url)
+        response = self.query("conditions", url)
         return response
 
     def _response_to_json(self, api, response):

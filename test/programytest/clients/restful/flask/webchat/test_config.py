@@ -10,7 +10,8 @@ class WebChatConfigurationTests(unittest.TestCase):
     def test_init(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         webchat:
           host: 127.0.0.1
           port: 5000
@@ -18,7 +19,10 @@ class WebChatConfigurationTests(unittest.TestCase):
           use_api_keys: false
           cookie_id: ProgramYSession
           cookie_expires: 90
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         webchat_config = WebChatConfiguration()
         webchat_config.load_configuration(yaml, ".")
@@ -36,8 +40,8 @@ class WebChatConfigurationTests(unittest.TestCase):
         data = {}
         config.to_yaml(data, True)
 
-        self.assertEqual(data['cookie_id'], "ProgramYSession")
-        self.assertEqual(90, data['cookie_expires'])
+        self.assertEqual(data["cookie_id"], "ProgramYSession")
+        self.assertEqual(90, data["cookie_expires"])
 
     def test_to_yaml_with_no_defaults(self):
         config = WebChatConfiguration()
@@ -45,5 +49,5 @@ class WebChatConfigurationTests(unittest.TestCase):
         data = {}
         config.to_yaml(data, False)
 
-        self.assertEqual(data['cookie_id'], "ProgramYSession")
-        self.assertEqual(90, data['cookie_expires'])
+        self.assertEqual(data["cookie_id"], "ProgramYSession")
+        self.assertEqual(90, data["cookie_expires"])

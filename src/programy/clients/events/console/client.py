@@ -14,10 +14,11 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
-from programy.utils.console.console import outputLog
+
 from programy.clients.events.client import EventBotClient
 from programy.clients.events.console.config import ConsoleConfiguration
+from programy.utils.console.console import outputLog
+from programy.utils.logging.ylogger import YLogger
 
 
 class ConsoleBotClient(EventBotClient):
@@ -44,16 +45,20 @@ class ConsoleBotClient(EventBotClient):
         if input_func:
             return input_func(ask)
 
-        return input(ask)       #pylint: disable=input-builtin
+        return input(ask)  # pylint: disable=input-builtin
 
     def display_startup_messages(self, client_context):
-        self.process_response(client_context, client_context.bot.get_version_string(client_context))
+        self.process_response(
+            client_context, client_context.bot.get_version_string(client_context)
+        )
         initial_question = client_context.bot.get_initial_question(client_context)
         self._renderer.render(client_context, initial_question)
 
     def process_question(self, client_context, question):
         self._questions += 1
-        return client_context.bot.ask_question(client_context, question, responselogger=self)
+        return client_context.bot.ask_question(
+            client_context, question, responselogger=self
+        )
 
     def render_response(self, client_context, response):
         # Calls the renderer which handles RCS context, and then calls back to the client to show response
@@ -71,13 +76,19 @@ class ConsoleBotClient(EventBotClient):
     def wait_and_answer(self):
         running = True
         try:
-            client_context = self.create_client_context(self._configuration.client_configuration.default_userid)
+            client_context = self.create_client_context(
+                self._configuration.client_configuration.default_userid
+            )
             self.process_question_answer(client_context)
 
         except KeyboardInterrupt:
             running = False
-            client_context = self.create_client_context(self._configuration.client_configuration.default_userid)
-            self._renderer.render(client_context, client_context.bot.get_exit_response(client_context))
+            client_context = self.create_client_context(
+                self._configuration.client_configuration.default_userid
+            )
+            self._renderer.render(
+                client_context, client_context.bot.get_exit_response(client_context)
+            )
 
         except Exception as excep:
             YLogger.exception(self, "Oops something bad happened !", excep)
@@ -85,11 +96,13 @@ class ConsoleBotClient(EventBotClient):
         return running
 
     def prior_to_run_loop(self):
-        client_context = self.create_client_context(self._configuration.client_configuration.default_userid)
+        client_context = self.create_client_context(
+            self._configuration.client_configuration.default_userid
+        )
         self.display_startup_messages(client_context)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     outputLog(None, "Initiating Console Client...")
 

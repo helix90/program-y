@@ -14,16 +14,15 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from sqlalchemy import Column
-from sqlalchemy import Integer
-from sqlalchemy import String
-from sqlalchemy import Boolean
+
+from sqlalchemy import Boolean, Column, Integer, String
+
 from programy.storage.stores.sql.base import Base
 from programy.storage.stores.utils import DAOUtils
 
 
 class Service(Base):
-    __tablename__ = 'services'
+    __tablename__ = "services"
 
     id = Column(Integer, primary_key=True)
     type = Column(String(48))
@@ -40,30 +39,49 @@ class Service(Base):
     rest_retries = Column(String(512))
 
     def __repr__(self):
-        if self.type == 'rest':
-            return "<Service(id='%s', type='%s', name='%s', category='%s', service_class='%s', " \
-                   "default_response='%s', default_srai='%s', default_aiml='%s', " \
-                   "load_default_aiml='%s', " \
-                   "success_prefix='%s', " \
-                   "url='%s', " \
-                   "rest_timeout='%s', rest_retries='%s'" \
-                   ")>" % (
-                DAOUtils.valid_id(self.id), self.type, self.name, self.category, self.service_class,
-                self.default_response, self.default_srai, self.default_aiml,
-                "False" if self.load_default_aiml is False else "True",
-                self.success_prefix,
-                self.url,
-                self.rest_timeout, self.rest_retries)
-        else:
-            return "<Service(id='%s', type='%s', name='%s', category='%s', service_class='%s', " \
-                   "default_response='%s', default_srai='%s', default_aiml='%s', load_default_aiml='%r', " \
-                   "success_prefix='%s', " \
-                   "url='%s' " \
-                   ")>" % (
-                DAOUtils.valid_id(self.id), self.type, self.name, self.category, self.service_class,
-                    self.default_response, self.default_srai, self.default_aiml,
+        if self.type == "rest":
+            return (
+                "<Service(id='%s', type='%s', name='%s', category='%s', service_class='%s', "
+                "default_response='%s', default_srai='%s', default_aiml='%s', "
+                "load_default_aiml='%s', "
+                "success_prefix='%s', "
+                "url='%s', "
+                "rest_timeout='%s', rest_retries='%s'"
+                ")>"
+                % (
+                    DAOUtils.valid_id(self.id),
+                    self.type,
+                    self.name,
+                    self.category,
+                    self.service_class,
+                    self.default_response,
+                    self.default_srai,
+                    self.default_aiml,
                     "False" if self.load_default_aiml is False else "True",
                     self.success_prefix,
-                    self.url
-                    )
-
+                    self.url,
+                    self.rest_timeout,
+                    self.rest_retries,
+                )
+            )
+        else:
+            return (
+                "<Service(id='%s', type='%s', name='%s', category='%s', service_class='%s', "
+                "default_response='%s', default_srai='%s', default_aiml='%s', load_default_aiml='%r', "
+                "success_prefix='%s', "
+                "url='%s' "
+                ")>"
+                % (
+                    DAOUtils.valid_id(self.id),
+                    self.type,
+                    self.name,
+                    self.category,
+                    self.service_class,
+                    self.default_response,
+                    self.default_srai,
+                    self.default_aiml,
+                    "False" if self.load_default_aiml is False else "True",
+                    self.success_prefix,
+                    self.url,
+                )
+            )

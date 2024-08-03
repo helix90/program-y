@@ -1,7 +1,11 @@
 import datetime
 import unittest
+
+from programytest.services.library.metoffice.payloads.forecast_daily import (
+    forecast_daily_payload,
+)
+
 from programy.services.library.metoffice.metoffice import MetOffice5DayForecast
-from programytest.services.library.metoffice.payloads.forecast_daily import forecast_daily_payload
 
 
 class MockMetOffice5DayForecast(MetOffice5DayForecast):

@@ -48,7 +48,7 @@ class RDFCollectionUnificationTests(unittest.TestCase):
         unified = collection.unify(["?x"], [set1, set2])
         self.assertIsNotNone(unified)
         self.assertEqual(1, len(unified))
-        self.assertTrue([['?x', 'MONKEY']] in unified)
+        self.assertTrue([["?x", "MONKEY"]] in unified)
 
     def test_unify_on_single_var_different(self):
         collection = RDFCollection()
@@ -64,7 +64,7 @@ class RDFCollectionUnificationTests(unittest.TestCase):
         set2 = collection.match_to_vars("?x", "HASFUR", "true")
 
         unified = collection.unify(["?y"], [set1, set2])
-        self.assertEquals([[['?y', None]], [['?y', None]]], unified)
+        self.assertEquals([[["?y", None]], [["?y", None]]], unified)
 
     def test_unify_on_single_var_with_not(self):
         collection = RDFCollection()
@@ -82,7 +82,7 @@ class RDFCollectionUnificationTests(unittest.TestCase):
         unified = collection.unify(["?x"], [set1, set2])
         self.assertIsNotNone(unified)
         self.assertEqual(1, len(unified))
-        self.assertTrue([['?x', 'BIRD']] in unified)
+        self.assertTrue([["?x", "BIRD"]] in unified)
 
     def test_unify_on_multi_vars(self):
         collection = RDFCollection()
@@ -117,8 +117,19 @@ class RDFCollectionUnificationTests(unittest.TestCase):
         unified = collection.unify(("?x", "?y", "?z", "?w"), [set1, set2, set3])
         self.assertIsNotNone(unified)
         self.assertEqual(2, len(unified))
-        self.assertTrue([['?x', 'TEST1'], ['?y', 'TEST2'], ['?z', 'TEST3'], ['?w', 'TEST4'], ] in unified)
-        self.assertTrue([['?x', 'TEST2'], ['?y', 'TEST3'], ['?z', 'TEST4'], ['?w', 'TEST5']] in unified)
+        self.assertTrue(
+            [
+                ["?x", "TEST1"],
+                ["?y", "TEST2"],
+                ["?z", "TEST3"],
+                ["?w", "TEST4"],
+            ]
+            in unified
+        )
+        self.assertTrue(
+            [["?x", "TEST2"], ["?y", "TEST3"], ["?z", "TEST4"], ["?w", "TEST5"]]
+            in unified
+        )
 
     def test_unify_tuple(self):
         collection = RDFCollection()

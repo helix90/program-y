@@ -14,19 +14,20 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
-from programy.storage.stores.nosql.mongo.store.mongostore import MongoStore
+
 from programy.storage.entities.category import CategoryReadWriteStore
 from programy.storage.stores.nosql.mongo.dao.category import Category
+from programy.storage.stores.nosql.mongo.store.mongostore import MongoStore
+from programy.utils.logging.ylogger import YLogger
 
 
 class MongoCategoryStore(CategoryReadWriteStore, MongoStore):
-    CATEGORIES = 'categories'
-    GROUPID = 'groupid'
-    PATTERN = 'pattern'
-    TOPIC = 'topic'
-    THAT = 'that'
-    TEMPLATE = 'template'
+    CATEGORIES = "categories"
+    GROUPID = "groupid"
+    PATTERN = "pattern"
+    TOPIC = "topic"
+    THAT = "that"
+    TEMPLATE = "template"
 
     def __init__(self, storage_engine):
         MongoStore.__init__(self, storage_engine)
@@ -41,9 +42,23 @@ class MongoCategoryStore(CategoryReadWriteStore, MongoStore):
         collection.delete_many({MongoCategoryStore.GROUPID: name})
 
     def store_category(self, groupid, userid, topic, that, pattern, template):
-        YLogger.debug(self, "Storing category in Mongo [%s] [%s] [%s] [%s] [%s]", groupid, pattern, topic, that,
-                      template)
-        category = Category(groupid=groupid, userid=userid, topic=topic, that=that, pattern=pattern, template=template)
+        YLogger.debug(
+            self,
+            "Storing category in Mongo [%s] [%s] [%s] [%s] [%s]",
+            groupid,
+            pattern,
+            topic,
+            that,
+            template,
+        )
+        category = Category(
+            groupid=groupid,
+            userid=userid,
+            topic=topic,
+            that=that,
+            pattern=pattern,
+            template=template,
+        )
         return self.add_document(category)
 
     def load(self, collector, name=None):
@@ -65,15 +80,20 @@ class MongoCategoryStore(CategoryReadWriteStore, MongoStore):
     def _load_documents(self, documents, parser):
         for doc in documents:
             category = Category.from_document(doc)
-            YLogger.debug(self, "Loading category [%s] [%s] [%s] [%s] [%s]",
-                          category.groupid,
-                          category.pattern,
-                          category.topic,
-                          category.that,
-                          category.template)
-            self._load_category(category.groupid,
-                                category.pattern,
-                                category.topic,
-                                category.that,
-                                category.template,
-                                parser)
+            YLogger.debug(
+                self,
+                "Loading category [%s] [%s] [%s] [%s] [%s]",
+                category.groupid,
+                category.pattern,
+                category.topic,
+                category.that,
+                category.template,
+            )
+            self._load_category(
+                category.groupid,
+                category.pattern,
+                category.topic,
+                category.that,
+                category.template,
+                parser,
+            )

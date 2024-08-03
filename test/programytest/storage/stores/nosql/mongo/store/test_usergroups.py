@@ -1,10 +1,12 @@
 import unittest
 from unittest.mock import patch
+
 import programytest.storage.engines as Engines
+from programytest.storage.asserts.store.assert_usergroups import UserGroupsStoreAsserts
+
 from programy.storage.stores.nosql.mongo.config import MongoStorageConfiguration
 from programy.storage.stores.nosql.mongo.engine import MongoStorageEngine
 from programy.storage.stores.nosql.mongo.store.usergroups import MongoUserGroupsStore
-from programytest.storage.asserts.store.assert_usergroups import UserGroupsStoreAsserts
 
 
 class MongoUserGroupsStoreTests(UserGroupsStoreAsserts):
@@ -16,7 +18,7 @@ class MongoUserGroupsStoreTests(UserGroupsStoreAsserts):
         engine.initialise()
         store = MongoUserGroupsStore(engine)
         self.assertEqual(store.storage_engine, engine)
-        
+
     @unittest.skipIf(Engines.mongo is False, Engines.mongo_disabled)
     def test_upload_from_file(self):
         config = MongoStorageConfiguration()
@@ -30,7 +32,10 @@ class MongoUserGroupsStoreTests(UserGroupsStoreAsserts):
         raise Exception("Mock Exception")
 
     @unittest.skipIf(Engines.mongo is False, Engines.mongo_disabled)
-    @patch("programy.storage.stores.nosql.mongo.store.usergroups.MongoUserGroupsStore._read_yaml_from_file",patch_read_yaml_from_file)
+    @patch(
+        "programy.storage.stores.nosql.mongo.store.usergroups.MongoUserGroupsStore._read_yaml_from_file",
+        patch_read_yaml_from_file,
+    )
     def test_upload_from_file_exception(self):
         config = MongoStorageConfiguration()
         engine = MongoStorageEngine(config)
@@ -52,7 +57,10 @@ class MongoUserGroupsStoreTests(UserGroupsStoreAsserts):
         return False
 
     @unittest.skipIf(Engines.mongo is False, Engines.mongo_disabled)
-    @patch("programy.storage.stores.nosql.mongo.store.mongostore.MongoStore.add_document", patch_add_document)
+    @patch(
+        "programy.storage.stores.nosql.mongo.store.mongostore.MongoStore.add_document",
+        patch_add_document,
+    )
     def test_upload_from_file_add_document_false(self):
         config = MongoStorageConfiguration()
         engine = MongoStorageEngine(config)
@@ -60,4 +68,3 @@ class MongoUserGroupsStoreTests(UserGroupsStoreAsserts):
         store = MongoUserGroupsStore(engine)
 
         self.assert_upload_from_file_exception(store)
-

@@ -10,7 +10,8 @@ class FileStoreConfigurationTests(unittest.TestCase):
     def test_with_files_data(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         brain:
             files:
                 sets:
@@ -20,7 +21,10 @@ class FileStoreConfigurationTests(unittest.TestCase):
                     format: text
                     encoding: utf-8
                     delete_on_start: true
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         brain_config = yaml.get_section("brain")
         self.assertIsNotNone(brain_config)
@@ -45,14 +49,18 @@ class FileStoreConfigurationTests(unittest.TestCase):
     def test_with_file_data(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         brain:
             files:
                 sets:
                     file: $BOT_ROOT/sets/test.txt
                     format: text
                     encoding: utf-8
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         brain_config = yaml.get_section("brain")
         self.assertIsNotNone(brain_config)
@@ -72,11 +80,15 @@ class FileStoreConfigurationTests(unittest.TestCase):
     def test_with_file_no_data(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         brain:
             files:
                 sets:
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         brain_config = yaml.get_section("brain")
         self.assertIsNotNone(brain_config)
@@ -96,10 +108,14 @@ class FileStoreConfigurationTests(unittest.TestCase):
     def test_with_file_no_config_no_data(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         brain:
             files:
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         brain_config = yaml.get_section("brain")
         self.assertIsNotNone(brain_config)
@@ -109,7 +125,8 @@ class FileStoreConfigurationTests(unittest.TestCase):
     def test_to_yaml_defaults(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         brain:
             files:
                 sets:
@@ -119,7 +136,10 @@ class FileStoreConfigurationTests(unittest.TestCase):
                     format: text
                     encoding: utf-8
                     delete_on_start: true
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         brain_config = yaml.get_section("brain")
         self.assertIsNotNone(brain_config)
@@ -131,17 +151,18 @@ class FileStoreConfigurationTests(unittest.TestCase):
 
         data = {}
         sets_config.to_yaml(data, True)
-        self.assertFalse(data['delete_on_start'])
-        self.assertEqual(data['dirs'], './storage/sets')
-        self.assertIsNone(data['encoding'])
-        self.assertEqual(data['extension'], '.txt')
-        self.assertIsNone(data['format'])
-        self.assertFalse(data['subdirs'])
+        self.assertFalse(data["delete_on_start"])
+        self.assertEqual(data["dirs"], "./storage/sets")
+        self.assertIsNone(data["encoding"])
+        self.assertEqual(data["extension"], ".txt")
+        self.assertIsNone(data["format"])
+        self.assertFalse(data["subdirs"])
 
     def test_to_yaml_no_defaults(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         brain:
             files:
                 sets:
@@ -151,7 +172,10 @@ class FileStoreConfigurationTests(unittest.TestCase):
                     format: text
                     encoding: utf-8
                     delete_on_start: true
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         brain_config = yaml.get_section("brain")
         self.assertIsNotNone(brain_config)
@@ -163,9 +187,9 @@ class FileStoreConfigurationTests(unittest.TestCase):
 
         data = {}
         sets_config.to_yaml(data, False)
-        self.assertTrue(data['delete_on_start'])
-        self.assertEqual(data['dirs'], ['./sets'])
-        self.assertEqual(data['encoding'], 'utf-8')
-        self.assertEqual(data['extension'], '.txt')
-        self.assertEqual(data['format'], 'text')
-        self.assertFalse(data['subdirs'])
+        self.assertTrue(data["delete_on_start"])
+        self.assertEqual(data["dirs"], ["./sets"])
+        self.assertEqual(data["encoding"], "utf-8")
+        self.assertEqual(data["extension"], ".txt")
+        self.assertEqual(data["format"], "text")
+        self.assertFalse(data["subdirs"])

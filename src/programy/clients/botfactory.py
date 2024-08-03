@@ -14,8 +14,9 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from abc import abstractmethod
-from abc import ABC
+
+from abc import ABC, abstractmethod
+
 from programy.bot import Bot
 from programy.utils.classes.loader import ClassLoader
 from programy.utils.logging.ylogger import YLogger
@@ -60,7 +61,7 @@ class DefaultBotSelector(BotSelector):
         return None
 
 
-class BotFactory():
+class BotFactory:
 
     def __init__(self, client, configuration):
         self._client = client
@@ -92,8 +93,9 @@ class BotFactory():
             self._bot_selector = DefaultBotSelector(configuration, self._bots)
         else:
             try:
-                self._bot_selector = ClassLoader.instantiate_class(configuration.bot_selector)(configuration,
-                                                                                               self._bots)
+                self._bot_selector = ClassLoader.instantiate_class(
+                    configuration.bot_selector
+                )(configuration, self._bots)
             except Exception as excep:
                 YLogger.exception(self, "Failed to loadbot selector [%s]", excep)
                 self._bot_selector = DefaultBotSelector(configuration, self._bots)
@@ -105,7 +107,5 @@ class BotFactory():
         bots = []
         for botid, bot in self._bots.items():
             brains = bot.get_question_counts()
-            bots.append({"id": botid,
-                         "questions": bot.num_questions,
-                         "brains": brains})
+            bots.append({"id": botid, "questions": bot.num_questions, "brains": brains})
         return bots

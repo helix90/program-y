@@ -11,11 +11,15 @@ class BotSentenceJoinerConfigurationTests(unittest.TestCase):
     def test_with_data(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         bot:
             joiner:
                 classname: programy.dialog.joiner.SentenceJoiner
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         bot_config = yaml.get_section("bot")
 
@@ -25,37 +29,49 @@ class BotSentenceJoinerConfigurationTests(unittest.TestCase):
         license_keys = LicenseKeys()
         joiner_config.check_for_license_keys(license_keys)
 
-        self.assertEqual("programy.dialog.joiner.SentenceJoiner", joiner_config.classname)
-        self.assertEqual('.?!', joiner_config.join_chars)
-        self.assertEqual('.', joiner_config.terminator)
+        self.assertEqual(
+            "programy.dialog.joiner.SentenceJoiner", joiner_config.classname
+        )
+        self.assertEqual(".?!", joiner_config.join_chars)
+        self.assertEqual(".", joiner_config.terminator)
 
     def test_with_default_data(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         bot:
             joiner:
                 classname: programy.dialog.joiner.SentenceJoiner
                 join_chars: .?!
                 termiantor: .
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         bot_config = yaml.get_section("bot")
 
         joiner_config = BotSentenceJoinerConfiguration()
         joiner_config.load_config_section(yaml, bot_config, ".")
 
-        self.assertEqual("programy.dialog.joiner.SentenceJoiner", joiner_config.classname)
+        self.assertEqual(
+            "programy.dialog.joiner.SentenceJoiner", joiner_config.classname
+        )
         self.assertEqual(".?!", joiner_config.join_chars)
-        self.assertEqual('.', joiner_config.terminator)
+        self.assertEqual(".", joiner_config.terminator)
 
     def test_without_data(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         bot:
             joiner:
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         bot_config = yaml.get_section("bot")
 
@@ -65,9 +81,13 @@ class BotSentenceJoinerConfigurationTests(unittest.TestCase):
     def test_with_no_data(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         bot:
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         bot_config = yaml.get_section("bot")
 
@@ -83,6 +103,12 @@ class BotSentenceJoinerConfigurationTests(unittest.TestCase):
 
     @staticmethod
     def assert_defaults(test, data):
-        test.assertEqual(data['classname'], BotSentenceJoinerConfiguration.DEFAULT_CLASSNAME)
-        test.assertEqual(data['join_chars'], BotSentenceJoinerConfiguration.DEFAULT_JOIN_CHARS)
-        test.assertEqual(data['terminator'], BotSentenceJoinerConfiguration.DEFAULT_TERMINATOR)
+        test.assertEqual(
+            data["classname"], BotSentenceJoinerConfiguration.DEFAULT_CLASSNAME
+        )
+        test.assertEqual(
+            data["join_chars"], BotSentenceJoinerConfiguration.DEFAULT_JOIN_CHARS
+        )
+        test.assertEqual(
+            data["terminator"], BotSentenceJoinerConfiguration.DEFAULT_TERMINATOR
+        )

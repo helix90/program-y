@@ -1,10 +1,11 @@
 import unittest
 import unittest.mock
 
+from programytest.clients.arguments import MockArgumentParser
+
+from programy.clients.render.html import HtmlRenderer
 from programy.clients.restful.flask.webchat.client import WebChatBotClient
 from programy.clients.restful.flask.webchat.config import WebChatConfiguration
-from programy.clients.render.html import HtmlRenderer
-from programytest.clients.arguments import MockArgumentParser
 
 
 class MockWebChatBotClient(WebChatBotClient):
@@ -20,7 +21,7 @@ class MockWebChatBotClient(WebChatBotClient):
         return "Sorry"
 
     def create_webchat_response(self, response_data, userid, userid_expire_date):
-        return {'response': response_data}
+        return {"response": response_data}
 
     def get_answer(self, client_context, question):
         if self.test_answer is not None:
@@ -37,7 +38,7 @@ class WebChatBotClientTests(unittest.TestCase):
         client.initialise()
 
         self.assertIsInstance(client.get_client_configuration(), WebChatConfiguration)
-        self.assertEqual('ProgramY AIML2.0 Client', client.get_description())
+        self.assertEqual("ProgramY AIML2.0 Client", client.get_description())
 
         self.assertFalse(client._render_callback())
         self.assertIsInstance(client.renderer, HtmlRenderer)
@@ -48,11 +49,11 @@ class WebChatBotClientTests(unittest.TestCase):
         self.assertIsNotNone(client)
         client.initialise()
 
-        client.api_keys.api_keys = ['KEY1', 'KEY2']
+        client.api_keys.api_keys = ["KEY1", "KEY2"]
 
-        self.assertTrue(client.api_keys.is_apikey_valid('KEY1'))
-        self.assertTrue(client.api_keys.is_apikey_valid('KEY2'))
-        self.assertFalse(client.api_keys.is_apikey_valid('KEY3'))
+        self.assertTrue(client.api_keys.is_apikey_valid("KEY1"))
+        self.assertTrue(client.api_keys.is_apikey_valid("KEY2"))
+        self.assertFalse(client.api_keys.is_apikey_valid("KEY3"))
 
     def test_get_api_key_exists(self):
         arguments = MockArgumentParser()
@@ -60,14 +61,14 @@ class WebChatBotClientTests(unittest.TestCase):
         self.assertIsNotNone(client)
         client.initialise()
 
-        client.api_keys.api_keys = ['KEY1', 'KEY2']
+        client.api_keys.api_keys = ["KEY1", "KEY2"]
 
         request = unittest.mock.Mock
-        request.args = {'apikey': 'KEY1'}
+        request.args = {"apikey": "KEY1"}
 
         key = client.api_keys.get_api_key(request)
         self.assertIsNotNone(key)
-        self.assertEqual('KEY1', key)
+        self.assertEqual("KEY1", key)
 
     def test_get_api_key_not_exists(self):
         arguments = MockArgumentParser()
@@ -87,11 +88,11 @@ class WebChatBotClientTests(unittest.TestCase):
         self.assertIsNotNone(client)
 
         request = unittest.mock.Mock
-        request.args = {'question': 'Hello'}
+        request.args = {"question": "Hello"}
 
         key = client.get_question(request)
         self.assertIsNotNone(key)
-        self.assertEqual('Hello', key)
+        self.assertEqual("Hello", key)
 
     def test_get_question_not_exists(self):
         arguments = MockArgumentParser()
@@ -121,10 +122,10 @@ class WebChatBotClientTests(unittest.TestCase):
         self.assertIsNotNone(client)
 
         request = unittest.mock.Mock
-        request.args = {'apikey': "KEY1"}
+        request.args = {"apikey": "KEY1"}
 
         client.configuration.client_configuration._use_api_keys = True
-        client.api_keys.api_keys = ['KEY1']
+        client.api_keys.api_keys = ["KEY1"]
 
         self.assertTrue(client.api_keys.verify_api_key_usage(request))
 
@@ -137,7 +138,7 @@ class WebChatBotClientTests(unittest.TestCase):
         request.args = {}
 
         client.configuration.client_configuration._use_api_keys = True
-        client.api_keys.api_keys = ['KEY1']
+        client.api_keys.api_keys = ["KEY1"]
 
         self.assertFalse(client.api_keys.verify_api_key_usage(request))
 
@@ -148,10 +149,10 @@ class WebChatBotClientTests(unittest.TestCase):
         client.initialise()
 
         request = unittest.mock.Mock
-        request.args = {'KEY2'}
+        request.args = {"KEY2"}
 
         client.configuration.client_configuration._use_api_keys = True
-        client.api_keys.api_keys = ['KEY1']
+        client.api_keys.api_keys = ["KEY1"]
 
         self.assertFalse(client.api_keys.verify_api_key_usage(request))
 
@@ -198,7 +199,9 @@ class WebChatBotClientTests(unittest.TestCase):
 
         response = client.create_error_response_data(client_context, "Hello", "Whoops!")
         self.assertIsNotNone(response)
-        self.assertEqual({"question": "Hello", "answer": "Sorry", "error": "Whoops!"}, response)
+        self.assertEqual(
+            {"question": "Hello", "answer": "Sorry", "error": "Whoops!"}, response
+        )
 
     def test_get_userid_cookie_expirary_date(self):
         arguments = MockArgumentParser()
@@ -224,4 +227,6 @@ class WebChatBotClientTests(unittest.TestCase):
 
         response = client.receive_message(request)
         self.assertIsNotNone(response)
-        self.assertEqual({'response': {'answer': 'Hi there', 'question': 'Hello'}}, response)
+        self.assertEqual(
+            {"response": {"answer": "Hi there", "question": "Hello"}}, response
+        )

@@ -14,11 +14,12 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
+
 from programy.clients.polling.client import PollingBotClient
 from programy.clients.polling.xmpp.config import XmppConfiguration
 from programy.clients.polling.xmpp.xmpp import XmppClient
 from programy.utils.console.console import outputLog
+from programy.utils.logging.ylogger import YLogger
 
 
 class XmppBotClient(PollingBotClient):
@@ -48,15 +49,25 @@ class XmppBotClient(PollingBotClient):
     def ask_question(self, userid, question):
         self._questions += 1
         client_context = self.create_client_context(userid)
-        response = client_context.bot.ask_question(client_context, question, responselogger=self)
+        response = client_context.bot.ask_question(
+            client_context, question, responselogger=self
+        )
         return response
 
     def connect(self):
-        YLogger.debug(self, "XMPPBotClient Connecting as %s to %s %s", self._username, self._server, self._port)
+        YLogger.debug(
+            self,
+            "XMPPBotClient Connecting as %s to %s %s",
+            self._username,
+            self._server,
+            self._port,
+        )
         self._xmpp_client = self.create_client(self._username, self._password)
         if self._xmpp_client is not None:
             self._xmpp_client.connect((self._server, self._port))
-            self._xmpp_client.register_xep_plugins(self.configuration.client_configuration)
+            self._xmpp_client.register_xep_plugins(
+                self.configuration.client_configuration
+            )
             return True
         return False
 
@@ -83,7 +94,7 @@ class XmppBotClient(PollingBotClient):
         return running
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     outputLog(None, "Initiating XMPP Client...")
 

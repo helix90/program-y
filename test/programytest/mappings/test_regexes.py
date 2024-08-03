@@ -1,4 +1,5 @@
 import unittest
+
 from programy.mappings.properties import RegexTemplatesCollection
 
 

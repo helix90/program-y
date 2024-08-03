@@ -14,6 +14,7 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 # This code was pulled from another AIML processor in Github
 # https://github.com/Decalogue/aiml3/blob/master/aiml/LangSupport.py
 # Thanks to Benny Shang for the info and help supporting chinese
@@ -32,8 +33,14 @@ class ChineseLanguage:
 
             r = [
                 # 标准CJK文字
-                (0x3400, 0x4DB5), (0x4E00, 0x9FA5), (0x9FA6, 0x9FBB), (0xF900, 0xFA2D),
-                (0xFA30, 0xFA6A), (0xFA70, 0xFAD9), (0x20000, 0x2A6D6), (0x2F800, 0x2FA1D),
+                (0x3400, 0x4DB5),
+                (0x4E00, 0x9FA5),
+                (0x9FA6, 0x9FBB),
+                (0xF900, 0xFA2D),
+                (0xFA30, 0xFA6A),
+                (0xFA70, 0xFAD9),
+                (0x20000, 0x2A6D6),
+                (0x2F800, 0x2FA1D),
                 # 全角ASCII、全角中英文标点、半宽片假名、半宽平假名、半宽韩文字母
                 (0xFF00, 0xFFEF),
                 # CJK部首补充
@@ -41,7 +48,8 @@ class ChineseLanguage:
                 # CJK标点符号
                 (0x3000, 0x303F),
                 # CJK笔划
-                (0x31C0, 0x31EF)]
+                (0x31C0, 0x31EF),
+            ]
 
             return any(s <= ord(c) <= e for s, e in r)
 
@@ -55,7 +63,7 @@ class ChineseLanguage:
                 result.extend([" ", c, " "])
             else:
                 result.append(c)
-        ret = ''.join(result)
+        ret = "".join(result)
         return ret.split()
 
     @staticmethod
@@ -86,4 +94,4 @@ class ChineseLanguage:
 
             ChineseLanguage.get_str_segment(seg, result, -1, " ")
 
-        return ''.join(result).strip()
+        return "".join(result).strip()

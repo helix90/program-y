@@ -14,10 +14,11 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 from programy.storage.stores.utils import DAOUtils
 
 
-class Duplicate():
+class Duplicate:
 
     def __init__(self, duplicate, file, start, end):
         self.id = None
@@ -27,24 +28,34 @@ class Duplicate():
         self.end = end
 
     def __repr__(self):
-        return "<Duplicate(id='%s', duplicate='%s', file='%s', start='%s', end='%s')>" % (
-            DAOUtils.valid_id(self.id), self.duplicate, self.file, self.start, self.end)
+        return (
+            "<Duplicate(id='%s', duplicate='%s', file='%s', start='%s', end='%s')>"
+            % (
+                DAOUtils.valid_id(self.id),
+                self.duplicate,
+                self.file,
+                self.start,
+                self.end,
+            )
+        )
 
     def to_document(self):
-        document = {"duplicate": self.duplicate,
-                    "file": self.file,
-                    "start": self.start,
-                    "end": self.end}
+        document = {
+            "duplicate": self.duplicate,
+            "file": self.file,
+            "start": self.start,
+            "end": self.end,
+        }
         if self.id is not None:
-            document['_id'] = self.id
+            document["_id"] = self.id
         return document
 
     @staticmethod
     def from_document(data):
         duplicate = Duplicate(None, None, None, None)
-        duplicate.id = DAOUtils.get_value_from_data(data, '_id')
-        duplicate.duplicate = DAOUtils.get_value_from_data(data, 'duplicate')
-        duplicate.file = DAOUtils.get_value_from_data(data, 'file')
-        duplicate.start = DAOUtils.get_value_from_data(data, 'start')
-        duplicate.end = DAOUtils.get_value_from_data(data, 'end')
+        duplicate.id = DAOUtils.get_value_from_data(data, "_id")
+        duplicate.duplicate = DAOUtils.get_value_from_data(data, "duplicate")
+        duplicate.file = DAOUtils.get_value_from_data(data, "file")
+        duplicate.start = DAOUtils.get_value_from_data(data, "start")
+        duplicate.end = DAOUtils.get_value_from_data(data, "end")
         return duplicate

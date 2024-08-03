@@ -14,17 +14,18 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
-from programy.storage.stores.nosql.mongo.store.mongostore import MongoStore
+
 from programy.storage.entities.link import LinkStore
 from programy.storage.stores.nosql.mongo.dao.link import Link
+from programy.storage.stores.nosql.mongo.store.mongostore import MongoStore
+from programy.utils.logging.ylogger import YLogger
 
 
 class MongoLinkStore(MongoStore, LinkStore):
     LINKS = "links"
     PRIMARY_USER = "primary_user"
-    PROVIDED_KEY = 'provided_key'
-    GENERATED_KEY = 'generated_key'
+    PROVIDED_KEY = "provided_key"
+    GENERATED_KEY = "generated_key"
 
     def __init__(self, storage_engine):
         MongoStore.__init__(self, storage_engine)
@@ -33,9 +34,25 @@ class MongoLinkStore(MongoStore, LinkStore):
     def collection_name(self):
         return MongoLinkStore.LINKS
 
-    def create_link(self, primary_userid, provided_key, generated_key, expires, expired=False, retry_count=0):
-        YLogger.info(self, "Creating link in Mongo [%s] [%s] [%s]", primary_userid, generated_key, provided_key)
-        link = Link(primary_userid, provided_key, generated_key, expires, expired, retry_count)
+    def create_link(
+        self,
+        primary_userid,
+        provided_key,
+        generated_key,
+        expires,
+        expired=False,
+        retry_count=0,
+    ):
+        YLogger.info(
+            self,
+            "Creating link in Mongo [%s] [%s] [%s]",
+            primary_userid,
+            generated_key,
+            provided_key,
+        )
+        link = Link(
+            primary_userid, provided_key, generated_key, expires, expired, retry_count
+        )
         return self.add_document(link)
 
     def get_link(self, userid):
@@ -52,11 +69,16 @@ class MongoLinkStore(MongoStore, LinkStore):
 
     def link_exists(self, userid, provided_key, generated_key):
         collection = self.collection()
-        link = collection.find_one({MongoLinkStore.PRIMARY_USER: userid, MongoLinkStore.PROVIDED_KEY: provided_key,
-                                    MongoLinkStore.GENERATED_KEY: generated_key})
+        link = collection.find_one(
+            {
+                MongoLinkStore.PRIMARY_USER: userid,
+                MongoLinkStore.PROVIDED_KEY: provided_key,
+                MongoLinkStore.GENERATED_KEY: generated_key,
+            }
+        )
         return bool(link is not None)
 
     def update_link(self, link):
         collection = self.collection()
-        result = collection.replace_one({'_id': link.id}, Link.to_document(link))
+        result = collection.replace_one({"_id": link.id}, Link.to_document(link))
         return bool(result.modified_count > 0)

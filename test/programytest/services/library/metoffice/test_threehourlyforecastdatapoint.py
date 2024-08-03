@@ -1,4 +1,5 @@
 import unittest
+
 from programy.services.library.metoffice.metoffice import ThreeHourlyForecastDataPoint
 
 
@@ -28,17 +29,19 @@ class ThreeHourlyForecastDataPointTests(unittest.TestCase):
         dp = ThreeHourlyForecastDataPoint()
         self.assertIsNotNone(dp)
 
-        json = {  "$": "360",
-                  "D": "S",
-                  "F": "3",
-                  "G": "4",
-                  "H": "96",
-                  "Pp": "0",
-                  "S": "2",
-                  "T": "4",
-                  "U": "1",
-                  "V": "MO",
-                  "W": "1"}
+        json = {
+            "$": "360",
+            "D": "S",
+            "F": "3",
+            "G": "4",
+            "H": "96",
+            "Pp": "0",
+            "S": "2",
+            "T": "4",
+            "U": "1",
+            "V": "MO",
+            "W": "1",
+        }
 
         dp.parse_json(json, "360", "2017-04-03Z")
 
@@ -54,23 +57,31 @@ class ThreeHourlyForecastDataPointTests(unittest.TestCase):
         self.assertEqual("MO", dp._visibility_code)
         self.assertEqual("Moderate - Between 4-10 km", dp._visibility_text)
         self.assertEqual("1", dp._uv_index_max)
-        self.assertEqual("Low exposure. No protection required. You can safely stay outside", dp._uv_guidance)
+        self.assertEqual(
+            "Low exposure. No protection required. You can safely stay outside",
+            dp._uv_guidance,
+        )
         self.assertEqual("0", dp._precipitation_probability)
         self.assertEqual("96", dp._screen_relative_humidity)
 
-        self.assertEqual("FORECAST HOURS TYPE Sunny day TEMP 4 FEELS 3 WINDSPEED 2 UVINDEX 1 UVGUIDE Low exposure. No protection required. You can safely stay outside RAINPROB 0 HUMIDITY 96 WINDDIR S WINDDIRFULL South VIS Moderate - Between 4-10 km", dp.to_program_y_text())
+        self.assertEqual(
+            "FORECAST HOURS TYPE Sunny day TEMP 4 FEELS 3 WINDSPEED 2 UVINDEX 1 UVGUIDE Low exposure. No protection required. You can safely stay outside RAINPROB 0 HUMIDITY 96 WINDDIR S WINDDIRFULL South VIS Moderate - Between 4-10 km",
+            dp.to_program_y_text(),
+        )
 
     def test_parse_json_s_u_v_w_missing(self):
         dp = ThreeHourlyForecastDataPoint()
         self.assertIsNotNone(dp)
 
-        json = {  "$": "360",
-                  "S": "2",
-                  "F": "3",
-                  "G": "4",
-                  "H": "96",
-                  "Pp": "0",
-                  "T": "4"}
+        json = {
+            "$": "360",
+            "S": "2",
+            "F": "3",
+            "G": "4",
+            "H": "96",
+            "Pp": "0",
+            "T": "4",
+        }
 
         dp.parse_json(json, "360", "2017-04-03Z")
 
@@ -90,4 +101,7 @@ class ThreeHourlyForecastDataPointTests(unittest.TestCase):
         self.assertEqual("0", dp._precipitation_probability)
         self.assertEqual("96", dp._screen_relative_humidity)
 
-        self.assertEqual("FORECAST HOURS TEMP 4 FEELS 3 WINDSPEED 2 UVINDEX None UVGUIDE None RAINPROB 0 HUMIDITY 96", dp.to_program_y_text())
+        self.assertEqual(
+            "FORECAST HOURS TEMP 4 FEELS 3 WINDSPEED 2 UVINDEX None UVGUIDE None RAINPROB 0 HUMIDITY 96",
+            dp.to_program_y_text(),
+        )

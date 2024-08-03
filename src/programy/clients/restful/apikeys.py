@@ -14,13 +14,14 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
+
 from programy.clients.restful.config import RestConfiguration
+from programy.utils.logging.ylogger import YLogger
 
 
 class APIKeysHandler:
     API_KEY_HEADER = "PROGRAMY-API-KEY"
-    API_KEY_ARG = 'apikey'
+    API_KEY_ARG = "apikey"
 
     def __init__(self, configuration: RestConfiguration):
         self._configuration = configuration
@@ -32,32 +33,42 @@ class APIKeysHandler:
 
     @staticmethod
     def add_post_api_key_header(headers, api_key):
-        headers['PROGRAMY-API-KEY'] = api_key
+        headers["PROGRAMY-API-KEY"] = api_key
 
     def load_api_keys(self):
         if self._configuration.use_api_keys is True:
             if self._configuration.api_key_file is not None:
                 try:
-                    with open(self._configuration.api_key_file, "r", encoding="utf-8") as api_key_file:
+                    with open(
+                        self._configuration.api_key_file, "r", encoding="utf-8"
+                    ) as api_key_file:
                         for api_key in api_key_file:
                             self.api_keys.append(api_key.strip())
 
                 except Exception as excep:
-                    YLogger.exception(self, "Failed to open license key file [%s]", excep,
-                                      self._configuration.api_key_file)
+                    YLogger.exception(
+                        self,
+                        "Failed to open license key file [%s]",
+                        excep,
+                        self._configuration.api_key_file,
+                    )
 
     def use_api_keys(self):
         return self._configuration.use_api_keys
 
-    def get_api_key(self, rest_request, method='GET'):
-        if method == 'GET':
-            if APIKeysHandler.API_KEY_ARG in rest_request.args and \
-                    rest_request.args[APIKeysHandler.API_KEY_ARG] is not None:
+    def get_api_key(self, rest_request, method="GET"):
+        if method == "GET":
+            if (
+                APIKeysHandler.API_KEY_ARG in rest_request.args
+                and rest_request.args[APIKeysHandler.API_KEY_ARG] is not None
+            ):
                 return rest_request.args[APIKeysHandler.API_KEY_ARG]
 
-        elif method == 'POST':
-            if APIKeysHandler.API_KEY_HEADER in rest_request.headers and \
-                    rest_request.headers[APIKeysHandler.API_KEY_HEADER] is not None:
+        elif method == "POST":
+            if (
+                APIKeysHandler.API_KEY_HEADER in rest_request.headers
+                and rest_request.headers[APIKeysHandler.API_KEY_HEADER] is not None
+            ):
                 return rest_request.headers[APIKeysHandler.API_KEY_HEADER]
 
         return None
@@ -65,7 +76,7 @@ class APIKeysHandler:
     def is_apikey_valid(self, apikey):
         return bool(apikey in self.api_keys)
 
-    def verify_api_key_usage(self, request, method='GET'):
+    def verify_api_key_usage(self, request, method="GET"):
         if self.use_api_keys() is True:
             apikey = self.get_api_key(request, method)
 

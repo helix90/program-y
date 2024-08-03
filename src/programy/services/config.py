@@ -32,16 +32,27 @@ class ServiceConfiguration:
         self._url = None
 
     @staticmethod
-    def from_data(service_type, name, category, storage=None, service_class=None, default_response=None, default_srai=None,
-                  success_prefix=None, default_aiml=None, load_default_aiml=True, url=None):
+    def from_data(
+        service_type,
+        name,
+        category,
+        storage=None,
+        service_class=None,
+        default_response=None,
+        default_srai=None,
+        success_prefix=None,
+        default_aiml=None,
+        load_default_aiml=True,
+        url=None,
+    ):
 
-        if service_type == 'rest':
+        if service_type == "rest":
             config = ServiceRESTConfiguration()
 
-        elif service_type == 'wsdl':
+        elif service_type == "wsdl":
             config = ServiceWSDLConfiguration()
 
-        elif service_type == 'library':
+        elif service_type == "library":
             config = ServiceLibraryConfiguration()
 
         else:
@@ -112,53 +123,53 @@ class ServiceConfiguration:
     @staticmethod
     def new_from_yaml(yaml_data, filename):
 
-        if 'service' not in yaml_data:
+        if "service" not in yaml_data:
             raise ValueError("'service' missing from service yaml")
 
-        service_data = yaml_data['service']
+        service_data = yaml_data["service"]
 
-        if 'type' in service_data:
-            service_type = service_data.get('type')
-            if service_type == 'rest':
+        if "type" in service_data:
+            service_type = service_data.get("type")
+            if service_type == "rest":
                 config = ServiceRESTConfiguration()
 
-            elif service_type == 'wsdl':
+            elif service_type == "wsdl":
                 config = ServiceWSDLConfiguration()
 
-            elif service_type == 'library':
+            elif service_type == "library":
                 config = ServiceWSDLConfiguration()
 
             else:
-                raise ValueError("Unknown service type [%s]"%service_type)
+                raise ValueError("Unknown service type [%s]" % service_type)
 
         else:
-            config = ServiceConfiguration(service_type='generic')
+            config = ServiceConfiguration(service_type="generic")
 
         config.from_yaml(service_data, filename)
         return config
 
     def from_yaml(self, service_data, filename):
 
-        self._name = service_data.get('name', None)
-        self._category = service_data.get('category', None)
+        self._name = service_data.get("name", None)
+        self._category = service_data.get("category", None)
 
         self._storage = filename
 
-        self._service_class = service_data.get('service_class', None)
+        self._service_class = service_data.get("service_class", None)
 
-        self._default_response = service_data.get('default_response', None)
-        self._default_srai = service_data.get('default_srai', None)
-        self._success_prefix = service_data.get('success_prefix', None)
+        self._default_response = service_data.get("default_response", None)
+        self._default_srai = service_data.get("default_srai", None)
+        self._success_prefix = service_data.get("success_prefix", None)
 
-        self._default_aiml = service_data.get('default_aiml', None)
-        self._load_default_aiml = service_data.get('load_default_aiml', True)
+        self._default_aiml = service_data.get("default_aiml", None)
+        self._load_default_aiml = service_data.get("load_default_aiml", True)
 
-        self._url = service_data.get('url', None)
+        self._url = service_data.get("url", None)
 
     @staticmethod
     def from_sql(dao):
 
-        if dao.type == 'rest':
+        if dao.type == "rest":
             config = ServiceRESTConfiguration()
 
             config._retries = dao.rest_retries
@@ -169,7 +180,7 @@ class ServiceConfiguration:
             if config._timeout is None:
                 config._timeout = ServiceRESTConfiguration.DEFAULT_TIMEOUT
 
-        elif dao.type == 'library':
+        elif dao.type == "library":
             config = ServiceLibraryConfiguration()
 
         else:
@@ -196,13 +207,13 @@ class ServiceConfiguration:
     @staticmethod
     def from_mongo(dao):
 
-        if dao.get('type') == 'rest':
+        if dao.get("type") == "rest":
             config = ServiceRESTConfiguration()
             rest_data = dao.get("rest", None)
 
             if rest_data is not None:
-                config._retries = rest_data.get('retries', None)
-                config._timeout = rest_data.get('timeout', None)
+                config._retries = rest_data.get("retries", None)
+                config._timeout = rest_data.get("timeout", None)
 
             if config._retries is None:
                 config._retries = ServiceRESTConfiguration.DEFAULT_RETRIES
@@ -210,27 +221,27 @@ class ServiceConfiguration:
             if config._timeout is None:
                 config._timeout = ServiceRESTConfiguration.DEFAULT_TIMEOUT
 
-        elif dao.get('type')== 'library':
+        elif dao.get("type") == "library":
             config = ServiceLibraryConfiguration()
 
         else:
-            config = ServiceConfiguration(service_type=dao.get('type'))
+            config = ServiceConfiguration(service_type=dao.get("type"))
 
-        config._name = dao.get('name', None)
-        config._category = dao.get('category', None)
+        config._name = dao.get("name", None)
+        config._category = dao.get("category", None)
 
         config._storage = "mongo"
 
-        config._service_class = dao.get('service_class', None)
+        config._service_class = dao.get("service_class", None)
 
-        config._default_response = dao.get('default_response', None)
-        config._default_srai = dao.get('default_srai', None)
-        config._success_prefix = dao.get('success_prefix', None)
+        config._default_response = dao.get("default_response", None)
+        config._default_srai = dao.get("default_srai", None)
+        config._success_prefix = dao.get("success_prefix", None)
 
-        config._default_aiml = dao.get('default_aiml', None)
-        config._load_default_aiml = dao.get('load_default_aiml', True)
+        config._default_aiml = dao.get("default_aiml", None)
+        config._load_default_aiml = dao.get("load_default_aiml", True)
 
-        config._url = dao.get('url', None)
+        config._url = dao.get("url", None)
 
         return config
 
@@ -238,7 +249,7 @@ class ServiceConfiguration:
 class ServiceLibraryConfiguration(ServiceConfiguration):
 
     def __init__(self):
-        ServiceConfiguration.__init__(self, service_type='library')
+        ServiceConfiguration.__init__(self, service_type="library")
 
 
 class ServiceRESTConfiguration(ServiceConfiguration):
@@ -247,7 +258,7 @@ class ServiceRESTConfiguration(ServiceConfiguration):
     DEFAULT_TIMEOUT = 3000
 
     def __init__(self):
-        ServiceConfiguration.__init__(self, service_type='rest')
+        ServiceConfiguration.__init__(self, service_type="rest")
         self._retries = ServiceRESTConfiguration.DEFAULT_RETRIES
         self._timeout = ServiceRESTConfiguration.DEFAULT_TIMEOUT
 
@@ -267,11 +278,11 @@ class ServiceRESTConfiguration(ServiceConfiguration):
 
         if rest_data is not None:
 
-            self._retries = rest_data.get('retries', None)
+            self._retries = rest_data.get("retries", None)
             if self._retries is None:
                 self._retries = ServiceRESTConfiguration.DEFAULT_RETRIES
 
-            self._timeout = rest_data.get('timeout', None)
+            self._timeout = rest_data.get("timeout", None)
             if self._timeout is None:
                 self._timeout = ServiceRESTConfiguration.DEFAULT_TIMEOUT
 
@@ -279,7 +290,7 @@ class ServiceRESTConfiguration(ServiceConfiguration):
 class ServiceWSDLConfiguration(ServiceConfiguration):
 
     def __init__(self):
-        ServiceConfiguration.__init__(self, service_type='wsdl')
+        ServiceConfiguration.__init__(self, service_type="wsdl")
         self._wsdl_file = None
         self._station_codes_file = None
 
@@ -299,5 +310,4 @@ class ServiceWSDLConfiguration(ServiceConfiguration):
 
         wsdl_data = service_data.get("wsdl", None)
         if wsdl_data is not None:
-            self._wsdl_file = wsdl_data.get('wsdl_file', None)
-
+            self._wsdl_file = wsdl_data.get("wsdl_file", None)

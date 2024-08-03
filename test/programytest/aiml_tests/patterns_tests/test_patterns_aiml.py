@@ -22,7 +22,7 @@ class PatternsAIMLTests(unittest.TestCase):
         self._client_context = client.create_client_context("testid")
 
     def test_basic2_1(self):
-        response = self._client_context.bot.ask_question(self._client_context,  "A B")
+        response = self._client_context.bot.ask_question(self._client_context, "A B")
         self.assertEqual(response, "C.")
 
     def test_basic2_2(self):
@@ -38,11 +38,15 @@ class PatternsAIMLTests(unittest.TestCase):
         self.assertEqual(response, "F.")
 
     def test_basic2_3_3(self):
-        response = self._client_context.bot.ask_question(self._client_context, "A B C D E")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "A B C D E"
+        )
         self.assertEqual(response, "F.")
 
     def test_basic2_3_4(self):
-        response = self._client_context.bot.ask_question(self._client_context, "X D E X")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "X D E X"
+        )
         self.assertEqual(response, "")
 
     def test_basic2_4_1(self):
@@ -54,18 +58,22 @@ class PatternsAIMLTests(unittest.TestCase):
         self.assertEqual(response, "I.")
 
     def test_basic2_4_3(self):
-        response = self._client_context.bot.ask_question(self._client_context, "G X X H")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "G X X H"
+        )
         self.assertEqual(response, "I.")
 
     def test_basic2_5_1(self):
         response = self._client_context.bot.ask_question(self._client_context, "J K")
         self.assertEqual(response, "")
 
-    #def test_basic2_5_2(self):
+        # def test_basic2_5_2(self):
         response = self._client_context.bot.ask_question(self._client_context, "J K X")
         self.assertEqual(response, "L.")
 
-        response = self._client_context.bot.ask_question(self._client_context, "J K X X X")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "J K X X X"
+        )
         self.assertEqual(response, "L.")
 
     def test_basic2_6(self):
@@ -75,7 +83,9 @@ class PatternsAIMLTests(unittest.TestCase):
         response = self._client_context.bot.ask_question(self._client_context, "X M N")
         self.assertEqual(response, "O.")
 
-        response = self._client_context.bot.ask_question(self._client_context, "X X X M N")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "X X X M N"
+        )
         self.assertEqual(response, "O.")
 
     def test_basic2_7(self):
@@ -85,7 +95,9 @@ class PatternsAIMLTests(unittest.TestCase):
         response = self._client_context.bot.ask_question(self._client_context, "P X Q")
         self.assertEqual(response, "R.")
 
-        response = self._client_context.bot.ask_question(self._client_context, "P X X X Q")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "P X X X Q"
+        )
         self.assertEqual(response, "R.")
 
     def test_basic2_8(self):
@@ -95,7 +107,9 @@ class PatternsAIMLTests(unittest.TestCase):
         response = self._client_context.bot.ask_question(self._client_context, "S T X")
         self.assertEqual(response, "U.")
 
-        response = self._client_context.bot.ask_question(self._client_context, "S T X X X")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "S T X X X"
+        )
         self.assertEqual(response, "U.")
 
     # * AA BB # -> CC
@@ -103,13 +117,19 @@ class PatternsAIMLTests(unittest.TestCase):
         response = self._client_context.bot.ask_question(self._client_context, "AA BB")
         self.assertEqual(response, "")
 
-        response = self._client_context.bot.ask_question(self._client_context, "XX AA BB")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "XX AA BB"
+        )
         self.assertEqual(response, "CC.")
 
-        response = self._client_context.bot.ask_question(self._client_context, "XX AA BB XX")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "XX AA BB XX"
+        )
         self.assertEqual(response, "CC.")
 
-        response = self._client_context.bot.ask_question(self._client_context, "XX XX AA BB XX XX")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "XX XX AA BB XX XX"
+        )
         self.assertEqual(response, "CC.")
 
     # * CC DD * -> EE
@@ -117,16 +137,24 @@ class PatternsAIMLTests(unittest.TestCase):
         response = self._client_context.bot.ask_question(self._client_context, "CC DD")
         self.assertEqual(response, "")
 
-        response = self._client_context.bot.ask_question(self._client_context, "XX CC DD")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "XX CC DD"
+        )
         self.assertEqual(response, "")
 
-        response = self._client_context.bot.ask_question(self._client_context, "CC DD XX")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "CC DD XX"
+        )
         self.assertEqual(response, "")
 
-        response = self._client_context.bot.ask_question(self._client_context, "XX CC DD XX")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "XX CC DD XX"
+        )
         self.assertEqual(response, "EE.")
 
-        response = self._client_context.bot.ask_question(self._client_context, "XX XX CC DD XX XX")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "XX XX CC DD XX XX"
+        )
         self.assertEqual(response, "EE.")
 
     # # FF GG * -> HH
@@ -134,16 +162,24 @@ class PatternsAIMLTests(unittest.TestCase):
         response = self._client_context.bot.ask_question(self._client_context, "FF GG")
         self.assertEqual(response, "")
 
-        response = self._client_context.bot.ask_question(self._client_context, "FF GG XX")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "FF GG XX"
+        )
         self.assertEqual(response, "HH.")
 
-        response = self._client_context.bot.ask_question(self._client_context, "XX FF GG")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "XX FF GG"
+        )
         self.assertEqual(response, "")
 
-        response = self._client_context.bot.ask_question(self._client_context, "XX FF GG XX")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "XX FF GG XX"
+        )
         self.assertEqual(response, "HH.")
 
-        response = self._client_context.bot.ask_question(self._client_context, "XX XX FF GG XX XX")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "XX XX FF GG XX XX"
+        )
         self.assertEqual(response, "HH.")
 
     # # II JJ # -> KK
@@ -151,51 +187,81 @@ class PatternsAIMLTests(unittest.TestCase):
         response = self._client_context.bot.ask_question(self._client_context, "II JJ")
         self.assertEqual(response, "KK.")
 
-        response = self._client_context.bot.ask_question(self._client_context, "XX II JJ")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "XX II JJ"
+        )
         self.assertEqual(response, "KK.")
 
-        response = self._client_context.bot.ask_question(self._client_context, "XX II JJ XX")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "XX II JJ XX"
+        )
         self.assertEqual(response, "KK.")
 
-        response = self._client_context.bot.ask_question(self._client_context, "XX XX II JJ XX XX")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "XX XX II JJ XX XX"
+        )
         self.assertEqual(response, "KK.")
 
     # * MM * MM * NN * NN * -> PPPP
     def test_basic2_13(self):
-        response = self._client_context.bot.ask_question(self._client_context, "MM MM NN NN")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "MM MM NN NN"
+        )
         self.assertEqual(response, "")
 
-        response = self._client_context.bot.ask_question(self._client_context, "XX MM MM NN NN")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "XX MM MM NN NN"
+        )
         self.assertEqual(response, "")
 
-        response = self._client_context.bot.ask_question(self._client_context, "XX MM XX MM NN NN")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "XX MM XX MM NN NN"
+        )
         self.assertEqual(response, "")
 
-        response = self._client_context.bot.ask_question(self._client_context, "XX MM XX MM XX NN NN")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "XX MM XX MM XX NN NN"
+        )
         self.assertEqual(response, "")
 
-        response = self._client_context.bot.ask_question(self._client_context, "XX MM XX MM XX NN XX NN")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "XX MM XX MM XX NN XX NN"
+        )
         self.assertEqual(response, "")
 
-        response = self._client_context.bot.ask_question(self._client_context, "XX MM XX MM XX NN XX NN XX")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "XX MM XX MM XX NN XX NN XX"
+        )
         self.assertEqual(response, "PPPP.")
 
     # # PP # PP # QQ # QQ # -> RRRR
     def test_basic2_14(self):
-        response = self._client_context.bot.ask_question(self._client_context, "PP PP QQ QQ")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "PP PP QQ QQ"
+        )
         self.assertEqual(response, "RRRR.")
 
-        response = self._client_context.bot.ask_question(self._client_context, "XX PP PP QQ QQ")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "XX PP PP QQ QQ"
+        )
         self.assertEqual(response, "RRRR.")
 
-        response = self._client_context.bot.ask_question(self._client_context, "PP XX PP QQ QQ")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "PP XX PP QQ QQ"
+        )
         self.assertEqual(response, "RRRR.")
 
-        response = self._client_context.bot.ask_question(self._client_context, "PP PP XX QQ QQ")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "PP PP XX QQ QQ"
+        )
         self.assertEqual(response, "RRRR.")
 
-        response = self._client_context.bot.ask_question(self._client_context, "PP PP QQ XX QQ")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "PP PP QQ XX QQ"
+        )
         self.assertEqual(response, "RRRR.")
 
-        response = self._client_context.bot.ask_question(self._client_context, "PP PP QQ QQ XX")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "PP PP QQ QQ XX"
+        )
         self.assertEqual(response, "RRRR.")

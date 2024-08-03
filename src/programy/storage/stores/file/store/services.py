@@ -14,12 +14,15 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 import os
+
 import yaml
-from programy.utils.logging.ylogger import YLogger
-from programy.storage.stores.file.store.filestore import FileStore
-from programy.storage.entities.services import ServicesStore
+
 from programy.services.config import ServiceConfiguration
+from programy.storage.entities.services import ServicesStore
+from programy.storage.stores.file.store.filestore import FileStore
+from programy.utils.logging.ylogger import YLogger
 
 
 class FileServiceStore(FileStore, ServicesStore):
@@ -58,20 +61,32 @@ class FileServiceStore(FileStore, ServicesStore):
                         for filename in paths:
                             if cat_ext is not None:
                                 if filename.endswith(cat_ext):
-                                    self._load_file_contents(collector, os.path.join(cat_dir, filename))
+                                    self._load_file_contents(
+                                        collector, os.path.join(cat_dir, filename)
+                                    )
                             else:
-                                self._load_file_contents(collector, os.path.join(cat_dir, filename))
+                                self._load_file_contents(
+                                    collector, os.path.join(cat_dir, filename)
+                                )
 
                     else:
-                        YLogger.error(self, "Error loading Service config file [%s]", cat_dir)
+                        YLogger.error(
+                            self, "Error loading Service config file [%s]", cat_dir
+                        )
 
                 else:
                     if os.path.exists(cat_dir):
                         for dirpath, _, filenames in os.walk(cat_dir):
-                            for filename in [f for f in filenames if f.endswith(cat_ext)]:
-                                self._load_file_contents(collector, os.path.join(dirpath, filename))
+                            for filename in [
+                                f for f in filenames if f.endswith(cat_ext)
+                            ]:
+                                self._load_file_contents(
+                                    collector, os.path.join(dirpath, filename)
+                                )
                     else:
-                        YLogger.error(self, "Error loading Service config file [%s]", cat_dir)
+                        YLogger.error(
+                            self, "Error loading Service config file [%s]", cat_dir
+                        )
 
     def _load_file_contents(self, handler, filename):
         YLogger.debug(self, "Loading services from file [%s]", filename)
@@ -82,7 +97,9 @@ class FileServiceStore(FileStore, ServicesStore):
                 count += 1
 
         except Exception as error:
-            YLogger.exception(self, "Error loading Service config file [%s]", error, filename)
+            YLogger.exception(
+                self, "Error loading Service config file [%s]", error, filename
+            )
 
         return count
 

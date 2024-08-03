@@ -22,13 +22,20 @@ class ThinkAIMLTests(unittest.TestCase):
         self._client_context = client.create_client_context("testid")
 
     def test_think(self):
-        response = self._client_context.bot.ask_question(self._client_context,  "THINK")
+        response = self._client_context.bot.ask_question(self._client_context, "THINK")
         self.assertIsNotNone(response)
         self.assertEqual(response, "")
 
     def test_set_think(self):
-        response = self._client_context.bot.ask_question(self._client_context, "SET THINK")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "SET THINK"
+        )
         self.assertIsNotNone(response)
         self.assertEqual(response, "")
 
-        self.assertEqual("Keith", self._client_context.bot.get_conversation(self._client_context).current_question().property("name"))
+        self.assertEqual(
+            "Keith",
+            self._client_context.bot.get_conversation(self._client_context)
+            .current_question()
+            .property("name"),
+        )

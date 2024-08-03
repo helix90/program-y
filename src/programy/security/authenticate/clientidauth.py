@@ -14,19 +14,17 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
 
 from programy.config.brain.security import BrainSecurityConfiguration
 from programy.security.authenticate.authenticator import Authenticator
+from programy.utils.logging.ylogger import YLogger
 
 
 class ClientIdAuthenticationService(Authenticator):
 
     def __init__(self, configuration: BrainSecurityConfiguration):
         Authenticator.__init__(self, configuration)
-        self.authorised = [
-            "console"
-        ]
+        self.authorised = ["console"]
 
     def user_auth_service(self, client_context):
         del client_context

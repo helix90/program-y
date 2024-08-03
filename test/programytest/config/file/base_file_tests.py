@@ -16,12 +16,19 @@ class ConfigurationBaseFileTests(unittest.TestCase):
         bot_configuration = client_configuration.configurations[0]
         self.assertIsNotNone(bot_configuration)
 
-        self.assertEqual(bot_configuration.initial_question, "Hi, how can I help you today?")
+        self.assertEqual(
+            bot_configuration.initial_question, "Hi, how can I help you today?"
+        )
         self.assertEqual(bot_configuration.initial_question_srai, "YINITIALQUESTION")
-        self.assertEqual(bot_configuration.default_response, "Sorry, I don't have an answer for that!")
+        self.assertEqual(
+            bot_configuration.default_response,
+            "Sorry, I don't have an answer for that!",
+        )
         self.assertEqual(bot_configuration.default_response_srai, "YEMPTY")
         self.assertEqual(bot_configuration.empty_string, "YEMPTY")
-        self.assertEqual(bot_configuration.exit_response, "So long, and thanks for the fish!")
+        self.assertEqual(
+            bot_configuration.exit_response, "So long, and thanks for the fish!"
+        )
         self.assertEqual(bot_configuration.exit_response_srai, "YEXITRESPONSE")
 
         self.assertEqual(bot_configuration.override_properties, True)
@@ -33,7 +40,10 @@ class ConfigurationBaseFileTests(unittest.TestCase):
 
         self.assertIsNotNone(bot_configuration.spelling)
         self.assertEqual(bot_configuration.spelling.section_name, "spelling")
-        self.assertEqual(bot_configuration.spelling.classname, "programy.spelling.norvig.NorvigSpellingChecker")
+        self.assertEqual(
+            bot_configuration.spelling.classname,
+            "programy.spelling.norvig.NorvigSpellingChecker",
+        )
         self.assertTrue(bot_configuration.spelling.check_before)
         self.assertTrue(bot_configuration.spelling.check_and_retry)
 

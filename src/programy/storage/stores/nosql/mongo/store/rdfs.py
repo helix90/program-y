@@ -14,18 +14,19 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
-from programy.storage.stores.nosql.mongo.store.mongostore import MongoStore
+
 from programy.storage.entities.rdf import RDFReadWriteStore
 from programy.storage.stores.nosql.mongo.dao.rdf import RDF
+from programy.storage.stores.nosql.mongo.store.mongostore import MongoStore
+from programy.utils.logging.ylogger import YLogger
 
 
 class MongoRDFsStore(RDFReadWriteStore, MongoStore):
-    RDFS = 'rdfs'
-    SUBJECT = 'subject'
-    PREDICATE = 'predicate'
-    OBJECT = 'object'
-    NAME = 'name'
+    RDFS = "rdfs"
+    SUBJECT = "subject"
+    PREDICATE = "predicate"
+    OBJECT = "object"
+    NAME = "name"
 
     def __init__(self, storage_engine):
         MongoStore.__init__(self, storage_engine)
@@ -42,7 +43,9 @@ class MongoRDFsStore(RDFReadWriteStore, MongoStore):
     def add_rdf(self, name, subject, predicate, objct, replace_existing=True):
         del replace_existing
         collection = self.collection()
-        YLogger.info(self, "Adding RDF [%s] [%s] [%s] [%s]", name, subject, predicate, objct)
+        YLogger.info(
+            self, "Adding RDF [%s] [%s] [%s] [%s]", name, subject, predicate, objct
+        )
         anrdf = RDF(name=name, subject=subject, predicate=predicate, obj=objct)
         collection.insert_one(anrdf.to_document())
         return True
@@ -53,13 +56,21 @@ class MongoRDFsStore(RDFReadWriteStore, MongoStore):
         rdfs = collection.find({})
         for rdf in rdfs:
             YLogger.info(self, "Loading RDF [%s]", rdf[MongoRDFsStore.NAME])
-            collector.add_entity(rdf[MongoRDFsStore.SUBJECT], rdf[MongoRDFsStore.PREDICATE], rdf[MongoRDFsStore.OBJECT],
-                                 rdf[MongoRDFsStore.NAME])
+            collector.add_entity(
+                rdf[MongoRDFsStore.SUBJECT],
+                rdf[MongoRDFsStore.PREDICATE],
+                rdf[MongoRDFsStore.OBJECT],
+                rdf[MongoRDFsStore.NAME],
+            )
 
     def load(self, collector, name=None):
         collection = self.collection()
         rdfs = collection.find({MongoRDFsStore.NAME: name})
         for rdf in rdfs:
             YLogger.info(self, "Loading RDF [%s]", rdf[MongoRDFsStore.NAME])
-            collector.add_entity(rdf[MongoRDFsStore.SUBJECT], rdf[MongoRDFsStore.PREDICATE], rdf[MongoRDFsStore.OBJECT],
-                                 name)
+            collector.add_entity(
+                rdf[MongoRDFsStore.SUBJECT],
+                rdf[MongoRDFsStore.PREDICATE],
+                rdf[MongoRDFsStore.OBJECT],
+                name,
+            )

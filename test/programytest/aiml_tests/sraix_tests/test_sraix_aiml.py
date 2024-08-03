@@ -2,9 +2,10 @@ import os
 import unittest
 import unittest.mock
 
-from programy.services.config import ServiceConfiguration
-from programy.services.base import Service
 from programytest.client import TestClient
+
+from programy.services.base import Service
+from programy.services.config import ServiceConfiguration
 
 
 class SraixTestClient(TestClient):
@@ -34,14 +35,20 @@ class SraixAIMLTests(unittest.TestCase):
         self._client_context = client.create_client_context("testid")
 
         config = ServiceConfiguration(service_type="library")
-        self._client_context.brain.service_handler.add_service('REST',  MockGenericRESTService(config))
+        self._client_context.brain.service_handler.add_service(
+            "REST", MockGenericRESTService(config)
+        )
 
     def test_basic_sraix_test(self):
-        response = self._client_context.bot.ask_question(self._client_context, "GENERIC REST TEST")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "GENERIC REST TEST"
+        )
         self.assertIsNotNone(response)
-        self.assertEqual(response, 'ANSWER.')
+        self.assertEqual(response, "ANSWER.")
 
     def test_unknown_sraix_test(self):
-        response = self._client_context.bot.ask_question(self._client_context, "UNKNOWN REST TEST")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "UNKNOWN REST TEST"
+        )
         self.assertIsNotNone(response)
-        self.assertEqual(response, '')
+        self.assertEqual(response, "")

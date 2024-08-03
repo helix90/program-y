@@ -14,6 +14,7 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 from programy.storage.stores.utils import DAOUtils
 
 
@@ -24,17 +25,20 @@ class UserGroups:
         self.usergroups = usergroups
 
     def __repr__(self):
-        return "<UserGroups(id='%s', usergroups='%s')>" % (DAOUtils.valid_id(self.id), self.usergroups)
+        return "<UserGroups(id='%s', usergroups='%s')>" % (
+            DAOUtils.valid_id(self.id),
+            self.usergroups,
+        )
 
     def to_document(self):
         document = {"usergroups": self.usergroups}
         if self.id is not None:
-            document['_id'] = self.id
+            document["_id"] = self.id
         return document
 
     @staticmethod
     def from_document(data):
         usergroups = UserGroups(None)
-        usergroups.id = DAOUtils.get_value_from_data(data, '_id')
-        usergroups.usergroups = DAOUtils.get_value_from_data(data, 'usergroups', {})
+        usergroups.id = DAOUtils.get_value_from_data(data, "_id")
+        usergroups.usergroups = DAOUtils.get_value_from_data(data, "usergroups", {})
         return usergroups

@@ -1,6 +1,7 @@
+from programytest.parser.base import ParserTestsBaseClass
+
 from programy.parser.exceptions import ParserException
 from programy.parser.template.graph import TemplateGraph
-from programytest.parser.base import ParserTestsBaseClass
 
 
 class TemplateGraphTests(ParserTestsBaseClass):
@@ -9,7 +10,9 @@ class TemplateGraphTests(ParserTestsBaseClass):
         graph = TemplateGraph(self._client_context.brain.aiml_parser)
         self.assertIsNotNone(graph)
         self.assertEquals(self._client_context.brain.aiml_parser, graph.aiml_parser)
-        self.assertEquals(self._client_context.brain.template_factory, graph.template_factory)
+        self.assertEquals(
+            self._client_context.brain.template_factory, graph.template_factory
+        )
 
     def test_get_node_class_by_name(self):
         graph = TemplateGraph(self._client_context.brain.aiml_parser)

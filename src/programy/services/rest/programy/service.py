@@ -14,13 +14,14 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-import os
+
 import json
+import os
 from urllib.parse import quote
-from programy.utils.logging.ylogger import YLogger
+
 from programy.services.base import ServiceQuery
-from programy.services.rest.base import RESTService
-from programy.services.rest.base import RESTServiceException
+from programy.services.rest.base import RESTService, RESTServiceException
+from programy.utils.logging.ylogger import YLogger
 
 
 class ProgramyServiceQuery(ServiceQuery):
@@ -43,19 +44,19 @@ class ProgramyServiceQuery(ServiceQuery):
 
     def aiml_response(self, response):
 
-        payload = response['response']['payload']
+        payload = response["response"]["payload"]
 
-        url = response['response']['url']
+        url = response["response"]["url"]
         if "v1.0" in url:
-            response2 = payload[0]['response']
+            response2 = payload[0]["response"]
 
         elif "v2.0" in url:
-            response2 = payload['response']
+            response2 = payload["response"]
 
         else:
-            response2 = payload['response']
+            response2 = payload["response"]
 
-        result = response2['answer']
+        result = response2["answer"]
         YLogger.debug(self, result)
         return result
 
@@ -67,11 +68,9 @@ class ProgramyServiceException(RESTServiceException):
 
 
 class ProgramyService(RESTService):
-    """
-    """
-    PATTERNS = [
-        [r"ASK\sQUESTION\s(.+)\sUSERID\s(.+)", ProgramyServiceQuery]
-    ]
+    """ """
+
+    PATTERNS = [[r"ASK\sQUESTION\s(.+)\sUSERID\s(.+)", ProgramyServiceQuery]]
 
     def __init__(self, configuration):
         RESTService.__init__(self, configuration)
@@ -81,9 +80,12 @@ class ProgramyService(RESTService):
         return ProgramyService.PATTERNS
 
     def initialise(self, client):
-        self._api_key = client.license_keys.get_key('PROGRAMY_APIKEY')
+        self._api_key = client.license_keys.get_key("PROGRAMY_APIKEY")
         if self._api_key is None:
-            YLogger.error(self, "PROGRAMY_APIKEY missing from license.keys, service will not function correctly!")
+            YLogger.error(
+                self,
+                "PROGRAMY_APIKEY missing from license.keys, service will not function correctly!",
+            )
 
     def get_default_aiml_file(self):
         return os.path.dirname(__file__) + os.sep + "programy.aiml"
@@ -98,7 +100,7 @@ class ProgramyService(RESTService):
 
     def ask(self, question, userid):
         url = self._build_ask_url(question, userid)
-        response = self.query('ask', url)
+        response = self.query("ask", url)
         return response
 
     def _response_to_json(self, api, response):

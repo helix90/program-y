@@ -1,10 +1,11 @@
 import unittest
 
 import programytest.storage.engines as Engines
+from programytest.storage.asserts.store.assert_denormals import DenormalStoreAsserts
+
 from programy.storage.stores.sql.config import SQLStorageConfiguration
 from programy.storage.stores.sql.engine import SQLStorageEngine
 from programy.storage.stores.sql.store.lookups import SQLDenormalStore
-from programytest.storage.asserts.store.assert_denormals import DenormalStoreAsserts
 
 
 class SQLDenormalStoreTests(DenormalStoreAsserts):

@@ -1,8 +1,9 @@
 import unittest
 import xml.etree.ElementTree as ET
 
-from programy.oob.default import DefaultOutOfBandProcessor
 from programytest.client import TestClient
+
+from programy.oob.default import DefaultOutOfBandProcessor
 
 
 class DefaultOutOfBandProcessorTests(unittest.TestCase):
@@ -18,4 +19,6 @@ class DefaultOutOfBandProcessorTests(unittest.TestCase):
         self.assertEqual("", oob_processor.execute_oob_command(self._client_context))
 
         oob_content = ET.fromstring("<something>process</something>")
-        self.assertEqual("", oob_processor.process_out_of_bounds(self._client_context, oob_content))
+        self.assertEqual(
+            "", oob_processor.process_out_of_bounds(self._client_context, oob_content)
+        )

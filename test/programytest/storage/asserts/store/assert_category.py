@@ -11,7 +11,9 @@ class MockAIMLParser(object):
     def parse_csv_line(self, aiml_csv):
         self.aimls.append(aiml_csv)
 
-    def parse_category(self, category_xml, namespace, topic_element=None, add_to_graph=True, userid="*"):
+    def parse_category(
+        self, category_xml, namespace, topic_element=None, add_to_graph=True, userid="*"
+    ):
         self.aimls.append(category_xml)
 
 
@@ -20,7 +22,7 @@ class CategoryStoreAsserts(unittest.TestCase):
     def assert_category_storage(self, store):
         store.empty()
 
-        store.store_category("TEST", "user1", '*', '*', 'HELLO', "Hi there!")
+        store.store_category("TEST", "user1", "*", "*", "HELLO", "Hi there!")
         store.commit()
 
         mock_parser = MockAIMLParser()
@@ -31,8 +33,8 @@ class CategoryStoreAsserts(unittest.TestCase):
     def assert_category_by_groupid_storage(self, store):
         store.empty()
 
-        store.store_category("TEST1", "user1", '*', '*', 'HELLO', "Hi there!")
-        store.store_category("TEST2", "user1", '*', '*', 'HELLO', "Hi there!")
+        store.store_category("TEST1", "user1", "*", "*", "HELLO", "Hi there!")
+        store.store_category("TEST2", "user1", "*", "*", "HELLO", "Hi there!")
         store.commit()
 
         mock_parser = MockAIMLParser()
@@ -43,8 +45,17 @@ class CategoryStoreAsserts(unittest.TestCase):
     def assert_upload_from_file(self, store):
         store.empty()
 
-        store.upload_from_file(os.path.dirname(__file__) + os.sep + "data" + os.sep + "categories" + os.sep + "kinghorn.aiml", verbose=True)
-        store.commit ()
+        store.upload_from_file(
+            os.path.dirname(__file__)
+            + os.sep
+            + "data"
+            + os.sep
+            + "categories"
+            + os.sep
+            + "kinghorn.aiml",
+            verbose=True,
+        )
+        store.commit()
 
         mock_parser = MockAIMLParser()
         store.load_all(mock_parser)
@@ -54,8 +65,11 @@ class CategoryStoreAsserts(unittest.TestCase):
     def assert_upload_from_directory(self, store):
         store.empty()
 
-        store.upload_from_directory(os.path.dirname(__file__) + os.sep + "data" + os.sep + "categories", subdir=False)
-        store.commit ()
+        store.upload_from_directory(
+            os.path.dirname(__file__) + os.sep + "data" + os.sep + "categories",
+            subdir=False,
+        )
+        store.commit()
 
         mock_parser = MockAIMLParser()
         store.load_all(mock_parser)
@@ -65,8 +79,11 @@ class CategoryStoreAsserts(unittest.TestCase):
     def assert_load(self, store):
         store.empty()
 
-        store.upload_from_directory(os.path.dirname(__file__) + os.sep + "data" + os.sep + "categories", subdir=False)
-        store.commit ()
+        store.upload_from_directory(
+            os.path.dirname(__file__) + os.sep + "data" + os.sep + "categories",
+            subdir=False,
+        )
+        store.commit()
 
         mock_parser = MockAIMLParser()
         store.load(mock_parser)
@@ -76,8 +93,11 @@ class CategoryStoreAsserts(unittest.TestCase):
     def assert_empty_name(self, store):
         store.empty()
 
-        store.upload_from_directory(os.path.dirname(__file__) + os.sep + "data" + os.sep + "categories", subdir=False)
-        store.commit ()
+        store.upload_from_directory(
+            os.path.dirname(__file__) + os.sep + "data" + os.sep + "categories",
+            subdir=False,
+        )
+        store.commit()
 
         mock_parser = MockAIMLParser()
         store.load_all(mock_parser)

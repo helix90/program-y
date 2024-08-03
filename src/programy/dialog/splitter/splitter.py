@@ -14,11 +14,13 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 import re
-from programy.utils.logging.ylogger import YLogger
-from programy.utils.classes.loader import ClassLoader
-from programy.config.bot.splitter import BotSentenceSplitterConfiguration
+
 from programy.activate import Activatable
+from programy.config.bot.splitter import BotSentenceSplitterConfiguration
+from programy.utils.classes.loader import ClassLoader
+from programy.utils.logging.ylogger import YLogger
 
 
 class SentenceSplitter(Activatable):
@@ -36,14 +38,20 @@ class SentenceSplitter(Activatable):
         raise NotImplementedError()  # pragma: no cover
 
     def remove_punctuation(self, text):
-        return SentenceSplitter.ALL_PUNCTUATION.sub('', text)
+        return SentenceSplitter.ALL_PUNCTUATION.sub("", text)
 
     @staticmethod
     def initiate_sentence_splitter(splitter_config):
         if splitter_config.classname is not None:
             try:
-                YLogger.info(None, "Loading sentence splitter from class [%s]", splitter_config.classname)
-                splitter_class = ClassLoader.instantiate_class(splitter_config.classname)
+                YLogger.info(
+                    None,
+                    "Loading sentence splitter from class [%s]",
+                    splitter_config.classname,
+                )
+                splitter_class = ClassLoader.instantiate_class(
+                    splitter_config.classname
+                )
                 sentence_splitter = splitter_class(splitter_config)
                 return sentence_splitter
 

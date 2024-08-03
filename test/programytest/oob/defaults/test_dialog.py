@@ -2,8 +2,9 @@ import unittest
 import unittest.mock
 import xml.etree.ElementTree as ET
 
-from programy.oob.callmom.dialog import DialogOutOfBandProcessor
 from programytest.client import TestClient
+
+from programy.oob.callmom.dialog import DialogOutOfBandProcessor
 
 
 class DialogOutOfBandProcessorTests(unittest.TestCase):
@@ -34,8 +35,13 @@ class DialogOutOfBandProcessorTests(unittest.TestCase):
         oob_processor = DialogOutOfBandProcessor()
         self.assertIsNotNone(oob_processor)
 
-        oob_content = ET.fromstring("<dialog><title>Which contact?</title><list>contact1, contact2, contact3</list></dialog>")
-        self.assertEqual("DIALOG", oob_processor.process_out_of_bounds(self._client_context, oob_content))
+        oob_content = ET.fromstring(
+            "<dialog><title>Which contact?</title><list>contact1, contact2, contact3</list></dialog>"
+        )
+        self.assertEqual(
+            "DIALOG",
+            oob_processor.process_out_of_bounds(self._client_context, oob_content),
+        )
 
     def test_processor_missing_title(self):
         oob_processor = DialogOutOfBandProcessor()

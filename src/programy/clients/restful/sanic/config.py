@@ -14,6 +14,7 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 from programy.clients.restful.config import RestConfiguration
 from programy.utils.substitutions.substitues import Substitutions
 
@@ -28,18 +29,23 @@ class SanicRestConfiguration(RestConfiguration):
     def workers(self):
         return self._workers
 
-    def load_configuration_section(self, configuration_file, section, bot_root, subs: Substitutions = None):
+    def load_configuration_section(
+        self, configuration_file, section, bot_root, subs: Substitutions = None
+    ):
 
         assert section is not None
 
-        self._workers = configuration_file.get_option(section, "workers", missing_value=4, subs=subs)
-        super(SanicRestConfiguration, self).load_configuration_section(configuration_file, section, bot_root,
-                                                                       subs=subs)
+        self._workers = configuration_file.get_option(
+            section, "workers", missing_value=4, subs=subs
+        )
+        super(SanicRestConfiguration, self).load_configuration_section(
+            configuration_file, section, bot_root, subs=subs
+        )
 
     def to_yaml(self, data, defaults=True):
         if defaults is True:
-            data['workers'] = 4
+            data["workers"] = 4
         else:
-            data['workers'] = self._workers
+            data["workers"] = self._workers
 
         super(SanicRestConfiguration, self).to_yaml(data, defaults)

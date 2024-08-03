@@ -1,11 +1,12 @@
 import unittest
 
+from programytest.client import TestClient
+
 from programy.bot import Bot
 from programy.config.bot.bot import BotConfiguration
 from programy.dialog.conversation import Conversation
 from programy.dialog.question import Question
 from programy.dialog.sentence import Sentence
-from programytest.client import TestClient
 
 
 class SentimentTests(unittest.TestCase):
@@ -14,7 +15,9 @@ class SentimentTests(unittest.TestCase):
         self._client = TestClient()
 
         config = BotConfiguration()
-        config.sentiment_analyser._classname = "programy.nlp.sentiment.textblob_sentiment.TextBlobSentimentAnalyser"
+        config.sentiment_analyser._classname = (
+            "programy.nlp.sentiment.textblob_sentiment.TextBlobSentimentAnalyser"
+        )
 
         self.client_context = self._client.create_client_context("testuser")
 
@@ -37,7 +40,9 @@ class SentimentTests(unittest.TestCase):
 
     def test_question_sentiment(self):
 
-        question = Question.create_from_text(self.client_context, "Hello There. How Are you")
+        question = Question.create_from_text(
+            self.client_context, "Hello There. How Are you"
+        )
 
         for sentence in question.sentences:
             sentence.calculate_sentinment_score(self.client_context)
@@ -46,7 +51,9 @@ class SentimentTests(unittest.TestCase):
         self.assertEqual(0.0, positivity)
         self.assertEqual(0.0, subjectivity)
 
-        question = Question.create_from_text(self.client_context, "I hate you. Your car is rubbish")
+        question = Question.create_from_text(
+            self.client_context, "I hate you. Your car is rubbish"
+        )
         question.recalculate_sentinment_score(self.client_context)
 
         positivity, subjectivity = question.calculate_sentinment_score()
@@ -59,10 +66,14 @@ class SentimentTests(unittest.TestCase):
         question1 = Question.create_from_text(self.client_context, "I am so unhappy")
         conversation.record_dialog(question1)
 
-        question2 = Question.create_from_text(self.client_context, "I do not like the colour red")
+        question2 = Question.create_from_text(
+            self.client_context, "I do not like the colour red"
+        )
         conversation.record_dialog(question2)
 
-        question3 = Question.create_from_text(self.client_context, "Custard makes me feel sick")
+        question3 = Question.create_from_text(
+            self.client_context, "Custard makes me feel sick"
+        )
         conversation.record_dialog(question3)
 
         conversation.recalculate_sentiment_score(self.client_context)

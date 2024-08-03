@@ -14,10 +14,11 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
-from programy.storage.stores.sql.store.sqlstore import SQLStore
+
 from programy.storage.entities.user import UserStore
 from programy.storage.stores.sql.dao.user import User
+from programy.storage.stores.sql.store.sqlstore import SQLStore
+from programy.utils.logging.ylogger import YLogger
 
 
 class SQLUserStore(SQLStore, UserStore):
@@ -39,21 +40,28 @@ class SQLUserStore(SQLStore, UserStore):
 
     def exists(self, userid, clientid):
         try:
-            self._storage_engine.session.query(User).filter(User.userid == userid, User.client == clientid).one()
+            self._storage_engine.session.query(User).filter(
+                User.userid == userid, User.client == clientid
+            ).one()
             return True
         except Exception:
             return False
 
     def get_links(self, userid):
         links = []
-        db_users = self._storage_engine.session.query(User).filter(User.userid == userid)
+        db_users = self._storage_engine.session.query(User).filter(
+            User.userid == userid
+        )
         for user in db_users:
             links.append(user.client)
         return links
 
     def _remove_user_from_db(self, userid, clientid):
-        rowcount = self._storage_engine.session.query(User).filter(User.userid == userid,
-                                                                   User.client == clientid).delete()
+        rowcount = (
+            self._storage_engine.session.query(User)
+            .filter(User.userid == userid, User.client == clientid)
+            .delete()
+        )
         return bool(rowcount > 0)
 
     def remove_user(self, userid, clientid):
@@ -66,7 +74,11 @@ class SQLUserStore(SQLStore, UserStore):
         return False
 
     def _remove_user_from_all_clients_from_db(self, userid):
-        rowcount = self._storage_engine.session.query(User).filter(User.userid == userid).delete()
+        rowcount = (
+            self._storage_engine.session.query(User)
+            .filter(User.userid == userid)
+            .delete()
+        )
         return bool(rowcount > 0)
 
     def remove_user_from_all_clients(self, userid):
@@ -74,6 +86,8 @@ class SQLUserStore(SQLStore, UserStore):
             return self._remove_user_from_all_clients_from_db(userid)
 
         except Exception as excep:
-            YLogger.exception_nostack(self, "Failed to remove user from all clients", excep)
+            YLogger.exception_nostack(
+                self, "Failed to remove user from all clients", excep
+            )
 
         return False

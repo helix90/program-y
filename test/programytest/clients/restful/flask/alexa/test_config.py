@@ -10,7 +10,8 @@ class AlexaConfigurationTests(unittest.TestCase):
     def test_init(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         alexa:
           host: 127.0.0.1
           port: 5000
@@ -27,7 +28,10 @@ class AlexaConfigurationTests(unittest.TestCase):
           error_srai: ALEXA_ERROR
           leave_intents: AMAZON.CancelIntent, AMAZON.StopIntent
           intent_map_file: intents.map
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         alexa_config = AlexaConfiguration()
         alexa_config.load_configuration(yaml, ".")
@@ -58,9 +62,13 @@ class AlexaConfigurationTests(unittest.TestCase):
     def test_init_no_values(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         alexa:
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         alexa_config = AlexaConfiguration()
         alexa_config.load_configuration(yaml, ".")
@@ -91,7 +99,7 @@ class AlexaConfigurationTests(unittest.TestCase):
         data = {}
         config.to_yaml(data, True)
 
-        self.assertEqual(data["launch_text"],  AlexaConfiguration.DEFAULT_LAUNCH_TEXT)
+        self.assertEqual(data["launch_text"], AlexaConfiguration.DEFAULT_LAUNCH_TEXT)
         self.assertIsNone(data["launch_srai"])
 
         self.assertEqual(data["stop_text"], AlexaConfiguration.DEFAULT_STOP_TEXT)
@@ -132,4 +140,3 @@ class AlexaConfigurationTests(unittest.TestCase):
 
         self.assertEqual(data["leave_intents"], AlexaConfiguration.DEFAULT_LEAVE_INTENT)
         self.assertIsNone(data["intent_map_file"])
-

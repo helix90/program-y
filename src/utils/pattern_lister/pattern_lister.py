@@ -1,9 +1,8 @@
-import sys
 import os.path
+import sys
 import xml.etree.ElementTree as ET
 
-
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     aiml_dir = sys.argv[1]
     csv_file = sys.argv[2]
@@ -18,12 +17,12 @@ if __name__ == '__main__':
         for filename in filenames:
             files += 1
             aiml_file = os.path.join(dirpath, filename)
-            print (aiml_file)
+            print(aiml_file)
 
             try:
                 tree = ET.parse(aiml_file)
                 aiml = tree.getroot()
-                categories = aiml.findall('category')
+                categories = aiml.findall("category")
                 for category in categories:
                     pattern_text = ""
 
@@ -38,21 +37,21 @@ if __name__ == '__main__':
                                 comma = True
 
                         elif elt.tag == "set":
-                            if 'name' in elt.attrib:
-                                name = elt.attrib['name']
+                            if "name" in elt.attrib:
+                                name = elt.attrib["name"]
                             else:
                                 name = elt.text.strip()
                             if comma is True:
                                 pattern_text += " "
-                            pattern_text += " SET[%s]"%name
+                            pattern_text += " SET[%s]" % name
                             if text:
                                 pattern_text += " "
                                 pattern_text += " ".join(text.split())
                             comma = True
 
                         elif elt.tag == "bot":
-                            if 'name' in elt.attrib:
-                                name = elt.attrib['name']
+                            if "name" in elt.attrib:
+                                name = elt.attrib["name"]
                             else:
                                 name = elt.text.strip()
                             if comma is True:
@@ -90,5 +89,5 @@ if __name__ == '__main__':
             output_file.write(new_line)
             output_file.write("\n")
 
-    print("Files:    %d"%files)
-    print("Patterns: %d"%len(questions))
+    print("Files:    %d" % files)
+    print("Patterns: %d" % len(questions))

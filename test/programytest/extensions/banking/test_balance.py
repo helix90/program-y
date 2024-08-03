@@ -1,7 +1,8 @@
 import unittest
 
-from programy.extensions.banking.balance import BankingBalanceExtension
 from programytest.client import TestClient
+
+from programy.extensions.banking.balance import BankingBalanceExtension
 
 
 class BankBalanceExtensionTests(unittest.TestCase):

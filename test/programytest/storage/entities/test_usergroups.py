@@ -1,11 +1,14 @@
 import unittest
 import unittest.mock
+
 import yaml
-from programy.storage.entities.usergroups import UserGroupsStore
-from programy.security.authorise.usergroupsauthorisor import BasicUserGroupAuthorisationService
+
 from programy.config.brain.security import BrainSecurityAuthorisationConfiguration
-from programy.security.authorise.usergroups import User
-from programy.security.authorise.usergroups import Group
+from programy.security.authorise.usergroups import Group, User
+from programy.security.authorise.usergroupsauthorisor import (
+    BasicUserGroupAuthorisationService,
+)
+from programy.storage.entities.usergroups import UserGroupsStore
 
 
 class UserGroupsStoreTests(unittest.TestCase):
@@ -25,10 +28,13 @@ class UserGroupsStoreTests(unittest.TestCase):
         user = User("console")
         store = UserGroupsStore()
 
-        yaml_data =  yaml.load("""
+        yaml_data = yaml.load(
+            """
             groups:
               sysadmin, localuser
-        """, Loader=yaml.FullLoader)
+        """,
+            Loader=yaml.FullLoader,
+        )
 
         store._load_users_user_groups(yaml_data, user, "console")
 
@@ -40,10 +46,13 @@ class UserGroupsStoreTests(unittest.TestCase):
         user = User("console")
         store = UserGroupsStore()
 
-        yaml_data = yaml.load("""
+        yaml_data = yaml.load(
+            """
             groups:
               sysadmin, localuser, localuser
-        """, Loader=yaml.FullLoader)
+        """,
+            Loader=yaml.FullLoader,
+        )
 
         store._load_users_user_groups(yaml_data, user, "console")
 
@@ -55,10 +64,13 @@ class UserGroupsStoreTests(unittest.TestCase):
         user = User("console")
         store = UserGroupsStore()
 
-        yaml_data = yaml.load("""
+        yaml_data = yaml.load(
+            """
             roles:
               su, local
-        """, Loader=yaml.FullLoader)
+        """,
+            Loader=yaml.FullLoader,
+        )
 
         store._load_users_user_roles(yaml_data, user, "console")
 
@@ -70,10 +82,13 @@ class UserGroupsStoreTests(unittest.TestCase):
         user = User("console")
         store = UserGroupsStore()
 
-        yaml_data = yaml.load("""
+        yaml_data = yaml.load(
+            """
             roles:
               su, local, su
-        """, Loader=yaml.FullLoader)
+        """,
+            Loader=yaml.FullLoader,
+        )
 
         store._load_users_user_roles(yaml_data, user, "console")
 
@@ -82,30 +97,38 @@ class UserGroupsStoreTests(unittest.TestCase):
         self.assertFalse("other" in user.roles)
 
     def test_load_users_user(self):
-        authorisor = BasicUserGroupAuthorisationService(BrainSecurityAuthorisationConfiguration())
+        authorisor = BasicUserGroupAuthorisationService(
+            BrainSecurityAuthorisationConfiguration()
+        )
         store = UserGroupsStore()
 
-        yaml_data = yaml.load("""
+        yaml_data = yaml.load(
+            """
             users:
               console:
                 roles:
                   user
                 groups:
                   sysadmin
-        """, Loader=yaml.FullLoader)
+        """,
+            Loader=yaml.FullLoader,
+        )
 
         store._load_users_user(yaml_data, "console", authorisor)
 
         self.assertTrue("console" in authorisor.users.keys())
-        self.assertIsInstance(authorisor.users['console'], User)
-        self.assertTrue("user" in authorisor.users['console'].roles)
-        self.assertTrue("sysadmin" in authorisor.users['console'].groups)
+        self.assertIsInstance(authorisor.users["console"], User)
+        self.assertTrue("user" in authorisor.users["console"].roles)
+        self.assertTrue("sysadmin" in authorisor.users["console"].groups)
 
     def test_load_users(self):
-        authorisor = BasicUserGroupAuthorisationService(BrainSecurityAuthorisationConfiguration())
+        authorisor = BasicUserGroupAuthorisationService(
+            BrainSecurityAuthorisationConfiguration()
+        )
         store = UserGroupsStore()
 
-        yaml_data = yaml.load("""
+        yaml_data = yaml.load(
+            """
             users:
               console:
                 roles:
@@ -117,26 +140,31 @@ class UserGroupsStoreTests(unittest.TestCase):
                   user
                 groups:
                   local
-        """, Loader=yaml.FullLoader)
+        """,
+            Loader=yaml.FullLoader,
+        )
 
-        store._load_users(yaml_data,authorisor)
+        store._load_users(yaml_data, authorisor)
 
         self.assertTrue("console" in authorisor.users.keys())
-        self.assertIsInstance(authorisor.users['console'], User)
-        self.assertTrue("user" in authorisor.users['console'].roles)
-        self.assertTrue("sysadmin" in authorisor.users['console'].groups)
-        self.assertTrue("local" in authorisor.users['console'].groups)
+        self.assertIsInstance(authorisor.users["console"], User)
+        self.assertTrue("user" in authorisor.users["console"].roles)
+        self.assertTrue("sysadmin" in authorisor.users["console"].groups)
+        self.assertTrue("local" in authorisor.users["console"].groups)
 
         self.assertTrue("viewer" in authorisor.users.keys())
-        self.assertIsInstance(authorisor.users['viewer'], User)
-        self.assertTrue("user" in authorisor.users['viewer'].roles)
-        self.assertTrue("local" in authorisor.users['viewer'].groups)
+        self.assertIsInstance(authorisor.users["viewer"], User)
+        self.assertTrue("user" in authorisor.users["viewer"].roles)
+        self.assertTrue("local" in authorisor.users["viewer"].groups)
 
     def test_load_users_no_users(self):
-        authorisor = BasicUserGroupAuthorisationService(BrainSecurityAuthorisationConfiguration())
+        authorisor = BasicUserGroupAuthorisationService(
+            BrainSecurityAuthorisationConfiguration()
+        )
         store = UserGroupsStore()
 
-        yaml_data = yaml.load("""
+        yaml_data = yaml.load(
+            """
             others:
               console:
                 roles:
@@ -148,9 +176,11 @@ class UserGroupsStoreTests(unittest.TestCase):
                   user
                 groups:
                   local
-        """, Loader=yaml.FullLoader)
+        """,
+            Loader=yaml.FullLoader,
+        )
 
-        store._load_users(yaml_data,authorisor)
+        store._load_users(yaml_data, authorisor)
 
         self.assertFalse("console" in authorisor.users.keys())
         self.assertFalse("viewer" in authorisor.users.keys())
@@ -159,10 +189,13 @@ class UserGroupsStoreTests(unittest.TestCase):
         group = Group("sysadmin")
         store = UserGroupsStore()
 
-        yaml_data = yaml.load("""
+        yaml_data = yaml.load(
+            """
          groups:
             su  
-         """, Loader=yaml.FullLoader)
+         """,
+            Loader=yaml.FullLoader,
+        )
 
         store._load_groups_group_groups(yaml_data, group, "sysadmin")
 
@@ -172,10 +205,13 @@ class UserGroupsStoreTests(unittest.TestCase):
         group = Group("sysadmin")
         store = UserGroupsStore()
 
-        yaml_data = yaml.load("""
+        yaml_data = yaml.load(
+            """
          groups:
             su, su
-         """, Loader=yaml.FullLoader)
+         """,
+            Loader=yaml.FullLoader,
+        )
 
         store._load_groups_group_groups(yaml_data, group, "sysadmin")
 
@@ -185,10 +221,13 @@ class UserGroupsStoreTests(unittest.TestCase):
         group = Group("sysadmin")
         store = UserGroupsStore()
 
-        yaml_data = yaml.load("""
+        yaml_data = yaml.load(
+            """
          users:
             user1, user2  
-         """, Loader=yaml.FullLoader)
+         """,
+            Loader=yaml.FullLoader,
+        )
 
         store._load_groups_group_users(yaml_data, group, "sysadmin")
 
@@ -199,10 +238,13 @@ class UserGroupsStoreTests(unittest.TestCase):
         group = Group("sysadmin")
         store = UserGroupsStore()
 
-        yaml_data = yaml.load("""
+        yaml_data = yaml.load(
+            """
          users:
             user1, user2, user1
-         """, Loader=yaml.FullLoader)
+         """,
+            Loader=yaml.FullLoader,
+        )
 
         store._load_groups_group_users(yaml_data, group, "sysadmin")
 
@@ -213,10 +255,13 @@ class UserGroupsStoreTests(unittest.TestCase):
         group = Group("sysadmin")
         store = UserGroupsStore()
 
-        yaml_data = yaml.load("""
+        yaml_data = yaml.load(
+            """
          roles:
             role1, role2, role3  
-         """, Loader=yaml.FullLoader)
+         """,
+            Loader=yaml.FullLoader,
+        )
 
         store._load_groups_group_roles(yaml_data, group, "sysadmin")
 
@@ -228,10 +273,13 @@ class UserGroupsStoreTests(unittest.TestCase):
         group = Group("sysadmin")
         store = UserGroupsStore()
 
-        yaml_data = yaml.load("""
+        yaml_data = yaml.load(
+            """
          roles:
             role1, role2, role3, role1, role3
-         """, Loader=yaml.FullLoader)
+         """,
+            Loader=yaml.FullLoader,
+        )
 
         store._load_groups_group_roles(yaml_data, group, "sysadmin")
 
@@ -240,10 +288,13 @@ class UserGroupsStoreTests(unittest.TestCase):
         self.assertTrue("role3" in group.roles)
 
     def test_load_groups_group(self):
-        authorisor = BasicUserGroupAuthorisationService(BrainSecurityAuthorisationConfiguration())
+        authorisor = BasicUserGroupAuthorisationService(
+            BrainSecurityAuthorisationConfiguration()
+        )
         store = UserGroupsStore()
 
-        yaml_data = yaml.load("""
+        yaml_data = yaml.load(
+            """
         groups:
           group1:
             roles:
@@ -252,46 +303,56 @@ class UserGroupsStoreTests(unittest.TestCase):
               group1, group2
             users:
               user1, user2
-         """, Loader=yaml.FullLoader)
+         """,
+            Loader=yaml.FullLoader,
+        )
 
         store._load_groups_group(yaml_data, "group1", authorisor)
 
         self.assertTrue("group1" in authorisor.groups)
-        self.assertTrue("role1" in authorisor.groups['group1'].roles)
-        self.assertTrue("role2" in authorisor.groups['group1'].roles)
-        self.assertTrue("role2" in authorisor.groups['group1'].roles)
-        self.assertTrue("group1" in authorisor.groups['group1'].groups)
-        self.assertTrue("group2" in authorisor.groups['group1'].groups)
-        self.assertTrue("user1" in authorisor.groups['group1'].users)
-        self.assertTrue("user2" in authorisor.groups['group1'].users)
+        self.assertTrue("role1" in authorisor.groups["group1"].roles)
+        self.assertTrue("role2" in authorisor.groups["group1"].roles)
+        self.assertTrue("role2" in authorisor.groups["group1"].roles)
+        self.assertTrue("group1" in authorisor.groups["group1"].groups)
+        self.assertTrue("group2" in authorisor.groups["group1"].groups)
+        self.assertTrue("user1" in authorisor.groups["group1"].users)
+        self.assertTrue("user2" in authorisor.groups["group1"].users)
 
     def test_load_groups_group_no_roles(self):
-        authorisor = BasicUserGroupAuthorisationService(BrainSecurityAuthorisationConfiguration())
+        authorisor = BasicUserGroupAuthorisationService(
+            BrainSecurityAuthorisationConfiguration()
+        )
         store = UserGroupsStore()
 
-        yaml_data = yaml.load("""
+        yaml_data = yaml.load(
+            """
         groups:
           group1:
             groups:
               group1, group2
             users:
               user1, user2
-         """, Loader=yaml.FullLoader)
+         """,
+            Loader=yaml.FullLoader,
+        )
 
         store._load_groups_group(yaml_data, "group1", authorisor)
 
         self.assertTrue("group1" in authorisor.groups)
-        self.assertTrue("group1" in authorisor.groups['group1'].groups)
-        self.assertTrue("group2" in authorisor.groups['group1'].groups)
-        self.assertTrue("user1" in authorisor.groups['group1'].users)
-        self.assertTrue("user2" in authorisor.groups['group1'].users)
+        self.assertTrue("group1" in authorisor.groups["group1"].groups)
+        self.assertTrue("group2" in authorisor.groups["group1"].groups)
+        self.assertTrue("user1" in authorisor.groups["group1"].users)
+        self.assertTrue("user2" in authorisor.groups["group1"].users)
 
     def test_load_groups(self):
 
-        authorisor = BasicUserGroupAuthorisationService(BrainSecurityAuthorisationConfiguration())
+        authorisor = BasicUserGroupAuthorisationService(
+            BrainSecurityAuthorisationConfiguration()
+        )
         store = UserGroupsStore()
 
-        yaml_data = yaml.load("""
+        yaml_data = yaml.load(
+            """
         groups:
           group1:
             roles:
@@ -308,31 +369,36 @@ class UserGroupsStoreTests(unittest.TestCase):
               group3
             users:
               user3
-         """, Loader=yaml.FullLoader)
+         """,
+            Loader=yaml.FullLoader,
+        )
 
-        store._load_groups(yaml_data,authorisor)
+        store._load_groups(yaml_data, authorisor)
 
         self.assertTrue("group1" in authorisor.groups)
-        self.assertTrue("role1" in authorisor.groups['group1'].roles)
-        self.assertTrue("role2" in authorisor.groups['group1'].roles)
-        self.assertTrue("role2" in authorisor.groups['group1'].roles)
-        self.assertTrue("group1" in authorisor.groups['group1'].groups)
-        self.assertTrue("group2" in authorisor.groups['group1'].groups)
-        self.assertTrue("user1" in authorisor.groups['group1'].users)
-        self.assertTrue("user2" in authorisor.groups['group1'].users)
+        self.assertTrue("role1" in authorisor.groups["group1"].roles)
+        self.assertTrue("role2" in authorisor.groups["group1"].roles)
+        self.assertTrue("role2" in authorisor.groups["group1"].roles)
+        self.assertTrue("group1" in authorisor.groups["group1"].groups)
+        self.assertTrue("group2" in authorisor.groups["group1"].groups)
+        self.assertTrue("user1" in authorisor.groups["group1"].users)
+        self.assertTrue("user2" in authorisor.groups["group1"].users)
 
         self.assertTrue("group2" in authorisor.groups)
-        self.assertTrue("role4" in authorisor.groups['group2'].roles)
-        self.assertTrue("role5" in authorisor.groups['group2'].roles)
-        self.assertTrue("group3" in authorisor.groups['group2'].groups)
-        self.assertTrue("user3" in authorisor.groups['group2'].users)
+        self.assertTrue("role4" in authorisor.groups["group2"].roles)
+        self.assertTrue("role5" in authorisor.groups["group2"].roles)
+        self.assertTrue("group3" in authorisor.groups["group2"].groups)
+        self.assertTrue("user3" in authorisor.groups["group2"].users)
 
     def test_load_groups_no_groups(self):
 
-        authorisor = BasicUserGroupAuthorisationService(BrainSecurityAuthorisationConfiguration())
+        authorisor = BasicUserGroupAuthorisationService(
+            BrainSecurityAuthorisationConfiguration()
+        )
         store = UserGroupsStore()
 
-        yaml_data = yaml.load("""
+        yaml_data = yaml.load(
+            """
         others:
           group1:
             roles:
@@ -349,19 +415,24 @@ class UserGroupsStoreTests(unittest.TestCase):
               group3
             users:
               user3
-         """, Loader=yaml.FullLoader)
+         """,
+            Loader=yaml.FullLoader,
+        )
 
-        store._load_groups(yaml_data,authorisor)
+        store._load_groups(yaml_data, authorisor)
 
         self.assertFalse("group1" in authorisor.groups)
         self.assertFalse("group2" in authorisor.groups)
 
     def test_overall_load(self):
 
-        authorisor = BasicUserGroupAuthorisationService(BrainSecurityAuthorisationConfiguration())
+        authorisor = BasicUserGroupAuthorisationService(
+            BrainSecurityAuthorisationConfiguration()
+        )
         store = UserGroupsStore()
 
-        yaml_data = yaml.load("""
+        yaml_data = yaml.load(
+            """
         users:
           user1:
             groups:
@@ -390,15 +461,20 @@ class UserGroupsStoreTests(unittest.TestCase):
           group3:
             roles:
               role6
-         """, Loader=yaml.FullLoader)
+         """,
+            Loader=yaml.FullLoader,
+        )
 
-        store.load_users_and_groups_from_yaml(yaml_data,authorisor)
+        store.load_users_and_groups_from_yaml(yaml_data, authorisor)
 
     def test_overall_load_missing_groups(self):
-        authorisor = BasicUserGroupAuthorisationService(BrainSecurityAuthorisationConfiguration())
+        authorisor = BasicUserGroupAuthorisationService(
+            BrainSecurityAuthorisationConfiguration()
+        )
         store = UserGroupsStore()
 
-        yaml_data = yaml.load("""
+        yaml_data = yaml.load(
+            """
         users:
           user1:
             groups:
@@ -426,6 +502,8 @@ class UserGroupsStoreTests(unittest.TestCase):
               
           group3:
             roles:
-              role6         """, Loader=yaml.FullLoader)
+              role6         """,
+            Loader=yaml.FullLoader,
+        )
 
         store.load_users_and_groups_from_yaml(yaml_data, authorisor)

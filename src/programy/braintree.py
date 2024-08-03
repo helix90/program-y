@@ -14,9 +14,10 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
-from programy.storage.factory import StorageFactory
+
 from programy.config.brain.braintree import BrainBraintreeConfiguration
+from programy.storage.factory import StorageFactory
+from programy.utils.logging.ylogger import YLogger
 
 
 class BraintreeManager:
@@ -35,7 +36,18 @@ class BraintreeManager:
         if self._configuration.create is True:
             YLogger.debug(self, "Dumping AIML Graph as tree")
 
-            if client_context.client.storage_factory.entity_storage_engine_available(StorageFactory.BRAINTREE) is True:
-                storage_engine = client_context.client.storage_factory.entity_storage_engine(StorageFactory.BRAINTREE)
+            if (
+                client_context.client.storage_factory.entity_storage_engine_available(
+                    StorageFactory.BRAINTREE
+                )
+                is True
+            ):
+                storage_engine = (
+                    client_context.client.storage_factory.entity_storage_engine(
+                        StorageFactory.BRAINTREE
+                    )
+                )
                 braintree_storage = storage_engine.braintree_store()
-                braintree_storage.save_braintree(client_context, client_context.brain.aiml_parser.pattern_parser)
+                braintree_storage.save_braintree(
+                    client_context, client_context.brain.aiml_parser.pattern_parser
+                )

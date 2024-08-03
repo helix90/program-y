@@ -1,13 +1,12 @@
-
-import re
 import pickle
+import re
 import sys
 from collections import Counter
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     def all_words(text):
-        return re.findall(r'\w+', text.upper())
+        return re.findall(r"\w+", text.upper())
 
     def create_corpus(text_filename, corpus_filename):
 

@@ -15,8 +15,9 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 """
-from programy.utils.logging.ylogger import YLogger
+
 from programy.extensions.base import Extension
+from programy.utils.logging.ylogger import YLogger
 
 
 class TranscriptAdminExtension(Extension):
@@ -32,8 +33,10 @@ class TranscriptAdminExtension(Extension):
 
             transcript += "Questions:<br /><ul>"
             for question in conversation.questions:
-                transcript += "<li>%s - %s</li>" % (question.combine_sentences(client_context),
-                                                    question.combine_answers())
+                transcript += "<li>%s - %s</li>" % (
+                    question.combine_sentences(client_context),
+                    question.combine_answers(),
+                )
             transcript += "</ul>"
             transcript += "<br />"
 

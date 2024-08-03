@@ -1,8 +1,9 @@
+from programytest.parser.base import ParserTestsBaseClass
+
 from programy.parser.template.nodes.base import TemplateNode
 from programy.parser.template.nodes.richmedia.olist import TemplateOrderedListNode
 from programy.parser.template.nodes.word import TemplateWordNode
 
-from programytest.parser.base import ParserTestsBaseClass
 
 class TemplateListNodeTests(ParserTestsBaseClass):
 
@@ -22,7 +23,11 @@ class TemplateListNodeTests(ParserTestsBaseClass):
         resolved = root.resolve(self._client_context)
 
         self.assertIsNotNone(resolved)
-        self.assertEqual("<olist><item>Item1</item><item>Item2</item></olist>", resolved)
+        self.assertEqual(
+            "<olist><item>Item1</item><item>Item2</item></olist>", resolved
+        )
 
-        self.assertEqual("<olist><item>Item1</item><item>Item2</item></olist>", root.to_xml(self._client_context))
-
+        self.assertEqual(
+            "<olist><item>Item1</item><item>Item2</item></olist>",
+            root.to_xml(self._client_context),
+        )

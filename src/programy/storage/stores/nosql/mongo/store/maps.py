@@ -14,16 +14,17 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
-from programy.storage.stores.nosql.mongo.store.mongostore import MongoStore
+
 from programy.storage.entities.maps import MapsReadWriteStore
 from programy.storage.stores.nosql.mongo.dao.map import Map
+from programy.storage.stores.nosql.mongo.store.mongostore import MongoStore
+from programy.utils.logging.ylogger import YLogger
 
 
 class MongoMapsStore(MongoStore, MapsReadWriteStore):
-    MAPS = 'maps'
-    NAME = 'name'
-    KEYVALUES = 'key_values'
+    MAPS = "maps"
+    NAME = "name"
+    KEYVALUES = "key_values"
 
     def __init__(self, storage_engine):
         MongoStore.__init__(self, storage_engine)
@@ -43,12 +44,20 @@ class MongoMapsStore(MongoStore, MapsReadWriteStore):
         if amap is not None:
             if key in amap[MongoMapsStore.KEYVALUES]:
                 if overwrite_existing is True:
-                    YLogger.info(self, "Updating map [%s] in Mongo [%s]=[%s]", name, key, value)
+                    YLogger.info(
+                        self, "Updating map [%s] in Mongo [%s]=[%s]", name, key, value
+                    )
                     amap[MongoMapsStore.KEYVALUES][key] = value
                     result = collection.replace_one({MongoMapsStore.NAME: name}, amap)
                     return bool(result.modified_count > 0)
                 else:
-                    YLogger.error(self, "Existing value in map [%s] [%s] = [%s] in Mongo", name, key, value)
+                    YLogger.error(
+                        self,
+                        "Existing value in map [%s] [%s] = [%s] in Mongo",
+                        name,
+                        key,
+                        value,
+                    )
             else:
                 amap[MongoMapsStore.KEYVALUES][key] = value
                 result = collection.replace_one({MongoMapsStore.NAME: name}, amap)

@@ -11,12 +11,12 @@ class EmbeddedBasicBotClientTests(unittest.TestCase):
         client = EmbeddedBasicBot()
         self.assertIsNotNone(client)
 
-        self.assertEqual('ProgramY AIML2.0 Client', client.get_description())
-        self.assertIsInstance(client.get_client_configuration(), ClientConfigurationData)
+        self.assertEqual("ProgramY AIML2.0 Client", client.get_description())
+        self.assertIsInstance(
+            client.get_client_configuration(), ClientConfigurationData
+        )
 
         self.assertFalse(client._render_callback())
         self.assertIsInstance(client.renderer, TextRenderer)
 
         self.assertNotEqual("", client.ask_question("Hello"))
-
-

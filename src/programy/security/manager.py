@@ -14,10 +14,11 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
-from programy.utils.classes.loader import ClassLoader
-from programy.dialog.sentence import Sentence
+
 from programy.config.brain.securities import BrainSecuritiesConfiguration
+from programy.dialog.sentence import Sentence
+from programy.utils.classes.loader import ClassLoader
+from programy.utils.logging.ylogger import YLogger
 
 
 class SecurityManager:
@@ -52,7 +53,9 @@ class SecurityManager:
     def _load_authentication_class(self, client):
         if self._configuration.authentication is not None:
             if self._configuration.authentication.classname is not None:
-                classobject = ClassLoader.instantiate_class(self._configuration.authentication.classname)
+                classobject = ClassLoader.instantiate_class(
+                    self._configuration.authentication.classname
+                )
                 self._authentication = classobject(self._configuration.authentication)
                 self._authentication.initialise(client)
 
@@ -66,7 +69,9 @@ class SecurityManager:
     def _load_authorisation_class(self, client):
         if self._configuration.authorisation is not None:
             if self._configuration.authorisation.classname is not None:
-                classobject = ClassLoader.instantiate_class(self._configuration.authorisation.classname)
+                classobject = ClassLoader.instantiate_class(
+                    self._configuration.authorisation.classname
+                )
                 self._authorisation = classobject(self._configuration.authorisation)
                 self._authorisation.initialise(client)
 
@@ -80,7 +85,9 @@ class SecurityManager:
     def _load_account_linking_class(self, client):
         if self._configuration.account_linker is not None:
             if self._configuration.account_linker.classname is not None:
-                classobject = ClassLoader.instantiate_class(self._configuration.account_linker.classname)
+                classobject = ClassLoader.instantiate_class(
+                    self._configuration.account_linker.classname
+                )
                 self._account_linker = classobject(self._configuration.account_linker)
                 self.account_linker.initialise(client)
 
@@ -96,16 +103,18 @@ class SecurityManager:
 
         # If we have an SRAI defined, then use that
         if self.authentication.configuration.denied_srai is not None:
-            match_context = client_context.brain.aiml_parser.\
-                match_sentence(client_context,
-                               Sentence(client_context,
-                                        self.authentication.configuration.denied_srai),
-                               topic_pattern="*",
-                               that_pattern="*")
+            match_context = client_context.brain.aiml_parser.match_sentence(
+                client_context,
+                Sentence(client_context, self.authentication.configuration.denied_srai),
+                topic_pattern="*",
+                that_pattern="*",
+            )
 
             # If the SRAI matched then return the result
             if match_context is not None:
-                return client_context.brain.resolve_matched_template(client_context, match_context)
+                return client_context.brain.resolve_matched_template(
+                    client_context, match_context
+                )
 
         # Otherswise return the static text, which is either
         #    User defined via config.yaml

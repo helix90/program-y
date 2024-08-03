@@ -1,20 +1,25 @@
 import xml.etree.ElementTree as ET
 
+from programytest.parser.template.graph_tests.graph_test_client import (
+    TemplateGraphTestClient,
+)
+
 from programy.parser.template.nodes.base import TemplateNode
 from programy.parser.template.nodes.eval import TemplateEvalNode
 from programy.parser.template.nodes.get import TemplateGetNode
 from programy.parser.template.nodes.word import TemplateWordNode
-from programytest.parser.template.graph_tests.graph_test_client import TemplateGraphTestClient
 
 
 class TemplateGraphEvalTests(TemplateGraphTestClient):
 
     def test_eval_node_from_xml_single_word(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
 			<template>
 				<eval>Text</eval>
 			</template>
-			""")
+			"""
+        )
         root = self._graph.parse_template_expression(template)
         self.assertIsNotNone(root)
         self.assertIsInstance(root, TemplateNode)
@@ -26,11 +31,13 @@ class TemplateGraphEvalTests(TemplateGraphTestClient):
         self.assertIsInstance(node, TemplateEvalNode)
 
     def test_eval_node_from_xml_multi_words(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
 			<template>
 				<eval>Some Text</eval>
 			</template>
-			""")
+			"""
+        )
         root = self._graph.parse_template_expression(template)
         self.assertIsNotNone(root)
         self.assertIsInstance(root, TemplateNode)
@@ -48,11 +55,13 @@ class TemplateGraphEvalTests(TemplateGraphTestClient):
         self.assertEqual(node.children[1].word, "Text")
 
     def test_eval_node_from_xml_multi_words(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
 			<template>
 				<eval>Some <get name="SomeGet" /> Text</eval>
 			</template>
-			""")
+			"""
+        )
         root = self._graph.parse_template_expression(template)
         self.assertIsNotNone(root)
         self.assertIsInstance(root, TemplateNode)

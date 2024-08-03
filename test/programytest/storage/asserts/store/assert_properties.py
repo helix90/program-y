@@ -1,5 +1,5 @@
-import unittest
 import os
+import unittest
 
 
 class PropertyStoreAsserts(unittest.TestCase):
@@ -82,8 +82,18 @@ class PropertyStoreAsserts(unittest.TestCase):
     def assert_upload_from_file(self, store):
         store.empty()
 
-        count, success = store.upload_from_file(os.path.dirname(
-            __file__) + os.sep + "data" + os.sep + "lookups" + os.sep + "text" + os.sep + "properties.txt", verbose=False)
+        count, success = store.upload_from_file(
+            os.path.dirname(__file__)
+            + os.sep
+            + "data"
+            + os.sep
+            + "lookups"
+            + os.sep
+            + "text"
+            + os.sep
+            + "properties.txt",
+            verbose=False,
+        )
 
         self.assertEquals(93, count)
         self.assertEquals(80, success)
@@ -91,8 +101,18 @@ class PropertyStoreAsserts(unittest.TestCase):
     def assert_upload_from_file_verbose(self, store):
         store.empty()
 
-        count, success = store.upload_from_file(os.path.dirname(
-            __file__) + os.sep + "data" + os.sep + "lookups" + os.sep + "text" + os.sep + "properties.txt", verbose=True)
+        count, success = store.upload_from_file(
+            os.path.dirname(__file__)
+            + os.sep
+            + "data"
+            + os.sep
+            + "lookups"
+            + os.sep
+            + "text"
+            + os.sep
+            + "properties.txt",
+            verbose=True,
+        )
 
         self.assertEquals(93, count)
         self.assertEquals(80, success)
@@ -100,8 +120,17 @@ class PropertyStoreAsserts(unittest.TestCase):
     def assert_upload_from_file_exception(self, store):
         store.empty()
 
-        count, success = store.upload_from_file(os.path.dirname(
-            __file__) + os.sep + "data" + os.sep + "lookups" + os.sep + "text" + os.sep + "properties.txt")
+        count, success = store.upload_from_file(
+            os.path.dirname(__file__)
+            + os.sep
+            + "data"
+            + os.sep
+            + "lookups"
+            + os.sep
+            + "text"
+            + os.sep
+            + "properties.txt"
+        )
 
         self.assertEquals(0, count)
         self.assertEquals(0, success)

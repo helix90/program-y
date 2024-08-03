@@ -14,12 +14,14 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 import os
 import os.path
 import shutil
-from programy.utils.logging.ylogger import YLogger
-from programy.storage.stores.file.store.filestore import FileStore
+
 from programy.storage.entities.errors import ErrorsStore
+from programy.storage.stores.file.store.filestore import FileStore
+from programy.utils.logging.ylogger import YLogger
 
 
 class FileErrorsStore(FileStore, ErrorsStore):
@@ -43,7 +45,9 @@ class FileErrorsStore(FileStore, ErrorsStore):
         with open(filename, "w+") as errors_file:
             errors_file.write("Error,File,Start Line,End Line\n")
             for error in errors:
-                errors_file.write("%s,%s,%s,%s\n" % (error[0], error[1], error[2], error[3]))
+                errors_file.write(
+                    "%s,%s,%s,%s\n" % (error[0], error[1], error[2], error[3])
+                )
             errors_file.flush()
 
     def save_errors(self, errors, commit=True):
@@ -55,4 +59,6 @@ class FileErrorsStore(FileStore, ErrorsStore):
             self._write_errors_to_file(filename, errors)
 
         except Exception as excep:
-            YLogger.exception_nostack(self, "Failed to write errors file [%s]", excep, filename)
+            YLogger.exception_nostack(
+                self, "Failed to write errors file [%s]", excep, filename
+            )

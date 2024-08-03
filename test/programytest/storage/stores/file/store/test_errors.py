@@ -2,10 +2,11 @@ import os.path
 import shutil
 import unittest
 from unittest.mock import patch
+
 from programy.storage.stores.file.config import FileStorageConfiguration
 from programy.storage.stores.file.engine import FileStorageEngine
-from programy.storage.stores.file.store.errors import FileErrorsStore
 from programy.storage.stores.file.store.config import FileStoreConfiguration
+from programy.storage.stores.file.store.errors import FileErrorsStore
 
 
 class FileErrorsStoreTests(unittest.TestCase):
@@ -23,7 +24,7 @@ class FileErrorsStoreTests(unittest.TestCase):
         engine.initialise()
         store = FileErrorsStore(engine)
 
-        self.assertEquals('/tmp/debug/errors.txt', store._get_storage_path())
+        self.assertEquals("/tmp/debug/errors.txt", store._get_storage_path())
         self.assertIsInstance(store.get_storage(), FileStoreConfiguration)
 
     def test_save_errors(self):
@@ -52,7 +53,10 @@ class FileErrorsStoreTests(unittest.TestCase):
     def patch_write_errors_to_file(self, filename, errors):
         raise Exception("Mock Exception")
 
-    @patch ('programy.storage.stores.file.store.errors.FileErrorsStore._write_errors_to_file', patch_write_errors_to_file)
+    @patch(
+        "programy.storage.stores.file.store.errors.FileErrorsStore._write_errors_to_file",
+        patch_write_errors_to_file,
+    )
     def test_save_errors_with_exception(self):
         config = FileStorageConfiguration()
         tmpdir = os.path.dirname(__file__) + os.sep + "errors"

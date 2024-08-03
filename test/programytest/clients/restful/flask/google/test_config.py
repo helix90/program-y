@@ -10,7 +10,8 @@ class GoogleConfigurationTests(unittest.TestCase):
     def test_init(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         google:
           host: 127.0.0.1
           port: 5000
@@ -23,7 +24,10 @@ class GoogleConfigurationTests(unittest.TestCase):
           help_srai: GOOGLE_HELP
           error_text: Oopsie there has been an error
           error_srai: GOOGLE_ERROR
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         google_config = GoogleConfiguration()
         google_config.load_configuration(yaml, ".")
@@ -47,9 +51,13 @@ class GoogleConfigurationTests(unittest.TestCase):
     def test_init_no_values(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         google:
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         google_config = GoogleConfiguration()
         google_config.load_configuration(yaml, ".")

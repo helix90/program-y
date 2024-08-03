@@ -14,15 +14,25 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
+
 from programy.config.section import BaseSectionConfigurationData
+from programy.utils.logging.ylogger import YLogger
 from programy.utils.substitutions.substitues import Substitutions
 
 
 class FileStoreConfiguration(BaseSectionConfigurationData):
 
-    def __init__(self, name='storage', dirs=None, extension=None, subdirs=False, fileformat=None, encoding=None,
-                 delete_on_start=False, file=None):
+    def __init__(
+        self,
+        name="storage",
+        dirs=None,
+        extension=None,
+        subdirs=False,
+        fileformat=None,
+        encoding=None,
+        delete_on_start=False,
+        file=None,
+    ):
         BaseSectionConfigurationData.__init__(self, name)
 
         self._dirs = None
@@ -86,19 +96,35 @@ class FileStoreConfiguration(BaseSectionConfigurationData):
     def delete_on_start(self):
         return self._delete_on_start
 
-    def load_config_section(self, configuration_file, configuration, bot_root, subs: Substitutions = None):
+    def load_config_section(
+        self, configuration_file, configuration, bot_root, subs: Substitutions = None
+    ):
         dirs_config = configuration_file.get_option(configuration, self.section_name)
         if dirs_config is not None:
-            self.extract_configuration(configuration_file, dirs_config, bot_root, subs=subs)
+            self.extract_configuration(
+                configuration_file, dirs_config, bot_root, subs=subs
+            )
         else:
-            YLogger.warning(self, "'%s' section missing from bot config, using to defaults", self.section_name)
+            YLogger.warning(
+                self,
+                "'%s' section missing from bot config, using to defaults",
+                self.section_name,
+            )
 
-    def extract_configuration(self, configuration_file, files_config, bot_root, subs: Substitutions = None):
-        dirs = configuration_file.get_multi_file_option(files_config, "dirs", bot_root, subs=subs)
+    def extract_configuration(
+        self, configuration_file, files_config, bot_root, subs: Substitutions = None
+    ):
+        dirs = configuration_file.get_multi_file_option(
+            files_config, "dirs", bot_root, subs=subs
+        )
         if dirs is not None and dirs:
             self._dirs = dirs
-            self._extension = configuration_file.get_option(files_config, "extension", subs=subs)
-            self._subdirs = configuration_file.get_bool_option(files_config, "subdirs", False, subs=subs)
+            self._extension = configuration_file.get_option(
+                files_config, "extension", subs=subs
+            )
+            self._subdirs = configuration_file.get_bool_option(
+                files_config, "subdirs", False, subs=subs
+            )
             self._has_single_file = False
         else:
             file = configuration_file.get_option(files_config, "file", subs=subs)
@@ -106,37 +132,43 @@ class FileStoreConfiguration(BaseSectionConfigurationData):
                 self._dirs = [self.sub_bot_root(file, bot_root)]
                 self._has_single_file = True
 
-        self._format = configuration_file.get_option(files_config, "format", None, subs=subs)
-        self._encoding = configuration_file.get_option(files_config, "encoding", None, subs=subs)
+        self._format = configuration_file.get_option(
+            files_config, "format", None, subs=subs
+        )
+        self._encoding = configuration_file.get_option(
+            files_config, "encoding", None, subs=subs
+        )
 
-        self._delete_on_start = configuration_file.get_bool_option(files_config, "delete_on_start", False, subs=subs)
+        self._delete_on_start = configuration_file.get_bool_option(
+            files_config, "delete_on_start", False, subs=subs
+        )
 
     def to_yaml(self, data, defaults=True):
         if defaults is True:
 
             if self._has_single_file is True:
-                data['file'] = "./storage/%s" % self.id
+                data["file"] = "./storage/%s" % self.id
 
             else:
-                data['dirs'] = "./storage/%s" % self.id
+                data["dirs"] = "./storage/%s" % self.id
 
-            data['extension'] = ".txt"
-            data['subdirs'] = False
+            data["extension"] = ".txt"
+            data["subdirs"] = False
 
-            data['format'] = None
-            data['encoding'] = None
-            data['delete_on_start'] = False
+            data["format"] = None
+            data["encoding"] = None
+            data["delete_on_start"] = False
 
         else:
             if self._has_single_file is True:
-                data['file'] = self._dirs[0]
+                data["file"] = self._dirs[0]
 
             else:
-                data['dirs'] = self._dirs
+                data["dirs"] = self._dirs
 
-            data['extension'] = self._extension
-            data['subdirs'] = self._subdirs
+            data["extension"] = self._extension
+            data["subdirs"] = self._subdirs
 
-            data['format'] = self._format
-            data['encoding'] = self._encoding
-            data['delete_on_start'] = self._delete_on_start
+            data["format"] = self._format
+            data["encoding"] = self._encoding
+            data["delete_on_start"] = self._delete_on_start

@@ -2,10 +2,11 @@ import json
 import os
 import unittest.mock
 
+from programytest.clients.arguments import MockArgumentParser
+
+from programy.clients.render.text import TextRenderer
 from programy.clients.restful.flask.alexa.client import AlexaBotClient
 from programy.clients.restful.flask.alexa.config import AlexaConfiguration
-from programy.clients.render.text import TextRenderer
-from programytest.clients.arguments import MockArgumentParser
 
 
 class MockAlexaBotClient(AlexaBotClient):
@@ -31,7 +32,7 @@ class AlexaClientBotClientTests(unittest.TestCase):
         self.assertIsNotNone(client)
 
         self.assertIsInstance(client.get_client_configuration(), AlexaConfiguration)
-        self.assertEqual('ProgramY AIML2.0 Client', client.get_description())
+        self.assertEqual("ProgramY AIML2.0 Client", client.get_description())
 
         self.assertFalse(client._render_callback())
         self.assertIsInstance(client.renderer, TextRenderer)
@@ -63,60 +64,73 @@ class AlexaClientBotClientTests(unittest.TestCase):
         response = client._create_response("Hello World")
         self.assertIsNotNone(response)
 
-        self.assertTrue('version' in response)
-        self.assertEqual("1.0", response['version'])
+        self.assertTrue("version" in response)
+        self.assertEqual("1.0", response["version"])
 
-        self.assertTrue('response' in response)
+        self.assertTrue("response" in response)
 
-        self.assertTrue('outputSpeech' in response['response'])
-        self.assertTrue('type' in response['response']['outputSpeech'])
-        self.assertEqual("PlainText", response['response']['outputSpeech']['type'])
-        self.assertTrue('text' in response['response']['outputSpeech'])
-        self.assertEqual("Hello World", response['response']['outputSpeech']['text'])
-        self.assertTrue('ssml' in response['response']['outputSpeech'])
-        self.assertEqual("<speak>Hello World</speak>", response['response']['outputSpeech']['ssml'])
-        self.assertTrue('playBehavior' in response['response']['outputSpeech'])
-        self.assertEqual("REPLACE_ENQUEUED", response['response']['outputSpeech']['playBehavior'])
+        self.assertTrue("outputSpeech" in response["response"])
+        self.assertTrue("type" in response["response"]["outputSpeech"])
+        self.assertEqual("PlainText", response["response"]["outputSpeech"]["type"])
+        self.assertTrue("text" in response["response"]["outputSpeech"])
+        self.assertEqual("Hello World", response["response"]["outputSpeech"]["text"])
+        self.assertTrue("ssml" in response["response"]["outputSpeech"])
+        self.assertEqual(
+            "<speak>Hello World</speak>", response["response"]["outputSpeech"]["ssml"]
+        )
+        self.assertTrue("playBehavior" in response["response"]["outputSpeech"])
+        self.assertEqual(
+            "REPLACE_ENQUEUED", response["response"]["outputSpeech"]["playBehavior"]
+        )
 
-        self.assertTrue('shouldEndSession' in response['response'])
-        self.assertFalse(response['response']['shouldEndSession'])
+        self.assertTrue("shouldEndSession" in response["response"])
+        self.assertFalse(response["response"]["shouldEndSession"])
 
     def test_create_response_no_defaults(self):
         arguments = MockArgumentParser()
         client = MockAlexaBotClient(arguments)
         self.assertIsNotNone(client)
 
-        response = client._create_response("Hello World", responsetype="PlainText", playBehavior="REPLACE_ENQUEUED", shouldEndSession=True)
+        response = client._create_response(
+            "Hello World",
+            responsetype="PlainText",
+            playBehavior="REPLACE_ENQUEUED",
+            shouldEndSession=True,
+        )
         self.assertIsNotNone(response)
 
-        self.assertTrue('version' in response)
-        self.assertEqual("1.0", response['version'])
+        self.assertTrue("version" in response)
+        self.assertEqual("1.0", response["version"])
 
-        self.assertTrue('response' in response)
+        self.assertTrue("response" in response)
 
-        self.assertTrue('outputSpeech' in response['response'])
-        self.assertTrue('type' in response['response']['outputSpeech'])
-        self.assertEqual("PlainText", response['response']['outputSpeech']['type'])
-        self.assertTrue('text' in response['response']['outputSpeech'])
-        self.assertEqual("Hello World", response['response']['outputSpeech']['text'])
-        self.assertTrue('ssml' in response['response']['outputSpeech'])
-        self.assertEqual("<speak>Hello World</speak>", response['response']['outputSpeech']['ssml'])
-        self.assertTrue('playBehavior' in response['response']['outputSpeech'])
-        self.assertEqual("REPLACE_ENQUEUED", response['response']['outputSpeech']['playBehavior'])
+        self.assertTrue("outputSpeech" in response["response"])
+        self.assertTrue("type" in response["response"]["outputSpeech"])
+        self.assertEqual("PlainText", response["response"]["outputSpeech"]["type"])
+        self.assertTrue("text" in response["response"]["outputSpeech"])
+        self.assertEqual("Hello World", response["response"]["outputSpeech"]["text"])
+        self.assertTrue("ssml" in response["response"]["outputSpeech"])
+        self.assertEqual(
+            "<speak>Hello World</speak>", response["response"]["outputSpeech"]["ssml"]
+        )
+        self.assertTrue("playBehavior" in response["response"]["outputSpeech"])
+        self.assertEqual(
+            "REPLACE_ENQUEUED", response["response"]["outputSpeech"]["playBehavior"]
+        )
 
-        self.assertTrue('shouldEndSession' in response['response'])
-        self.assertTrue(response['response']['shouldEndSession'])
+        self.assertTrue("shouldEndSession" in response["response"])
+        self.assertTrue(response["response"]["shouldEndSession"])
 
     def test_extract_question(self):
         arguments = MockArgumentParser()
         client = MockAlexaBotClient(arguments)
         self.assertIsNotNone(client)
 
-        intent = {'slots': {'text': {'value': 'test question'}}}
-        self.assertEqual('test question', client._extract_question(intent))
+        intent = {"slots": {"text": {"value": "test question"}}}
+        self.assertEqual("test question", client._extract_question(intent))
 
-        intent = {'slots': {'text': {}}}
-        self.assertEqual('', client._extract_question(intent))
+        intent = {"slots": {"text": {}}}
+        self.assertEqual("", client._extract_question(intent))
 
     def test_add_intent(self):
         arguments = MockArgumentParser()
@@ -126,7 +140,9 @@ class AlexaClientBotClientTests(unittest.TestCase):
         self.assertEqual("nothing", client._add_intent("AskNothing", "nothing"))
 
         client._intent_mappings["Something"] = "AskSomething"
-        self.assertEqual("AskSomething something", client._add_intent("Something", "something"))
+        self.assertEqual(
+            "AskSomething something", client._add_intent("Something", "something")
+        )
 
     def test_handle_launch_request(self):
         arguments = MockArgumentParser()
@@ -196,7 +212,8 @@ class AlexaClientBotClientTests(unittest.TestCase):
         client = MockAlexaBotClient(arguments)
         self.assertIsNotNone(client)
 
-        request = json.loads(   """
+        request = json.loads(
+            """
                                 {
                                     "version": "1.0",
                                     "session": {
@@ -213,14 +230,19 @@ class AlexaClientBotClientTests(unittest.TestCase):
                                 """
         )
 
-        self.assertEqual(client._get_userid(request), "amzn1.ask.account.AGD73QVLBN4YXQ3MNXMQXKHEJIXSXYUF3336QSOVAVOYOLO5V6NR2JML7RJZX5FELAU5I5DWGORWLLRQ4H4V6TKCCHFMMLJJFVYHVF7YO3ROOKGSDCMRZRQ24T7Y6RXSD2UTQMXHIONKCRSX4BZC73EI6R5JPFRTLT3KIXAMBT6RBOAATHIERBJ663GLDR3W5BKU6XSLSTX2N4A")
+        self.assertEqual(
+            client._get_userid(request),
+            "amzn1.ask.account.AGD73QVLBN4YXQ3MNXMQXKHEJIXSXYUF3336QSOVAVOYOLO5V6NR2JML7RJZX5FELAU5I5DWGORWLLRQ4H4V6TKCCHFMMLJJFVYHVF7YO3ROOKGSDCMRZRQ24T7Y6RXSD2UTQMXHIONKCRSX4BZC73EI6R5JPFRTLT3KIXAMBT6RBOAATHIERBJ663GLDR3W5BKU6XSLSTX2N4A",
+        )
 
     def test_receive_message(self):
         arguments = MockArgumentParser()
         client = MockAlexaBotClient(arguments)
         self.assertIsNotNone(client)
 
-        request = MockHttpRequest(json.loads("""
+        request = MockHttpRequest(
+            json.loads(
+                """
         {
             "version": "1.0",
             "session": {
@@ -275,6 +297,8 @@ class AlexaClientBotClientTests(unittest.TestCase):
                 "locale": "en-GB",
                 "shouldLinkResultBeReturned": false
             }
-        }"""))
+        }"""
+            )
+        )
 
         client.receive_message(request)

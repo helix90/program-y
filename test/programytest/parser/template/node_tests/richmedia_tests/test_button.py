@@ -1,8 +1,9 @@
+from programytest.parser.base import ParserTestsBaseClass
+
 from programy.parser.template.nodes.base import TemplateNode
 from programy.parser.template.nodes.richmedia.button import TemplateButtonNode
 from programy.parser.template.nodes.word import TemplateWordNode
 
-from programytest.parser.base import ParserTestsBaseClass
 
 class TemplateButtonNodeTests(ParserTestsBaseClass):
 
@@ -20,9 +21,15 @@ class TemplateButtonNodeTests(ParserTestsBaseClass):
 
         resolved = root.resolve(self._client_context)
         self.assertIsNotNone(resolved)
-        self.assertEqual("<button><text>Servusai.com</text><url>http://Servusai.com</url></button>", resolved)
+        self.assertEqual(
+            "<button><text>Servusai.com</text><url>http://Servusai.com</url></button>",
+            resolved,
+        )
 
-        self.assertEqual("<button><text>Servusai.com</text><url>http://Servusai.com</url></button>", root.to_xml(self._client_context))
+        self.assertEqual(
+            "<button><text>Servusai.com</text><url>http://Servusai.com</url></button>",
+            root.to_xml(self._client_context),
+        )
 
     def test_url_postback_node(self):
         root = TemplateNode()
@@ -38,6 +45,12 @@ class TemplateButtonNodeTests(ParserTestsBaseClass):
 
         resolved = root.resolve(self._client_context)
         self.assertIsNotNone(resolved)
-        self.assertEqual("<button><text>SAY HELLO</text><postback>HELLO</postback></button>", resolved)
+        self.assertEqual(
+            "<button><text>SAY HELLO</text><postback>HELLO</postback></button>",
+            resolved,
+        )
 
-        self.assertEqual("<button><text>SAY HELLO</text><postback>HELLO</postback></button>", root.to_xml(self._client_context))
+        self.assertEqual(
+            "<button><text>SAY HELLO</text><postback>HELLO</postback></button>",
+            root.to_xml(self._client_context),
+        )

@@ -1,7 +1,8 @@
+from programytest.parser.base import ParserTestsBaseClass
+
 from programy.parser.pattern.nodes.base import PatternNode
 from programy.parser.pattern.nodes.priority import PatternPriorityWordNode
 from programy.parser.pattern.nodes.zeroormore import PatternZeroOrMoreWildCardNode
-from programytest.parser.base import ParserTestsBaseClass
 
 
 class PatternNodeTests(ParserTestsBaseClass):
@@ -26,11 +27,15 @@ class PatternNodeTests(ParserTestsBaseClass):
         self.assertIsNotNone(node.children)
 
         self.assertFalse(node.equivalent(PatternNode()))
-        self.assertEqual(node.to_string(), "NODE [*] [P(0)^(0)#(0)C(0)_(0)*(0)To(0)Th(0)Te(0)]")
+        self.assertEqual(
+            node.to_string(), "NODE [*] [P(0)^(0)#(0)C(0)_(0)*(0)To(0)Th(0)Te(0)]"
+        )
 
         node.add_child(PatternNode())
         self.assertEqual(len(node.children), 1)
-        self.assertEqual(node.to_string(), "NODE [*] [P(0)^(0)#(0)C(1)_(0)*(0)To(0)Th(0)Te(0)]")
+        self.assertEqual(
+            node.to_string(), "NODE [*] [P(0)^(0)#(0)C(1)_(0)*(0)To(0)Th(0)Te(0)]"
+        )
 
     def test_add_child(self):
         node = PatternNode()
@@ -47,5 +52,3 @@ class PatternNodeTests(ParserTestsBaseClass):
         node.add_child(arrow_node1)
         new_node = node.add_child(arrow_node2)
         self.assertEqual(new_node, arrow_node1)
-
-

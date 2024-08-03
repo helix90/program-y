@@ -1,11 +1,11 @@
 import socket
 import unittest
 
-from programy.clients.events.tcpsocket.client import SocketBotClient
-from programy.clients.events.tcpsocket.client import SocketConnection
+from programytest.clients.arguments import MockArgumentParser
+
+from programy.clients.events.tcpsocket.client import SocketBotClient, SocketConnection
 from programy.clients.events.tcpsocket.config import SocketConfiguration
 from programy.clients.render.json import JSONRenderer
-from programytest.clients.arguments import MockArgumentParser
 
 
 class MockSocket(object):
@@ -53,7 +53,9 @@ class MockSocketBotClient(SocketBotClient):
         self.response = ""
 
     def create_socket_connection(self, host, port, queue, max_buffer):
-        return SocketConnection(host, port, queue, max_buffer, factory=MockSocketFactory(self._socket))
+        return SocketConnection(
+            host, port, queue, max_buffer, factory=MockSocketFactory(self._socket)
+        )
 
     def process_question(self, client_context, question):
         return self.response
@@ -63,9 +65,9 @@ class SocketBotClientTests(unittest.TestCase):
 
     def test_init(self):
         arguments = MockArgumentParser()
-        client = MockSocketBotClient( MockSocket(), arguments)
+        client = MockSocketBotClient(MockSocket(), arguments)
         self.assertIsNotNone(client)
-        self.assertEqual('ProgramY AIML2.0 Client', client.get_description())
+        self.assertEqual("ProgramY AIML2.0 Client", client.get_description())
         self.assertIsInstance(client.get_client_configuration(), SocketConfiguration)
 
         self.assertFalse(client._render_callback())
@@ -75,8 +77,7 @@ class SocketBotClientTests(unittest.TestCase):
         arguments = MockArgumentParser()
         client = MockSocketBotClient(MockSocket(), arguments)
 
-        receive_payload = {"userid": "user12345",
-                           "question": "Test Question"}
+        receive_payload = {"userid": "user12345", "question": "Test Question"}
 
         question = client.extract_question(receive_payload)
         self.assertEqual("Test Question", question)
@@ -87,25 +88,32 @@ class SocketBotClientTests(unittest.TestCase):
     def test_wait_and_answer(self):
         arguments = MockArgumentParser()
         mock_socket = MockSocket()
-        mock_socket._recv =  '{"userid": "user1234", "question": "Test Question"}'
+        mock_socket._recv = '{"userid": "user1234", "question": "Test Question"}'
         client = MockSocketBotClient(mock_socket, arguments)
         client.response = "Hello"
         client.wait_and_answer()
-        self.assertEqual('{"result": "OK", "answer": {"type": "text", "text": "Hello"}, "userid": "user1234"}', mock_socket._send)
+        self.assertEqual(
+            '{"result": "OK", "answer": {"type": "text", "text": "Hello"}, "userid": "user1234"}',
+            mock_socket._send,
+        )
 
     def test_wait_and_answer_no_response(self):
         arguments = MockArgumentParser()
         mock_socket = MockSocket()
-        mock_socket._recv =  ''
+        mock_socket._recv = ""
         client = MockSocketBotClient(mock_socket, arguments)
         client.response = ""
         client.wait_and_answer()
-        self.assertEqual('{"result": "ERROR", "message": "Expecting value"}', mock_socket._send)
+        self.assertEqual(
+            '{"result": "ERROR", "message": "Expecting value"}', mock_socket._send
+        )
 
     def test_wait_and_answer_invalid_response(self):
         arguments = MockArgumentParser()
         mock_socket = MockSocket()
-        mock_socket._recv =  'This is rubbish'
+        mock_socket._recv = "This is rubbish"
         client = MockSocketBotClient(mock_socket, arguments)
         client.wait_and_answer()
-        self.assertEqual('{"result": "ERROR", "message": "Expecting value"}', mock_socket._send)
+        self.assertEqual(
+            '{"result": "ERROR", "message": "Expecting value"}', mock_socket._send
+        )

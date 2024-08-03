@@ -14,11 +14,12 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
-from programy.utils.classes.loader import ClassLoader
-from programy.parser.template.nodes.base import TemplateNode
-from programy.utils.text.text import TextUtils
+
 from programy.parser.exceptions import ParserException
+from programy.parser.template.nodes.base import TemplateNode
+from programy.utils.classes.loader import ClassLoader
+from programy.utils.logging.ylogger import YLogger
+from programy.utils.text.text import TextUtils
 
 
 ######################################################################################################################
@@ -44,18 +45,20 @@ class TemplateExtensionNode(TemplateNode):
         instance = new_class()
         resolved = instance.execute(client_context, data)
 
-        YLogger.debug(client_context, "[%s] resolved to [%s]", self.to_string(), resolved)
+        YLogger.debug(
+            client_context, "[%s] resolved to [%s]", self.to_string(), resolved
+        )
         return resolved
 
     def to_string(self):
         return "[EXTENSION (%s)]" % self._path
 
     def to_xml(self, client_context):
-        xml = '<extension'
+        xml = "<extension"
         xml += ' path="%s"' % self._path
-        xml += '>'
+        xml += ">"
         xml += self.children_to_xml(client_context)
-        xml += '</extension>'
+        xml += "</extension>"
         return xml
 
     #######################################################################################################
@@ -66,8 +69,8 @@ class TemplateExtensionNode(TemplateNode):
 
     def parse_expression(self, graph, expression):
 
-        if 'path' in expression.attrib:
-            self.path = expression.attrib['path']
+        if "path" in expression.attrib:
+            self.path = expression.attrib["path"]
 
         head_text = self.get_text_from_element(expression)
         self.parse_text(graph, head_text)
@@ -75,7 +78,7 @@ class TemplateExtensionNode(TemplateNode):
         for child in expression:
             tag_name = TextUtils.tag_from_text(child.tag)
 
-            if tag_name == 'path':
+            if tag_name == "path":
                 self.path = self.get_text_from_element(child)
             else:
                 graph.parse_tag_expression(child, self)

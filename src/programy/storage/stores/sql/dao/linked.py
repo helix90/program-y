@@ -14,15 +14,15 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from sqlalchemy import Column
-from sqlalchemy import Integer
-from sqlalchemy import String
+
+from sqlalchemy import Column, Integer, String
+
 from programy.storage.stores.sql.base import Base
 from programy.storage.stores.utils import DAOUtils
 
 
 class LinkedAccount(Base):
-    __tablename__ = 'linkaccounts'
+    __tablename__ = "linkaccounts"
 
     id = Column(Integer, primary_key=True)
     primary_user = Column(String(16))
@@ -30,4 +30,7 @@ class LinkedAccount(Base):
 
     def __repr__(self):
         return "<Linked(id='%s', primary_user='%s', linked_user='%s')>" % (
-            DAOUtils.valid_id(self.id), self.primary_user, self.linked_user)
+            DAOUtils.valid_id(self.id),
+            self.primary_user,
+            self.linked_user,
+        )

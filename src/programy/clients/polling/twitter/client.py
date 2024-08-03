@@ -14,14 +14,17 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-import time
+
 import datetime
+import time
+
 import tweepy
 from tweepy.error import RateLimitError
-from programy.utils.logging.ylogger import YLogger
+
 from programy.clients.polling.client import PollingBotClient
 from programy.clients.polling.twitter.config import TwitterConfiguration
 from programy.utils.console.console import outputLog
+from programy.utils.logging.ylogger import YLogger
 
 
 class TwitterListener(tweepy.StreamListener):
@@ -63,13 +66,19 @@ class TwitterBotClient(PollingBotClient):
         self._consumer_key = self.license_keys.get_key("TWITTER_CONSUMER_KEY")
         self._consumer_secret = self.license_keys.get_key("TWITTER_CONSUMER_SECRET")
         self._access_token = self.license_keys.get_key("TWITTER_ACCESS_TOKEN")
-        self._access_token_secret = self.license_keys.get_key("TWITTER_ACCESS_TOKEN_SECRET")
+        self._access_token_secret = self.license_keys.get_key(
+            "TWITTER_ACCESS_TOKEN_SECRET"
+        )
         self._username_len = len(self._username)  # Going to get used quite a lot
 
-    def _create_api(self, consumer_key, consumer_secret, access_token, access_token_secret):
+    def _create_api(
+        self, consumer_key, consumer_secret, access_token, access_token_secret
+    ):
         auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
         auth.set_access_token(access_token, access_token_secret)
-        api = tweepy.API(auth, wait_on_rate_limit=False, wait_on_rate_limit_notify=False)
+        api = tweepy.API(
+            auth, wait_on_rate_limit=False, wait_on_rate_limit_notify=False
+        )
         try:
             api.verify_credentials()
             return api
@@ -79,15 +88,21 @@ class TwitterBotClient(PollingBotClient):
             return None
 
     def connect(self):
-        if self._consumer_key is not None and \
-                self._consumer_secret is not None and \
-                self._access_token is not None and \
-                self._access_token_secret is not None:
-            self._welcome_message = self.configuration.client_configuration.welcome_message
-            self._api = self._create_api(self._consumer_key,
-                                         self._consumer_secret,
-                                         self._access_token,
-                                         self._access_token_secret)
+        if (
+            self._consumer_key is not None
+            and self._consumer_secret is not None
+            and self._access_token is not None
+            and self._access_token_secret is not None
+        ):
+            self._welcome_message = (
+                self.configuration.client_configuration.welcome_message
+            )
+            self._api = self._create_api(
+                self._consumer_key,
+                self._consumer_secret,
+                self._access_token,
+                self._access_token_secret,
+            )
             self._me = self._api.me()
             return True
 
@@ -99,7 +114,9 @@ class TwitterBotClient(PollingBotClient):
     def ask_question(self, userid, question):
         self._questions += 1
         client_context = self.create_client_context(userid)
-        return client_context.bot.ask_question(client_context, question, responselogger=self)
+        return client_context.bot.ask_question(
+            client_context, question, responselogger=self
+        )
 
     def _follow_followers(self):
         YLogger.debug(self, "Retrieving and following followers")
@@ -145,7 +162,9 @@ class TwitterBotClient(PollingBotClient):
             if self._direct_id == -1:
                 tweets = tweepy.Cursor(self._api.list_direct_messages).items()
             else:
-                tweepy.Cursor(self._api.list_direct_messages, count=10, cursor=new_since_id).items()
+                tweepy.Cursor(
+                    self._api.list_direct_messages, count=10, cursor=new_since_id
+                ).items()
 
             for tweet in tweets:
                 new_since_id = max(tweet.id, new_since_id)
@@ -157,9 +176,17 @@ class TwitterBotClient(PollingBotClient):
 
     def pre_poll(self):
         if self.configuration.client_configuration.respond_to_mentions is True:
-            YLogger.debug(self, "Responding to mentions: %s", self.configuration.client_configuration.mentions)
+            YLogger.debug(
+                self,
+                "Responding to mentions: %s",
+                self.configuration.client_configuration.mentions,
+            )
             stream = tweepy.Stream(self._api.auth, TwitterListener(self))
-            stream.filter(track=self.configuration.client_configuration.mentions, languages=["en"], is_async=True)
+            stream.filter(
+                track=self.configuration.client_configuration.mentions,
+                languages=["en"],
+                is_async=True,
+            )
 
     def poll_and_answer(self):
 
@@ -175,7 +202,11 @@ class TwitterBotClient(PollingBotClient):
                 YLogger.debug(self, "Checking direct messages")
                 self._check_directs()
 
-            YLogger.debug(self, "Sleeping for %d at %s" %(sleepy_time, datetime.datetime.now().strftime("%H:%M:%S")))
+            YLogger.debug(
+                self,
+                "Sleeping for %d at %s"
+                % (sleepy_time, datetime.datetime.now().strftime("%H:%M:%S")),
+            )
 
         except KeyboardInterrupt:
             running = False
@@ -183,7 +214,11 @@ class TwitterBotClient(PollingBotClient):
         except RateLimitError:
 
             outputLog(self, "Rate limit exceeded, check logs!")
-            YLogger.error(self, "Rate limit exceeded, sleeping for %d seconds", self._rate_limit_sleep)
+            YLogger.error(
+                self,
+                "Rate limit exceeded, sleeping for %d seconds",
+                self._rate_limit_sleep,
+            )
 
             sleepy_time = self._rate_limit_sleep
 
@@ -195,7 +230,7 @@ class TwitterBotClient(PollingBotClient):
         return running
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     outputLog(None, "Initiating Twitter Client...")
 
     twitter_app = TwitterBotClient()

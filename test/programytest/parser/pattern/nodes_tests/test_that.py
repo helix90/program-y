@@ -1,3 +1,5 @@
+from programytest.parser.base import ParserTestsBaseClass
+
 from programy.dialog.sentence import Sentence
 from programy.parser.exceptions import ParserException
 from programy.parser.pattern.match import Match
@@ -5,7 +7,6 @@ from programy.parser.pattern.matchcontext import MatchContext
 from programy.parser.pattern.nodes.root import PatternRootNode
 from programy.parser.pattern.nodes.that import PatternThatNode
 from programy.parser.pattern.nodes.topic import PatternTopicNode
-from programytest.parser.base import ParserTestsBaseClass
 
 
 class PatternThatNodeTests(ParserTestsBaseClass):
@@ -30,7 +31,9 @@ class PatternThatNodeTests(ParserTestsBaseClass):
         self.assertFalse(node.has_children())
 
         self.assertTrue(node.equivalent(PatternThatNode()))
-        self.assertEqual(node.to_string(), "THAT [*] [P(0)^(0)#(0)C(0)_(0)*(0)To(0)Th(0)Te(0)]")
+        self.assertEqual(
+            node.to_string(), "THAT [*] [P(0)^(0)#(0)C(0)_(0)*(0)To(0)Th(0)Te(0)]"
+        )
         self.assertEqual(node.to_string(verbose=False), "THAT")
 
         self.assertEqual("<that></that>\n", node.to_xml(self._client_context))
@@ -61,21 +64,33 @@ class PatternThatNodeTests(ParserTestsBaseClass):
 
     def test_to_xml(self):
         node1 = PatternThatNode()
-        self.assertEqual('<that></that>\n', node1.to_xml(self._client_context))
-        self.assertEqual('<that userid="*"></that>\n', node1.to_xml(self._client_context, include_user=True))
+        self.assertEqual("<that></that>\n", node1.to_xml(self._client_context))
+        self.assertEqual(
+            '<that userid="*"></that>\n',
+            node1.to_xml(self._client_context, include_user=True),
+        )
 
         node2 = PatternThatNode(userid="testid")
-        self.assertEqual('<that></that>\n', node2.to_xml(self._client_context))
-        self.assertEqual('<that userid="testid"></that>\n', node2.to_xml(self._client_context, include_user=True))
+        self.assertEqual("<that></that>\n", node2.to_xml(self._client_context))
+        self.assertEqual(
+            '<that userid="testid"></that>\n',
+            node2.to_xml(self._client_context, include_user=True),
+        )
 
     def test_to_string(self):
         node1 = PatternThatNode()
         self.assertEqual(node1.to_string(verbose=False), "THAT")
-        self.assertEqual(node1.to_string(verbose=True), "THAT [*] [P(0)^(0)#(0)C(0)_(0)*(0)To(0)Th(0)Te(0)]")
+        self.assertEqual(
+            node1.to_string(verbose=True),
+            "THAT [*] [P(0)^(0)#(0)C(0)_(0)*(0)To(0)Th(0)Te(0)]",
+        )
 
         node2 = PatternThatNode(userid="testid")
         self.assertEqual(node2.to_string(verbose=False), "THAT")
-        self.assertEqual(node2.to_string(verbose=True), "THAT [testid] [P(0)^(0)#(0)C(0)_(0)*(0)To(0)Th(0)Te(0)]")
+        self.assertEqual(
+            node2.to_string(verbose=True),
+            "THAT [testid] [P(0)^(0)#(0)C(0)_(0)*(0)To(0)Th(0)Te(0)]",
+        )
 
     def test_equivalent(self):
         node1 = PatternThatNode()
@@ -94,7 +109,9 @@ class PatternThatNodeTests(ParserTestsBaseClass):
         match_context = MatchContext(max_search_depth=100, max_search_timeout=0)
         words = Sentence(self._client_context)
 
-        result = node.consume(self._client_context, match_context, words, 0, Match.WORD, 1, parent=False)
+        result = node.consume(
+            self._client_context, match_context, words, 0, Match.WORD, 1, parent=False
+        )
         self.assertIsNone(result)
 
     def test_consume_search_depth_exceeded(self):
@@ -104,6 +121,7 @@ class PatternThatNodeTests(ParserTestsBaseClass):
         match_context = MatchContext(max_search_depth=0, max_search_timeout=100)
         words = Sentence(self._client_context)
 
-        result = node.consume(self._client_context, match_context, words, 0, Match.WORD, 1, parent=False)
+        result = node.consume(
+            self._client_context, match_context, words, 0, Match.WORD, 1, parent=False
+        )
         self.assertIsNone(result)
-

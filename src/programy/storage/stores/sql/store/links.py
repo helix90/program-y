@@ -14,10 +14,12 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 from sqlalchemy import and_
-from programy.storage.stores.sql.store.sqlstore import SQLStore
+
 from programy.storage.entities.link import LinkStore
 from programy.storage.stores.sql.dao.link import Link
+from programy.storage.stores.sql.store.sqlstore import SQLStore
 from programy.utils.logging.ylogger import YLogger
 
 
@@ -33,15 +35,33 @@ class SQLLinkStore(SQLStore, LinkStore):
     def empty(self):
         self._get_all().delete()
 
-    def create_link(self, primary_userid, provided_key, generated_key, expires, expired=False, retry_count=0):
-        link = Link(primary_user=primary_userid, generated_key=generated_key, provided_key=provided_key,
-                    expires=expires, expired=expired, retry_count=retry_count)
+    def create_link(
+        self,
+        primary_userid,
+        provided_key,
+        generated_key,
+        expires,
+        expired=False,
+        retry_count=0,
+    ):
+        link = Link(
+            primary_user=primary_userid,
+            generated_key=generated_key,
+            provided_key=provided_key,
+            expires=expires,
+            expired=expired,
+            retry_count=retry_count,
+        )
         self._storage_engine.session.add(link)
         return link
 
     def get_link(self, userid):
         try:
-            link = self._storage_engine.session.query(Link).filter(Link.primary_user == userid).one()
+            link = (
+                self._storage_engine.session.query(Link)
+                .filter(Link.primary_user == userid)
+                .one()
+            )
             return link
 
         except Exception as e:
@@ -50,8 +70,12 @@ class SQLLinkStore(SQLStore, LinkStore):
         return None
 
     def _delete_link(self, userid):
-        result = self._storage_engine.session.query(Link).filter(Link.primary_user == userid).delete()
-        return bool(result==1)
+        result = (
+            self._storage_engine.session.query(Link)
+            .filter(Link.primary_user == userid)
+            .delete()
+        )
+        return bool(result == 1)
 
     def remove_link(self, userid):
         try:
@@ -64,9 +88,11 @@ class SQLLinkStore(SQLStore, LinkStore):
 
     def link_exists(self, userid, provided_key, generated_key):
         try:
-            self._storage_engine.session.query(Link).filter(Link.primary_user == userid,
-                                                            Link.provided_key == provided_key,
-                                                            Link.generated_key == generated_key).one()
+            self._storage_engine.session.query(Link).filter(
+                Link.primary_user == userid,
+                Link.provided_key == provided_key,
+                Link.generated_key == generated_key,
+            ).one()
             return True
 
         except Exception as excep:
@@ -74,7 +100,9 @@ class SQLLinkStore(SQLStore, LinkStore):
             return False
 
     def _get_link(self, id):
-        return self._storage_engine.session.query(Link).filter(and_(Link.id == id)).one()
+        return (
+            self._storage_engine.session.query(Link).filter(and_(Link.id == id)).one()
+        )
 
     def update_link(self, link):
         existing = self._get_link(link.id)

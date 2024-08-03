@@ -47,6 +47,7 @@ class MockXmppClient(XmppClient):
     def get_userid(self, msg):
         return self.userid
 
+
 class XmppClientTesst(unittest.TestCase):
 
     def test_xmpp_client_init(self):
@@ -65,7 +66,9 @@ class XmppClientTesst(unittest.TestCase):
     def test_get_question(self):
         bot_client = MockBotClient()
         xmpp_client = MockXmppClient(bot_client, "userid", "password")
-        self.assertEqual("this is text", xmpp_client.get_question({"body": "this is text"}))
+        self.assertEqual(
+            "this is text", xmpp_client.get_question({"body": "this is text"})
+        )
 
     def test_get_userid(self):
         bot_client = MockBotClient()
@@ -98,4 +101,3 @@ class XmppClientTesst(unittest.TestCase):
         xmpp_client.message({"type": "chat", "from": "user123", "body": "Hello"})
         self.assertIsNotNone(xmpp_client.response)
         self.assertEqual("Hiya", xmpp_client.response)
-

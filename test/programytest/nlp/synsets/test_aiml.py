@@ -17,15 +17,19 @@ class SynsetAIMLTestsClient(TestClient):
 
 class SynsetAIMLTests(unittest.TestCase):
 
-    def setUp (self):
+    def setUp(self):
         client = SynsetAIMLTestsClient()
         self._client_context = client.create_client_context("testid")
 
     def test_synset(self):
-        response = self._client_context.bot.ask_question(self._client_context, "SYNSETS SIMILAR HACK CHOP")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "SYNSETS SIMILAR HACK CHOP"
+        )
         self.assertIsNotNone(response)
         self.assertEqual("TRUE.", response)
 
-        response = self._client_context.bot.ask_question(self._client_context, "SYNSETS SIMILAR OCTOPUS SHRUMP")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "SYNSETS SIMILAR OCTOPUS SHRUMP"
+        )
         self.assertIsNotNone(response)
         self.assertEqual("FALSE.", response)

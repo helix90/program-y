@@ -1,10 +1,11 @@
 import unittest
 
+from programytest.client import TestClient
+from programytest.custom import CustomAssertions
+
 from programy.bot import Bot
 from programy.config.bot.bot import BotConfiguration
 from programy.context import ClientContext
-from programytest.client import TestClient
-from programytest.custom import CustomAssertions
 
 
 class TestBot(Bot):
@@ -34,4 +35,3 @@ class ParserTestsBaseClass(unittest.TestCase, CustomAssertions):
         self._client_context = ClientContext(client, "testid")
         self._client_context.bot = TestBot(BotConfiguration(), client)
         self._client_context.brain = self._client_context.bot.brain
-

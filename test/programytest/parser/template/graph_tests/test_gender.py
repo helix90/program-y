@@ -1,20 +1,25 @@
 import xml.etree.ElementTree as ET
 
+from programytest.parser.template.graph_tests.graph_test_client import (
+    TemplateGraphTestClient,
+)
+
 from programy.parser.template.nodes.base import TemplateNode
 from programy.parser.template.nodes.gender import TemplateGenderNode
 from programy.parser.template.nodes.star import TemplateStarNode
 from programy.parser.template.nodes.word import TemplateWordNode
-from programytest.parser.template.graph_tests.graph_test_client import TemplateGraphTestClient
 
 
 class TemplateGraphGenderTests(TemplateGraphTestClient):
 
     def test_gender_node_from_xml(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
 			<template>
 				<gender>Text</gender>
 			</template>
-			""")
+			"""
+        )
         root = self._graph.parse_template_expression(template)
         self.assertIsNotNone(root)
         self.assertIsInstance(root, TemplateNode)
@@ -30,11 +35,13 @@ class TemplateGraphGenderTests(TemplateGraphTestClient):
         self.assertIsInstance(next_node, TemplateWordNode)
 
     def test_gender_node_from_xml_default_to_star(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
 			<template>
 				<gender />
 			</template>
-			""")
+			"""
+        )
         root = self._graph.parse_template_expression(template)
         self.assertIsNotNone(root)
         self.assertIsInstance(root, TemplateNode)

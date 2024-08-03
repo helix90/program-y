@@ -14,11 +14,12 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-import urllib.parse
+
 import os
+import urllib.parse
+
 from programy.services.base import ServiceQuery
-from programy.services.rest.base import RESTService
-from programy.services.rest.base import RESTServiceException
+from programy.services.rest.base import RESTService, RESTServiceException
 
 
 class GenericServiceQuery(ServiceQuery):
@@ -38,8 +39,8 @@ class GenericServiceQuery(ServiceQuery):
         return self._service.generic(self._query)
 
     def aiml_response(self, response):
-        payload = response['response']['payload']
-        return payload['result']
+        payload = response["response"]["payload"]
+        return payload["result"]
 
 
 class GenericServiceException(RESTServiceException):
@@ -49,11 +50,9 @@ class GenericServiceException(RESTServiceException):
 
 
 class GenericService(RESTService):
-    """
-    """
-    PATTERNS = [
-        [r"SEARCH\s(.+)", GenericServiceQuery]
-    ]
+    """ """
+
+    PATTERNS = [[r"SEARCH\s(.+)", GenericServiceQuery]]
 
     def __init__(self, configuration):
         RESTService.__init__(self, configuration)
@@ -74,9 +73,8 @@ class GenericService(RESTService):
 
     def generic(self, question):
         url = self._build_generic_url(question)
-        response = self.query('generic', url)
+        response = self.query("generic", url)
         return response
 
     def _response_to_json(self, api, response):
         return response.json()
-

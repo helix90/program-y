@@ -17,16 +17,23 @@ class SynsetsTestsClient(TestClient):
 
 class WordNetAIMLTests(unittest.TestCase):
 
-    def setUp (self):
+    def setUp(self):
         client = SynsetsTestsClient()
         self._client_context = client.create_client_context("testid")
 
     def test_wordnet_definition(self):
-        response = self._client_context.bot.ask_question(self._client_context, "WORDNET CAT")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "WORDNET CAT"
+        )
         self.assertIsNotNone(response)
-        self.assertEqual("Feline mammal usually having thick soft fur and no ability to roar: domestic cats; wildcats.", response)
+        self.assertEqual(
+            "Feline mammal usually having thick soft fur and no ability to roar: domestic cats; wildcats.",
+            response,
+        )
 
     def test_wordnet_no_definition(self):
-        response = self._client_context.bot.ask_question(self._client_context, "WORDNET KJGJHGJJG")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "WORDNET KJGJHGJJG"
+        )
         self.assertIsNotNone(response)
         self.assertEqual("", response)

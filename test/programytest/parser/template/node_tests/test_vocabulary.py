@@ -1,9 +1,10 @@
 import xml.etree.ElementTree as ET
 
+from programytest.parser.base import ParserTestsBaseClass
+
 from programy.parser.template.nodes.base import TemplateNode
 from programy.parser.template.nodes.vocabulary import TemplateVocabularyNode
 from programy.parser.template.nodes.word import TemplateWordNode
-from programytest.parser.base import ParserTestsBaseClass
 
 
 class MockTemplateVocabularyNode(TemplateVocabularyNode):
@@ -18,10 +19,12 @@ class TemplateVocabularyNodeTests(ParserTestsBaseClass):
 
     def test_node(self):
 
-        topic_element = ET.fromstring('<topic>*</topic>')
-        that_element = ET.fromstring('<that>*</that>')
+        topic_element = ET.fromstring("<topic>*</topic>")
+        that_element = ET.fromstring("<that>*</that>")
         pattern_element = ET.fromstring("<pattern>hello world</pattern>")
-        self._client_context.brain._aiml_parser.pattern_parser.add_pattern_to_graph(pattern_element, topic_element, that_element, None)
+        self._client_context.brain._aiml_parser.pattern_parser.add_pattern_to_graph(
+            pattern_element, topic_element, that_element, None
+        )
 
         self._client_context.brain.sets._sets["TESTSET"] = ["VAL1", "VAL2", "VAL3"]
 
@@ -36,7 +39,7 @@ class TemplateVocabularyNodeTests(ParserTestsBaseClass):
         root.append(node)
         self.assertEqual(len(root.children), 1)
 
-        self.assertEqual(root.resolve(self._client_context), '14')
+        self.assertEqual(root.resolve(self._client_context), "14")
 
     def test_to_xml(self):
         root = TemplateNode()

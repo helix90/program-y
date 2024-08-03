@@ -1,8 +1,9 @@
 import unittest
 
+from programytest.client import TestClient
+
 from programy.context import ClientContext
 from programy.dynamic.maps.singular import SingularMap
-from programytest.client import TestClient
 
 
 class TestSingularMaps(unittest.TestCase):

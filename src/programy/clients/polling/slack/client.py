@@ -14,13 +14,15 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 import re
+
 from slack import WebClient
-from programy.utils.logging.ylogger import YLogger
+
 from programy.clients.polling.client import PollingBotClient
 from programy.clients.polling.slack.config import SlackConfiguration
 from programy.utils.console.console import outputLog
-
+from programy.utils.logging.ylogger import YLogger
 
 SLACK_CLIENT = None
 
@@ -44,7 +46,9 @@ class SlackBotClient(PollingBotClient):
         return SlackConfiguration()
 
     def parse_configuration(self):
-        self._polling_interval = self.configuration.client_configuration.polling_interval
+        self._polling_interval = (
+            self.configuration.client_configuration.polling_interval
+        )
 
     def get_license_keys(self):
         self._bot_token = self.license_keys.get_key("SLACK_TOKEN")
@@ -66,9 +70,9 @@ class SlackBotClient(PollingBotClient):
 
     def parse_messages(self, slack_events):
         """
-            Parses a list of events coming from the Slack RTM API to find bot messages.
-            If a bot message is found, this function returns a tuple of message and channel.
-            If its not found, then this function returns None, None.
+        Parses a list of events coming from the Slack RTM API to find bot messages.
+        If a bot message is found, this function returns a tuple of message and channel.
+        If its not found, then this function returns None, None.
         """
         for event in slack_events:
             if event["type"] == "message" and "subtype" not in event:
@@ -85,44 +89,45 @@ class SlackBotClient(PollingBotClient):
         if userid is None and message is None:
             userid, message = self.parse_mention(text)
             if userid is None and message is None:
-                userid = event['user']
+                userid = event["user"]
                 message = text
             else:
                 mention = True
         else:
             direct = True
 
-        response = {
-            "botid": self._starterbot_id,
-            "userid": userid,
-            "message": message
-        }
+        response = {"botid": self._starterbot_id, "userid": userid, "message": message}
 
         if message:
-            channel = event['channel']
+            channel = event["channel"]
 
             if self.configuration.client_configuration.reply_to_all is True:
-                response['reply_all'] = True
+                response["reply_all"] = True
                 self.handle_message(message, channel, userid)
 
-            elif self.configuration.client_configuration.reply_to_direct is True and direct is True:
-                response['direct'] = True
+            elif (
+                self.configuration.client_configuration.reply_to_direct is True
+                and direct is True
+            ):
+                response["direct"] = True
                 self.handle_message(message, channel, userid)
 
-            elif self.configuration.client_configuration.reply_to_mention is True and mention is True:
-                response['mention'] = True
+            elif (
+                self.configuration.client_configuration.reply_to_mention is True
+                and mention is True
+            ):
+                response["mention"] = True
                 self.handle_message(message, channel, userid)
 
             else:
-                response['no_response'] = True
+                response["no_response"] = True
 
         YLogger.debug("Slack Bot Response: %s", response)
 
-
     def parse_mention(self, message_text):
         """
-            Finds a direct mention (a mention that is at the beginning) in message text
-            and returns the user ID which was mentioned. If there is no direct mention, returns None
+        Finds a direct mention (a mention that is at the beginning) in message text
+        and returns the user ID which was mentioned. If there is no direct mention, returns None
         """
         matches = re.search(self.MENTION_REGEX, message_text)
         # the first group contains the username, the second group contains the remaining message
@@ -133,8 +138,8 @@ class SlackBotClient(PollingBotClient):
 
     def parse_direct_message(self, message_text):
         """
-            Finds a direct mention (a mention that is at the beginning) in message text
-            and returns the user ID which was mentioned. If there is no direct mention, returns None
+        Finds a direct mention (a mention that is at the beginning) in message text
+        and returns the user ID which was mentioned. If there is no direct mention, returns None
         """
         matches = re.search(self.DIRECT_REGEX, message_text)
         # the first group contains the username, the second group contains the remaining message
@@ -146,7 +151,9 @@ class SlackBotClient(PollingBotClient):
     def ask_question(self, userid, question):
         self._questions += 1
         client_context = self.create_client_context(userid)
-        response = client_context.bot.ask_question(client_context, question, responselogger=self)
+        response = client_context.bot.ask_question(
+            client_context, question, responselogger=self
+        )
         return self.renderer.render(client_context, response)
 
     def send_response(self, response, channel):
@@ -155,7 +162,7 @@ class SlackBotClient(PollingBotClient):
             "chat.postMessage",
             username=self.configuration.client_configuration.username,
             channel=channel,
-            text=response or response
+            text=response or response,
         )
 
     def handle_message(self, message, channel, userid):
@@ -190,7 +197,7 @@ class SlackBotClient(PollingBotClient):
         return running
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     outputLog(None, "Initiating Slack Client...")
 

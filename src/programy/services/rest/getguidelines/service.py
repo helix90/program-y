@@ -14,14 +14,15 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-import os
+
 import json
+import os
 import urllib.parse
 from datetime import datetime
-from programy.utils.logging.ylogger import YLogger
+
 from programy.services.base import ServiceQuery
-from programy.services.rest.base import RESTService
-from programy.services.rest.base import RESTServiceException
+from programy.services.rest.base import RESTService, RESTServiceException
+from programy.utils.logging.ylogger import YLogger
 
 
 class GetGuidelinesAllServiceQuery(ServiceQuery):
@@ -42,11 +43,11 @@ class GetGuidelinesAllServiceQuery(ServiceQuery):
         return self._service.all(self._conditions)
 
     def aiml_response(self, response):
-        payload = response['response']['payload']
-        data = payload['data']
-        data2 = [x['Recommendation'] for x in data]
+        payload = response["response"]["payload"]
+        data = payload["data"]
+        data2 = [x["Recommendation"] for x in data]
         recommends = ["<li>{0}</li>\n".format(x) for x in data2]
-        result = 'ALL <ol>{0}</ol>'.format("".join(recommends))
+        result = "ALL <ol>{0}</ol>".format("".join(recommends))
         YLogger.debug(self, result)
         return result
 
@@ -69,8 +70,8 @@ class GetGuidelinesVacServiceQuery(ServiceQuery):
         return self._service.vac(self._conditions)
 
     def aiml_response(self, response):
-        payload = response['response']['payload']
-        result = 'CONDITIONS {0}'.format(str(payload))
+        payload = response["response"]["payload"]
+        result = "CONDITIONS {0}".format(str(payload))
         YLogger.debug(self, result)
         return result
 
@@ -88,14 +89,14 @@ class GetGuidelinesConditionsServiceQuery(ServiceQuery):
         return self._service.conditions()
 
     def aiml_response(self, response):
-        payload = response['response']['payload']
+        payload = response["response"]["payload"]
 
         result = "<ul><li>Key - Description</li>\n"
         for key, descr in payload.items():
             result += "<li>{0} - {1}</li>\n".format(key, descr)
         result += "</ul>"
 
-        result = 'CONDITIONS {0}'.format(result)
+        result = "CONDITIONS {0}".format(result)
         YLogger.debug(self, result)
         return result
 
@@ -107,12 +108,12 @@ class GetGuidelinesServiceException(RESTServiceException):
 
 
 class GetGuidelinesService(RESTService):
-    """
-    """
+    """ """
+
     PATTERNS = [
         [r"ALL\s(.+)", GetGuidelinesAllServiceQuery],
         [r"VAC", GetGuidelinesVacServiceQuery],
-        [r"CONDITIONS",GetGuidelinesConditionsServiceQuery]
+        [r"CONDITIONS", GetGuidelinesConditionsServiceQuery],
     ]
 
     # conditions: Disease-specific recs. E.g. Congestive heart failure, chf Diabetes, dm. Sign in to see all conditions (too many to list here).
@@ -141,12 +142,12 @@ class GetGuidelinesService(RESTService):
         "alcohol": "Alcohol abuse",
         "transplant": "Transplant status",
         "hypothyroid": "Hypothyroidism",
-        "chf": "Congestive Heart Failure"
+        "chf": "Congestive Heart Failure",
     }
 
     ALL_BASE_URL = "https://getguidelines.com/all"
     VAC_BASE_URL = "https://getguidelines.com/vac"
-    
+
     def __init__(self, configuration):
         RESTService.__init__(self, configuration)
         self._api_token = None
@@ -155,9 +156,12 @@ class GetGuidelinesService(RESTService):
         return GetGuidelinesService.PATTERNS
 
     def initialise(self, client):
-        self._api_token = client.license_keys.get_key('GETGUIDELINES')
+        self._api_token = client.license_keys.get_key("GETGUIDELINES")
         if self._api_token is None:
-            YLogger.error(self, "GETGUIDELINES missing from license.keys, service will not function correctly!")
+            YLogger.error(
+                self,
+                "GETGUIDELINES missing from license.keys, service will not function correctly!",
+            )
 
     def get_default_aiml_file(self):
         return os.path.dirname(__file__) + os.sep + "getguidelines.aiml"
@@ -166,63 +170,67 @@ class GetGuidelinesService(RESTService):
     def get_default_conf_file():
         return os.path.dirname(__file__) + os.sep + "getguidelines.conf"
 
-    def _build_all_url(self,
-                   conditions,
-                   bmi=None,
-                   age=None,
-                   pack_years=None,
-                   tst=None,
-                   sbp=None,
-                   dbp=None,
-                   ldl=None,
-                   trigs=None,
-                   sex=None,
-                   ethnicity=None,
-                   pregnant=None,
-                   cac=None,
-                   broad=None,
-                   ):
+    def _build_all_url(
+        self,
+        conditions,
+        bmi=None,
+        age=None,
+        pack_years=None,
+        tst=None,
+        sbp=None,
+        dbp=None,
+        ldl=None,
+        trigs=None,
+        sex=None,
+        ethnicity=None,
+        pregnant=None,
+        cac=None,
+        broad=None,
+    ):
         url = GetGuidelinesService.ALL_BASE_URL
         url += "?api_token={0}".format(self._api_token)
         url += "&conditions={0}".format(conditions)
         return url
 
-    def _build_vac_url(self,
-                   conditions,
-                   bmi=None,
-                   age=None,
-                   pack_years=None,
-                   tst=None,
-                   sbp=None,
-                   dbp=None,
-                   ldl=None,
-                   trigs=None,
-                   sex=None,
-                   ethnicity=None,
-                   pregnant=None,
-                   cac=None,
-                   broad=None,
-                   ):
+    def _build_vac_url(
+        self,
+        conditions,
+        bmi=None,
+        age=None,
+        pack_years=None,
+        tst=None,
+        sbp=None,
+        dbp=None,
+        ldl=None,
+        trigs=None,
+        sex=None,
+        ethnicity=None,
+        pregnant=None,
+        cac=None,
+        broad=None,
+    ):
         url = GetGuidelinesService.VAC_BASE_URL
         url += "?api_token={0}".format(self._api_token)
         url += "&conditions={0}".format(urllib.parse.quote(conditions))
         return url
 
-    def _check_query_data(self,
-                          conditions,
-                          bmi,
-                          age,
-                          pack_years,
-                          tst,
-                          sbp,
-                          dbp,
-                          ldl,
-                          trigs,
-                          sex,
-                          ethnicity,
-                          pregnant,
-                          cac,
-                          broad):
+    def _check_query_data(
+        self,
+        conditions,
+        bmi,
+        age,
+        pack_years,
+        tst,
+        sbp,
+        dbp,
+        ldl,
+        trigs,
+        sex,
+        ethnicity,
+        pregnant,
+        cac,
+        broad,
+    ):
 
         # bmi: Body mass index. Alternatively, set kg and m, or lbs and inches to have bmi calculated and applied to corresponding guidelines.
         # tst: TB skin test, measured in millimeters of induration. E.g. tst=6
@@ -239,24 +247,28 @@ class GetGuidelinesService(RESTService):
         for condition in splits_conditions:
             if condition not in GetGuidelinesService.CONDITIONS:
                 raise GetGuidelinesServiceException(
-                    "Unknown condition [{0} (lowercase and no spaces!)".format(condition))
+                    "Unknown condition [{0} (lowercase and no spaces!)".format(
+                        condition
+                    )
+                )
 
-    def all(self,
-            conditions,
-            bmi=None,
-            age=None,
-            pack_years=None,
-            tst=None,
-            sbp=None,
-            dbp=None,
-            ldl=None,
-            trigs=None,
-            sex=None,
-            ethnicity=None,
-            pregnant=None,
-            cac=None,
-            broad=None,
-            ):
+    def all(
+        self,
+        conditions,
+        bmi=None,
+        age=None,
+        pack_years=None,
+        tst=None,
+        sbp=None,
+        dbp=None,
+        ldl=None,
+        trigs=None,
+        sex=None,
+        ethnicity=None,
+        pregnant=None,
+        cac=None,
+        broad=None,
+    ):
         self._check_query_data(
             conditions,
             bmi,
@@ -271,7 +283,8 @@ class GetGuidelinesService(RESTService):
             ethnicity,
             pregnant,
             cac,
-            broad)
+            broad,
+        )
         url = self._build_all_url(
             conditions,
             bmi,
@@ -286,26 +299,28 @@ class GetGuidelinesService(RESTService):
             ethnicity,
             pregnant,
             cac,
-            broad)
-        response = self.query('all', url)
+            broad,
+        )
+        response = self.query("all", url)
         return response
 
-    def vac(self,
-            conditions,
-            bmi=None,
-            age=None,
-            pack_years=None,
-            tst=None,
-            sbp=None,
-            dbp=None,
-            ldl=None,
-            trigs=None,
-            sex=None,
-            ethnicity=None,
-            pregnant=None,
-            cac=None,
-            broad=None,
-            ):
+    def vac(
+        self,
+        conditions,
+        bmi=None,
+        age=None,
+        pack_years=None,
+        tst=None,
+        sbp=None,
+        dbp=None,
+        ldl=None,
+        trigs=None,
+        sex=None,
+        ethnicity=None,
+        pregnant=None,
+        cac=None,
+        broad=None,
+    ):
         self._check_query_data(
             conditions,
             bmi,
@@ -320,7 +335,8 @@ class GetGuidelinesService(RESTService):
             ethnicity,
             pregnant,
             cac,
-            broad)
+            broad,
+        )
         url = self._build_vac_url(
             conditions,
             bmi,
@@ -335,21 +351,30 @@ class GetGuidelinesService(RESTService):
             ethnicity,
             pregnant,
             cac,
-            broad)
-        response = self.query('vac', url)
+            broad,
+        )
+        response = self.query("vac", url)
         return response
 
     def conditions(self):
         started = datetime.now()
         speed = started - datetime.now()
-        return self._create_success_payload("conditions", "", "DIRECT", retries=0, started=started, speed=speed, response=GetGuidelinesService.CONDITIONS)
+        return self._create_success_payload(
+            "conditions",
+            "",
+            "DIRECT",
+            retries=0,
+            started=started,
+            speed=speed,
+            response=GetGuidelinesService.CONDITIONS,
+        )
 
     def _response_to_json(self, api, response):
 
-        if api == 'conditions':
+        if api == "conditions":
             return response
 
-        elif api == 'all' or api == 'vac':
+        elif api == "all" or api == "vac":
             return json.loads(response.text)
 
         return None

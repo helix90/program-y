@@ -14,12 +14,13 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-import os
+
 import json
-from programy.utils.logging.ylogger import YLogger
+import os
+
 from programy.services.base import ServiceQuery
-from programy.services.rest.base import RESTService
-from programy.services.rest.base import RESTServiceException
+from programy.services.rest.base import RESTService, RESTServiceException
+from programy.utils.logging.ylogger import YLogger
 
 
 class WorldTradingDataStocksServiceQuery(ServiceQuery):
@@ -39,17 +40,19 @@ class WorldTradingDataStocksServiceQuery(ServiceQuery):
         return self._service.stocks(self._symbols)
 
     def aiml_response(self, response):
-        payload = response['response'].get('payload')
+        payload = response["response"].get("payload")
         if payload is not None:
-            data = payload.get('data')
+            data = payload.get("data")
             if data is not None:
                 line = data[0]
-                name = line.get('name')
-                symbol = line.get('symbol')
-                price = line.get('price')
-                currency = line.get('currency')
+                name = line.get("name")
+                symbol = line.get("symbol")
+                price = line.get("price")
+                currency = line.get("currency")
 
-                result = "NAME {0} SYMBOL {1} PRICE {2} CURRENCY {3}".format(name, symbol, price, currency)
+                result = "NAME {0} SYMBOL {1} PRICE {2} CURRENCY {3}".format(
+                    name, symbol, price, currency
+                )
                 YLogger.debug(self, result)
                 return result
 
@@ -66,11 +69,12 @@ class WorldTradingDataStocksService(RESTService):
     """
     "https://www.worldtradingdata.com/home"
     """
-    PATTERNS = [
-        [r"SYMBOLS\s(.+)", WorldTradingDataStocksServiceQuery]
-    ]
 
-    STOCKS_API_URL = "https://api.worldtradingdata.com/api/v1/stock?symbol={0}&api_token={1}"
+    PATTERNS = [[r"SYMBOLS\s(.+)", WorldTradingDataStocksServiceQuery]]
+
+    STOCKS_API_URL = (
+        "https://api.worldtradingdata.com/api/v1/stock?symbol={0}&api_token={1}"
+    )
 
     def __init__(self, configuration):
         RESTService.__init__(self, configuration)
@@ -80,9 +84,12 @@ class WorldTradingDataStocksService(RESTService):
         return WorldTradingDataStocksService.PATTERNS
 
     def initialise(self, client):
-        self._api_token = client.license_keys.get_key('WORLDTRADINGDATA_APITOKEN')
+        self._api_token = client.license_keys.get_key("WORLDTRADINGDATA_APITOKEN")
         if self._api_token is None:
-            YLogger.error(self, "WORLDTRADINGDATA_APITOKEN missing from license.keys, service will not function correctly!")
+            YLogger.error(
+                self,
+                "WORLDTRADINGDATA_APITOKEN missing from license.keys, service will not function correctly!",
+            )
 
     def get_default_aiml_file(self):
         return os.path.dirname(__file__) + os.sep + "worldtradingdata.aiml"
@@ -92,14 +99,15 @@ class WorldTradingDataStocksService(RESTService):
         return os.path.dirname(__file__) + os.sep + "worldtradingdata.conf"
 
     def _build_symbols_url(self, symbols):
-        url = WorldTradingDataStocksService.STOCKS_API_URL.format(symbols, self._api_token)
+        url = WorldTradingDataStocksService.STOCKS_API_URL.format(
+            symbols, self._api_token
+        )
         return url
 
     def stocks(self, symbols):
         url = self._build_symbols_url(symbols)
-        response = self.query('stocks', url)
+        response = self.query("stocks", url)
         return response
 
     def _response_to_json(self, api, response):
         return json.loads(response.text)
-

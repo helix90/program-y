@@ -1,11 +1,12 @@
 import unittest
 
+from programytest.client import TestClient
+
 from programy.bot import Bot
 from programy.config.bot.bot import BotConfiguration
 from programy.config.brain.security import BrainSecurityAuthenticationConfiguration
 from programy.context import ClientContext
 from programy.security.authenticate.clientidauth import ClientIdAuthenticationService
-from programytest.client import TestClient
 
 
 class MockClientIdAuthenticationService(ClientIdAuthenticationService):
@@ -20,6 +21,7 @@ class MockClientIdAuthenticationService(ClientIdAuthenticationService):
             raise Exception("Bad thing happen!")
         return self.should_authorised
 
+
 class ClientIdAuthenticationServiceTests(unittest.TestCase):
 
     def setUp(self):
@@ -30,7 +32,9 @@ class ClientIdAuthenticationServiceTests(unittest.TestCase):
         self._client_context.brain = self._client_context.bot.brain
 
     def test_init(self):
-        service = ClientIdAuthenticationService(BrainSecurityAuthenticationConfiguration())
+        service = ClientIdAuthenticationService(
+            BrainSecurityAuthenticationConfiguration()
+        )
         self.assertIsNotNone(service)
         self._client_context._userid = "console"
         self.assertTrue(service.authenticate(self._client_context))
@@ -38,7 +42,9 @@ class ClientIdAuthenticationServiceTests(unittest.TestCase):
         self.assertFalse(service.authenticate(self._client_context))
 
     def test_authorise_success(self):
-        service = MockClientIdAuthenticationService(BrainSecurityAuthenticationConfiguration())
+        service = MockClientIdAuthenticationService(
+            BrainSecurityAuthenticationConfiguration()
+        )
         service.should_authorised = True
         self.assertTrue("console" in service.authorised)
         self._client_context._userid = "console"
@@ -49,13 +55,17 @@ class ClientIdAuthenticationServiceTests(unittest.TestCase):
         self.assertTrue("unknown" in service.authorised)
 
     def test_authorise_failure(self):
-        service = MockClientIdAuthenticationService(BrainSecurityAuthenticationConfiguration())
+        service = MockClientIdAuthenticationService(
+            BrainSecurityAuthenticationConfiguration()
+        )
         service.should_authorised = False
         self.assertFalse("unknown" in service.authorised)
         self.assertFalse(service.authenticate(self._client_context))
 
     def test_authorise_exception(self):
-        service = MockClientIdAuthenticationService(BrainSecurityAuthenticationConfiguration())
+        service = MockClientIdAuthenticationService(
+            BrainSecurityAuthenticationConfiguration()
+        )
         service.should_authorised = True
         service.raise_exception = True
         self.assertFalse(service.authenticate(self._client_context._userid))

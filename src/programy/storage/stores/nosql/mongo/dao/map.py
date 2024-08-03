@@ -14,10 +14,11 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 from programy.storage.stores.utils import DAOUtils
 
 
-class Map():
+class Map:
 
     def __init__(self, name, key_values):
         self.id = None
@@ -25,19 +26,22 @@ class Map():
         self.key_values = key_values
 
     def __repr__(self):
-        return "<Map(id='%s', name='%s', values='%s')>" % (DAOUtils.valid_id(self.id), self.name, ", ".join(self.key_values))
+        return "<Map(id='%s', name='%s', values='%s')>" % (
+            DAOUtils.valid_id(self.id),
+            self.name,
+            ", ".join(self.key_values),
+        )
 
     def to_document(self):
-        document = {"name": self.name,
-                    "key_values": self.key_values}
+        document = {"name": self.name, "key_values": self.key_values}
         if self.id is not None:
-            document['_id'] = self.id
+            document["_id"] = self.id
         return document
 
     @staticmethod
     def from_document(data):
         amap = Map(None, None)
-        amap.id = DAOUtils.get_value_from_data(data, '_id')
-        amap.name = DAOUtils.get_value_from_data(data, 'name')
-        amap.key_values = DAOUtils.get_value_from_data(data, 'key_values', [])
+        amap.id = DAOUtils.get_value_from_data(data, "_id")
+        amap.name = DAOUtils.get_value_from_data(data, "name")
+        amap.key_values = DAOUtils.get_value_from_data(data, "key_values", [])
         return amap

@@ -14,11 +14,12 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-import urllib.parse
+
 import os
+import urllib.parse
+
 from programy.services.base import ServiceQuery
-from programy.services.rest.base import RESTService
-from programy.services.rest.base import RESTServiceException
+from programy.services.rest.base import RESTService, RESTServiceException
 from programy.utils.logging.ylogger import YLogger
 
 
@@ -39,11 +40,11 @@ class MirosoftNewsQuery(ServiceQuery):
         return self._service.news(self._query)
 
     def aiml_response(self, response):
-        payload = response['response']['payload']
-        values = payload['value']
+        payload = response["response"]["payload"]
+        values = payload["value"]
         result = "<ul>\n"
         for value in values:
-            result += "<li>{0} - {1}</li>\n".format(value['name'], value['description'])
+            result += "<li>{0} - {1}</li>\n".format(value["name"], value["description"])
         result += "</ul>"
         return result
 
@@ -58,20 +59,22 @@ class MicrosoftNewsService(RESTService):
     """
     https://portal.azure.com/
     """
-    PATTERNS = [
-        [r"NEWS\s(.+)", MirosoftNewsQuery]
-    ]
 
-    BASE_SEARCH_URL="https://chatilly.cognitiveservices.azure.com/bing/v7.0"
+    PATTERNS = [[r"NEWS\s(.+)", MirosoftNewsQuery]]
+
+    BASE_SEARCH_URL = "https://chatilly.cognitiveservices.azure.com/bing/v7.0"
 
     def __init__(self, configuration):
         RESTService.__init__(self, configuration)
         self._key = None
-        
+
     def initialise(self, client):
-        self._key = client.license_keys.get_key('BING_SEARCH_KEY')
+        self._key = client.license_keys.get_key("BING_SEARCH_KEY")
         if self._key is None:
-            YLogger.error(self, "BING_SEARCH_KEY missing from license.keys, service will not function correctly!")
+            YLogger.error(
+                self,
+                "BING_SEARCH_KEY missing from license.keys, service will not function correctly!",
+            )
 
     def patterns(self) -> list:
         return MicrosoftNewsService.PATTERNS
@@ -99,7 +102,7 @@ class MicrosoftNewsService(RESTService):
     def news(self, query):
         url = self._build_news_url(query)
         headers = self._build_news_headers()
-        response = self.query('news', url, headers=headers)
+        response = self.query("news", url, headers=headers)
         return response
 
     def _response_to_json(self, api, response):

@@ -14,29 +14,29 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
-import os
 import logging.config
+import os
+
 import yaml
 
-from programy.utils.logging.ylogger import YLogger
-
-from programy.config.file.factory import ConfigurationFactory
 from programy.clients.args import CommandLineClientArguments
+from programy.clients.botfactory import BotFactory
+from programy.clients.ping.responder import PingResponder
+from programy.clients.render.text import TextRenderer
+from programy.clients.response import ResponseLogger
+from programy.config.file.factory import ConfigurationFactory
 from programy.config.programy import ProgramyConfiguration
 from programy.context import ClientContext
-from programy.utils.license.keys import LicenseKeys
-from programy.utils.substitutions.substitues import Substitutions
 from programy.scheduling.scheduler import ProgramyScheduler
-from programy.clients.render.text import TextRenderer
-from programy.utils.classes.loader import ClassLoader
 from programy.storage.factory import StorageFactory
-from programy.utils.email.sender import EmailSender
 from programy.triggers.manager import TriggerManager
 from programy.triggers.system import SystemTriggers
-from programy.clients.ping.responder import PingResponder
-from programy.clients.botfactory import BotFactory
-from programy.clients.response import ResponseLogger
+from programy.utils.classes.loader import ClassLoader
 from programy.utils.console.console import outputLog
+from programy.utils.email.sender import EmailSender
+from programy.utils.license.keys import LicenseKeys
+from programy.utils.logging.ylogger import YLogger
+from programy.utils.substitutions.substitues import Substitutions
 
 
 class BotClient(ResponseLogger):
@@ -68,7 +68,9 @@ class BotClient(ResponseLogger):
 
         self.load_license_keys()
         self.get_license_keys()
-        self._configuration.client_configuration.check_for_license_keys(self._license_keys)
+        self._configuration.client_configuration.check_for_license_keys(
+            self._license_keys
+        )
 
         self._bot_factory = BotFactory(self, self.configuration.client_configuration)
 
@@ -168,8 +170,15 @@ class BotClient(ResponseLogger):
         return client_args
 
     def load_license_keys(self):
-        if self.storage_factory.entity_storage_engine_available(StorageFactory.LICENSE_KEYS) is True:
-            storage_engine = self.storage_factory.entity_storage_engine(StorageFactory.LICENSE_KEYS)
+        if (
+            self.storage_factory.entity_storage_engine_available(
+                StorageFactory.LICENSE_KEYS
+            )
+            is True
+        ):
+            storage_engine = self.storage_factory.entity_storage_engine(
+                StorageFactory.LICENSE_KEYS
+            )
             if storage_engine is not None:
                 keys_store = storage_engine.license_store()
                 keys_store.load(self._license_keys)
@@ -184,16 +193,24 @@ class BotClient(ResponseLogger):
     def initiate_logging(self, arguments):
         if arguments.logging is not None:
             try:
-                with open(arguments.logging, 'r+', encoding="utf-8") as yml_data_file:
+                with open(arguments.logging, "r+", encoding="utf-8") as yml_data_file:
                     logging_config = yaml.load(yml_data_file, Loader=yaml.FullLoader)
                     logging.config.dictConfig(logging_config)
                     YLogger.info(self, "Now logging under configuration")
 
             except Exception as excep:
-                YLogger.exception(self, "Failed to open logging configuration [%s]", excep, arguments.logging)
+                YLogger.exception(
+                    self,
+                    "Failed to open logging configuration [%s]",
+                    excep,
+                    arguments.logging,
+                )
 
         else:
-            outputLog(self, "Warning. No logging configuration file defined, using defaults...")
+            outputLog(
+                self,
+                "Warning. No logging configuration file defined, using defaults...",
+            )
 
     def get_client_configuration(self):
         """
@@ -201,7 +218,9 @@ class BotClient(ResponseLogger):
         and stil use the dynamic loader capabilities
         :return: Client configuration object
         """
-        raise NotImplementedError("You must override this and return a subclassed client configuration")  # pragma: no cover
+        raise NotImplementedError(
+            "You must override this and return a subclassed client configuration"
+        )  # pragma: no cover
 
     def load_configuration(self, arguments, subs: Substitutions = None):
         if arguments.bot_root is None:
@@ -209,14 +228,19 @@ class BotClient(ResponseLogger):
                 arguments.bot_root = os.path.dirname(arguments.config_filename)
             else:
                 arguments.bot_root = "."
-            outputLog(self, "No bot root argument set, defaulting to [%s]" % arguments.bot_root)
+            outputLog(
+                self,
+                "No bot root argument set, defaulting to [%s]" % arguments.bot_root,
+            )
 
         if arguments.config_filename is not None:
-            self._configuration = ConfigurationFactory.load_configuration_from_file(self.get_client_configuration(),
-                                                                                    arguments.config_filename,
-                                                                                    arguments.config_format,
-                                                                                    arguments.bot_root,
-                                                                                    subs)
+            self._configuration = ConfigurationFactory.load_configuration_from_file(
+                self.get_client_configuration(),
+                arguments.config_filename,
+                arguments.config_format,
+                arguments.bot_root,
+                subs,
+            )
         else:
             outputLog(self, "No configuration file specified, using defaults only !")
             self._configuration = ProgramyConfiguration(self.get_client_configuration())
@@ -224,7 +248,9 @@ class BotClient(ResponseLogger):
     def load_scheduler(self):
         if self.configuration.client_configuration.scheduler is not None:
             YLogger.debug(None, "Loading Scheduler")
-            self._scheduler = ProgramyScheduler(self, self.configuration.client_configuration.scheduler)
+            self._scheduler = ProgramyScheduler(
+                self, self.configuration.client_configuration.scheduler
+            )
             self._scheduler.start()
 
     def load_email(self):
@@ -235,13 +261,17 @@ class BotClient(ResponseLogger):
     def load_trigger_manager(self):
         if self._configuration.client_configuration.triggers is not None:
             YLogger.debug(None, "Loading Trigger Manager")
-            self._trigger_mgr = TriggerManager.load_trigger_manager(self._configuration.client_configuration.triggers)
+            self._trigger_mgr = TriggerManager.load_trigger_manager(
+                self._configuration.client_configuration.triggers
+            )
 
     def load_storage(self):
         self._storage = StorageFactory()
         if self.configuration.client_configuration.storage is not None:
             YLogger.debug(None, "Loading Storage Factory")
-            self._storage.load_engines_from_config(self.configuration.client_configuration.storage)
+            self._storage.load_engines_from_config(
+                self.configuration.client_configuration.storage
+            )
         else:
             outputLog(self, "No storage defined!")
 
@@ -253,7 +283,9 @@ class BotClient(ResponseLogger):
         try:
             if self._configuration.client_configuration.renderer is not None:
                 YLogger.debug(None, "Loading Renderer")
-                clazz = ClassLoader.instantiate_class(self._configuration.client_configuration.renderer)
+                clazz = ClassLoader.instantiate_class(
+                    self._configuration.client_configuration.renderer
+                )
                 if callback is True:
                     self._renderer = clazz(self)
                 else:
@@ -299,4 +331,6 @@ class BotClient(ResponseLogger):
 
     def run(self, app=None):
         del app
-        raise NotImplementedError("You must override this and implement the logic to run the client")  # pragma: no cover
+        raise NotImplementedError(
+            "You must override this and implement the logic to run the client"
+        )  # pragma: no cover

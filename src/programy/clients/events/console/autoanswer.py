@@ -14,9 +14,10 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 from programy.clients.events.console.client import ConsoleBotClient
-from programy.utils.console.console import outputLog
 from programy.storage.utils.processors import CSVFileReader
+from programy.utils.console.console import outputLog
 
 
 class AutoAnswerConsoleBotClient(ConsoleBotClient):
@@ -39,20 +40,26 @@ class AutoAnswerConsoleBotClient(ConsoleBotClient):
                 return
 
             except Exception as excep:
-                outputLog(self, "Using q&a defaults, as unable to load file [%s], reason[%s]" %
-                          (self.arguments.args.qandas, str(excep)))
+                outputLog(
+                    self,
+                    "Using q&a defaults, as unable to load file [%s], reason[%s]"
+                    % (self.arguments.args.qandas, str(excep)),
+                )
 
         self._qandas = defaults_qandas[:]
 
     def add_client_arguments(self, parser=None):
         if parser is not None:
-            parser.add_argument('--qandas', dest='qandas',
-                                help='list of questions and answers in csv format '
-                                     '[question, answer1, answer2, ... answern]')
+            parser.add_argument(
+                "--qandas",
+                dest="qandas",
+                help="list of questions and answers in csv format "
+                "[question, answer1, answer2, ... answern]",
+            )
 
     def is_right_answer(self, response, answers):
         if len(answers) == 1:
-            if answers[0] == '*':
+            if answers[0] == "*":
                 if len(response) > 0:
                     return True
 
@@ -64,21 +71,25 @@ class AutoAnswerConsoleBotClient(ConsoleBotClient):
             answers = qanda[1]
             response = self.process_question(client_context, question)
             if self.is_right_answer(response, answers) is True:
-                outputLog(self, "RIGHT - Question=[%s], Answer=[%s]" % (question, response))
+                outputLog(
+                    self, "RIGHT - Question=[%s], Answer=[%s]" % (question, response)
+                )
 
             else:
-                outputLog(self, "WRONG - Question=[%s], Answer=[%s]" % (question, response))
+                outputLog(
+                    self, "WRONG - Question=[%s], Answer=[%s]" % (question, response)
+                )
 
         raise KeyboardInterrupt()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     outputLog(None, "Initiating Auto Answer Console Client...")
 
     default_quands = [
         ["Hello", ["*"]],
         ["What are you", ["*"]],
-        ["Where are you", ["I'm currently in Kinghorn."]]
+        ["Where are you", ["I'm currently in Kinghorn."]],
     ]
 
     console_app = AutoAnswerConsoleBotClient(default_quands)

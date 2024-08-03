@@ -14,8 +14,9 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
+
 from programy.processors.processing import PreProcessor
+from programy.utils.logging.ylogger import YLogger
 
 
 class NormalizePreProcessor(PreProcessor):
@@ -25,5 +26,7 @@ class NormalizePreProcessor(PreProcessor):
 
     def process(self, context, word_string):
         normalized = context.brain.normals.normalise_string(word_string)
-        YLogger.debug(context, "Normalising input from [%s] to [%s]", word_string, normalized)
+        YLogger.debug(
+            context, "Normalising input from [%s] to [%s]", word_string, normalized
+        )
         return normalized

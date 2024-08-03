@@ -14,13 +14,14 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-import urllib.parse
-import os
+
 import json
-from programy.utils.logging.ylogger import YLogger
+import os
+import urllib.parse
+
 from programy.services.base import ServiceQuery
-from programy.services.rest.base import RESTService
-from programy.services.rest.base import RESTServiceException
+from programy.services.rest.base import RESTService, RESTServiceException
+from programy.utils.logging.ylogger import YLogger
 
 
 class WolframAlphaSimpleQuery(ServiceQuery):
@@ -49,19 +50,21 @@ class WolframAlphaSimpleQuery(ServiceQuery):
 
     @staticmethod
     def get_answer(data):
-        response = data.get('response', None)
+        response = data.get("response", None)
         if response is not None:
-            payload = response.get('payload', None)
+            payload = response.get("payload", None)
             if payload is not None:
-                queryresult = payload.get('queryresult', None)
+                queryresult = payload.get("queryresult", None)
                 if queryresult is not None:
-                    pods = queryresult.get('pods', [])
+                    pods = queryresult.get("pods", [])
                     for pod in pods:
-                        title = pod.get('title', "")
-                        if title == 'Input interpretation':
-                            subpods = pod.get('subpods', [])
+                        title = pod.get("title", "")
+                        if title == "Input interpretation":
+                            subpods = pod.get("subpods", [])
                             if subpods:
-                                return "SIMPLE {0}".format(subpods[0].get('plaintext', None))
+                                return "SIMPLE {0}".format(
+                                    subpods[0].get("plaintext", None)
+                                )
         return None
 
 
@@ -82,8 +85,8 @@ class WolframAlphaShortQuery(ServiceQuery):
         return self._service.short(self._query)
 
     def aiml_response(self, response):
-        payload = response['response']['payload']
-        result = "SHORT {0}".format(payload['answer'])
+        payload = response["response"]["payload"]
+        result = "SHORT {0}".format(payload["answer"])
         YLogger.debug(self, result)
         return result
 
@@ -95,11 +98,11 @@ class WolframAlphaServiceException(RESTServiceException):
 
 
 class WolframAlphaService(RESTService):
-    """
-    """
+    """ """
+
     PATTERNS = [
         [r"SIMPLE\s(.+)", WolframAlphaSimpleQuery],
-        [r"SHORT\s(.+)?", WolframAlphaShortQuery]
+        [r"SHORT\s(.+)?", WolframAlphaShortQuery],
     ]
 
     SIMPLE_QUERY_URL = "https://api.wolframalpha.com/v1/query"
@@ -115,7 +118,10 @@ class WolframAlphaService(RESTService):
     def initialise(self, client):
         self._appID = client.license_keys.get_key("WOLFRAM_ALPHA_APPID")
         if self._appID is None:
-            YLogger.error(self, "WOLFRAM_ALPHA_APPID missing from license.keys, service will not function correctly!")
+            YLogger.error(
+                self,
+                "WOLFRAM_ALPHA_APPID missing from license.keys, service will not function correctly!",
+            )
 
     def get_default_aiml_file(self):
         return os.path.dirname(__file__) + os.sep + "wolframalpha.aiml"
@@ -140,20 +146,20 @@ class WolframAlphaService(RESTService):
 
     def simple(self, question):
         url = self._build_simple_url(question)
-        response = self.query('simple', url)
+        response = self.query("simple", url)
         return response
 
     def short(self, question):
         url = self._build_short_url(question)
-        response = self.query('short', url)
+        response = self.query("short", url)
         return response
 
     def _response_to_json(self, api, response):
 
-        if api == 'short':
+        if api == "short":
             return {"answer": response.text}
 
-        elif api == 'simple':
+        elif api == "simple":
             return json.loads(response.text)
 
         return None

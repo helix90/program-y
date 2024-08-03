@@ -23,7 +23,13 @@ class MockRenderer:
 
 class MockBotClient(object):
 
-    def __init__(self, verify_api_key_usage=(None, None), variables={}, response=None, metadata={}):
+    def __init__(
+        self,
+        verify_api_key_usage=(None, None),
+        variables={},
+        response=None,
+        metadata={},
+    ):
         self._verify_api_key_usage = verify_api_key_usage
         self._variables = variables
         self._response = response
@@ -34,8 +40,8 @@ class MockBotClient(object):
     def renderer(self):
         return self._renderer
 
-    def verify_api_key_usage(self, request, method='GET'):
-        return self._verify_api_key_usage[0],  self._verify_api_key_usage[1]
+    def verify_api_key_usage(self, request, method="GET"):
+        return self._verify_api_key_usage[0], self._verify_api_key_usage[1]
 
     def get_variable(self, request, name, method):
         return self._variables[name]
@@ -70,15 +76,16 @@ class APIHandler_V2_0Tests(unittest.TestCase):
         self.assertIsNotNone(handler)
 
     def test_process_get_request(self):
-        mock_bot_client = MockBotClient(variables={"query": "Hello",
-                                                   "userId": "userid1"
-                                                  },
-                                        response="Hi there",
-                                        metadata={ "botName": "testbot",
-                                                   "version": "1.0",
-                                                   "copyright": "copyright 2019'",
-                                                   "authors": "Test Bot"
-                                                  })
+        mock_bot_client = MockBotClient(
+            variables={"query": "Hello", "userId": "userid1"},
+            response="Hi there",
+            metadata={
+                "botName": "testbot",
+                "version": "1.0",
+                "copyright": "copyright 2019'",
+                "authors": "Test Bot",
+            },
+        )
         self.assertIsNotNone(mock_bot_client)
 
         handler = APIHandler_V2_0UnderTest(mock_bot_client)
@@ -86,56 +93,66 @@ class APIHandler_V2_0Tests(unittest.TestCase):
 
         response = handler.process_request(mock_bot_client, "Hello")
         self.assertIsNotNone(response)
-        self.assertEqual(response, ({'response': {"query": "Hello",
-                                                   "userId": "userid1",
-                                                   "timestamp": 0,
-                                                   "text": "Hi there",
-                                     },
-                                    'status': {
-                                        'code': 200,
-                                        'message': 'success'
-                                    },
-                                    "meta": {
-                                        "botName": "testbot",
-                                        "version": "1.0",
-                                        "copyright": "copyright 2019'",
-                                        "authors": "Test Bot"
-                                    }
-                                    }, 200))
+        self.assertEqual(
+            response,
+            (
+                {
+                    "response": {
+                        "query": "Hello",
+                        "userId": "userid1",
+                        "timestamp": 0,
+                        "text": "Hi there",
+                    },
+                    "status": {"code": 200, "message": "success"},
+                    "meta": {
+                        "botName": "testbot",
+                        "version": "1.0",
+                        "copyright": "copyright 2019'",
+                        "authors": "Test Bot",
+                    },
+                },
+                200,
+            ),
+        )
 
     def test_format_success_response(self):
-        mock_bot_client = MockBotClient(variables={"query": "Hello",
-                                                   "userId": "userid1"
-                                                  },
-                                        response="Hi there",
-                                        )
+        mock_bot_client = MockBotClient(
+            variables={"query": "Hello", "userId": "userid1"},
+            response="Hi there",
+        )
         self.assertIsNotNone(mock_bot_client)
 
         handler = APIHandler_V2_0UnderTest(mock_bot_client)
         self.assertIsNotNone(handler)
 
-        metadata = {"botName": "testbot",
+        metadata = {
+            "botName": "testbot",
+            "version": "1.0",
+            "copyright": "copyright 2019'",
+            "authors": "Test Bot",
+        }
+        response = handler.format_success_response(
+            "userid1", "Hello", "Hi there", metadata
+        )
+        self.assertIsNotNone(response)
+        self.assertEqual(
+            response,
+            {
+                "response": {
+                    "query": "Hello",
+                    "userId": "userid1",
+                    "timestamp": 0,
+                    "text": "Hi there",
+                },
+                "status": {"code": 200, "message": "success"},
+                "meta": {
+                    "botName": "testbot",
                     "version": "1.0",
                     "copyright": "copyright 2019'",
-                    "authors": "Test Bot"
-                    }
-        response = handler.format_success_response("userid1", "Hello", "Hi there", metadata)
-        self.assertIsNotNone(response)
-        self.assertEqual(response, {'response': {"query": "Hello",
-                                                   "userId": "userid1",
-                                                   "timestamp": 0,
-                                                   "text": "Hi there",
-                                     },
-                                    'status': {
-                                        'code': 200,
-                                        'message': 'success'
-                                    },
-                                    "meta": {
-                                        "botName": "testbot",
-                                        "version": "1.0",
-                                        "copyright": "copyright 2019'",
-                                        "authors": "Test Bot"
-                                    }})
+                    "authors": "Test Bot",
+                },
+            },
+        )
 
     def test_format_error_response(self):
         mock_bot_client = MockBotClient()
@@ -144,24 +161,28 @@ class APIHandler_V2_0Tests(unittest.TestCase):
         handler = APIHandler_V2_0UnderTest(mock_bot_client)
         self.assertIsNotNone(handler)
 
-        metadata = {"botName": "testbot",
-                    "version": "1.0",
-                    "copyright": "copyright 2019'",
-                    "authors": "Test Bot"
-                    }
+        metadata = {
+            "botName": "testbot",
+            "version": "1.0",
+            "copyright": "copyright 2019'",
+            "authors": "Test Bot",
+        }
         response = handler.format_error_response("userid1", "Hello", "Oopsie", metadata)
         self.assertIsNotNone(response)
-        self.assertEqual(response, {'response': {"query": "Hello",
-                                                   "userId": "userid1",
-                                                   "timestamp": 0,
-                                     },
-                                    'status': {
-                                        'code': 500,
-                                        'message': 'Oopsie'
-                                    },
-                                    "meta": {
-                                        "botName": "testbot",
-                                        "version": "1.0",
-                                        "copyright": "copyright 2019'",
-                                        "authors": "Test Bot"
-                                    }})
+        self.assertEqual(
+            response,
+            {
+                "response": {
+                    "query": "Hello",
+                    "userId": "userid1",
+                    "timestamp": 0,
+                },
+                "status": {"code": 500, "message": "Oopsie"},
+                "meta": {
+                    "botName": "testbot",
+                    "version": "1.0",
+                    "copyright": "copyright 2019'",
+                    "authors": "Test Bot",
+                },
+            },
+        )

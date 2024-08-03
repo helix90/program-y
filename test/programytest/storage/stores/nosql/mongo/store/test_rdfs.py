@@ -1,10 +1,11 @@
 import unittest
 
 import programytest.storage.engines as Engines
+from programytest.storage.asserts.store.assert_rdfs import RDFStoreAsserts
+
 from programy.storage.stores.nosql.mongo.config import MongoStorageConfiguration
 from programy.storage.stores.nosql.mongo.engine import MongoStorageEngine
 from programy.storage.stores.nosql.mongo.store.rdfs import MongoRDFsStore
-from programytest.storage.asserts.store.assert_rdfs import RDFStoreAsserts
 
 
 class MongoRDFsStoreTests(RDFStoreAsserts):
@@ -78,7 +79,9 @@ class MongoRDFsStoreTests(RDFStoreAsserts):
         engine.initialise()
         store = MongoRDFsStore(engine)
 
-        self.assert_upload_from_csv_file(store,)
+        self.assert_upload_from_csv_file(
+            store,
+        )
 
     @unittest.skipIf(Engines.mongo is False, Engines.mongo_disabled)
     def test_upload_csv_files_from_directory_with_subdir(self):

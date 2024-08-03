@@ -1,10 +1,12 @@
 import unittest
 from unittest.mock import patch
+
 import programytest.storage.engines as Engines
+from programytest.storage.asserts.store.assert_users import UserStoreAsserts
+
 from programy.storage.stores.sql.config import SQLStorageConfiguration
 from programy.storage.stores.sql.engine import SQLStorageEngine
 from programy.storage.stores.sql.store.users import SQLUserStore
-from programytest.storage.asserts.store.assert_users import UserStoreAsserts
 
 
 class SQLUserStoreTests(UserStoreAsserts):
@@ -30,7 +32,10 @@ class SQLUserStoreTests(UserStoreAsserts):
         raise Exception("Mock Exception")
 
     @unittest.skipIf(Engines.mongo is False, Engines.mongo_disabled)
-    @patch("programy.storage.stores.sql.store.users.SQLUserStore._remove_user_from_db", patch_remove_user_from_db)
+    @patch(
+        "programy.storage.stores.sql.store.users.SQLUserStore._remove_user_from_db",
+        patch_remove_user_from_db,
+    )
     def test_remove_user_exception(self):
         config = SQLStorageConfiguration()
         engine = SQLStorageEngine(config)
@@ -43,7 +48,10 @@ class SQLUserStoreTests(UserStoreAsserts):
         raise Exception("Mock Exception")
 
     @unittest.skipIf(Engines.mongo is False, Engines.mongo_disabled)
-    @patch("programy.storage.stores.sql.store.users.SQLUserStore._remove_user_from_all_clients_from_db", patch_remove_user_from_all_clients_from_db)
+    @patch(
+        "programy.storage.stores.sql.store.users.SQLUserStore._remove_user_from_all_clients_from_db",
+        patch_remove_user_from_all_clients_from_db,
+    )
     def test_remove_user_from_all_clients_exception(self):
         config = SQLStorageConfiguration()
         engine = SQLStorageEngine(config)

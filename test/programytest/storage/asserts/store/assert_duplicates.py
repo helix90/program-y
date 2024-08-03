@@ -7,7 +7,9 @@ class DuplicateStoreAsserts(unittest.TestCase):
 
         store.empty()
 
-        duplicates = [["Duplicate1", "aiml1.xml", "100", "200"],
-                      ["Duplicate2", "aiml2.xml", "200", "300"]]
+        duplicates = [
+            ["Duplicate1", "aiml1.xml", "100", "200"],
+            ["Duplicate2", "aiml2.xml", "200", "300"],
+        ]
 
         store.save_duplicates(duplicates)

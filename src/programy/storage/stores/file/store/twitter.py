@@ -14,12 +14,14 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 import os
 import os.path
 import shutil
-from programy.utils.logging.ylogger import YLogger
-from programy.storage.stores.file.store.filestore import FileStore
+
 from programy.storage.entities.twitter import TwitterStore
+from programy.storage.stores.file.store.filestore import FileStore
+from programy.utils.logging.ylogger import YLogger
 
 
 class FileTwitterStore(FileStore, TwitterStore):
@@ -35,26 +37,39 @@ class FileTwitterStore(FileStore, TwitterStore):
         return self.storage_engine.configuration.twitter_storage.file
 
     def empty(self):
-        if os.path.exists(self.storage_engine.configuration.twitter_storage.dirs[0]) is True:
+        if (
+            os.path.exists(self.storage_engine.configuration.twitter_storage.dirs[0])
+            is True
+        ):
             shutil.rmtree(self.storage_engine.configuration.twitter_storage.dirs[0])
 
-    def _twitter_filename(self, storage_dir, ext='ids'):
+    def _twitter_filename(self, storage_dir, ext="ids"):
         return storage_dir + os.sep + "twitter." + ext
 
-    def _write_message_ids_to_file(self, twitter_ids_file, last_direct_message_id, last_status_id):
+    def _write_message_ids_to_file(
+        self, twitter_ids_file, last_direct_message_id, last_status_id
+    ):
         with open(twitter_ids_file, "w+", encoding="utf-8") as idfile:
             idfile.write("%s\n" % last_direct_message_id)
             idfile.write("%s\n" % last_status_id)
 
     def store_last_message_ids(self, last_direct_message_id, last_status_id):
         try:
-            self._ensure_dir_exists(self.storage_engine.configuration.twitter_storage.dirs[0])
-            twitter_ids_file = self._twitter_filename(self.storage_engine.configuration.twitter_storage.dirs[0])
-            self._write_message_ids_to_file(twitter_ids_file, last_direct_message_id, last_status_id)
+            self._ensure_dir_exists(
+                self.storage_engine.configuration.twitter_storage.dirs[0]
+            )
+            twitter_ids_file = self._twitter_filename(
+                self.storage_engine.configuration.twitter_storage.dirs[0]
+            )
+            self._write_message_ids_to_file(
+                twitter_ids_file, last_direct_message_id, last_status_id
+            )
             return True
 
         except Exception as e:
-            YLogger.exception_nostack(None, "Failed to store last message ids [%s]", e, twitter_ids_file)
+            YLogger.exception_nostack(
+                None, "Failed to store last message ids [%s]", e, twitter_ids_file
+            )
 
         return False
 
@@ -66,11 +81,17 @@ class FileTwitterStore(FileStore, TwitterStore):
 
     def load_last_message_ids(self):
         try:
-            self._ensure_dir_exists(self.storage_engine.configuration.twitter_storage.dirs[0])
-            twitter_ids_file = self._twitter_filename(self.storage_engine.configuration.twitter_storage.dirs[0])
+            self._ensure_dir_exists(
+                self.storage_engine.configuration.twitter_storage.dirs[0]
+            )
+            twitter_ids_file = self._twitter_filename(
+                self.storage_engine.configuration.twitter_storage.dirs[0]
+            )
             return self._load_message_ids_from_file(twitter_ids_file)
 
         except Exception as e:
-            YLogger.exception_nostack(None, "Failed to load last message ids [%s]", e, twitter_ids_file)
+            YLogger.exception_nostack(
+                None, "Failed to load last message ids [%s]", e, twitter_ids_file
+            )
 
         return "-1", "-1"

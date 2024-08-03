@@ -14,8 +14,9 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
+
 from programy.parser.template.nodes.base import TemplateNode
+from programy.utils.logging.ylogger import YLogger
 
 
 class TemplateVocabularyNode(TemplateNode):
@@ -25,9 +26,13 @@ class TemplateVocabularyNode(TemplateNode):
 
     def resolve_to_string(self, client_context):
         set_words = client_context.brain.sets.count_words_in_sets()
-        pattern_words = client_context.brain.aiml_parser.pattern_parser.count_words_in_patterns()
+        pattern_words = (
+            client_context.brain.aiml_parser.pattern_parser.count_words_in_patterns()
+        )
         resolved = "%d" % (set_words + pattern_words)
-        YLogger.debug(client_context, "[%s] resolved to [%s]", self.to_string(), resolved)
+        YLogger.debug(
+            client_context, "[%s] resolved to [%s]", self.to_string(), resolved
+        )
         return resolved
 
     def to_string(self):

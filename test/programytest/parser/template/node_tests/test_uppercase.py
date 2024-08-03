@@ -1,9 +1,10 @@
 import xml.etree.ElementTree as ET
 
+from programytest.parser.base import ParserTestsBaseClass
+
 from programy.parser.template.nodes.base import TemplateNode
 from programy.parser.template.nodes.uppercase import TemplateUppercaseNode
 from programy.parser.template.nodes.word import TemplateWordNode
-from programytest.parser.base import ParserTestsBaseClass
 
 
 class MockTemplateUppercaseNode(TemplateUppercaseNode):
@@ -12,6 +13,7 @@ class MockTemplateUppercaseNode(TemplateUppercaseNode):
 
     def resolve(self, context):
         raise Exception("This is a failure!")
+
 
 class TemplateUppercaseNodeTests(ParserTestsBaseClass):
 

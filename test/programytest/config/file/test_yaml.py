@@ -1,27 +1,34 @@
 import os
 
+from programytest.config.file.base_file_tests import ConfigurationBaseFileTests
+
 from programy.clients.events.console.config import ConsoleConfiguration
 from programy.config.file.yaml_file import YamlConfigurationFile
 from programy.utils.substitutions.substitues import Substitutions
-from programytest.config.file.base_file_tests import ConfigurationBaseFileTests
 
 
 class YamlConfigurationFileTests(ConfigurationBaseFileTests):
 
     def test_invalid_file(self):
         config = YamlConfigurationFile()
-        self.assertIsNotNone(config.load_from_file("unknown.yaml", ConsoleConfiguration(), "."))
+        self.assertIsNotNone(
+            config.load_from_file("unknown.yaml", ConsoleConfiguration(), ".")
+        )
 
     def test_get_methods(self):
         config_data = YamlConfigurationFile()
         self.assertIsNotNone(config_data)
-        configuration = config_data.load_from_text("""
+        configuration = config_data.load_from_text(
+            """
 brain:
     overrides:
       allow_system_aiml: true
       allow_learn_aiml: true
       allow_learnf_aiml: true
-          """, ConsoleConfiguration(), ".")
+          """,
+            ConsoleConfiguration(),
+            ".",
+        )
         self.assertIsNotNone(configuration)
 
         section = config_data.get_section("brainx")
@@ -40,18 +47,30 @@ brain:
         self.assertTrue("allow_learn_aiml" in keys)
         self.assertTrue("allow_learnf_aiml" in keys)
         self.assertIsNone(config_data.get_child_section_keys("missing", section))
-        self.assertEqual(True, config_data.get_option(child_section, "allow_system_aiml"))
-        self.assertEqual(True, config_data.get_option(child_section, "missing", missing_value=True))
-        self.assertEqual(True, config_data.get_bool_option(child_section, "allow_system_aiml"))
-        self.assertEqual(False, config_data.get_bool_option(child_section, "other_value"))
+        self.assertEqual(
+            True, config_data.get_option(child_section, "allow_system_aiml")
+        )
+        self.assertEqual(
+            True, config_data.get_option(child_section, "missing", missing_value=True)
+        )
+        self.assertEqual(
+            True, config_data.get_bool_option(child_section, "allow_system_aiml")
+        )
+        self.assertEqual(
+            False, config_data.get_bool_option(child_section, "other_value")
+        )
         self.assertEqual(0, config_data.get_int_option(child_section, "other_value"))
 
     def test_from_text_no_yaml(self):
-            config_data = YamlConfigurationFile()
-            self.assertIsNotNone(config_data)
-            with self.assertRaises(Exception):
-                _ = config_data.load_from_text("""
-                  """, ConsoleConfiguration(), ".")
+        config_data = YamlConfigurationFile()
+        self.assertIsNotNone(config_data)
+        with self.assertRaises(Exception):
+            _ = config_data.load_from_text(
+                """
+                  """,
+                ConsoleConfiguration(),
+                ".",
+            )
 
     def test_load_from_file(self):
         yaml = YamlConfigurationFile()
@@ -82,18 +101,25 @@ brain:
     def test_load_from_text_multis_one_value(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        configuration = yaml.load_from_text("""
+        configuration = yaml.load_from_text(
+            """
             bot:
                 brain:  bot1
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
         self.assertIsNotNone(configuration)
 
-        self.assertEqual(1, len(configuration.client_configuration.configurations[0].configurations))
+        self.assertEqual(
+            1, len(configuration.client_configuration.configurations[0].configurations)
+        )
 
     def test_load_from_text_multis_multiple_values(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        configuration = yaml.load_from_text("""
+        configuration = yaml.load_from_text(
+            """
             console:
                 bots:
                     bot1:
@@ -104,10 +130,15 @@ brain:
                         brains:
                             brain3:
                             
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
         self.assertIsNotNone(configuration)
 
-        self.assertEqual(2, len(configuration.client_configuration.configurations[0].configurations))
+        self.assertEqual(
+            2, len(configuration.client_configuration.configurations[0].configurations)
+        )
 
     def test_load_with_subs(self):
 
@@ -116,13 +147,17 @@ brain:
 
         config_data = YamlConfigurationFile()
         self.assertIsNotNone(config_data)
-        configuration = config_data.load_from_text("""
+        configuration = config_data.load_from_text(
+            """
             brain:
                 overrides:
                   allow_system_aiml: true
                   allow_learn_aiml: true
                   allow_learnf_aiml: true
-          """, ConsoleConfiguration(), ".")
+          """,
+            ConsoleConfiguration(),
+            ".",
+        )
         self.assertIsNotNone(configuration)
 
         section = config_data.get_section("brainx")
@@ -134,14 +169,21 @@ brain:
         child_section = config_data.get_section("overrides", section)
         self.assertIsNotNone(child_section)
 
-        self.assertEqual(True, config_data.get_option(child_section, "allow_system_aiml"))
-        self.assertEqual(True, config_data.get_bool_option(child_section, "allow_system_aiml"))
-        self.assertEqual(False, config_data.get_bool_option(child_section, "other_value"))
+        self.assertEqual(
+            True, config_data.get_option(child_section, "allow_system_aiml")
+        )
+        self.assertEqual(
+            True, config_data.get_bool_option(child_section, "allow_system_aiml")
+        )
+        self.assertEqual(
+            False, config_data.get_bool_option(child_section, "other_value")
+        )
 
     def test_get_invalid_values(self):
         config_data = YamlConfigurationFile()
         self.assertIsNotNone(config_data)
-        configuration = config_data.load_from_text("""
+        configuration = config_data.load_from_text(
+            """
         section1:
             section2:
                   boolvalue: true
@@ -151,7 +193,10 @@ brain:
                               one
                               two
                               three
-                  """, ConsoleConfiguration(), ".")
+                  """,
+            ConsoleConfiguration(),
+            ".",
+        )
         self.assertIsNotNone(configuration)
 
         section = config_data.get_section("section1")
@@ -168,15 +213,36 @@ brain:
         self.assertTrue(config_data.get_bool_option(child_section, "intvalue"))
         self.assertTrue(config_data.get_bool_option(child_section, "strvalue"))
 
-        self.assertEquals(['one', 'two', 'three'], config_data.get_multi_option(child_section, "multivalue"))
+        self.assertEquals(
+            ["one", "two", "three"],
+            config_data.get_multi_option(child_section, "multivalue"),
+        )
         self.assertEquals([], config_data.get_multi_option(child_section, "boolvalue"))
         self.assertEquals([], config_data.get_multi_option(child_section, "intvalue"))
-        self.assertEquals(["hello"], config_data.get_multi_option(child_section, "strvalue"))
+        self.assertEquals(
+            ["hello"], config_data.get_multi_option(child_section, "strvalue")
+        )
 
-        self.assertEquals(['one', 'two', 'three'], config_data.get_multi_file_option(child_section, "multivalue", "."))
-        self.assertEquals([], config_data.get_multi_file_option(child_section, "boolvalue", "."))
-        self.assertEquals([], config_data.get_multi_file_option(child_section, "intvalue", "."))
-        self.assertEquals(["hello"], config_data.get_multi_file_option(child_section, "strvalue", "."))
+        self.assertEquals(
+            ["one", "two", "three"],
+            config_data.get_multi_file_option(child_section, "multivalue", "."),
+        )
+        self.assertEquals(
+            [], config_data.get_multi_file_option(child_section, "boolvalue", ".")
+        )
+        self.assertEquals(
+            [], config_data.get_multi_file_option(child_section, "intvalue", ".")
+        )
+        self.assertEquals(
+            ["hello"], config_data.get_multi_file_option(child_section, "strvalue", ".")
+        )
 
-        self.assertEquals([], config_data.get_multi_file_option(child_section, "unknown1", "."))
-        self.assertEquals(["missing1", "missing2"], config_data.get_multi_file_option(child_section, "unknown1", ".", missing_value=["missing1", "missing2"]))
+        self.assertEquals(
+            [], config_data.get_multi_file_option(child_section, "unknown1", ".")
+        )
+        self.assertEquals(
+            ["missing1", "missing2"],
+            config_data.get_multi_file_option(
+                child_section, "unknown1", ".", missing_value=["missing1", "missing2"]
+            ),
+        )

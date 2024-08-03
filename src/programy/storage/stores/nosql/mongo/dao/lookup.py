@@ -14,10 +14,11 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 from programy.storage.stores.utils import DAOUtils
 
 
-class Lookup():
+class Lookup:
 
     def __init__(self, key, value):
         self.id = None
@@ -25,19 +26,22 @@ class Lookup():
         self.value = value
 
     def __repr__(self):
-        return "<Lookup(id='%s', key='%s', value='%s')>" % (DAOUtils.valid_id(self.id), self.key, self.value)
+        return "<Lookup(id='%s', key='%s', value='%s')>" % (
+            DAOUtils.valid_id(self.id),
+            self.key,
+            self.value,
+        )
 
     def to_document(self):
-        document = {"key": self.key,
-                    "value": self.value}
+        document = {"key": self.key, "value": self.value}
         if self.id is not None:
-            document['_id'] = self.id
+            document["_id"] = self.id
         return document
 
     @staticmethod
     def from_document(data):
         lookup = Lookup(None, None)
-        lookup.id = DAOUtils.get_value_from_data(data, '_id')
-        lookup.key = DAOUtils.get_value_from_data(data, 'key')
-        lookup.value = DAOUtils.get_value_from_data(data, 'value')
+        lookup.id = DAOUtils.get_value_from_data(data, "_id")
+        lookup.key = DAOUtils.get_value_from_data(data, "key")
+        lookup.value = DAOUtils.get_value_from_data(data, "value")
         return lookup

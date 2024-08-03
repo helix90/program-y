@@ -14,12 +14,15 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
-from programy.utils.weather.metoffice import MetOffice
-from programy.utils.weather.metoffice import MetOffice5DayForecast
-from programy.utils.weather.metoffice import MetOffice24HourForecast
-from programy.utils.geo.google import GoogleMaps
+
 from programy.extensions.base import Extension
+from programy.utils.geo.google import GoogleMaps
+from programy.utils.logging.ylogger import YLogger
+from programy.utils.weather.metoffice import (
+    MetOffice,
+    MetOffice5DayForecast,
+    MetOffice24HourForecast,
+)
 
 
 class WeatherExtension(Extension):
@@ -43,39 +46,51 @@ class WeatherExtension(Extension):
 
             splits = data.split()
             if len(splits) != 5:
-                YLogger.debug(client_context, "Weather - Not enough paramters passed, [%d] expected 5", len(splits))
+                YLogger.debug(
+                    client_context,
+                    "Weather - Not enough paramters passed, [%d] expected 5",
+                    len(splits),
+                )
                 return None
 
             obvtype = splits[0]
-            if obvtype not in ['OBSERVATION', 'FORECAST5DAY', 'FORECAST24HOUR']:
-                YLogger.debug(client_context, "Weather - Type not understood [%s]", obvtype)
+            if obvtype not in ["OBSERVATION", "FORECAST5DAY", "FORECAST24HOUR"]:
+                YLogger.debug(
+                    client_context, "Weather - Type not understood [%s]", obvtype
+                )
                 return None
 
-            if splits[1] == 'LOCATION':
+            if splits[1] == "LOCATION":
                 postcode = splits[2]
             else:
                 YLogger.debug(client_context, "Weather - LOCATION missing")
                 return None
 
-            if splits[3] == 'WHEN':
+            if splits[3] == "WHEN":
                 when = splits[4]
             else:
                 YLogger.debug(client_context, "Weather - WHEN missing")
                 return None
 
-            if obvtype == 'OBSERVATION':
+            if obvtype == "OBSERVATION":
                 result = self.current_observation(client_context, postcode)
 
-            elif obvtype == 'FORECAST5DAY':
-                result =  self.five_day_forecast(client_context, postcode, when, fromdate=fromdate)
+            elif obvtype == "FORECAST5DAY":
+                result = self.five_day_forecast(
+                    client_context, postcode, when, fromdate=fromdate
+                )
 
-            else: # obvtype == 'FORECAST24HOUR':
-                result = self.twentyfour_hour_forecast(client_context, postcode, when, fromdate=fromdate)
+            else:  # obvtype == 'FORECAST24HOUR':
+                result = self.twentyfour_hour_forecast(
+                    client_context, postcode, when, fromdate=fromdate
+                )
 
             return result
 
         except Exception as error:
-            YLogger.exception(client_context, "Failed to execute weather extension", error)
+            YLogger.exception(
+                client_context, "Failed to execute weather extension", error
+            )
 
         return "UNAVAILABLE"
 
@@ -94,17 +109,26 @@ class WeatherExtension(Extension):
             return "UNAVAILABLE"
 
     def twentyfour_hour_forecast(self, context, postcode, when, fromdate=None):
-        YLogger.debug(context, "Getting 24 hour weather forecast for [%s] at time [%s]", postcode, when)
+        YLogger.debug(
+            context,
+            "Getting 24 hour weather forecast for [%s] at time [%s]",
+            postcode,
+            when,
+        )
 
         googlemaps = self.get_geo_locator()
         latlng = googlemaps.get_latlong_for_location(postcode)
 
         met_office = self.get_met_office()
 
-        forecast = met_office.twentyfour_hour_forecast(latlng.latitude, latlng.longitude)
+        forecast = met_office.twentyfour_hour_forecast(
+            latlng.latitude, latlng.longitude
+        )
         if forecast is not None:
 
-            datapoint = forecast.get_forecast_for_n_hours_ahead(int(when), fromdate=fromdate)
+            datapoint = forecast.get_forecast_for_n_hours_ahead(
+                int(when), fromdate=fromdate
+            )
             if datapoint is not None:
                 return datapoint
 
@@ -115,7 +139,9 @@ class WeatherExtension(Extension):
         return "UNAVAILABLE"
 
     def five_day_forecast(self, context, postcode, when, fromdate=None):
-        YLogger.debug(context, "Getting 5 day forecast for [%s] at time [%s]", postcode, when)
+        YLogger.debug(
+            context, "Getting 5 day forecast for [%s] at time [%s]", postcode, when
+        )
 
         googlemaps = self.get_geo_locator()
         latlng = googlemaps.get_latlong_for_location(postcode)
@@ -125,7 +151,9 @@ class WeatherExtension(Extension):
         forecast = met_office.five_day_forecast(latlng.latitude, latlng.longitude)
         if forecast is not None:
 
-            datapoint = forecast.get_forecast_for_n_days_ahead(int(when), fromdate=fromdate)
+            datapoint = forecast.get_forecast_for_n_days_ahead(
+                int(when), fromdate=fromdate
+            )
             if datapoint is not None:
                 return datapoint
 

@@ -14,9 +14,11 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-import datetime
+
 import csv
+import datetime
 import os
+
 from programy.utils.logging.ylogger import YLogger
 
 
@@ -45,11 +47,21 @@ class TextFile:
 
 class CSVFile:
 
-    def __init__(self, filename, mode="a", encoding="utf-8", delimiter=',', quotechar='"', quoting=csv.QUOTE_ALL):
+    def __init__(
+        self,
+        filename,
+        mode="a",
+        encoding="utf-8",
+        delimiter=",",
+        quotechar='"',
+        quoting=csv.QUOTE_ALL,
+    ):
         self._filename = filename
         self._encoding = encoding
         self._file = open(self._filename, mode, encoding=self._encoding)
-        self._csv_writer = csv.writer(self._file, delimiter=delimiter, quotechar=quotechar, quoting=quoting)
+        self._csv_writer = csv.writer(
+            self._file, delimiter=delimiter, quotechar=quotechar, quoting=quoting
+        )
 
     @property
     def filename(self):
@@ -68,7 +80,14 @@ class CSVFile:
 
 class FileWriterConfiguration:
 
-    def __init__(self, filename, fileformat=None, mode="a", encoding="utf-8", delete_on_start=False):
+    def __init__(
+        self,
+        filename,
+        fileformat=None,
+        mode="a",
+        encoding="utf-8",
+        delete_on_start=False,
+    ):
         self._filename = filename
         self._file_format = fileformat
         self._mode = mode
@@ -106,10 +125,10 @@ class FileWriter:
                 YLogger.info(self, "Removing %s on start up", configuration.filename)
                 os.remove(configuration.filename)
 
-        if configuration.file_format == 'txt':
+        if configuration.file_format == "txt":
             self._file = TextFile(self._filename, encoding=configuration.encoding)
 
-        elif configuration.file_format == 'csv':
+        elif configuration.file_format == "csv":
             self._file = CSVFile(self._filename)
             self.write_header()
 
@@ -117,7 +136,7 @@ class FileWriter:
             raise Exception("Unknown file type [%s]" % configuration.fileformat)
 
     def write_header(self):
-        pass    # pragma: no cover
+        pass  # pragma: no cover
 
     def format_row_as_text(self, row):
         return row
@@ -139,7 +158,12 @@ class ConversationFileWriter(FileWriter):
         self._file.flush()
 
     def format_row_as_text(self, row):
-        return "%s - %s - Question[%s], Response[%s]\n" % (row[0], row[1], row[2], row[3])
+        return "%s - %s - Question[%s], Response[%s]\n" % (
+            row[0],
+            row[1],
+            row[2],
+            row[3],
+        )
 
     def write_header(self):
         self._file.write_line(self, ["Timestamp", "Clientid", "Question", "Response"])
@@ -167,7 +191,9 @@ class ContentFileWriter(FileWriter):
         self._entries.append(row)
 
     def save_content(self):
-        YLogger.info(self, "Saving aiml %s to file [%s]", self._content_type, self._filename)
+        YLogger.info(
+            self, "Saving aiml %s to file [%s]", self._content_type, self._filename
+        )
 
         for entry in self._entries:
             self._file.write_line(self, entry)
@@ -182,8 +208,13 @@ class ContentFileWriter(FileWriter):
             return "%s [%s]\n" % (row[0], row[1])
 
     def display_debug_info(self):
-        YLogger.info(self, "Found a total of %d %s in your grammrs, check out [%s] for details",
-                     len(self._entries), self._content_type, self._filename)
+        YLogger.info(
+            self,
+            "Found a total of %d %s in your grammrs, check out [%s] for details",
+            len(self._entries),
+            self._content_type,
+            self._filename,
+        )
 
 
 class ErrorsFileWriter(ContentFileWriter):
@@ -192,7 +223,9 @@ class ErrorsFileWriter(ContentFileWriter):
         ContentFileWriter.__init__(self, configuration, "errors")
 
     def write_header(self):
-        self._file.write_line(self, ["Timestamp", "Error", "File", "Start Line", "End Line"])
+        self._file.write_line(
+            self, ["Timestamp", "Error", "File", "Start Line", "End Line"]
+        )
         self._file.flush()
 
 
@@ -201,5 +234,7 @@ class DuplicatesFileWriter(ContentFileWriter):
         ContentFileWriter.__init__(self, configuration, "duplicates")
 
     def write_header(self):
-        self._file.write_line(self, ["Timestamp", "Duplicate", "File", "Start Line", "End Line"])
+        self._file.write_line(
+            self, ["Timestamp", "Duplicate", "File", "Start Line", "End Line"]
+        )
         self._file.flush()

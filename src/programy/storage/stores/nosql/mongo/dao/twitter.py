@@ -14,6 +14,7 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 from programy.storage.stores.utils import DAOUtils
 
 
@@ -25,20 +26,30 @@ class Twitter:
         self.last_status_id = last_status_id
 
     def __repr__(self):
-        return "<Twitter(id='%s', last_direct_message_id='%s', last_status_id='%s')>" % \
-               (DAOUtils.valid_id(self.id), self.last_direct_message_id, self.last_status_id)
+        return (
+            "<Twitter(id='%s', last_direct_message_id='%s', last_status_id='%s')>"
+            % (
+                DAOUtils.valid_id(self.id),
+                self.last_direct_message_id,
+                self.last_status_id,
+            )
+        )
 
     def to_document(self):
-        document = {"last_direct_message_id": self.last_direct_message_id,
-                    "last_status_id": self.last_status_id}
+        document = {
+            "last_direct_message_id": self.last_direct_message_id,
+            "last_status_id": self.last_status_id,
+        }
         if self.id is not None:
-            document['_id'] = self.id
+            document["_id"] = self.id
         return document
 
     @staticmethod
     def from_document(data):
         twitter = Twitter(None, None)
-        twitter.id = DAOUtils.get_value_from_data(data, '_id')
-        twitter.last_direct_message_id = DAOUtils.get_value_from_data(data, 'last_direct_message_id')
-        twitter.last_status_id = DAOUtils.get_value_from_data(data, 'last_status_id')
+        twitter.id = DAOUtils.get_value_from_data(data, "_id")
+        twitter.last_direct_message_id = DAOUtils.get_value_from_data(
+            data, "last_direct_message_id"
+        )
+        twitter.last_status_id = DAOUtils.get_value_from_data(data, "last_status_id")
         return twitter

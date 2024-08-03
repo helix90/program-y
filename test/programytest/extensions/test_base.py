@@ -6,9 +6,8 @@ from programy.extensions.base import Extension
 
 class MockExtension(Extension):
 
-    def execute(self,context, data):
+    def execute(self, context, data):
         raise NotImplementedError()
-
 
 
 class ExtensionTests(unittest.TestCase):

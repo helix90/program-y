@@ -2,6 +2,7 @@ import os
 import os.path
 import re
 import unittest
+
 from programy.mappings.gender import GenderCollection
 from programy.storage.entities.store import Store
 
@@ -37,7 +38,9 @@ class GenderStoreAsserts(unittest.TestCase):
 
         store.empty()
 
-        store.upload_from_text(None, """
+        store.upload_from_text(
+            None,
+            """
                                 " with him "," with her "
                                 " with her "," with him "
                                 " to him "," to her "
@@ -53,34 +56,80 @@ class GenderStoreAsserts(unittest.TestCase):
                                 " him "," her "
                                 " her "," his "
                                 " she "," he "
-                                """)
+                                """,
+        )
 
         collection = GenderCollection()
         store.load(collection)
 
-        self.assertEqual(collection.gender(" WITH HIM "), [re.compile('(^WITH HIM | WITH HIM | WITH HIM$)', re.IGNORECASE), ' WITH HER '])
-        self.assertEqual(collection.genderise_string("This is with him "), "This is with her")
+        self.assertEqual(
+            collection.gender(" WITH HIM "),
+            [
+                re.compile("(^WITH HIM | WITH HIM | WITH HIM$)", re.IGNORECASE),
+                " WITH HER ",
+            ],
+        )
+        self.assertEqual(
+            collection.genderise_string("This is with him "), "This is with her"
+        )
 
     def assert_upload_from_text_file(self, store):
 
         store.empty()
 
-        store.upload_from_file(os.path.dirname(__file__) + os.sep + "data" + os.sep + "lookups" + os.sep + "text" + os.sep + "gender.txt")
+        store.upload_from_file(
+            os.path.dirname(__file__)
+            + os.sep
+            + "data"
+            + os.sep
+            + "lookups"
+            + os.sep
+            + "text"
+            + os.sep
+            + "gender.txt"
+        )
 
         collection = GenderCollection()
         store.load(collection)
 
-        self.assertEqual(collection.gender(" WITH HIM "), [re.compile('(^WITH HIM | WITH HIM | WITH HIM$)', re.IGNORECASE), ' WITH HER '])
-        self.assertEqual(collection.genderise_string("This is with him "), "This is with her")
+        self.assertEqual(
+            collection.gender(" WITH HIM "),
+            [
+                re.compile("(^WITH HIM | WITH HIM | WITH HIM$)", re.IGNORECASE),
+                " WITH HER ",
+            ],
+        )
+        self.assertEqual(
+            collection.genderise_string("This is with him "), "This is with her"
+        )
 
     def assert_upload_csv_file(self, store):
 
         store.empty()
 
-        store.upload_from_file(os.path.dirname(__file__) + os.sep + "data" + os.sep + "lookups" + os.sep + "csv" + os.sep + "gender.csv", fileformat=Store.CSV_FORMAT)
+        store.upload_from_file(
+            os.path.dirname(__file__)
+            + os.sep
+            + "data"
+            + os.sep
+            + "lookups"
+            + os.sep
+            + "csv"
+            + os.sep
+            + "gender.csv",
+            fileformat=Store.CSV_FORMAT,
+        )
 
         collection = GenderCollection()
         store.load(collection)
 
-        self.assertEqual(collection.gender(" WITH HIM "), [re.compile('(^WITH HIM | WITH HIM | WITH HIM$)', re.IGNORECASE), ' WITH HER '])
-        self.assertEqual(collection.genderise_string("This is with him "), "This is with her")
+        self.assertEqual(
+            collection.gender(" WITH HIM "),
+            [
+                re.compile("(^WITH HIM | WITH HIM | WITH HIM$)", re.IGNORECASE),
+                " WITH HER ",
+            ],
+        )
+        self.assertEqual(
+            collection.genderise_string("This is with him "), "This is with her"
+        )

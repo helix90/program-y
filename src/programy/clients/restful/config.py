@@ -14,6 +14,7 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 from programy.clients.config import ClientConfigurationData
 from programy.utils.substitutions.substitues import Substitutions
 
@@ -25,7 +26,7 @@ class RestConfiguration(ClientConfigurationData):
         self._host = "0.0.0.0"
         self._port = 80
         self._debug = False
-        self._api = '/api/rest/v1.0/ask'
+        self._api = "/api/rest/v1.0/ask"
         self._use_api_keys = False
         self._api_key_file = None
         self._ssl_cert_file = None
@@ -68,48 +69,69 @@ class RestConfiguration(ClientConfigurationData):
     def authorization(self):
         return self._authorization
 
-    def load_configuration_section(self, configuration_file, section, bot_root, subs: Substitutions = None):
+    def load_configuration_section(
+        self, configuration_file, section, bot_root, subs: Substitutions = None
+    ):
 
         assert section is not None
 
-        self._host = configuration_file.get_option(section, "host", missing_value="0.0.0.0", subs=subs)
-        self._port = configuration_file.get_int_option(section, "port", missing_value=80, subs=subs)
-        self._debug = configuration_file.get_bool_option(section, "debug", missing_value=False, subs=subs)
-        self._api = configuration_file.get_option(section, "api", missing_value='/api/rest/v1.0/ask', subs=subs)
-        self._use_api_keys = configuration_file.get_bool_option(section, "use_api_keys", missing_value=False,
-                                                                subs=subs)
-        self._api_key_file = configuration_file.get_option(section, "api_key_file", subs=subs)
+        self._host = configuration_file.get_option(
+            section, "host", missing_value="0.0.0.0", subs=subs
+        )
+        self._port = configuration_file.get_int_option(
+            section, "port", missing_value=80, subs=subs
+        )
+        self._debug = configuration_file.get_bool_option(
+            section, "debug", missing_value=False, subs=subs
+        )
+        self._api = configuration_file.get_option(
+            section, "api", missing_value="/api/rest/v1.0/ask", subs=subs
+        )
+        self._use_api_keys = configuration_file.get_bool_option(
+            section, "use_api_keys", missing_value=False, subs=subs
+        )
+        self._api_key_file = configuration_file.get_option(
+            section, "api_key_file", subs=subs
+        )
         if self._api_key_file is not None:
             self._api_key_file = self.sub_bot_root(self._api_key_file, bot_root)
-        self._ssl_cert_file = configuration_file.get_option(section, "ssl_cert_file", subs=subs)
+        self._ssl_cert_file = configuration_file.get_option(
+            section, "ssl_cert_file", subs=subs
+        )
         if self._ssl_cert_file is not None:
             self._ssl_cert_file = self.sub_bot_root(self._ssl_cert_file, bot_root)
-        self._ssl_key_file = configuration_file.get_option(section, "ssl_key_file", subs=subs)
+        self._ssl_key_file = configuration_file.get_option(
+            section, "ssl_key_file", subs=subs
+        )
         if self._ssl_key_file is not None:
             self._ssl_key_file = self.sub_bot_root(self._ssl_key_file, bot_root)
-        self._authorization = configuration_file.get_option(section, "authorization", subs=subs)
-        super(RestConfiguration, self).load_configuration_section(configuration_file, section, bot_root, subs=subs)
+        self._authorization = configuration_file.get_option(
+            section, "authorization", subs=subs
+        )
+        super(RestConfiguration, self).load_configuration_section(
+            configuration_file, section, bot_root, subs=subs
+        )
 
     def to_yaml(self, data, defaults=True):
         if defaults is True:
-            data['host'] = "0.0.0.0"
-            data['port'] = 80
-            data['debug'] = False
-            data['api'] = '/api/rest/v1.0/ask'
-            data['use_api_keys'] = False
-            data['api_key_file'] = './api.keys'
-            data['ssl_cert_file'] = './rsa.cert'
-            data['ssl_key_file'] = './rsa.keys'
-            data['authorization'] = None
+            data["host"] = "0.0.0.0"
+            data["port"] = 80
+            data["debug"] = False
+            data["api"] = "/api/rest/v1.0/ask"
+            data["use_api_keys"] = False
+            data["api_key_file"] = "./api.keys"
+            data["ssl_cert_file"] = "./rsa.cert"
+            data["ssl_key_file"] = "./rsa.keys"
+            data["authorization"] = None
         else:
-            data['host'] = self._host
-            data['port'] = self._port
-            data['debug'] = self._debug
-            data['api'] = self._api
-            data['use_api_keys'] = self._use_api_keys
-            data['api_key_file'] = self._api_key_file
-            data['ssl_cert_file'] = self._ssl_cert_file
-            data['ssl_key_file'] = self._ssl_key_file
-            data['authorization'] = self._authorization
+            data["host"] = self._host
+            data["port"] = self._port
+            data["debug"] = self._debug
+            data["api"] = self._api
+            data["use_api_keys"] = self._use_api_keys
+            data["api_key_file"] = self._api_key_file
+            data["ssl_cert_file"] = self._ssl_cert_file
+            data["ssl_key_file"] = self._ssl_key_file
+            data["authorization"] = self._authorization
 
         super(RestConfiguration, self).to_yaml(data, defaults)

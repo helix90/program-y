@@ -1,7 +1,8 @@
 import unittest
 
-from programy.clients.ping.responder import PingResponder
 from programytest.client import TestClient
+
+from programy.clients.ping.responder import PingResponder
 
 
 class PingResponderTests(unittest.TestCase):
@@ -19,5 +20,3 @@ class PingResponderTests(unittest.TestCase):
         self.assertTrue("client" in result)
         self.assertTrue("bots" in result)
         self.assertTrue("logging" in result)
-
-

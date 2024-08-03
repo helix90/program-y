@@ -1,8 +1,7 @@
 import unittest
 import unittest.mock
 
-from programy.storage.engine import StorageEngine
-from programy.storage.engine import StorageEngineException
+from programy.storage.engine import StorageEngine, StorageEngineException
 
 
 class StorageEngineTests(unittest.TestCase):

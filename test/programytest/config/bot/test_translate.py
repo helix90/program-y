@@ -11,13 +11,17 @@ class BotTranslatorConfigurationTests(unittest.TestCase):
     def test_with_data(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         bot:
             translator:
                 classname: programy.nlp.translate.textblob_translator.TextBlobTranslator
                 from: fr
                 to: en 
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         bot_config = yaml.get_section("bot")
 
@@ -27,35 +31,49 @@ class BotTranslatorConfigurationTests(unittest.TestCase):
         license_keys = LicenseKeys()
         translator_config.check_for_license_keys(license_keys)
 
-        self.assertEqual("programy.nlp.translate.textblob_translator.TextBlobTranslator", translator_config.classname)
+        self.assertEqual(
+            "programy.nlp.translate.textblob_translator.TextBlobTranslator",
+            translator_config.classname,
+        )
         self.assertEqual("en", translator_config.to_lang)
         self.assertEqual("fr", translator_config.from_lang)
 
     def test_with_default_data(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         bot:
             translator:
                 classname: programy.nlp.translate.textblob_translator.TextBlobTranslator
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         bot_config = yaml.get_section("bot")
 
         translator_config = BotTranslatorConfiguration(name="translator")
         translator_config.load_config_section(yaml, bot_config, ".")
 
-        self.assertEqual("programy.nlp.translate.textblob_translator.TextBlobTranslator", translator_config.classname)
+        self.assertEqual(
+            "programy.nlp.translate.textblob_translator.TextBlobTranslator",
+            translator_config.classname,
+        )
         self.assertIsNone(translator_config.to_lang)
         self.assertIsNone(translator_config.from_lang)
 
     def test_without_data(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         bot:
             translator:
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         bot_config = yaml.get_section("bot")
 
@@ -69,9 +87,13 @@ class BotTranslatorConfigurationTests(unittest.TestCase):
     def test_with_no_data(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         bot:
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         bot_config = yaml.get_section("bot")
 
@@ -91,6 +113,9 @@ class BotTranslatorConfigurationTests(unittest.TestCase):
 
     @staticmethod
     def assert_defaults(test, data):
-        test.assertEqual(data['classname'], "programy.nlp.translate.textblob_translator.TextBlobTranslator")
-        test.assertEqual(data['from'], None)
-        test.assertEqual(data['to'], None)
+        test.assertEqual(
+            data["classname"],
+            "programy.nlp.translate.textblob_translator.TextBlobTranslator",
+        )
+        test.assertEqual(data["from"], None)
+        test.assertEqual(data["to"], None)

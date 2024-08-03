@@ -1,13 +1,15 @@
-import unittest
 import os
-from programy.utils.files.filewriter import CSVFile
+import unittest
+
 from programytest.utils.files.utils import get_os_specific_path
+
+from programy.utils.files.filewriter import CSVFile
 
 
 class CSVFileTests(unittest.TestCase):
 
     def test_init(self):
-        filename = get_os_specific_path() + 'csvfile.csv'
+        filename = get_os_specific_path() + "csvfile.csv"
 
         if os.path.exists(filename):
             os.remove(filename)
@@ -28,6 +30,3 @@ class CSVFileTests(unittest.TestCase):
         os.remove(filename)
 
         self.assertFalse(os.path.exists(filename))
-
-
-

@@ -14,9 +14,10 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
+
 from programy.config.base import BaseConfigurationData
 from programy.storage.stores.sql.engine import SQLStorageEngine
+from programy.utils.logging.ylogger import YLogger
 from programy.utils.substitutions.substitues import Substitutions
 
 
@@ -25,9 +26,9 @@ class SQLStorageConfiguration(BaseConfigurationData):
     def __init__(self):
         BaseConfigurationData.__init__(self, name="config")
 
-        self._url = 'sqlite:///:memory:'
+        self._url = "sqlite:///:memory:"
         self._echo = False
-        self._encoding = 'utf-8'
+        self._encoding = "utf-8"
         self._create_db = True
         self._drop_all_first = True
 
@@ -63,7 +64,9 @@ class SQLStorageConfiguration(BaseConfigurationData):
     def drop_all_first(self, drop_all):
         self._drop_all_first = drop_all
 
-    def load_config_section(self, configuration_file, configuration, bot_root, subs: Substitutions = None):
+    def load_config_section(
+        self, configuration_file, configuration, bot_root, subs: Substitutions = None
+    ):
         del bot_root
         storage = configuration_file.get_section(self._section_name, configuration)
         if storage is not None:
@@ -71,33 +74,41 @@ class SQLStorageConfiguration(BaseConfigurationData):
             if self._url.endswith("memory"):
                 self._url += ":"
             self._echo = configuration_file.get_option(storage, "echo", subs=subs)
-            self._encoding = configuration_file.get_option(storage, "encoding", subs=subs)
-            self._create_db = configuration_file.get_option(storage, "create_db", subs=subs)
-            self._drop_all_first = configuration_file.get_option(storage, "drop_all_first", subs=subs)
+            self._encoding = configuration_file.get_option(
+                storage, "encoding", subs=subs
+            )
+            self._create_db = configuration_file.get_option(
+                storage, "create_db", subs=subs
+            )
+            self._drop_all_first = configuration_file.get_option(
+                storage, "drop_all_first", subs=subs
+            )
 
         else:
             YLogger.error(None, "'config' section missing from storage config")
 
     def create_sqlstorage_config(self):
-        return {'url': self._url,
-                'echo': self._echo,
-                'encoding': self._encoding,
-                'create_db': self._create_db,
-                'drop_all_first': self._drop_all_first}
+        return {
+            "url": self._url,
+            "echo": self._echo,
+            "encoding": self._encoding,
+            "create_db": self._create_db,
+            "drop_all_first": self._drop_all_first,
+        }
 
     def to_yaml(self, data, defaults=True):
         if defaults is True:
-            data['url'] = 'sqlite:///:memory:'
-            data['echo'] = False
-            data['encoding'] = 'utf-8'
-            data['create_db'] = True
-            data['drop_all_first'] = True
+            data["url"] = "sqlite:///:memory:"
+            data["echo"] = False
+            data["encoding"] = "utf-8"
+            data["create_db"] = True
+            data["drop_all_first"] = True
         else:
-            data['url'] = self._url
-            data['echo'] = self._echo
-            data['encoding'] = self._encoding
-            data['create_db'] = self._create_db
-            data['drop_all_first'] = self._drop_all_first
+            data["url"] = self._url
+            data["echo"] = self._echo
+            data["encoding"] = self._encoding
+            data["create_db"] = self._create_db
+            data["drop_all_first"] = self._drop_all_first
 
     def create_engine(self):
         engine = SQLStorageEngine(self)

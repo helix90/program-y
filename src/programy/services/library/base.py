@@ -14,10 +14,10 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 from abc import ABC
 
-from programy.services.base import Service
-from programy.services.base import ServiceException
+from programy.services.base import Service, ServiceException
 
 
 class PythonAPIServiceException(ServiceException):
@@ -32,42 +32,41 @@ class PythonAPIService(Service, ABC):
         Service.__init__(self, configuration)
 
     def _response_to_json(self, api, response):
-        raise NotImplementedError()     # pragma: no cover
+        raise NotImplementedError()  # pragma: no cover
 
     def _add_base_payload(self, data, status, started, speed):
         if started is not None:
-            data['response']['started'] = started.strftime("%d/%m/%Y, %H:%M:%S")
+            data["response"]["started"] = started.strftime("%d/%m/%Y, %H:%M:%S")
         if speed is not None:
-            data['response']['speed'] = str(speed.microseconds/1000) + "ms"
-        data['response']['status'] = status
-        data['response']['service'] = self.name
-        data['response']['category'] = self.category
+            data["response"]["speed"] = str(speed.microseconds / 1000) + "ms"
+        data["response"]["status"] = status
+        data["response"]["service"] = self.name
+        data["response"]["category"] = self.category
 
     def _create_success_payload(self, api, started, speed, response):
         data = {}
-        data['response'] = {}
+        data["response"] = {}
         self._add_base_payload(data, "success", started, speed)
-        data['response']['payload'] = self._response_to_json(api, response)
-        data['response']['api'] = api
+        data["response"]["payload"] = self._response_to_json(api, response)
+        data["response"]["api"] = api
         return data
 
     def _create_failure_payload(self, api, started, speed):
         data = {}
-        data['api'] = api
-        data['response'] = {}
-        data['response']['api'] = api
+        data["api"] = api
+        data["response"] = {}
+        data["response"]["api"] = api
         self._add_base_payload(data, "failure", started, speed)
-        data['response']['payload'] = {}
-        data['response']['payload']['type'] = 'general'
+        data["response"]["payload"] = {}
+        data["response"]["payload"]["type"] = "general"
         return data
 
     def _create_exception_failure_payload(self, api, started, speed, err):
         data = {}
-        data['response'] = {}
-        data['response']['api'] = api
+        data["response"] = {}
+        data["response"]["api"] = api
         self._add_base_payload(data, "failure", started, speed)
-        data['response']['payload'] = {}
-        data['response']['payload']['type'] = 'general'
-        data['response']['payload']['error'] = str(err)
+        data["response"]["payload"] = {}
+        data["response"]["payload"]["type"] = "general"
+        data["response"]["payload"]["error"] = str(err)
         return data
-

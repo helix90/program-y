@@ -1,7 +1,8 @@
 import unittest
 
-from programy.extensions.telecoms.minutes import TelecomMinutesExtension
 from programytest.client import TestClient
+
+from programy.extensions.telecoms.minutes import TelecomMinutesExtension
 
 
 class TelecomsMinutesExtensionTests(unittest.TestCase):

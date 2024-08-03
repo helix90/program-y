@@ -1,4 +1,5 @@
 import unittest
+
 from programy.utils.files.filewriter import FileWriterConfiguration
 
 
@@ -14,7 +15,13 @@ class FileWriterConfigurationTests(unittest.TestCase):
         self.assertEquals(False, config.delete_on_start)
 
     def test_init_no_defaults(self):
-        config = FileWriterConfiguration("filename2.txt", fileformat="txt", mode="r", encoding="ascii", delete_on_start=True)
+        config = FileWriterConfiguration(
+            "filename2.txt",
+            fileformat="txt",
+            mode="r",
+            encoding="ascii",
+            delete_on_start=True,
+        )
 
         self.assertEquals("filename2.txt", config.filename)
         self.assertEquals("txt", config.file_format)

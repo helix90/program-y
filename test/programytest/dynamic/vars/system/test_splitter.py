@@ -1,13 +1,16 @@
 import unittest
 
+from programytest.client import TestClient
+
 from programy.activate import Activatable
 from programy.bot import Bot
 from programy.config.bot.bot import BotConfiguration
 from programy.config.bot.splitter import BotSentenceSplitterConfiguration
 from programy.context import ClientContext
 from programy.dialog.splitter.splitter import SentenceSplitter
-from programy.dynamic.variables.system.splitter import SentenceSplitter as SentenceSplitterVar
-from programytest.client import TestClient
+from programy.dynamic.variables.system.splitter import (
+    SentenceSplitter as SentenceSplitterVar,
+)
 
 
 class SentenceSplitterDynamicVarTests(unittest.TestCase):
@@ -18,7 +21,9 @@ class SentenceSplitterDynamicVarTests(unittest.TestCase):
         self._client_context.bot = Bot(BotConfiguration(), client)
 
         config = BotSentenceSplitterConfiguration()
-        self._client_context.bot._sentence_splitter = SentenceSplitter.initiate_sentence_splitter(config)
+        self._client_context.bot._sentence_splitter = (
+            SentenceSplitter.initiate_sentence_splitter(config)
+        )
 
     def test_splitter_active(self):
         dyn_var = SentenceSplitterVar(None)

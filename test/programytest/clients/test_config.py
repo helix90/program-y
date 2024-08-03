@@ -1,14 +1,15 @@
 import unittest
 
+from programytest.clients.ping.test_config import PingResponderConfigurationTests
+from programytest.config.bot.test_bot import BotConfigurationTests
+from programytest.scheduling.test_config import SchedulerConfigurationTests
+from programytest.storage.test_config import StorageConfigurationTests
+from programytest.triggers.test_config import TriggersConfigurationTests
+from programytest.utils.email.test_config import EmailConfigurationTests
+
 from programy.clients.config import ClientConfigurationData
 from programy.clients.events.console.config import ConsoleConfiguration
 from programy.config.file.yaml_file import YamlConfigurationFile
-from programytest.config.bot.test_bot import BotConfigurationTests
-from programytest.utils.email.test_config import EmailConfigurationTests
-from programytest.triggers.test_config import TriggersConfigurationTests
-from programytest.clients.ping.test_config import PingResponderConfigurationTests
-from programytest.storage.test_config import StorageConfigurationTests
-from programytest.scheduling.test_config import SchedulerConfigurationTests
 
 
 class ClientConfigurationDataTests(unittest.TestCase):
@@ -16,7 +17,8 @@ class ClientConfigurationDataTests(unittest.TestCase):
     def test_with_data_single_bot(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         console:
           prompt: ">>>"
           
@@ -127,13 +129,18 @@ class ClientConfigurationDataTests(unittest.TestCase):
                                 romantodec: programy.dynamic.maps.roman.MapRomanToDecimal
                                 dectoroman: programy.dynamic.maps.roman.MapDecimalToRoman
                             
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         client_config = ClientConfigurationData("console")
         client_config.load_configuration(yaml, ".")
 
         self.assertEqual(1, len(client_config.configurations))
-        self.assertEqual("programy.clients.botfactory.DefaultBotSelector", client_config.bot_selector)
+        self.assertEqual(
+            "programy.clients.botfactory.DefaultBotSelector", client_config.bot_selector
+        )
 
         self.assertIsNotNone(client_config.scheduler)
         self.assertEqual("Scheduler1", client_config.scheduler.name)
@@ -141,12 +148,15 @@ class ClientConfigurationDataTests(unittest.TestCase):
         self.assertTrue(client_config.scheduler.add_listeners)
         self.assertTrue(client_config.scheduler.remove_all_jobs)
 
-        self.assertEqual("programy.clients.render.text.TextRenderer", client_config.renderer)
+        self.assertEqual(
+            "programy.clients.render.text.TextRenderer", client_config.renderer
+        )
 
     def test_with_data_multiple_bots(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         console:
           prompt: ">>>"
           
@@ -354,13 +364,18 @@ class ClientConfigurationDataTests(unittest.TestCase):
                                 romantodec: programy.dynamic.maps.roman.MapRomanToDecimal
                                 dectoroman: programy.dynamic.maps.roman.MapDecimalToRoman
                             
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         client_config = ClientConfigurationData("console")
         client_config.load_configuration(yaml, ".")
 
         self.assertEqual(2, len(client_config.configurations))
-        self.assertEqual("programy.clients.botfactory.DefaultBotSelector", client_config.bot_selector)
+        self.assertEqual(
+            "programy.clients.botfactory.DefaultBotSelector", client_config.bot_selector
+        )
 
         self.assertIsNotNone(client_config.scheduler)
         self.assertEqual("Scheduler1", client_config.scheduler.name)
@@ -368,14 +383,20 @@ class ClientConfigurationDataTests(unittest.TestCase):
         self.assertTrue(client_config.scheduler.add_listeners)
         self.assertTrue(client_config.scheduler.remove_all_jobs)
 
-        self.assertEqual("programy.clients.render.text.TextRenderer", client_config.renderer)
+        self.assertEqual(
+            "programy.clients.render.text.TextRenderer", client_config.renderer
+        )
 
     def test_without_data(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         console:
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         client_config = ClientConfigurationData("console")
         client_config.load_configuration(yaml, ".")
@@ -393,9 +414,13 @@ class ClientConfigurationDataTests(unittest.TestCase):
     def test_with_no_data(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         other:
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         client_config = ClientConfigurationData("console")
         client_config.load_configuration(yaml, ".")
@@ -419,21 +444,23 @@ class ClientConfigurationDataTests(unittest.TestCase):
 
     @staticmethod
     def assert_defaults(test, data):
-        test.assertEqual(data['description'], 'ProgramY AIML2.0 Client')
-        test.assertEqual(data['renderer'], "programy.clients.render.text.TextRenderer")
+        test.assertEqual(data["description"], "ProgramY AIML2.0 Client")
+        test.assertEqual(data["renderer"], "programy.clients.render.text.TextRenderer")
 
-        test.assertTrue('scheduler' in data)
-        SchedulerConfigurationTests.assert_defaults(test, data['scheduler'])
-        test.assertTrue('email' in data)
-        EmailConfigurationTests.assert_defaults(test, data['email'])
-        test.assertTrue('triggers' in data)
-        TriggersConfigurationTests.assert_defaults(test, data['triggers'])
-        test.assertTrue('responder' in data)
-        PingResponderConfigurationTests.assert_defaults(test, data['responder'])
-        test.assertTrue('storage' in data)
-        StorageConfigurationTests.assert_defaults(test, data['storage'])
-        test.assertTrue('bots' in data)
-        test.assertTrue('bot' in data['bots'])
-        BotConfigurationTests.assert_defaults(test, data['bots']['bot'])
+        test.assertTrue("scheduler" in data)
+        SchedulerConfigurationTests.assert_defaults(test, data["scheduler"])
+        test.assertTrue("email" in data)
+        EmailConfigurationTests.assert_defaults(test, data["email"])
+        test.assertTrue("triggers" in data)
+        TriggersConfigurationTests.assert_defaults(test, data["triggers"])
+        test.assertTrue("responder" in data)
+        PingResponderConfigurationTests.assert_defaults(test, data["responder"])
+        test.assertTrue("storage" in data)
+        StorageConfigurationTests.assert_defaults(test, data["storage"])
+        test.assertTrue("bots" in data)
+        test.assertTrue("bot" in data["bots"])
+        BotConfigurationTests.assert_defaults(test, data["bots"]["bot"])
 
-        test.assertEqual(data['bot_selector'], "programy.clients.botfactory.DefaultBotSelector")
+        test.assertEqual(
+            data["bot_selector"], "programy.clients.botfactory.DefaultBotSelector"
+        )

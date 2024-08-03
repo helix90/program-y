@@ -18,12 +18,16 @@ class LoggerStorageConfigurationTests(unittest.TestCase):
 
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
                 logger:
                     type:   logger
                     config:
                         conversation_logger: conversations
-                """, ConsoleConfiguration(), ".")
+                """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         logger_config = yaml.get_section("logger")
 
@@ -36,9 +40,13 @@ class LoggerStorageConfigurationTests(unittest.TestCase):
 
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
                 logger:
-                """, ConsoleConfiguration(), ".")
+                """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         logger_config = yaml.get_section("logger")
 
@@ -51,9 +59,13 @@ class LoggerStorageConfigurationTests(unittest.TestCase):
 
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
                 other:
-                """, ConsoleConfiguration(), ".")
+                """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         logger_config = yaml.get_section("logger")
 
@@ -66,29 +78,36 @@ class LoggerStorageConfigurationTests(unittest.TestCase):
 
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
                 logger:
                     type:   logger
                     config:
                         conversation_logger: conversations
-                """, ConsoleConfiguration(), ".")
+                """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         logger_config = yaml.get_section("logger")
 
         config = LoggerStorageConfiguration()
         config.load_config_section(yaml, logger_config, ".")
 
-        self.assertEquals({'conversation_logger': 'conversations'}, config.create_loggerstorage_config())
+        self.assertEquals(
+            {"conversation_logger": "conversations"},
+            config.create_loggerstorage_config(),
+        )
 
     def test_to_yaml_defaults(self):
         config = LoggerStorageConfiguration()
         data = {}
         config.to_yaml(data, True)
-        self.assertEquals({'conversation_logger': 'conversation'}, data)
+        self.assertEquals({"conversation_logger": "conversation"}, data)
 
     def test_to_yaml_no_defaults(self):
         config = LoggerStorageConfiguration()
         config._conversation_logger = "convologger"
         data = {}
         config.to_yaml(data, False)
-        self.assertEquals({'conversation_logger': 'convologger'}, data)
+        self.assertEquals({"conversation_logger": "convologger"}, data)

@@ -1,10 +1,12 @@
 import unittest
+
+from programytest.client import TestClient
+
 from programy.dialog.conversation import Conversation
 from programy.dialog.question import Question
-from programy.parser.pattern.matchcontext import MatchContext
 from programy.parser.pattern.match import Match
+from programy.parser.pattern.matchcontext import MatchContext
 from programy.parser.pattern.nodes.word import PatternWordNode
-from programytest.client import TestClient
 
 
 class ConverstionStoreAsserts(unittest.TestCase):
@@ -33,7 +35,10 @@ class ConverstionStoreAsserts(unittest.TestCase):
 
             self.assertEqual(1, len(conversation2.questions))
             self.assertEqual(1, len(conversation2.questions[0].sentences))
-            self.assertEqual("Hello There", conversation2.questions[0].sentences[0].text(client_context))
+            self.assertEqual(
+                "Hello There",
+                conversation2.questions[0].sentences[0].text(client_context),
+            )
             self.assertEqual("Hi", conversation2.questions[0].sentences[0].response)
 
         client2 = TestClient()
@@ -59,12 +64,13 @@ class ConverstionStoreAsserts(unittest.TestCase):
         question1 = Question.create_from_text(client_context, "Hello There")
         question1.sentence(0).response = "Hi"
         question1.sentence(0).matched_context = MatchContext(
-            max_search_depth = 99,
-            max_search_timeout = 99,
-            matched_nodes = [Match(Match.WORD, PatternWordNode("Hello"), "Hello")],
-            template_node = None,
-            sentence = "HELLO",
-            response = "Hi There" )
+            max_search_depth=99,
+            max_search_timeout=99,
+            matched_nodes=[Match(Match.WORD, PatternWordNode("Hello"), "Hello")],
+            template_node=None,
+            sentence="HELLO",
+            response="Hi There",
+        )
 
         conversation.record_dialog(question1)
 

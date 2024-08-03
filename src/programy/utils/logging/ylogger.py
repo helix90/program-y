@@ -14,13 +14,23 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 import logging
 import traceback
 
 
 class YLoggerSnapshot:  # pragma: no cover
 
-    def __init__(self, criticals=0, fatals=0, errors=0, exceptions=0, warnings=0, infos=0, debugs=0):
+    def __init__(
+        self,
+        criticals=0,
+        fatals=0,
+        errors=0,
+        exceptions=0,
+        warnings=0,
+        infos=0,
+        debugs=0,
+    ):
         self._criticals = criticals
         self._fatals = fatals
         self._errors = errors
@@ -30,8 +40,17 @@ class YLoggerSnapshot:  # pragma: no cover
         self._debugs = debugs
 
     def __str__(self):
-        return "Critical(%d) Fatal(%d) Error(%d) Exception(%d) Warning(%d) Info(%d), Debug(%d)" % (
-            self._criticals, self._fatals, self._errors, self._exceptions, self._warnings, self._infos, self._debugs
+        return (
+            "Critical(%d) Fatal(%d) Error(%d) Exception(%d) Warning(%d) Info(%d), Debug(%d)"
+            % (
+                self._criticals,
+                self._fatals,
+                self._errors,
+                self._exceptions,
+                self._warnings,
+                self._infos,
+                self._debugs,
+            )
         )
 
     def to_json(self):
@@ -42,7 +61,7 @@ class YLoggerSnapshot:  # pragma: no cover
             "exceptions": self._exceptions,
             "warnings": self._warnings,
             "infos": self._infos,
-            "debugs": self._debugs
+            "debugs": self._debugs,
         }
 
 
@@ -57,13 +76,15 @@ class YLogger:  # pragma: no cover
 
     @staticmethod
     def snapshot():
-        return YLoggerSnapshot(YLogger.CRITICALS,
-                               YLogger.FATALS,
-                               YLogger.ERRORS,
-                               YLogger.EXCEPTIONS,
-                               YLogger.WARNINGS,
-                               YLogger.INFOS,
-                               YLogger.DEBUGS)
+        return YLoggerSnapshot(
+            YLogger.CRITICALS,
+            YLogger.FATALS,
+            YLogger.ERRORS,
+            YLogger.EXCEPTIONS,
+            YLogger.WARNINGS,
+            YLogger.INFOS,
+            YLogger.DEBUGS,
+        )
 
     @staticmethod
     def reset_snapshot():
@@ -80,14 +101,17 @@ class YLogger:  # pragma: no cover
         if caller is not None:
             if hasattr(caller, "ylogger_type"):
                 log_type = caller.ylogger_type()
-                if log_type == 'client':
+                if log_type == "client":
                     return "[%s] - %s" % (caller.id, message)
 
-                elif log_type == 'bot':
-                    return "[%s] [%s] - %s" % (caller.client.id if caller.client is not None else "",
-                                               caller.id, message)
+                elif log_type == "bot":
+                    return "[%s] [%s] - %s" % (
+                        caller.client.id if caller.client is not None else "",
+                        caller.id,
+                        message,
+                    )
 
-                elif log_type == 'brain':
+                elif log_type == "brain":
                     clientid = ""
                     botid = ""
                     if caller.bot is not None:
@@ -98,11 +122,14 @@ class YLogger:  # pragma: no cover
 
                     return "[%s] [%s] [%s] - %s" % (clientid, botid, caller.id, message)
 
-                elif log_type == 'context':
-                    return "[%s] [%s] [%s] [%s] - %s" % (caller.client.id if caller.client is not None else "",
-                                                         caller.bot.id if caller.bot is not None else "",
-                                                         caller.brain.id if caller.brain is not None else "",
-                                                         caller.userid, message)
+                elif log_type == "context":
+                    return "[%s] [%s] [%s] [%s] - %s" % (
+                        caller.client.id if caller.client is not None else "",
+                        caller.bot.id if caller.bot is not None else "",
+                        caller.brain.id if caller.brain is not None else "",
+                        caller.userid,
+                        message,
+                    )
         return message
 
     @staticmethod
@@ -160,8 +187,12 @@ class YLogger:  # pragma: no cover
         if YLogger.error_enabled():
             excep_msg = "%s [%s]" % (message, str(exception))
             logging.error(YLogger.format_message(caller, excep_msg), *args, **kwargs)
-            tb_lines = [line.rstrip('\n') for line in
-                        traceback.format_exception(exception.__class__, exception, exception.__traceback__)]
+            tb_lines = [
+                line.rstrip("\n")
+                for line in traceback.format_exception(
+                    exception.__class__, exception, exception.__traceback__
+                )
+            ]
             for line in tb_lines:
                 logging.exception(YLogger.format_message(caller, line))
 
@@ -185,5 +216,16 @@ class YLogger:  # pragma: no cover
 
     @staticmethod
     def is_ylogger_method(method):
-        return bool(method in [YLogger.critical, YLogger.fatal, YLogger.error, YLogger.exception,
-                               YLogger.exception_nostack, YLogger.warning, YLogger.info, YLogger.debug])
+        return bool(
+            method
+            in [
+                YLogger.critical,
+                YLogger.fatal,
+                YLogger.error,
+                YLogger.exception,
+                YLogger.exception_nostack,
+                YLogger.warning,
+                YLogger.info,
+                YLogger.debug,
+            ]
+        )

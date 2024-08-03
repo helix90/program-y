@@ -1,9 +1,10 @@
 import os
 import unittest
 
+from programytest.client import TestClient
+
 from programy.context import ClientContext
 from programy.processors.post.consoleformat import ConsoleFormatPostProcessor
-from programytest.client import TestClient
 
 
 class RemoveHTMLTests(unittest.TestCase):
@@ -16,16 +17,20 @@ class RemoveHTMLTests(unittest.TestCase):
         self.assertIsNotNone(result)
         self.assertEqual("Hello World", result)
 
-        result = processor.process(context, "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Rationis enim perfectio est virtus; Sed quid attinet de rebus tam apertis plura requirere?")
+        result = processor.process(
+            context,
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Rationis enim perfectio est virtus; Sed quid attinet de rebus tam apertis plura requirere?",
+        )
         self.assertIsNotNone(result)
-        if os.name == 'posix':
+        if os.name == "posix":
             self.assertEqual(
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Rationis enim perfectio\nest virtus; Sed quid attinet de rebus tam apertis plura requirere?",
-                result)
-        elif os.name == 'nt':
+                result,
+            )
+        elif os.name == "nt":
             self.assertEqual(
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Rationis enim perfectio\r\nest virtus; Sed quid attinet de rebus tam apertis plura requirere?",
-                result)
+                result,
+            )
         else:
-            raise Exception("Unknown os [%s]"%os.name)
-
+            raise Exception("Unknown os [%s]" % os.name)

@@ -10,13 +10,17 @@ class BrainOverridesConfigurationTests(unittest.TestCase):
     def test_with_data(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         brain:
             overrides:
               allow_system_aiml: true
               allow_learn_aiml: true
               allow_learnf_aiml: true
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         brain_config = yaml.get_section("brain")
 
@@ -30,10 +34,14 @@ class BrainOverridesConfigurationTests(unittest.TestCase):
     def test_without_data(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         brain:
             overrides:
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         brain_config = yaml.get_section("brain")
 
@@ -47,9 +55,13 @@ class BrainOverridesConfigurationTests(unittest.TestCase):
     def test_with_no_data(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         brain:
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         brain_config = yaml.get_section("brain")
 
@@ -69,6 +81,6 @@ class BrainOverridesConfigurationTests(unittest.TestCase):
 
     @staticmethod
     def assert_defaults(test, data):
-        test.assertFalse(data['allow_system_aiml'])
-        test.assertFalse(data['allow_learn_aiml'])
-        test.assertFalse(data['allow_learnf_aiml'])
+        test.assertFalse(data["allow_system_aiml"])
+        test.assertFalse(data["allow_learn_aiml"])
+        test.assertFalse(data["allow_learnf_aiml"])

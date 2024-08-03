@@ -1,18 +1,20 @@
 import logging
 import unittest.mock
 
+from programytest.clients.arguments import MockArgumentParser
 from viberbot import Api
 from viberbot.api.user_profile import UserProfile
-from viberbot.api.viber_requests import ViberConversationStartedRequest
-from viberbot.api.viber_requests import ViberFailedRequest
-from viberbot.api.viber_requests import ViberMessageRequest
-from viberbot.api.viber_requests import ViberSubscribedRequest
-from viberbot.api.viber_requests import ViberUnsubscribedRequest
+from viberbot.api.viber_requests import (
+    ViberConversationStartedRequest,
+    ViberFailedRequest,
+    ViberMessageRequest,
+    ViberSubscribedRequest,
+    ViberUnsubscribedRequest,
+)
 
+from programy.clients.render.text import TextRenderer
 from programy.clients.restful.flask.viber.client import ViberBotClient
 from programy.clients.restful.flask.viber.config import ViberConfiguration
-from programy.clients.render.text import TextRenderer
-from programytest.clients.arguments import MockArgumentParser
 
 
 class MockViberApi(Api):
@@ -30,7 +32,7 @@ class MockViberApi(Api):
         self._messages = messages
 
     def verify_signature(self, request_data, signature):
-	    return self._verified
+        return self._verified
 
     def parse_request(self, request_data):
         if self._request is None:
@@ -67,7 +69,7 @@ class MockViberBotClient(ViberBotClient):
     def create_viber_bot(self, viber_token):
         if self.test_viber_client is not None:
             return self.test_viber_client
-        return super(MockViberBotClient,self).create_viber_bot(viber_token)
+        return super(MockViberBotClient, self).create_viber_bot(viber_token)
 
 
 class ViberBotClientTests(unittest.TestCase):
@@ -148,7 +150,7 @@ class ViberBotClientTests(unittest.TestCase):
         client = MockViberBotClient(arguments, viber_client=MockViberApi(None))
         self.assertIsNotNone(client)
 
-        request = ViberSubscribedRequest ()
+        request = ViberSubscribedRequest()
         request._user = UserProfile(user_id="User123")
 
         client.handle_subscribed_request(request)
@@ -156,7 +158,9 @@ class ViberBotClientTests(unittest.TestCase):
         self.assertIsNotNone(client.test_viber_client)
         self.assertIsNotNone(client.test_viber_client._messages)
         self.assertEqual(1, len(client.test_viber_client._messages))
-        self.assertEqual("Thanks for subscribing!", client.test_viber_client._messages[0].text)
+        self.assertEqual(
+            "Thanks for subscribing!", client.test_viber_client._messages[0].text
+        )
 
     def test_handle_unsubscribed_request(self):
         arguments = MockArgumentParser()

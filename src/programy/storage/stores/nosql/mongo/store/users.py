@@ -14,16 +14,17 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
-from programy.storage.stores.nosql.mongo.store.mongostore import MongoStore
+
 from programy.storage.entities.user import UserStore
 from programy.storage.stores.nosql.mongo.dao.user import User
+from programy.storage.stores.nosql.mongo.store.mongostore import MongoStore
+from programy.utils.logging.ylogger import YLogger
 
 
 class MongoUserStore(MongoStore, UserStore):
-    USERS = 'users'
-    USERID = 'userid'
-    CLIENT = 'client'
+    USERS = "users"
+    USERID = "userid"
+    CLIENT = "client"
 
     def __init__(self, storage_engine):
         MongoStore.__init__(self, storage_engine)
@@ -39,7 +40,9 @@ class MongoUserStore(MongoStore, UserStore):
 
     def exists(self, userid, clientid):
         collection = self.collection()
-        user = collection.find_one({MongoUserStore.USERID: userid, MongoUserStore.CLIENT: clientid})
+        user = collection.find_one(
+            {MongoUserStore.USERID: userid, MongoUserStore.CLIENT: clientid}
+        )
         return bool(user is not None)
 
     def get_links(self, userid):
@@ -47,12 +50,14 @@ class MongoUserStore(MongoStore, UserStore):
         users = collection.find({MongoUserStore.USERID: userid})
         links = []
         for user in users:
-            links.append(user['client'])
+            links.append(user["client"])
         return links
 
     def _remove_user_from_db(self, userid, clientid):
         collection = self.collection()
-        result = collection.delete_many({MongoUserStore.USERID: userid, MongoUserStore.CLIENT: clientid})
+        result = collection.delete_many(
+            {MongoUserStore.USERID: userid, MongoUserStore.CLIENT: clientid}
+        )
         return bool(result.deleted_count > 0)
 
     def remove_user(self, userid, clientid):
@@ -74,6 +79,8 @@ class MongoUserStore(MongoStore, UserStore):
             return self._remove_user_from_all_clients_from_db(userid)
 
         except Exception as excep:
-            YLogger.exception_nostack(self, "Failed to remove user from all clients", excep)
+            YLogger.exception_nostack(
+                self, "Failed to remove user from all clients", excep
+            )
 
         return False

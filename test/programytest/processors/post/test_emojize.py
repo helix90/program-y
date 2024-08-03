@@ -1,10 +1,11 @@
 import unittest
 
+from programytest.client import TestClient
+
 from programy.bot import Bot
 from programy.config.bot.bot import BotConfiguration
 from programy.context import ClientContext
 from programy.processors.post.emojize import EmojizePostProcessor
-from programytest.client import TestClient
 
 
 class EmojizePreProcessorTests(unittest.TestCase):
@@ -15,8 +16,12 @@ class EmojizePreProcessorTests(unittest.TestCase):
 
     def test_demojize(self):
         processor = EmojizePostProcessor()
-        
+
         context = ClientContext(self.client, "TestUser")
-        
-        self.assertEqual("Python is 👍", processor.process(context, 'Python is :thumbs_up:'))
-        self.assertEqual("Python is 👍", processor.process(context, 'Python is :thumbsup:'))
+
+        self.assertEqual(
+            "Python is 👍", processor.process(context, "Python is :thumbs_up:")
+        )
+        self.assertEqual(
+            "Python is 👍", processor.process(context, "Python is :thumbsup:")
+        )

@@ -1,11 +1,12 @@
 import xml.etree.ElementTree as ET
 
+from programytest.parser.base import ParserTestsBaseClass
+
 from programy.dialog.question import Question
 from programy.parser.template.nodes.base import TemplateNode
 from programy.parser.template.nodes.get import TemplateGetNode
 from programy.parser.template.nodes.select import TemplateSelectNode
 from programy.parser.template.nodes.word import TemplateWordNode
-from programytest.parser.base import ParserTestsBaseClass
 
 
 class MockTemplateGetNode(TemplateGetNode):
@@ -19,15 +20,24 @@ class MockTemplateGetNode(TemplateGetNode):
 class TemplateGetNodeTests(ParserTestsBaseClass):
 
     def test_decode_tuples_as_json_list(self):
-        self.assertEqual([[["x","1"], ["y","2"], ["z", "3"]]], TemplateGetNode.decode_tuples('[[["x","1"], ["y","2"], ["z", "3"]]]'))
+        self.assertEqual(
+            [[["x", "1"], ["y", "2"], ["z", "3"]]],
+            TemplateGetNode.decode_tuples('[[["x","1"], ["y","2"], ["z", "3"]]]'),
+        )
 
     def test_decode_tuples_as_list(self):
-        self.assertEqual([[["x","1"], ["y","2"], ["z", "3"]]], TemplateGetNode.decode_tuples([[["x","1"], ["y","2"], ["z", "3"]]]))
+        self.assertEqual(
+            [[["x", "1"], ["y", "2"], ["z", "3"]]],
+            TemplateGetNode.decode_tuples([[["x", "1"], ["y", "2"], ["z", "3"]]]),
+        )
 
     def test_get_tuples(self):
         node = TemplateGetNode()
         node.tuples = TemplateWordNode('[[["x","1"], ["y","2"], ["z", "3"]]]')
-        self.assertEquals([[["x","1"], ["y","2"], ["z", "3"]]], node._get_tuples(self._client_context))
+        self.assertEquals(
+            [[["x", "1"], ["y", "2"], ["z", "3"]]],
+            node._get_tuples(self._client_context),
+        )
 
     def test_get_tuples_invalid_json(self):
         node = TemplateGetNode()
@@ -36,15 +46,21 @@ class TemplateGetNodeTests(ParserTestsBaseClass):
 
     def test_default_value_properties(self):
         self._client_context.bot.brain.properties.add_property("default_get", "test123")
-        self.assertEqual("test123", TemplateGetNode.get_default_value(self._client_context))
+        self.assertEqual(
+            "test123", TemplateGetNode.get_default_value(self._client_context)
+        )
 
     def test_default_value_default_get(self):
         self._client_context.bot.brain.configuration.defaults._default_get = "test456"
-        self.assertEqual("test456", TemplateGetNode.get_default_value(self._client_context))
+        self.assertEqual(
+            "test456", TemplateGetNode.get_default_value(self._client_context)
+        )
 
     def test_default_value_no_value(self):
         self._client_context.bot.brain.configuration.defaults._default_get = None
-        self.assertEqual("unknown", TemplateGetNode.get_default_value(self._client_context))
+        self.assertEqual(
+            "unknown", TemplateGetNode.get_default_value(self._client_context)
+        )
 
     def test_local_get(self):
         root = TemplateNode()
@@ -63,7 +79,9 @@ class TemplateGetNodeTests(ParserTestsBaseClass):
 
         conversation = self._client_context.bot.get_conversation(self._client_context)
         self.assertIsNotNone(conversation)
-        question = Question.create_from_text(self._client_context, "Hello", self._client_context.bot.sentence_splitter)
+        question = Question.create_from_text(
+            self._client_context, "Hello", self._client_context.bot.sentence_splitter
+        )
         conversation.record_dialog(question)
         self.assertIsNotNone(conversation.current_question())
         question.set_property("name", "keith")
@@ -103,7 +121,9 @@ class TemplateGetNodeTests(ParserTestsBaseClass):
 
         conversation = self._client_context.bot.get_conversation(self._client_context)
         self.assertIsNotNone(conversation)
-        question = Question.create_from_text(self._client_context, "Hello", self._client_context.bot.sentence_splitter)
+        question = Question.create_from_text(
+            self._client_context, "Hello", self._client_context.bot.sentence_splitter
+        )
         conversation.record_dialog(question)
 
         result = root.resolve(self._client_context)
@@ -127,7 +147,9 @@ class TemplateGetNodeTests(ParserTestsBaseClass):
 
         conversation = self._client_context.bot.get_conversation(self._client_context)
         self.assertIsNotNone(conversation)
-        question = Question.create_from_text(self._client_context, "Hello", self._client_context.bot.sentence_splitter)
+        question = Question.create_from_text(
+            self._client_context, "Hello", self._client_context.bot.sentence_splitter
+        )
         conversation.record_dialog(question)
         self.assertIsNotNone(conversation.current_question())
         conversation.set_property("name", "keith")
@@ -211,7 +233,9 @@ class TemplateGetNodeTests(ParserTestsBaseClass):
         xml = root.xml_tree(self._client_context)
         self.assertIsNotNone(xml)
         xml_str = ET.tostring(xml, "utf-8").decode("utf-8")
-        self.assertEqual('<template><get var="?x ?y"><select /></get></template>', xml_str)
+        self.assertEqual(
+            '<template><get var="?x ?y"><select /></get></template>', xml_str
+        )
 
         result = root.resolve_to_string(self._client_context)
         self.assertEquals("unknown", result)

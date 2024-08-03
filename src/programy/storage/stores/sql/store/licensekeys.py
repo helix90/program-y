@@ -14,13 +14,15 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 import os
-from programy.utils.logging.ylogger import YLogger
-from programy.storage.stores.sql.store.sqlstore import SQLStore
+
 from programy.storage.entities.license import LicenseStore
-from programy.storage.stores.sql.dao.license import LicenseKey
 from programy.storage.entities.store import Store
+from programy.storage.stores.sql.dao.license import LicenseKey
+from programy.storage.stores.sql.store.sqlstore import SQLStore
 from programy.utils.console.console import outputLog
+from programy.utils.logging.ylogger import YLogger
 
 
 class SQLLicenseKeysStore(SQLStore, LicenseStore):
@@ -64,21 +66,25 @@ class SQLLicenseKeysStore(SQLStore, LicenseStore):
 
         return count, success
 
-    def upload_from_file(self, filename, fileformat=Store.TEXT_FORMAT, commit=True, verbose=False):
+    def upload_from_file(
+        self, filename, fileformat=Store.TEXT_FORMAT, commit=True, verbose=False
+    ):
         try:
             count, success = self._read_lines_from_file(filename, verbose)
             self.commit(commit)
             return count, success
 
         except Exception as e:
-            YLogger.exception(None, "Failed to upload license keys from file [%s]", e, filename)
+            YLogger.exception(
+                None, "Failed to upload license keys from file [%s]", e, filename
+            )
 
         return 0, 0
 
     def _process_license_key_line(self, line, verbose=False):
         line = line.strip()
         result = False
-        if line and line.startswith('#') is False:
+        if line and line.startswith("#") is False:
             splits = line.split("=")
             if len(splits) > 1:
                 key_name = splits[0].strip()
@@ -86,7 +92,7 @@ class SQLLicenseKeysStore(SQLStore, LicenseStore):
                 key = "".join(splits[1:]).strip()
                 result = self.add_licensekey(key_name, key)
                 if verbose is True:
-                    outputLog(self, "[%s] = [%s]" % (key_name, key))        # pragma: no cover
+                    outputLog(self, "[%s] = [%s]" % (key_name, key))  # pragma: no cover
 
             else:
                 YLogger.warning(self, "Invalid license key [%s]", line)

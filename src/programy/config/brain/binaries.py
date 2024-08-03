@@ -14,9 +14,9 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
 
 from programy.config.section import BaseSectionConfigurationData
+from programy.utils.logging.ylogger import YLogger
 from programy.utils.substitutions.substitues import Substitutions
 
 
@@ -40,23 +40,32 @@ class BrainBinariesConfiguration(BaseSectionConfigurationData):
     def load_aiml_on_binary_fail(self):
         return self._load_aiml_on_binary_fail
 
-    def load_config_section(self, configuration_file, configuration, bot_root, subs: Substitutions = None):
+    def load_config_section(
+        self, configuration_file, configuration, bot_root, subs: Substitutions = None
+    ):
         binaries = configuration_file.get_section("binaries", configuration)
         if binaries is not None:
-            self._save_binary = configuration_file.get_option(binaries, "save_binary", missing_value=None, subs=subs)
-            self._load_binary = configuration_file.get_option(binaries, "load_binary", missing_value=None, subs=subs)
-            self._load_aiml_on_binary_fail = configuration_file.get_option(binaries, "load_aiml_on_binary_fail",
-                                                                           missing_value=None, subs=subs)
+            self._save_binary = configuration_file.get_option(
+                binaries, "save_binary", missing_value=None, subs=subs
+            )
+            self._load_binary = configuration_file.get_option(
+                binaries, "load_binary", missing_value=None, subs=subs
+            )
+            self._load_aiml_on_binary_fail = configuration_file.get_option(
+                binaries, "load_aiml_on_binary_fail", missing_value=None, subs=subs
+            )
         else:
-            YLogger.warning(self, "'binaries' section missing from bot config, using to defaults")
+            YLogger.warning(
+                self, "'binaries' section missing from bot config, using to defaults"
+            )
 
     def to_yaml(self, data, defaults=True):
         if defaults is True:
-            data['save_binary'] = False
-            data['load_binary'] = False
-            data['load_aiml_on_binary_fail'] = True
+            data["save_binary"] = False
+            data["load_binary"] = False
+            data["load_aiml_on_binary_fail"] = True
 
         else:
-            data['save_binary'] = self._save_binary
-            data['load_binary'] = self._load_binary
-            data['load_aiml_on_binary_fail'] = self._load_aiml_on_binary_fail
+            data["save_binary"] = self._save_binary
+            data["load_binary"] = self._load_binary
+            data["load_aiml_on_binary_fail"] = self._load_aiml_on_binary_fail

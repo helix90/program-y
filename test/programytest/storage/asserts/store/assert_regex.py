@@ -11,12 +11,13 @@ class RegexStoreAsserts(unittest.TestCase):
     def assert_regexes_storage(self, store):
         store.empty()
 
-        defaults = {"anything": "^.*$",
-                    "anytext": "^.+$",
-                    "anyinteger": "^\d+$",
-                    "anydecimal": "^\d+\.\d+$",
-                    "anynumber": "^[\d+\.\d+$]|[\d+]$"
-                    }
+        defaults = {
+            "anything": "^.*$",
+            "anytext": "^.+$",
+            "anyinteger": "^\d+$",
+            "anydecimal": "^\d+\.\d+$",
+            "anynumber": "^[\d+\.\d+$]|[\d+]$",
+        }
         store.add_regexes(defaults)
         store.commit()
 
@@ -75,14 +76,26 @@ class RegexStoreAsserts(unittest.TestCase):
     def assert_upload_from_file(self, store):
         store.empty()
 
-        store.upload_from_file(os.path.dirname(__file__) + os.sep + "data" + os.sep + "lookups" + os.sep + "text" + os.sep + "regex-templates.txt")
+        store.upload_from_file(
+            os.path.dirname(__file__)
+            + os.sep
+            + "data"
+            + os.sep
+            + "lookups"
+            + os.sep
+            + "text"
+            + os.sep
+            + "regex-templates.txt"
+        )
         store.commit()
 
         collection = RegexTemplatesCollection()
         store.load(collection)
 
         self.assertTrue(collection.has_regex("anything"))
-        self.assertEqual(re.compile('^.*$', re.IGNORECASE), collection.regex("anything"))
+        self.assertEqual(
+            re.compile("^.*$", re.IGNORECASE), collection.regex("anything")
+        )
         self.assertTrue(collection.has_regex("legion"))
         self.assertFalse(collection.has_regex("XXXXX"))
 
@@ -91,14 +104,16 @@ class RegexStoreAsserts(unittest.TestCase):
 
         collection = RegexTemplatesCollection()
 
-        store.add_to_collection(collection, "anything", '^.*$')
+        store.add_to_collection(collection, "anything", "^.*$")
 
         self.assertTrue(collection.has_regex("anything"))
-        self.assertEqual(re.compile('^.*$', re.IGNORECASE), collection.regex("anything"))
+        self.assertEqual(
+            re.compile("^.*$", re.IGNORECASE), collection.regex("anything")
+        )
 
     def assert_add_to_collection_collection(self, store):
         store.empty()
 
         collection = RegexTemplatesCollection()
 
-        store.add_to_collection(collection, "anything", '^.*$')
+        store.add_to_collection(collection, "anything", "^.*$")

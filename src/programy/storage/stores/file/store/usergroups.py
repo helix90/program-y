@@ -14,10 +14,12 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 import yaml
-from programy.utils.logging.ylogger import YLogger
-from programy.storage.stores.file.store.filestore import FileStore
+
 from programy.storage.entities.usergroups import UserGroupsStore
+from programy.storage.stores.file.store.filestore import FileStore
+from programy.utils.logging.ylogger import YLogger
 
 
 class FileUserGroupStore(FileStore, UserGroupsStore):
@@ -33,7 +35,9 @@ class FileUserGroupStore(FileStore, UserGroupsStore):
         return self.storage_engine.configuration.usergroups_storage
 
     def _read_usergroups_from_file(self, filename, usersgroupsauthorisor):
-        with open(filename, 'r+', encoding=self.get_storage().encoding) as yml_data_file:
+        with open(
+            filename, "r+", encoding=self.get_storage().encoding
+        ) as yml_data_file:
             yaml_data = yaml.load(yml_data_file, Loader=yaml.FullLoader)
 
         self.load_users_and_groups_from_yaml(yaml_data, usersgroupsauthorisor)
@@ -46,6 +50,8 @@ class FileUserGroupStore(FileStore, UserGroupsStore):
             return True
 
         except Exception as e:
-            YLogger.exception_nostack(self, "Failed to load usergroups yaml file [%s]", e, filename)
+            YLogger.exception_nostack(
+                self, "Failed to load usergroups yaml file [%s]", e, filename
+            )
 
         return False

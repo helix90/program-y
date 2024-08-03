@@ -1,6 +1,7 @@
 import os
 import unittest
 from email.mime.multipart import MIMEMultipart
+
 from programy.utils.email.config import EmailConfiguration
 from programy.utils.email.sender import EmailSender
 
@@ -41,7 +42,14 @@ class MockResult:
 
 class MockEmailSender(EmailSender):
 
-    def __init__(self, config: EmailConfiguration, mock_sender, result=None, ctype=None, attachment_encoding=None):
+    def __init__(
+        self,
+        config: EmailConfiguration,
+        mock_sender,
+        result=None,
+        ctype=None,
+        attachment_encoding=None,
+    ):
         EmailSender.__init__(self, config)
         self.mock_sender = mock_sender
         self._result = result
@@ -60,18 +68,22 @@ class MockEmailSender(EmailSender):
     def _send_message(self, host, port, username, password, msg):
         if self._result is not None:
             return self._result
-        return super(MockEmailSender, self)._send_message(host, port, username, password, msg)
+        return super(MockEmailSender, self)._send_message(
+            host, port, username, password, msg
+        )
 
 
 class EmailSenderTests(unittest.TestCase):
-    
+
     def test_send_message(self):
 
         config = EmailConfiguration()
-        
+
         sender = MockEmailSender(config, mock_sender=MockSMTPServer("127.0.0.1", 80))
-        
-        sender.send("fred@west.com", "New patio", "Do you need any help with the slabs?")
+
+        sender.send(
+            "fred@west.com", "New patio", "Do you need any help with the slabs?"
+        )
 
         self.assertTrue(sender.mock_sender.did_ehlo)
         self.assertTrue(sender.mock_sender.did_starttls)
@@ -83,7 +95,11 @@ class EmailSenderTests(unittest.TestCase):
 
         sender = MockEmailSender(config, mock_sender=MockSMTPServer("127.0.0.1", 80))
 
-        sender.send(["fred@west.com", "mary@west.com"], "New patio", "Do you need any help with the slabs?")
+        sender.send(
+            ["fred@west.com", "mary@west.com"],
+            "New patio",
+            "Do you need any help with the slabs?",
+        )
 
         self.assertTrue(sender.mock_sender.did_ehlo)
         self.assertTrue(sender.mock_sender.did_starttls)
@@ -97,7 +113,12 @@ class EmailSenderTests(unittest.TestCase):
 
         attachment = os.path.dirname(__file__) + os.sep + "test.txt"
 
-        sender.send("fred@west.com", "New patio", "Do you need any help with the slabs?", [attachment])
+        sender.send(
+            "fred@west.com",
+            "New patio",
+            "Do you need any help with the slabs?",
+            [attachment],
+        )
 
         self.assertTrue(sender.mock_sender.did_ehlo)
         self.assertTrue(sender.mock_sender.did_starttls)
@@ -111,7 +132,12 @@ class EmailSenderTests(unittest.TestCase):
 
         attachment = os.path.dirname(__file__) + os.sep + "robbie.png"
 
-        sender.send("fred@west.com", "New patio", "Do you need any help with the slabs?", [attachment])
+        sender.send(
+            "fred@west.com",
+            "New patio",
+            "Do you need any help with the slabs?",
+            [attachment],
+        )
 
         self.assertTrue(sender.mock_sender.did_ehlo)
         self.assertTrue(sender.mock_sender.did_starttls)
@@ -125,7 +151,12 @@ class EmailSenderTests(unittest.TestCase):
 
         attachment = os.path.dirname(__file__) + os.sep + "audio.mp3"
 
-        sender.send("fred@west.com", "New patio", "Do you need any help with the slabs?", [attachment])
+        sender.send(
+            "fred@west.com",
+            "New patio",
+            "Do you need any help with the slabs?",
+            [attachment],
+        )
 
         self.assertTrue(sender.mock_sender.did_ehlo)
         self.assertTrue(sender.mock_sender.did_starttls)
@@ -139,7 +170,12 @@ class EmailSenderTests(unittest.TestCase):
 
         attachment = os.path.dirname(__file__) + os.sep + "something.pdf"
 
-        sender.send("fred@west.com", "New patio", "Do you need any help with the slabs?", [attachment])
+        sender.send(
+            "fred@west.com",
+            "New patio",
+            "Do you need any help with the slabs?",
+            [attachment],
+        )
 
         self.assertTrue(sender.mock_sender.did_ehlo)
         self.assertTrue(sender.mock_sender.did_starttls)
@@ -153,7 +189,12 @@ class EmailSenderTests(unittest.TestCase):
 
         attachment = os.path.dirname(__file__) + os.sep + "unknown.???"
 
-        sender.send("fred@west.com", "New patio", "Do you need any help with the slabs?", [attachment])
+        sender.send(
+            "fred@west.com",
+            "New patio",
+            "Do you need any help with the slabs?",
+            [attachment],
+        )
 
         self.assertFalse(sender.mock_sender.did_ehlo)
 
@@ -164,7 +205,12 @@ class EmailSenderTests(unittest.TestCase):
 
         attachment = os.path.dirname(__file__) + os.sep + "audio.mp3"
 
-        sender.send("fred@west.com", "New patio", "Do you need any help with the slabs?", [(attachment, None, attachment)])
+        sender.send(
+            "fred@west.com",
+            "New patio",
+            "Do you need any help with the slabs?",
+            [(attachment, None, attachment)],
+        )
 
         self.assertTrue(sender.mock_sender.did_ehlo)
         self.assertTrue(sender.mock_sender.did_starttls)
@@ -183,11 +229,18 @@ class EmailSenderTests(unittest.TestCase):
     def test_get_ctype_and_attachment_ctype_none(self):
         config = EmailConfiguration()
 
-        sender = MockEmailSender(config, mock_sender=MockSMTPServer("127.0.0.1", 80), ctype=None, attachment_encoding=None)
+        sender = MockEmailSender(
+            config,
+            mock_sender=MockSMTPServer("127.0.0.1", 80),
+            ctype=None,
+            attachment_encoding=None,
+        )
 
         attachment = os.path.dirname(__file__) + os.sep + "test.txt"
 
-        ctype, attachment_encoding = sender._get_ctype_and_attachment(attachment, "ascii")
+        ctype, attachment_encoding = sender._get_ctype_and_attachment(
+            attachment, "ascii"
+        )
 
         self.assertEquals("text/plain", ctype)
         self.assertEquals("ascii", attachment_encoding)
@@ -195,7 +248,12 @@ class EmailSenderTests(unittest.TestCase):
     def test_get_ctype_and_attachment_both_none(self):
         config = EmailConfiguration()
 
-        sender = MockEmailSender(config, mock_sender=MockSMTPServer("127.0.0.1", 80), ctype=None, attachment_encoding=None)
+        sender = MockEmailSender(
+            config,
+            mock_sender=MockSMTPServer("127.0.0.1", 80),
+            ctype=None,
+            attachment_encoding=None,
+        )
 
         attachment = os.path.dirname(__file__) + os.sep + "test.txt"
 
@@ -207,7 +265,12 @@ class EmailSenderTests(unittest.TestCase):
     def test_get_ctype_and_attachment_attachment_not_nonw(self):
         config = EmailConfiguration()
 
-        sender = MockEmailSender(config, mock_sender=MockSMTPServer("127.0.0.1", 80), ctype=None, attachment_encoding="utf-8")
+        sender = MockEmailSender(
+            config,
+            mock_sender=MockSMTPServer("127.0.0.1", 80),
+            ctype=None,
+            attachment_encoding="utf-8",
+        )
 
         attachment = os.path.dirname(__file__) + os.sep + "test.txt"
 
@@ -227,7 +290,9 @@ class EmailSenderTests(unittest.TestCase):
 
         sender._add_attachement(msg, attachment, ctype=None, encoding=None)
 
-        self.assertEquals([('Content-Type', 'multipart/mixed'), ('MIME-Version', '1.0')], msg.items())
+        self.assertEquals(
+            [("Content-Type", "multipart/mixed"), ("MIME-Version", "1.0")], msg.items()
+        )
         self.assertEquals(1, len(msg.get_payload()))
 
     def test_add_attachement_no_ctype_no_encoding_compressed(self):
@@ -241,7 +306,9 @@ class EmailSenderTests(unittest.TestCase):
 
         sender._add_attachement(msg, attachment, ctype=None, encoding=None)
 
-        self.assertEquals([('Content-Type', 'multipart/mixed'), ('MIME-Version', '1.0')], msg.items())
+        self.assertEquals(
+            [("Content-Type", "multipart/mixed"), ("MIME-Version", "1.0")], msg.items()
+        )
         self.assertEquals(1, len(msg.get_payload()))
 
     def test_add_attachement_no_ctype_encoding_compressed(self):
@@ -255,7 +322,9 @@ class EmailSenderTests(unittest.TestCase):
 
         sender._add_attachement(msg, attachment, ctype=None, encoding="utf-8")
 
-        self.assertEquals([('Content-Type', 'multipart/mixed'), ('MIME-Version', '1.0')], msg.items())
+        self.assertEquals(
+            [("Content-Type", "multipart/mixed"), ("MIME-Version", "1.0")], msg.items()
+        )
         self.assertEquals(1, len(msg.get_payload()))
 
     def test_add_attachement_ctype_no_encoding(self):
@@ -267,9 +336,11 @@ class EmailSenderTests(unittest.TestCase):
 
         attachment = os.path.dirname(__file__) + os.sep + "test.txt"
 
-        sender._add_attachement(msg, attachment, ctype='text/plain', encoding=None)
+        sender._add_attachement(msg, attachment, ctype="text/plain", encoding=None)
 
-        self.assertEquals([('Content-Type', 'multipart/mixed'), ('MIME-Version', '1.0')], msg.items())
+        self.assertEquals(
+            [("Content-Type", "multipart/mixed"), ("MIME-Version", "1.0")], msg.items()
+        )
         self.assertEquals(1, len(msg.get_payload()))
 
     def test_add_attachement_ctype_ecoding(self):
@@ -281,35 +352,57 @@ class EmailSenderTests(unittest.TestCase):
 
         attachment = os.path.dirname(__file__) + os.sep + "test.txt"
 
-        sender._add_attachement(msg, attachment, ctype='text/plain', encoding="utf-8")
+        sender._add_attachement(msg, attachment, ctype="text/plain", encoding="utf-8")
 
-        self.assertEquals([('Content-Type', 'multipart/mixed'), ('MIME-Version', '1.0')], msg.items())
+        self.assertEquals(
+            [("Content-Type", "multipart/mixed"), ("MIME-Version", "1.0")], msg.items()
+        )
         self.assertEquals(1, len(msg.get_payload()))
 
     def test_send_message_none_result(self):
         config = EmailConfiguration()
 
-        sender = MockEmailSender(config, mock_sender=MockSMTPServer("127.0.0.1", 80), result=MockResult(None))
+        sender = MockEmailSender(
+            config, mock_sender=MockSMTPServer("127.0.0.1", 80), result=MockResult(None)
+        )
 
-        sender.send("fred@west.com", "New patio", "Do you need any help with the slabs?")
+        sender.send(
+            "fred@west.com", "New patio", "Do you need any help with the slabs?"
+        )
 
     def test_send_message_empty_result(self):
         config = EmailConfiguration()
 
-        sender = MockEmailSender(config, mock_sender=MockSMTPServer("127.0.0.1", 80), result=MockResult([]))
+        sender = MockEmailSender(
+            config, mock_sender=MockSMTPServer("127.0.0.1", 80), result=MockResult([])
+        )
 
-        sender.send("fred@west.com", "New patio", "Do you need any help with the slabs?")
+        sender.send(
+            "fred@west.com", "New patio", "Do you need any help with the slabs?"
+        )
 
     def test_send_message_single_result(self):
         config = EmailConfiguration()
 
-        sender = MockEmailSender(config, mock_sender=MockSMTPServer("127.0.0.1", 80), result=MockResult({1: "Failed"}))
+        sender = MockEmailSender(
+            config,
+            mock_sender=MockSMTPServer("127.0.0.1", 80),
+            result=MockResult({1: "Failed"}),
+        )
 
-        sender.send("fred@west.com", "New patio", "Do you need any help with the slabs?")
+        sender.send(
+            "fred@west.com", "New patio", "Do you need any help with the slabs?"
+        )
 
     def test_send_message_multi_result(self):
         config = EmailConfiguration()
 
-        sender = MockEmailSender(config, mock_sender=MockSMTPServer("127.0.0.1", 80), result=MockResult({1: "Failed", 2: "Bad"}))
+        sender = MockEmailSender(
+            config,
+            mock_sender=MockSMTPServer("127.0.0.1", 80),
+            result=MockResult({1: "Failed", 2: "Bad"}),
+        )
 
-        sender.send("fred@west.com", "New patio", "Do you need any help with the slabs?")
+        sender.send(
+            "fred@west.com", "New patio", "Do you need any help with the slabs?"
+        )

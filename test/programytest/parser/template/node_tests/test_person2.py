@@ -1,9 +1,10 @@
 import xml.etree.ElementTree as ET
 
+from programytest.parser.base import ParserTestsBaseClass
+
 from programy.parser.template.nodes.base import TemplateNode
 from programy.parser.template.nodes.person2 import TemplatePerson2Node
 from programy.parser.template.nodes.word import TemplateWordNode
-from programytest.parser.base import ParserTestsBaseClass
 
 
 class MockTemplatePerson2Node(TemplatePerson2Node):
@@ -12,6 +13,7 @@ class MockTemplatePerson2Node(TemplatePerson2Node):
 
     def resolve_to_string(self, context):
         raise Exception("This is an error")
+
 
 class TemplatePerson2NodeTests(ParserTestsBaseClass):
 
@@ -27,7 +29,6 @@ class TemplatePerson2NodeTests(ParserTestsBaseClass):
 
         root.append(node)
         self.assertEqual(len(root.children), 1)
-
 
     def test_to_xml(self):
         root = TemplateNode()
@@ -48,4 +49,6 @@ class TemplatePerson2NodeTests(ParserTestsBaseClass):
         result = root.resolve(self._client_context)
         self.assertIsNotNone(result)
         self.assertEqual("", result)
+
+
 #

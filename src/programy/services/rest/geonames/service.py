@@ -14,13 +14,14 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 import os
 import urllib.parse
-from programy.utils.logging.ylogger import YLogger
+
 from programy.services.base import ServiceQuery
-from programy.services.rest.base import RESTService
-from programy.services.rest.base import RESTServiceException
+from programy.services.rest.base import RESTService, RESTServiceException
 from programy.services.utils.geocode import GeoCodeUtils
+from programy.utils.logging.ylogger import YLogger
 
 
 class GeoNamesLatLongPostCode(ServiceQuery):
@@ -44,10 +45,10 @@ class GeoNamesLatLongPostCode(ServiceQuery):
         return self._service.latlng_for_postcode(self._postcode, self._country)
 
     def aiml_response(self, response):
-        payload = response['response']['payload']
-        postalCodes = payload['postalCodes']
-        lat = postalCodes[0]['lat']
-        lng = postalCodes[0]['lng']
+        payload = response["response"]["payload"]
+        postalCodes = payload["postalCodes"]
+        lat = postalCodes[0]["lat"]
+        lng = postalCodes[0]["lng"]
 
         latText = GeoCodeUtils.float_to_aiml_string(lat)
         lngText = GeoCodeUtils.float_to_aiml_string(lng)
@@ -68,7 +69,7 @@ class GeoNamesPlacenamePostCode(ServiceQuery):
         self._country = ServiceQuery._get_matched_var(matched, 1, "country", True)
         if self._country is None:
             self._country = "uk"
-        #else:
+        # else:
         #    self._country = self._country.lower()
 
     def __init__(self, service):
@@ -80,10 +81,10 @@ class GeoNamesPlacenamePostCode(ServiceQuery):
         return self._service.latlng_for_placename(self._placename, self._country)
 
     def aiml_response(self, response):
-        payload = response['response']['payload']
-        postalCodes = payload['postalCodes']
-        lat = postalCodes[0]['lat']
-        lng = postalCodes[0]['lng']
+        payload = response["response"]["payload"]
+        postalCodes = payload["postalCodes"]
+        lat = postalCodes[0]["lat"]
+        lng = postalCodes[0]["lng"]
 
         latText = GeoCodeUtils.float_to_aiml_string(lat)
         lngText = GeoCodeUtils.float_to_aiml_string(lng)
@@ -103,9 +104,10 @@ class GeoNamesService(RESTService):
     """
     https://gnews.io/docs/v3#introduction
     """
+
     PATTERNS = [
         [r"LATLNG\sPOSTCODE\s(\w+)", GeoNamesLatLongPostCode],
-        [r"LATLNG\sPLACENAME\s(\w+)(?:\sCOUNTRY\s(\w+))?", GeoNamesPlacenamePostCode]
+        [r"LATLNG\sPLACENAME\s(\w+)(?:\sCOUNTRY\s(\w+))?", GeoNamesPlacenamePostCode],
     ]
 
     POSTAL_CODE_SEARCH = "http://api.geonames.org/postalCodeSearchJSON?postalcode={0}&country={1}&maxRows=10&username={2}"
@@ -120,9 +122,12 @@ class GeoNamesService(RESTService):
         return GeoNamesService.PATTERNS
 
     def initialise(self, client):
-        self._account_name = client.license_keys.get_key('GEO_NAMES_ACCOUNTNAME')
+        self._account_name = client.license_keys.get_key("GEO_NAMES_ACCOUNTNAME")
         if self._account_name is None:
-            YLogger.error(self, "GEO_NAMES_ACCOUNTNAME missing from license.keys, service will not function correctly!")
+            YLogger.error(
+                self,
+                "GEO_NAMES_ACCOUNTNAME missing from license.keys, service will not function correctly!",
+            )
 
     def get_default_aiml_file(self):
         return os.path.dirname(__file__) + os.sep + "geonames.aiml"
@@ -132,23 +137,30 @@ class GeoNamesService(RESTService):
         return os.path.dirname(__file__) + os.sep + "geonames.conf"
 
     def _build_postcode_url(self, postcode, country):
-        url = GeoNamesService.POSTAL_CODE_SEARCH.format(urllib.parse.quote(postcode), urllib.parse.quote(country), self._account_name)
+        url = GeoNamesService.POSTAL_CODE_SEARCH.format(
+            urllib.parse.quote(postcode),
+            urllib.parse.quote(country),
+            self._account_name,
+        )
         return url
 
-    def latlng_for_postcode(self, postcode, country='uk'):
+    def latlng_for_postcode(self, postcode, country="uk"):
         url = self._build_postcode_url(postcode, country)
-        response = self.query('latlng_for_postcode', url)
+        response = self.query("latlng_for_postcode", url)
         return response
 
     def _build_placename_url(self, placename, country):
-        url = GeoNamesService.PLACE_NAME_SEARCH.format(urllib.parse.quote(placename), urllib.parse.quote(country), self._account_name)
+        url = GeoNamesService.PLACE_NAME_SEARCH.format(
+            urllib.parse.quote(placename),
+            urllib.parse.quote(country),
+            self._account_name,
+        )
         return url
 
-    def latlng_for_placename(self, placename, country='uk'):
+    def latlng_for_placename(self, placename, country="uk"):
         url = self._build_placename_url(placename, country)
-        response = self.query('latlng_for_placename', url)
+        response = self.query("latlng_for_placename", url)
         return response
 
     def _response_to_json(self, api, response):
         return response.json()
-

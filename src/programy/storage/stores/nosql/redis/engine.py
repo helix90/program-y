@@ -14,10 +14,14 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 import redis
-from programy.utils.logging.ylogger import YLogger
+
 from programy.storage.engine import StorageEngine
-from programy.storage.stores.nosql.redis.store.conversations import RedisConversationStore
+from programy.storage.stores.nosql.redis.store.conversations import (
+    RedisConversationStore,
+)
+from programy.utils.logging.ylogger import YLogger
 
 
 class RedisStorageEngine(StorageEngine):
@@ -52,18 +56,22 @@ class RedisStorageEngine(StorageEngine):
                 host=self.configuration.host,
                 port=self.configuration.port,
                 password=self.configuration.password,
-                db=self.configuration.db)
+                db=self.configuration.db,
+            )
         else:
             self._redis = redis.StrictRedis(
                 host=self.configuration.host,
                 port=self.configuration.port,
-                db=self.configuration.db)
+                db=self.configuration.db,
+            )
 
         if self.configuration.drop_all_first is True:
             try:
                 self.conversation_store().empty()
             except Exception as excep:
-                YLogger.exception(self, "Failed deleting conversation redis data - ", excep)
+                YLogger.exception(
+                    self, "Failed deleting conversation redis data - ", excep
+                )
 
     def conversation_store(self):
         return RedisConversationStore(self)

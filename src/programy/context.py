@@ -14,10 +14,12 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 import datetime
 import uuid
-from programy.utils.logging.ylogger import YLogger
+
 from programy.utils.console.console import outputLog
+from programy.utils.logging.ylogger import YLogger
 
 
 class ClientContext:
@@ -66,7 +68,10 @@ class ClientContext:
     def check_max_recursion(self):
         if self.bot.configuration.max_question_recursion != -1:
             if self._question_depth > self.bot.configuration.max_question_recursion:
-                raise Exception("Maximum recursion limit [%d] exceeded" % self.bot.configuration.max_question_recursion)
+                raise Exception(
+                    "Maximum recursion limit [%d] exceeded"
+                    % self.bot.configuration.max_question_recursion
+                )
 
     def total_search_time(self):
         delta = datetime.datetime.now() - self._question_start_time
@@ -75,11 +80,16 @@ class ClientContext:
     def check_max_timeout(self):
         if self.bot.configuration.max_question_timeout != -1:
             if self.total_search_time() >= self.bot.configuration.max_question_timeout:
-                raise Exception("Maximum search time limit [%d] exceeded" % self.bot.configuration.max_question_timeout)
+                raise Exception(
+                    "Maximum search time limit [%d] exceeded"
+                    % self.bot.configuration.max_question_timeout
+                )
 
     def mark_question_start(self, question):
-        YLogger.debug(self,
-                      "##########################################################################################")
+        YLogger.debug(
+            self,
+            "##########################################################################################",
+        )
         YLogger.debug(self, "Question (%s): %s", self._client.id, question)
 
         if self._question_depth == 0:
@@ -96,7 +106,7 @@ class ClientContext:
             self._userid,
             self._bot.id if self._bot else "",
             self._brain.id if self._brain else "",
-            self._question_depth
+            self._question_depth,
         )
 
     def to_json(self):
@@ -105,7 +115,7 @@ class ClientContext:
             "userid": self._userid,
             "botid": self._bot.id if self._bot else None,
             "brainid": self._brain.id if self._brain else None,
-            "depth": self._question_depth
+            "depth": self._question_depth,
         }
 
     def dump(self, output_func=outputLog, verbose=False):
@@ -116,4 +126,6 @@ class ClientContext:
         :return: None
         """
         del verbose
-        self.brain.aiml_parser.pattern_parser.dump(output_func=output_func, verbose=False)
+        self.brain.aiml_parser.pattern_parser.dump(
+            output_func=output_func, verbose=False
+        )

@@ -9,7 +9,9 @@ class MockBaseContainerConfigurationData(BaseContainerConfigurationData):
     def __init__(self, name):
         BaseContainerConfigurationData.__init__(self, name)
 
-    def load_configuration(self, configuration_file, bot_root, subs: Substitutions = None):
+    def load_configuration(
+        self, configuration_file, bot_root, subs: Substitutions = None
+    ):
         raise NotImplementedError()
 
 

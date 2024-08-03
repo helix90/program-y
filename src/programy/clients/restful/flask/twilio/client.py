@@ -14,22 +14,23 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 from flask import Flask, request
 from twilio.rest import Client
 from twilio.twiml.messaging_response import MessagingResponse
-from programy.utils.logging.ylogger import YLogger
+
 from programy.clients.restful.flask.client import FlaskRestBotClient
 from programy.clients.restful.flask.twilio.config import TwilioConfiguration
 from programy.utils.console.console import outputLog
-
+from programy.utils.logging.ylogger import YLogger
 
 TWILIO_CLIENT = None
 
 
 class TwilioBotClient(FlaskRestBotClient):
-    
+
     def __init__(self, argument_parser=None):
-        FlaskRestBotClient.__init__(self, 'twilio', argument_parser)
+        FlaskRestBotClient.__init__(self, "twilio", argument_parser)
 
         YLogger.debug(self, "Twilio Client is running....")
 
@@ -65,12 +66,12 @@ class TwilioBotClient(FlaskRestBotClient):
         if self.configuration.client_configuration.debug is True:
             self.dump_request(request)
 
-        if request.method == 'POST':
-            client_number = request.form['From']
-            question = request.form['Body']
+        if request.method == "POST":
+            client_number = request.form["From"]
+            question = request.form["Body"]
         else:
-            client_number = request.args.get('From')
-            question = request.args.get('Body')
+            client_number = request.args.get("From")
+            question = request.args.get("Body")
 
         YLogger.debug(self, "Twillio received [%s] from [%s]", question, client_number)
 
@@ -94,8 +95,12 @@ if __name__ == "__main__":
 
     APP = Flask(__name__)
 
-    outputLog(None, "Exposing endpoint: "+TWILIO_CLIENT.configuration.client_configuration.api)
-    @APP.route(TWILIO_CLIENT.configuration.client_configuration.api, methods=['POST'])
+    outputLog(
+        None,
+        "Exposing endpoint: " + TWILIO_CLIENT.configuration.client_configuration.api,
+    )
+
+    @APP.route(TWILIO_CLIENT.configuration.client_configuration.api, methods=["POST"])
     def receive_message():
         try:
             return TWILIO_CLIENT.receive_message(request)

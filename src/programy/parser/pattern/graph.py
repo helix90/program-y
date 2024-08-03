@@ -14,11 +14,12 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
-from programy.utils.text.text import TextUtils
-from programy.parser.exceptions import ParserException, DuplicateGrammarException
+
+from programy.parser.exceptions import DuplicateGrammarException, ParserException
 from programy.parser.pattern.nodes.oneormore import PatternOneOrMoreWildCardNode
 from programy.parser.pattern.nodes.zeroormore import PatternZeroOrMoreWildCardNode
+from programy.utils.logging.ylogger import YLogger
+from programy.utils.text.text import TextUtils
 
 
 class PatternGraph:
@@ -48,7 +49,9 @@ class PatternGraph:
             self._root_node = self._pattern_factory.get_root_node()
         else:
             if root_node.is_root() is False:
-                raise ParserException("Root node needs to be of base type PatternRootNode")
+                raise ParserException(
+                    "Root node needs to be of base type PatternRootNode"
+                )
             self._root_node = root_node
 
     def empty(self):
@@ -63,15 +66,15 @@ class PatternGraph:
 
     def node_from_text(self, word, userid="*"):
         if word.startswith("$"):
-            node_class = self._pattern_factory.new_node_class('priority')
+            node_class = self._pattern_factory.new_node_class("priority")
             return node_class(word[1:], userid)
         elif PatternZeroOrMoreWildCardNode.is_wild_card(word):
-            node_class = self._pattern_factory.new_node_class('zeroormore')
+            node_class = self._pattern_factory.new_node_class("zeroormore")
             return node_class(word, userid)
         elif PatternOneOrMoreWildCardNode.is_wild_card(word):
-            node_class = self._pattern_factory.new_node_class('oneormore')
+            node_class = self._pattern_factory.new_node_class("oneormore")
             return node_class(word, userid)
-        node_class = self._pattern_factory.new_node_class('word')
+        node_class = self._pattern_factory.new_node_class("word")
         return node_class(word, userid)
 
     def node_from_element(self, element, userid="*"):
@@ -96,7 +99,7 @@ class PatternGraph:
         words = self._aiml_parser.brain.tokenizer.texts_to_words(stripped)
 
         for word in words:
-            if word != '':  # Blank nodes add no value, ignore them
+            if word != "":  # Blank nodes add no value, ignore them
                 word = TextUtils.strip_whitespace(word)
 
                 new_node = self.node_from_text(word, userid=userid)
@@ -128,7 +131,9 @@ class PatternGraph:
 
             head_text = self.get_text_from_element(pattern_element)
             if head_text is not None:
-                current_node = self._parse_text(head_text, self._root_node, userid=userid)
+                current_node = self._parse_text(
+                    head_text, self._root_node, userid=userid
+                )
             else:
                 current_node = self._root_node
 
@@ -149,7 +154,7 @@ class PatternGraph:
     def add_topic_to_node(self, topic_element, base_node, userid="*"):
         try:
 
-            current_node = self._pattern_factory.new_node_class('topic')(userid)
+            current_node = self._pattern_factory.new_node_class("topic")(userid)
             current_node = base_node.add_topic(current_node)
 
             head_text = self.get_text_from_element(topic_element)
@@ -168,7 +173,9 @@ class PatternGraph:
 
             if head_text is None:
                 if added_child is False:
-                    raise ParserException("Topic node text is empty", xml_element=topic_element)
+                    raise ParserException(
+                        "Topic node text is empty", xml_element=topic_element
+                    )
 
             return current_node
 
@@ -179,12 +186,14 @@ class PatternGraph:
     def add_that_to_node(self, that_element, base_node, userid="*"):
         try:
 
-            current_node = self._pattern_factory.new_node_class('that')(userid)
+            current_node = self._pattern_factory.new_node_class("that")(userid)
             current_node = base_node.add_that(current_node)
 
             head_text = self.get_text_from_element(that_element)
             if head_text is not None:
-                current_node = self._parse_text(TextUtils.strip_whitespace(head_text), current_node)
+                current_node = self._parse_text(
+                    TextUtils.strip_whitespace(head_text), current_node
+                )
 
             added_child = False
             for sub_element in that_element:
@@ -198,7 +207,9 @@ class PatternGraph:
 
             if head_text is None:
                 if added_child is False:
-                    raise ParserException("That node text is empty", xml_element=that_element)
+                    raise ParserException(
+                        "That node text is empty", xml_element=that_element
+                    )
 
             return current_node
 
@@ -207,12 +218,21 @@ class PatternGraph:
             raise parser_excep
 
     def add_template_to_node(self, template_graph_root, current_node, userid="*"):
-        template_node = self._pattern_factory.new_node_class('template')(template_graph_root, userid)
+        template_node = self._pattern_factory.new_node_class("template")(
+            template_graph_root, userid
+        )
         current_node = current_node.add_child(template_node, replace_existing=True)
         return current_node
 
-    def add_pattern_to_graph(self, pattern_element, topic_element, that_element, template_graph_root, learn=False,
-                             userid="*"):
+    def add_pattern_to_graph(
+        self,
+        pattern_element,
+        topic_element,
+        that_element,
+        template_graph_root,
+        learn=False,
+        userid="*",
+    ):
 
         pattern_node = self.add_pattern_to_node(pattern_element, userid=userid)
 
@@ -223,15 +243,26 @@ class PatternGraph:
         if that_node.has_template() is True:
             if learn is False:
                 if pattern_element.text is not None:
-                    raise DuplicateGrammarException("Dupicate grammar tree found [%s]" % (pattern_element.text.strip()))
+                    raise DuplicateGrammarException(
+                        "Dupicate grammar tree found [%s]"
+                        % (pattern_element.text.strip())
+                    )
                 else:
-                    raise DuplicateGrammarException("Dupicate grammar tree found for bot/set")
+                    raise DuplicateGrammarException(
+                        "Dupicate grammar tree found for bot/set"
+                    )
             else:
                 if pattern_element.text is not None:
-                    YLogger.warning(self, "Duplicate grammar tree found [%s] in learn, replacing existing",
-                                    pattern_element.text.strip())
+                    YLogger.warning(
+                        self,
+                        "Duplicate grammar tree found [%s] in learn, replacing existing",
+                        pattern_element.text.strip(),
+                    )
                 else:
-                    YLogger.warning(self, "Duplicate grammar tree found for bot/set in learn, replacing existing")
+                    YLogger.warning(
+                        self,
+                        "Duplicate grammar tree found for bot/set in learn, replacing existing",
+                    )
 
                 self.add_template_to_node(template_graph_root, that_node)
         else:

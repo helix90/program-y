@@ -14,10 +14,11 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 from programy.storage.stores.utils import DAOUtils
 
 
-class LicenseKey():
+class LicenseKey:
 
     def __init__(self, name, key):
         self.id = None
@@ -26,19 +27,21 @@ class LicenseKey():
 
     def __repr__(self):
         return "<LicenseKey(id='%s', name='%s', key='%s')>" % (
-            DAOUtils.valid_id(self.id), self.name, self.key)
+            DAOUtils.valid_id(self.id),
+            self.name,
+            self.key,
+        )
 
     def to_document(self):
-        document = {"name": self.name,
-                    "key": self.key}
+        document = {"name": self.name, "key": self.key}
         if self.id is not None:
-            document['_id'] = self.id
+            document["_id"] = self.id
         return document
 
     @staticmethod
     def from_document(data):
         license = LicenseKey(None, None)
-        license.id = DAOUtils.get_value_from_data(data, '_id')
-        license.name = DAOUtils.get_value_from_data(data, 'name')
-        license.key = DAOUtils.get_value_from_data(data, 'key')
+        license.id = DAOUtils.get_value_from_data(data, "_id")
+        license.name = DAOUtils.get_value_from_data(data, "name")
+        license.key = DAOUtils.get_value_from_data(data, "key")
         return license

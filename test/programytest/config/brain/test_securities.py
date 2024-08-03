@@ -1,9 +1,10 @@
 import unittest
 
+from programytest.config.brain.test_security import BrainSecurityConfigurationTests
+
 from programy.clients.events.console.config import ConsoleConfiguration
 from programy.config.brain.securities import BrainSecuritiesConfiguration
 from programy.config.file.yaml_file import YamlConfigurationFile
-from programytest.config.brain.test_security import BrainSecurityConfigurationTests
 
 
 class BrainSecuritiesConfigurationTests(unittest.TestCase):
@@ -11,7 +12,8 @@ class BrainSecuritiesConfigurationTests(unittest.TestCase):
     def test_with_data(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         brain:
             security:
                 authentication:
@@ -20,7 +22,10 @@ class BrainSecuritiesConfigurationTests(unittest.TestCase):
                 authorisation:
                     classname: programy.security.authorise.passthrough.PassThroughAuthorisationService
                     denied_srai: AUTHORISATION_FAILED
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         brain_config = yaml.get_section("brain")
 
@@ -37,6 +42,12 @@ class BrainSecuritiesConfigurationTests(unittest.TestCase):
 
     @staticmethod
     def assert_defaults(test, data):
-        BrainSecurityConfigurationTests.assert_authenticate_defaults(test, data['authentication'])
-        BrainSecurityConfigurationTests.assert_authorise_defaults(test, data['authorisation'])
-        BrainSecurityConfigurationTests.assert_accountlinker_defaults(test, data['account_linker'])
+        BrainSecurityConfigurationTests.assert_authenticate_defaults(
+            test, data["authentication"]
+        )
+        BrainSecurityConfigurationTests.assert_authorise_defaults(
+            test, data["authorisation"]
+        )
+        BrainSecurityConfigurationTests.assert_accountlinker_defaults(
+            test, data["account_linker"]
+        )

@@ -1,8 +1,9 @@
 import datetime
 import unittest
 
-from programy.utils.text.dateformat import DateFormatter
 from programytest.custom import CustomAssertions
+
+from programy.utils.text.dateformat import DateFormatter
 
 
 class TextUtilsTests(unittest.TestCase, CustomAssertions):
@@ -89,7 +90,9 @@ class TextUtilsTests(unittest.TestCase, CustomAssertions):
     def test_init_all(self):
         df = DateFormatter(weeks=1, days=1, hours=1, minutes=1, seconds=1)
         self.assertIsNotNone(df)
-        now = datetime.datetime.now() + datetime.timedelta(days=8, hours=1, minutes=1, seconds=1)
+        now = datetime.datetime.now() + datetime.timedelta(
+            days=8, hours=1, minutes=1, seconds=1
+        )
         self.assertEqual(now.year, df.time_now.year)
         self.assertEqual(now.month, df.time_now.month)
         self.assertEqual(now.day, df.time_now.day)
@@ -109,7 +112,9 @@ class TextUtilsTests(unittest.TestCase, CustomAssertions):
         self.assertIsNotNone(df)
         result = df.full_weekday()
         self.assertIsNotNone(result)
-        self.assertRegex(result, r"[Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday]")
+        self.assertRegex(
+            result, r"[Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday]"
+        )
 
     def test_abbreviated_month(self):
         df = DateFormatter()
@@ -123,7 +128,10 @@ class TextUtilsTests(unittest.TestCase, CustomAssertions):
         self.assertIsNotNone(df)
         result = df.full_month()
         self.assertIsNotNone(result)
-        self.assertRegex(result, r"[January|February|March|April|May|June|July|August|September|October|November|December]")
+        self.assertRegex(
+            result,
+            r"[January|February|March|April|May|June|July|August|September|October|November|December]",
+        )
 
     def test_locate_appropriate_date_time(self):
         df = DateFormatter()

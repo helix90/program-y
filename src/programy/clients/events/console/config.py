@@ -14,6 +14,7 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 from programy.clients.config import ClientConfigurationData
 from programy.utils.substitutions.substitues import Substitutions
 
@@ -33,21 +34,27 @@ class ConsoleConfiguration(ClientConfigurationData):
     def prompt(self):
         return self._prompt
 
-    def load_configuration_section(self, configuration_file, section, bot_root, subs: Substitutions = None) -> object:
+    def load_configuration_section(
+        self, configuration_file, section, bot_root, subs: Substitutions = None
+    ) -> object:
 
         assert section is not None
 
-        self._default_userid = configuration_file.get_option(section, "default_userid", missing_value="Console",
-                                                             subs=subs)
-        self._prompt = configuration_file.get_option(section, "prompt", missing_value=">>>", subs=subs)
-        super(ConsoleConfiguration, self).load_configuration_section(configuration_file, section, bot_root,
-                                                                     subs=subs)
+        self._default_userid = configuration_file.get_option(
+            section, "default_userid", missing_value="Console", subs=subs
+        )
+        self._prompt = configuration_file.get_option(
+            section, "prompt", missing_value=">>>", subs=subs
+        )
+        super(ConsoleConfiguration, self).load_configuration_section(
+            configuration_file, section, bot_root, subs=subs
+        )
 
     def to_yaml(self, data, defaults=True):
         if defaults is True:
-            data['default_userid'] = "console"
-            data['prompt'] = ">>>"
+            data["default_userid"] = "console"
+            data["prompt"] = ">>>"
         else:
-            data['default_userid'] = self._default_userid
-            data['prompt'] = self._prompt
+            data["default_userid"] = self._default_userid
+            data["prompt"] = self._prompt
         super(ConsoleConfiguration, self).to_yaml(data, defaults)

@@ -14,6 +14,7 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 import csv
 
 
@@ -30,7 +31,7 @@ class FileProcessor:
         self._mode = mode
 
     def flush(self):
-        pass    # pragma: no cover
+        pass  # pragma: no cover
 
 
 class TextFile(FileProcessor):
@@ -64,7 +65,7 @@ class TextFile(FileProcessor):
 
 class CSVFileProcessor(FileProcessor):
 
-    DELIMITER = ','
+    DELIMITER = ","
     QUOTECHAR = '"'
 
     def __init__(self, filename, mode, encoding):
@@ -73,11 +74,20 @@ class CSVFileProcessor(FileProcessor):
 
 class CSVFileWriter(CSVFileProcessor):
 
-    def __init__(self, filename, mode=FileProcessor.WRITE, encoding=FileProcessor.UTF8,
-                 delimiter=CSVFileProcessor.DELIMITER, quotechar=CSVFileProcessor.QUOTECHAR, quoting=csv.QUOTE_ALL):
+    def __init__(
+        self,
+        filename,
+        mode=FileProcessor.WRITE,
+        encoding=FileProcessor.UTF8,
+        delimiter=CSVFileProcessor.DELIMITER,
+        quotechar=CSVFileProcessor.QUOTECHAR,
+        quoting=csv.QUOTE_ALL,
+    ):
         CSVFileProcessor.__init__(self, filename, mode, encoding)
         self._file = open(self._filename, self._mode, encoding=self._encoding)
-        self._csv_writer = csv.writer(self._file, delimiter=delimiter, quotechar=quotechar, quoting=quoting)
+        self._csv_writer = csv.writer(
+            self._file, delimiter=delimiter, quotechar=quotechar, quoting=quoting
+        )
 
     def write_line(self, elements, filewriter=None):
         self._csv_writer.writerow(elements)
@@ -88,11 +98,20 @@ class CSVFileWriter(CSVFileProcessor):
 
 class CSVFileReader(CSVFileProcessor):
 
-    def __init__(self, filename, mode=FileProcessor.READ, encoding=FileProcessor.UTF8,
-                 delimiter=CSVFileProcessor.DELIMITER, quotechar=CSVFileProcessor.QUOTECHAR, quoting=csv.QUOTE_ALL):
+    def __init__(
+        self,
+        filename,
+        mode=FileProcessor.READ,
+        encoding=FileProcessor.UTF8,
+        delimiter=CSVFileProcessor.DELIMITER,
+        quotechar=CSVFileProcessor.QUOTECHAR,
+        quoting=csv.QUOTE_ALL,
+    ):
         CSVFileProcessor.__init__(self, filename, mode, encoding)
         self._file = open(self._filename, self._mode, encoding=self._encoding)
-        self._csv_reader = csv.reader(self._file, delimiter=delimiter, quotechar=quotechar, quoting=quoting)
+        self._csv_reader = csv.reader(
+            self._file, delimiter=delimiter, quotechar=quotechar, quoting=quoting
+        )
 
     def process_lines(self, name, processor, verbose=False):
         del verbose

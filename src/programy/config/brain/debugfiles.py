@@ -14,8 +14,9 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
+
 from programy.config.section import BaseSectionConfigurationData
+from programy.utils.logging.ylogger import YLogger
 from programy.utils.substitutions.substitues import Substitutions
 
 
@@ -34,21 +35,28 @@ class BrainDebugFilesConfiguration(BaseSectionConfigurationData):
     def save_duplicates(self):
         return self._save_duplicates
 
-    def load_config_section(self, configuration_file, configuration, bot_root, subs: Substitutions = None):
+    def load_config_section(
+        self, configuration_file, configuration, bot_root, subs: Substitutions = None
+    ):
         debugfiles = configuration_file.get_section("debugfiles", configuration)
         if debugfiles is not None:
-            self._save_errors = configuration_file.get_bool_option(debugfiles, "save_errors", missing_value=False,
-                                                                   subs=subs)
-            self._save_duplicates = configuration_file.get_bool_option(debugfiles, "save_duplicates",
-                                                                       missing_value=False, subs=subs)
+            self._save_errors = configuration_file.get_bool_option(
+                debugfiles, "save_errors", missing_value=False, subs=subs
+            )
+            self._save_duplicates = configuration_file.get_bool_option(
+                debugfiles, "save_duplicates", missing_value=False, subs=subs
+            )
         else:
-            YLogger.warning(self, "'debugfiles' section missing from brain config, using debugfile defaults")
+            YLogger.warning(
+                self,
+                "'debugfiles' section missing from brain config, using debugfile defaults",
+            )
 
     def to_yaml(self, data, defaults=True):
         if defaults is True:
-            data['save_errors'] = False
-            data['save_duplicates'] = False
+            data["save_errors"] = False
+            data["save_duplicates"] = False
 
         else:
-            data['save_errors'] = self._save_errors
-            data['save_duplicates'] = self._save_duplicates
+            data["save_errors"] = self._save_errors
+            data["save_duplicates"] = self._save_duplicates

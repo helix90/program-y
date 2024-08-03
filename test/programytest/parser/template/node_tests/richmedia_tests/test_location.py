@@ -1,7 +1,8 @@
+from programytest.parser.base import ParserTestsBaseClass
+
 from programy.parser.template.nodes.base import TemplateNode
 from programy.parser.template.nodes.richmedia.location import TemplateLocationNode
 
-from programytest.parser.base import ParserTestsBaseClass
 
 class TemplateLocationNodeTests(ParserTestsBaseClass):
 
@@ -20,4 +21,3 @@ class TemplateLocationNodeTests(ParserTestsBaseClass):
         self.assertEqual("<location />", resolved)
 
         self.assertEqual("<location />", root.to_xml(self._client_context))
-

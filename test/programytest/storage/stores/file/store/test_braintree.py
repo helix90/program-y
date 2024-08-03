@@ -2,11 +2,13 @@ import os.path
 import shutil
 import unittest
 from unittest.mock import patch
+
+from programytest.client import TestClient
+
 from programy.storage.stores.file.config import FileStorageConfiguration
 from programy.storage.stores.file.engine import FileStorageEngine
 from programy.storage.stores.file.store.braintree import FileBraintreeStore
 from programy.storage.stores.file.store.config import FileStoreConfiguration
-from programytest.client import TestClient
 
 
 class FileBraintreeStoreTests(unittest.TestCase):
@@ -24,12 +26,19 @@ class FileBraintreeStoreTests(unittest.TestCase):
         engine.initialise()
         store = FileBraintreeStore(engine)
 
-        self.assertEquals('/tmp/braintree/braintree.xml', store._get_storage_path())
+        self.assertEquals("/tmp/braintree/braintree.xml", store._get_storage_path())
         self.assertIsInstance(store.get_storage(), FileStoreConfiguration)
 
     def test_save_braintree_as_xml(self):
         config = FileStorageConfiguration()
-        config._categories_storage = FileStoreConfiguration(dirs=[os.path.dirname(__file__) + os.sep + "data" + os.sep + "categories"], extension="aiml", subdirs=False, fileformat="xml", encoding="utf-8", delete_on_start=False)
+        config._categories_storage = FileStoreConfiguration(
+            dirs=[os.path.dirname(__file__) + os.sep + "data" + os.sep + "categories"],
+            extension="aiml",
+            subdirs=False,
+            fileformat="xml",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
         tmpdir = os.path.dirname(__file__) + os.sep + "braintree"
         tmpfile = tmpdir + os.sep + "braintree.xml"
         config.braintree_storage._dirs = [tmpfile]
@@ -57,7 +66,14 @@ class FileBraintreeStoreTests(unittest.TestCase):
 
     def test_save_braintree_as_text(self):
         config = FileStorageConfiguration()
-        config._categories_storage = FileStoreConfiguration(dirs=[os.path.dirname(__file__) + os.sep + "data" + os.sep + "categories"], extension="aiml", subdirs=False, fileformat="xml", encoding="utf-8", delete_on_start=False)
+        config._categories_storage = FileStoreConfiguration(
+            dirs=[os.path.dirname(__file__) + os.sep + "data" + os.sep + "categories"],
+            extension="aiml",
+            subdirs=False,
+            fileformat="xml",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
         tmpdir = os.path.dirname(__file__) + os.sep + "braintree"
         tmpfile = tmpdir + os.sep + "braintree.text"
         config.braintree_storage._dirs = [tmpfile]
@@ -85,7 +101,14 @@ class FileBraintreeStoreTests(unittest.TestCase):
 
     def test_save_braintree_as_other(self):
         config = FileStorageConfiguration()
-        config._categories_storage = FileStoreConfiguration(dirs=[os.path.dirname(__file__) + os.sep + "data" + os.sep + "categories"], extension="aiml", subdirs=False, fileformat="xml", encoding="utf-8", delete_on_start=False)
+        config._categories_storage = FileStoreConfiguration(
+            dirs=[os.path.dirname(__file__) + os.sep + "data" + os.sep + "categories"],
+            extension="aiml",
+            subdirs=False,
+            fileformat="xml",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
         tmpdir = os.path.dirname(__file__) + os.sep + "braintree"
         tmpfile = tmpdir + os.sep + "braintree.text"
         config.braintree_storage._dirs = [tmpfile]
@@ -111,10 +134,20 @@ class FileBraintreeStoreTests(unittest.TestCase):
     def patch_save(self, client_context, pattern_graph):
         raise Exception("Mock Exception")
 
-    @patch('programy.storage.stores.file.store.braintree.FileBraintreeStore._save', patch_save)
+    @patch(
+        "programy.storage.stores.file.store.braintree.FileBraintreeStore._save",
+        patch_save,
+    )
     def test_save_braintree_as_xml_with_exception(self):
         config = FileStorageConfiguration()
-        config._categories_storage = FileStoreConfiguration(dirs=[os.path.dirname(__file__) + os.sep + "data" + os.sep + "categories"], extension="aiml", subdirs=False, fileformat="xml", encoding="utf-8", delete_on_start=False)
+        config._categories_storage = FileStoreConfiguration(
+            dirs=[os.path.dirname(__file__) + os.sep + "data" + os.sep + "categories"],
+            extension="aiml",
+            subdirs=False,
+            fileformat="xml",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
         tmpdir = os.path.dirname(__file__) + os.sep + "braintree"
         tmpfile = tmpdir + os.sep + "braintree.xml"
         config.braintree_storage._dirs = [tmpfile]

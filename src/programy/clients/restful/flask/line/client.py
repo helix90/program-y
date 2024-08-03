@@ -14,14 +14,16 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from flask import Flask, request, abort, Response
+
+from flask import Flask, Response, abort, request
 from linebot import LineBotApi, WebhookParser
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import MessageEvent, TextMessage, TextSendMessage
-from programy.utils.logging.ylogger import YLogger
+
 from programy.clients.restful.flask.client import FlaskRestBotClient
 from programy.clients.restful.flask.line.config import LineConfiguration
 from programy.utils.console.console import outputLog
+from programy.utils.logging.ylogger import YLogger
 
 
 class LineBotClient(FlaskRestBotClient):
@@ -48,7 +50,10 @@ class LineBotClient(FlaskRestBotClient):
             self._parser = WebhookParser(self._channel_secret)
 
         else:
-            YLogger.error(self, "Line channel access token and/or secret missing, unable to create line bot")
+            YLogger.error(
+                self,
+                "Line channel access token and/or secret missing, unable to create line bot",
+            )
 
     def handle_text_message(self, event):
         question = event.message.text
@@ -59,16 +64,22 @@ class LineBotClient(FlaskRestBotClient):
         answer = self.ask_question(userid, question)
         rendered = self.renderer.render(client_context, answer)
 
-        self._line_bot_api.reply_message(event.reply_token, TextSendMessage(text=rendered))
+        self._line_bot_api.reply_message(
+            event.reply_token, TextSendMessage(text=rendered)
+        )
 
     def get_unknown_response(self, userid):
         if self.configuration.client_configuration.unknown_command_srai is None:
             unknown_response = self.configuration.client_configuration.unknown_command
 
         else:
-            unknown_response = self.ask_question(userid, self.configuration.client_configuration.unknown_command_srai)
+            unknown_response = self.ask_question(
+                userid, self.configuration.client_configuration.unknown_command_srai
+            )
             if unknown_response is None or unknown_response == "":
-                unknown_response = self.configuration.client_configuration.unknown_command
+                unknown_response = (
+                    self.configuration.client_configuration.unknown_command
+                )
 
         client_context = self.create_client_context(userid)
 
@@ -77,12 +88,16 @@ class LineBotClient(FlaskRestBotClient):
     def handle_unknown_event(self, event):
         userid = ""
         unknown_response = self.get_unknown_response(userid)
-        self._line_bot_api.reply_message(event.reply_token, TextSendMessage(text=unknown_response))
+        self._line_bot_api.reply_message(
+            event.reply_token, TextSendMessage(text=unknown_response)
+        )
 
     def handle_unknown_message(self, event):
         userid = ""
         unknown_response = self.get_unknown_response(userid)
-        self._line_bot_api.reply_message(event.reply_token, TextSendMessage(text=unknown_response))
+        self._line_bot_api.reply_message(
+            event.reply_token, TextSendMessage(text=unknown_response)
+        )
 
     def handle_message_request(self, body, signature):
 
@@ -105,7 +120,7 @@ class LineBotClient(FlaskRestBotClient):
             self.dump_request(request)
 
         # get X-Line-Signature header value
-        signature = request.headers['X-Line-Signature']
+        signature = request.headers["X-Line-Signature"]
 
         # get request body as text
         body = request.get_data(as_text=True)
@@ -117,7 +132,7 @@ class LineBotClient(FlaskRestBotClient):
             YLogger.exception(self, "Line error", excep)
             abort(500)
 
-        return 'OK' #Response(status=200)
+        return "OK"  # Response(status=200)
 
 
 if __name__ == "__main__":
@@ -128,7 +143,7 @@ if __name__ == "__main__":
 
     APP = Flask(__name__)
 
-    @APP.route(LINE_CLIENT.configuration.client_configuration.api, methods=['POST'])
+    @APP.route(LINE_CLIENT.configuration.client_configuration.api, methods=["POST"])
     def receive_message():
         try:
             return LINE_CLIENT.receive_message(request)

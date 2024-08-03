@@ -14,9 +14,10 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
+
 from programy.storage.factory import StorageFactory
 from programy.utils.classes.loader import ClassLoader
+from programy.utils.logging.ylogger import YLogger
 
 
 class ServiceHandler:
@@ -39,13 +40,20 @@ class ServiceHandler:
         if service in self._services:
             return self._services[service]
 
-        raise ValueError("No service named [%s]"%service)
+        raise ValueError("No service named [%s]" % service)
 
     def load_services(self, client):
         YLogger.debug(self, "Loading services")
         self._client = client
-        if client.storage_factory.entity_storage_engine_available(StorageFactory.SERVICES) is True:
-            storage_engine = client.storage_factory.entity_storage_engine(StorageFactory.SERVICES)
+        if (
+            client.storage_factory.entity_storage_engine_available(
+                StorageFactory.SERVICES
+            )
+            is True
+        ):
+            storage_engine = client.storage_factory.entity_storage_engine(
+                StorageFactory.SERVICES
+            )
             services_store = storage_engine.services_store()
             services_store.load_all(self)
         else:
@@ -54,7 +62,9 @@ class ServiceHandler:
     def load_service(self, configuration):
         # First instantiate the service object
         YLogger.debug(self, "Loading service: [%s]", configuration.name)
-        self._services[configuration.name] = ClassLoader.instantiate_class(configuration.service_class)(configuration)
+        self._services[configuration.name] = ClassLoader.instantiate_class(
+            configuration.service_class
+        )(configuration)
         self._services[configuration.name].initialise(self._client)
 
     def post_initialise(self, brain):

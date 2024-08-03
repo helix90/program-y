@@ -14,14 +14,15 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
+
 from programy.parser.exceptions import ParserException
 from programy.parser.pattern.nodes.base import PatternNode
+from programy.utils.logging.ylogger import YLogger
 
 
 class PatternTopicNode(PatternNode):
 
-    def __init__(self, userid='*'):
+    def __init__(self, userid="*"):
         PatternNode.__init__(self, userid)
 
     def is_topic(self):
@@ -32,9 +33,9 @@ class PatternTopicNode(PatternNode):
         if include_user is True:
             string += '<topic userid="%s">' % self.userid
         else:
-            string += '<topic>'
+            string += "<topic>"
         string += super(PatternTopicNode, self).to_xml(client_context)
-        string += '</topic>\n'
+        string += "</topic>\n"
         return string
 
     def to_string(self, verbose=True):
@@ -56,19 +57,31 @@ class PatternTopicNode(PatternNode):
                 return True
         return False
 
-    def consume(self, client_context, context, words, word_no, match_type, depth, parent=False):
+    def consume(
+        self, client_context, context, words, word_no, match_type, depth, parent=False
+    ):
         del parent
 
         tabs = self.get_tabs(client_context, depth)
 
         if context.search_depth_exceeded(depth) is True:
-            YLogger.error(client_context, "%sMax search depth [%d]exceeded", tabs, context.max_search_depth)
+            YLogger.error(
+                client_context,
+                "%sMax search depth [%d]exceeded",
+                tabs,
+                context.max_search_depth,
+            )
             return None
 
         if words.word(word_no) == PatternTopicNode.TOPIC:
-            YLogger.debug(client_context, "%sTopic matched %s", tabs, words.word(word_no))
-            return super(PatternTopicNode, self).consume(client_context, context, words, word_no + 1, match_type,
-                                                         depth + 1)
+            YLogger.debug(
+                client_context, "%sTopic matched %s", tabs, words.word(word_no)
+            )
+            return super(PatternTopicNode, self).consume(
+                client_context, context, words, word_no + 1, match_type, depth + 1
+            )
 
-        YLogger.debug(client_context, "%sTopic NOT matched %s", tabs, words.word(word_no))
+        YLogger.debug(
+            client_context, "%sTopic NOT matched %s", tabs, words.word(word_no)
+        )
         return None

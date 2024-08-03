@@ -14,88 +14,111 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from sqlalchemy import Column
-from sqlalchemy import Integer
-from sqlalchemy import String
+
+from sqlalchemy import Column, Integer, String
+
 from programy.storage.stores.sql.base import Base
 from programy.storage.stores.utils import DAOUtils
 
 
 class AuthoriseUser(Base):
-    __tablename__ = 'authusers'
+    __tablename__ = "authusers"
 
     id = Column(Integer, primary_key=True)
     name = Column(String(48))
 
     def __repr__(self):
-        return "<AuthoriseUser(id='%s', name='%s')>" % (DAOUtils.valid_id(self.id), self.name)
+        return "<AuthoriseUser(id='%s', name='%s')>" % (
+            DAOUtils.valid_id(self.id),
+            self.name,
+        )
 
 
 class UserRole(Base):
-    __tablename__ = 'userroles'
+    __tablename__ = "userroles"
 
     id = Column(Integer, primary_key=True)
     user = Column(String(48))
     role = Column(String(48))
 
     def __repr__(self):
-        return "<UserRole(id='%s', user='%s', role='%s')>" % (DAOUtils.valid_id(self.id), self.user, self.role)
+        return "<UserRole(id='%s', user='%s', role='%s')>" % (
+            DAOUtils.valid_id(self.id),
+            self.user,
+            self.role,
+        )
 
 
 class UserGroup(Base):
-    __tablename__ = 'usergroups'
+    __tablename__ = "usergroups"
 
     id = Column(Integer, primary_key=True)
     user = Column(String(48))
     group = Column(String(48))
 
     def __repr__(self):
-        return "<UserGroup(id='%s', user='%s', group='%s')>" % (DAOUtils.valid_id(self.id), self.user, self.group)
+        return "<UserGroup(id='%s', user='%s', group='%s')>" % (
+            DAOUtils.valid_id(self.id),
+            self.user,
+            self.group,
+        )
 
 
 class AuthoriseGroup(Base):
-    __tablename__ = 'authgroups'
+    __tablename__ = "authgroups"
 
     id = Column(Integer, primary_key=True)
     name = Column(String(48))
     parent = Column(String(48), nullable=True)
 
     def __repr__(self):
-        return "<AuthoriseGroup(id='%s', name='%s', parent='%s')>" % (DAOUtils.valid_id(self.id),
-                                                                      self.name,
-                                                                      self.parent)
+        return "<AuthoriseGroup(id='%s', name='%s', parent='%s')>" % (
+            DAOUtils.valid_id(self.id),
+            self.name,
+            self.parent,
+        )
 
 
 class GroupGroup(Base):
-    __tablename__ = 'groupgroups'
+    __tablename__ = "groupgroups"
 
     id = Column(Integer, primary_key=True)
     group = Column(String(48))
     subgroup = Column(String(48))
 
     def __repr__(self):
-        return "<GroupGroup(id='%s', group='%s', subgroup='%s')>" % (DAOUtils.valid_id(self.id),
-                                                                     self.group,
-                                                                     self.subgroup)
+        return "<GroupGroup(id='%s', group='%s', subgroup='%s')>" % (
+            DAOUtils.valid_id(self.id),
+            self.group,
+            self.subgroup,
+        )
 
 
 class GroupRole(Base):
-    __tablename__ = 'grouproles'
+    __tablename__ = "grouproles"
 
     id = Column(Integer, primary_key=True)
     group = Column(String(48))
     role = Column(String(48))
 
     def __repr__(self):
-        return "<GroupRole(id='%s', group='%s', role='%s')>" % (DAOUtils.valid_id(self.id), self.group, self.role)
+        return "<GroupRole(id='%s', group='%s', role='%s')>" % (
+            DAOUtils.valid_id(self.id),
+            self.group,
+            self.role,
+        )
 
 
 class GroupUser(Base):
-    __tablename__ = 'groupusers'
+    __tablename__ = "groupusers"
 
     id = Column(Integer, primary_key=True)
     group = Column(String(48))
     user = Column(String(48))
 
     def __repr__(self):
-        return "<GroupUser(id='%s', group='%s', user='%s')>" % (DAOUtils.valid_id(self.id), self.group, self.user)
+        return "<GroupUser(id='%s', group='%s', user='%s')>" % (
+            DAOUtils.valid_id(self.id),
+            self.group,
+            self.user,
+        )

@@ -14,10 +14,11 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
-from programy.storage.stores.file.store.filestore import FileStore
-from programy.storage.entities.lookups import LookupsStore
+
 from programy.mappings.base import DoubleStringPatternSplitCollection
+from programy.storage.entities.lookups import LookupsStore
+from programy.storage.stores.file.store.filestore import FileStore
+from programy.utils.logging.ylogger import YLogger
 
 
 class FileLookupsStore(FileStore, LookupsStore):
@@ -35,16 +36,21 @@ class FileLookupsStore(FileStore, LookupsStore):
     def _load_file_contents(self, collection, filename):
         YLogger.debug(self, "Loading lookup [%s]", filename)
         try:
-            with open(filename, 'r', encoding='utf8') as my_file:
+            with open(filename, "r", encoding="utf8") as my_file:
                 for line in my_file:
-                        splits = DoubleStringPatternSplitCollection.\
-                            split_line_by_pattern(line, DoubleStringPatternSplitCollection.RE_OF_SPLIT_PATTERN)
-                        if splits and len(splits) > 1:
-                            index, pattern = self.process_key_value(splits[0].upper(), splits[1])
-                            collection.add_to_lookup(index, pattern)
+                    splits = DoubleStringPatternSplitCollection.split_line_by_pattern(
+                        line, DoubleStringPatternSplitCollection.RE_OF_SPLIT_PATTERN
+                    )
+                    if splits and len(splits) > 1:
+                        index, pattern = self.process_key_value(
+                            splits[0].upper(), splits[1]
+                        )
+                        collection.add_to_lookup(index, pattern)
 
         except Exception as excep:
-            YLogger.exception_nostack(self, "Failed to load lookup [%s]", excep, filename)
+            YLogger.exception_nostack(
+                self, "Failed to load lookup [%s]", excep, filename
+            )
 
 
 class FileDenormalStore(FileLookupsStore):

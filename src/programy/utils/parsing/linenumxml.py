@@ -19,27 +19,47 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR TH
 # because we can't hook the C implementation
 import sys  # pylint: disable=wrong-import-position
 
-sys.modules['_elementtree'] = None
+sys.modules["_elementtree"] = None
 import xml.etree.ElementTree as ET  # pylint: disable=wrong-import-position
 
 
 class LineNumberingParser(ET.XMLParser):
     # pylint: disable=protected-access
     def _end(self, *args, **kwargs):  # pylint: disable=arguments-differ
-        superend = super(self.__class__, self)  # pylint: disable=attribute-error, bad-super-call           # pragma: no cover
-        element = superend._end(*args, **kwargs)  # pytype: disable=attribute-error                         # pragma: no cover
-        element._end_line_number = self.parser.CurrentLineNumber  # pylint: disable=protected-access        # pragma: no cover
-        element._end_column_number = self.parser.CurrentColumnNumber  # pylint: disable=protected-access    # pragma: no cover
-        element._end_byte_index = self.parser.CurrentByteIndex  # pylint: disable=protected-access          # pragma: no cover
-        return element                                                                                      # pragma: no cover
+        superend = super(
+            self.__class__, self
+        )  # pylint: disable=attribute-error, bad-super-call           # pragma: no cover
+        element = superend._end(
+            *args, **kwargs
+        )  # pytype: disable=attribute-error                         # pragma: no cover
+        element._end_line_number = (
+            self.parser.CurrentLineNumber
+        )  # pylint: disable=protected-access        # pragma: no cover
+        element._end_column_number = (
+            self.parser.CurrentColumnNumber
+        )  # pylint: disable=protected-access    # pragma: no cover
+        element._end_byte_index = (
+            self.parser.CurrentByteIndex
+        )  # pylint: disable=protected-access          # pragma: no cover
+        return element  # pragma: no cover
 
     # pylint: disable=protected-access
     def _start(self, *args, **kwargs):  # pylint: disable=arguments-differ
         # Here we assume the default XML parser which is expat
         # and copy its element position attributes into output Elements
-        superstart = super(self.__class__, self) # pylint: disable=attribute-error, bad-super-call           # pragma: no cover
-        element = superstart._start(*args, **kwargs)  # pytype: disable=attribute-error                      # pragma: no cover
-        element._start_line_number = self.parser.CurrentLineNumber  # pylint: disable=protected-access       # pragma: no cover
-        element._start_column_number = self.parser.CurrentColumnNumber  # pylint: disable=protected-access   # pragma: no cover
-        element._start_byte_index = self.parser.CurrentByteIndex  # pylint: disable=protected-access         # pragma: no cover
-        return element                                                                                       # pragma: no cover
+        superstart = super(
+            self.__class__, self
+        )  # pylint: disable=attribute-error, bad-super-call           # pragma: no cover
+        element = superstart._start(
+            *args, **kwargs
+        )  # pytype: disable=attribute-error                      # pragma: no cover
+        element._start_line_number = (
+            self.parser.CurrentLineNumber
+        )  # pylint: disable=protected-access       # pragma: no cover
+        element._start_column_number = (
+            self.parser.CurrentColumnNumber
+        )  # pylint: disable=protected-access   # pragma: no cover
+        element._start_byte_index = (
+            self.parser.CurrentByteIndex
+        )  # pylint: disable=protected-access         # pragma: no cover
+        return element  # pragma: no cover

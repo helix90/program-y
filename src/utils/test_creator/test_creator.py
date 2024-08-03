@@ -1,6 +1,6 @@
-import xml.etree.ElementTree as ET
-import sys
 import os
+import sys
+import xml.etree.ElementTree as ET
 
 
 def load_replacements(replace_file):
@@ -41,7 +41,7 @@ def replace_wildcards(text, texts):
 
 def create_test_file(source, destination):
 
-    print ("Creating %s in %s" %(source, destination))
+    print("Creating %s in %s" % (source, destination))
 
     directory = os.path.dirname(destination)
     if not os.path.exists(directory):
@@ -49,11 +49,11 @@ def create_test_file(source, destination):
 
     with open(destination, "w+") as output_file:
         if default is not None:
-            output_file.write('$DEFAULT, "%s"\n\n'%default)
+            output_file.write('$DEFAULT, "%s"\n\n' % default)
         try:
             tree = ET.parse(source)
             aiml = tree.getroot()
-            categories = aiml.findall('category')
+            categories = aiml.findall("category")
             for category in categories:
                 pattern_text = ""
 
@@ -65,19 +65,19 @@ def create_test_file(source, destination):
                         pattern_text += replace_wildcards(text, texts)
 
                     elif elt.tag == "set":
-                        if 'name' in elt.attrib:
-                            name = elt.attrib['name']
+                        if "name" in elt.attrib:
+                            name = elt.attrib["name"]
                         else:
                             name = elt.text.strip()
 
                         if name in sets:
                             pattern_text += sets[name]
                         else:
-                            pattern_text += "SET[%s]"%name
+                            pattern_text += "SET[%s]" % name
 
                     elif elt.tag == "bot":
-                        if 'name' in elt.attrib:
-                            name = elt.attrib['name']
+                        if "name" in elt.attrib:
+                            name = elt.attrib["name"]
                         else:
                             name = elt.text.strip()
 
@@ -93,20 +93,19 @@ def create_test_file(source, destination):
                         pattern_text += replace_wildcards(text, texts)
                         pattern_text += " "
 
-                question = '"%s",'%pattern_text.strip()
+                question = '"%s",' % pattern_text.strip()
                 question = question.ljust(ljust)
 
-
                 if default is not None:
-                    test_line = '%s $DEFAULT'%(question)
+                    test_line = "%s $DEFAULT" % (question)
 
                 else:
-                    template = category.find('template')
+                    template = category.find("template")
 
                     answer = template.text
                     if answer:
                         if len(answer) > 80:
-                            answer = (answer[0:80])
+                            answer = answer[0:80]
                     else:
                         answer = "ERROR"
 
@@ -115,7 +114,7 @@ def create_test_file(source, destination):
                 output_file.write(test_line)
                 output_file.write("\n")
 
-            topics = aiml.findall('topic')
+            topics = aiml.findall("topic")
             if len(topics) > 0:
                 print("I dont handle topics yet!")
 
@@ -123,12 +122,11 @@ def create_test_file(source, destination):
             print(e)
 
 
-
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     source = sys.argv[1]
-    if source not in ['-f', '-d']:
-        print ("Please specify file -f or directory -d")
+    if source not in ["-f", "-d"]:
+        print("Please specify file -f or directory -d")
         exit(-1)
 
     aiml_source = sys.argv[2]
@@ -146,23 +144,30 @@ if __name__ == '__main__':
     print("Default:", default)
 
     listOfFiles = list()
-    if source == '-d':
-        for (dirpath, dirnames, filenames) in os.walk(aiml_source):
-            listOfFiles += [os.path.join(dirpath.replace(aiml_source, ""), file) for file in filenames]
+    if source == "-d":
+        for dirpath, dirnames, filenames in os.walk(aiml_source):
+            listOfFiles += [
+                os.path.join(dirpath.replace(aiml_source, ""), file)
+                for file in filenames
+            ]
 
     else:
         listOfFiles == aiml_source
 
     texts, sets, bots = load_replacements(replace_file)
 
-    if source == '-f':
+    if source == "-f":
         create_test_file(aiml_source, test_dest)
 
     else:
 
         for fileToProcess in listOfFiles:
-            if fileToProcess[0] == '/':
-                create_test_file(aiml_source + fileToProcess, test_dest + fileToProcess + ".tests")
+            if fileToProcess[0] == "/":
+                create_test_file(
+                    aiml_source + fileToProcess, test_dest + fileToProcess + ".tests"
+                )
             else:
-                create_test_file(aiml_source + os.sep + fileToProcess, test_dest + os.sep + fileToProcess + ".tests")
-
+                create_test_file(
+                    aiml_source + os.sep + fileToProcess,
+                    test_dest + os.sep + fileToProcess + ".tests",
+                )

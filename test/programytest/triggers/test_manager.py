@@ -11,7 +11,12 @@ class MockTriggerManager(TriggerManager):
     def __init__(self, config: TriggerConfiguration):
         TriggerManager.__init__(self, config)
 
-    def trigger(self, event: str, client_context: ClientContext = None, additional: Dict[str, str] = None) -> bool:
+    def trigger(
+        self,
+        event: str,
+        client_context: ClientContext = None,
+        additional: Dict[str, str] = None,
+    ) -> bool:
         return
 
 
@@ -29,4 +34,3 @@ class TriggerManagerTests(unittest.TestCase):
         self.assertIsNotNone(mgr)
 
         self.assertIsInstance(mgr, TriggerManager)
-

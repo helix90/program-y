@@ -14,10 +14,11 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
-from programy.storage.stores.file.store.filestore import FileStore
+
 from programy.storage.entities.oobs import OOBsStore
+from programy.storage.stores.file.store.filestore import FileStore
 from programy.utils.classes.loader import ClassLoader
+from programy.utils.logging.ylogger import YLogger
 
 
 class FileOOBStore(FileStore, OOBsStore):
@@ -44,7 +45,9 @@ class FileOOBStore(FileStore, OOBsStore):
                             count += 1
 
         except Exception as error:
-            YLogger.exception(self, "Error loading OOB config file [%s]", error, filename)
+            YLogger.exception(
+                self, "Error loading OOB config file [%s]", error, filename
+            )
 
         return count
 
@@ -60,12 +63,15 @@ class FileOOBStore(FileStore, OOBsStore):
             class_name = splits[1].strip()
             YLogger.debug(self, "Pre-instantiating OOB [%s]", class_name)
             try:
-                oob_handler.add_oob(oob_name, ClassLoader.instantiate_class(class_name)())
+                oob_handler.add_oob(
+                    oob_name, ClassLoader.instantiate_class(class_name)()
+                )
                 return True
 
             except Exception as e:
-                YLogger.exception_nostack(self,
-                                          "Failed pre-instantiating OOB [%s]" % e, class_name)
+                YLogger.exception_nostack(
+                    self, "Failed pre-instantiating OOB [%s]" % e, class_name
+                )
 
         return False
 
@@ -74,7 +80,7 @@ class FileOOBStore(FileStore, OOBsStore):
         if not line:
             return False
 
-        if line.startswith('#'):
+        if line.startswith("#"):
             return False
 
         if "=" not in line:

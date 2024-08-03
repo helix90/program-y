@@ -14,9 +14,10 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
-from programy.parser.template.nodes.base import TemplateNode
+
 from programy.parser.exceptions import ParserException
+from programy.parser.template.nodes.base import TemplateNode
+from programy.utils.logging.ylogger import YLogger
 from programy.utils.text.text import TextUtils
 
 
@@ -54,22 +55,45 @@ class TemplateSetNode(TemplateNode):
         value = self.resolve_children(client_context)
 
         if self.local is True:
-            YLogger.debug(client_context, "[%s] resolved to local: [%s] => [%s]", self.to_string(), name, value)
+            YLogger.debug(
+                client_context,
+                "[%s] resolved to local: [%s] => [%s]",
+                self.to_string(),
+                name,
+                value,
+            )
             conversation.current_question().set_property(name, value)
 
         elif client_context.brain.dynamics.is_dynamic_var(name) is True:
             client_context.brain.dynamics.set_dynamic_var(client_context, name, value)
 
         else:
-            if client_context.bot.override_properties is False and client_context.brain.properties.has_property(name):
-                YLogger.error(client_context, "Global property already exists for name [%s], ignoring set!", name)
+            if (
+                client_context.bot.override_properties is False
+                and client_context.brain.properties.has_property(name)
+            ):
+                YLogger.error(
+                    client_context,
+                    "Global property already exists for name [%s], ignoring set!",
+                    name,
+                )
                 value = client_context.brain.properties.property(name)
 
             else:
                 if client_context.brain.properties.has_property(name):
-                    YLogger.warning(client_context, "Global property already exists for name [%s], over writing!", name)
+                    YLogger.warning(
+                        client_context,
+                        "Global property already exists for name [%s], over writing!",
+                        name,
+                    )
 
-                YLogger.debug(client_context, "[%s] resolved to global: [%s] => [%s]", self.to_string(), name, value)
+                YLogger.debug(
+                    client_context,
+                    "[%s] resolved to global: [%s] => [%s]",
+                    self.to_string(),
+                    name,
+                    value,
+                )
                 conversation.set_property(name, value)
 
         YLogger.debug(client_context, "[%s] resolved to [%s]", self.to_string(), value)
@@ -77,7 +101,10 @@ class TemplateSetNode(TemplateNode):
         return value
 
     def to_string(self):
-        return "[SET [%s] - %s]" % ("Local" if self.local else "Global", self.name.to_string())
+        return "[SET [%s] - %s]" % (
+            "Local" if self.local else "Global",
+            self.name.to_string(),
+        )
 
     def to_xml(self, client_context):
         xml = "<set"
@@ -102,13 +129,13 @@ class TemplateSetNode(TemplateNode):
         name_found = False
         var_found = False
 
-        if 'name' in expression.attrib:
-            self.name = self.parse_attrib_value_as_word_node(graph, expression, 'name')
+        if "name" in expression.attrib:
+            self.name = self.parse_attrib_value_as_word_node(graph, expression, "name")
             self.local = False
             name_found = True
 
-        if 'var' in expression.attrib:
-            self.name = self.parse_attrib_value_as_word_node(graph, expression, 'var')
+        if "var" in expression.attrib:
+            self.name = self.parse_attrib_value_as_word_node(graph, expression, "var")
             self.local = True
             var_found = True
 
@@ -117,12 +144,12 @@ class TemplateSetNode(TemplateNode):
         for child in expression:
             tag_name = TextUtils.tag_from_text(child.tag)
 
-            if tag_name == 'name':
+            if tag_name == "name":
                 self.name = self.parse_children_as_word_node(graph, child)
                 self.local = False
                 name_found = True
 
-            elif tag_name == 'var':
+            elif tag_name == "var":
                 self.name = self.parse_children_as_word_node(graph, child)
                 self.local = True
                 var_found = True
@@ -133,7 +160,11 @@ class TemplateSetNode(TemplateNode):
             self.parse_text(graph, self.get_tail_from_element(child))
 
         if name_found is True and var_found is True:
-            raise ParserException("Set node has both name AND var values", xml_element=expression)
+            raise ParserException(
+                "Set node has both name AND var values", xml_element=expression
+            )
 
         if name_found is False and var_found is False:
-            raise ParserException("Set node has both name AND var values", xml_element=expression)
+            raise ParserException(
+                "Set node has both name AND var values", xml_element=expression
+            )

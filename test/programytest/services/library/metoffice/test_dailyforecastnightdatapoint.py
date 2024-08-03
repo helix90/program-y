@@ -1,4 +1,5 @@
 import unittest
+
 from programy.services.library.metoffice.metoffice import DailyForecastNightDataPoint
 
 
@@ -25,16 +26,18 @@ class DailyForecastNightDataPointTests(unittest.TestCase):
         dp = DailyForecastNightDataPoint()
         self.assertIsNotNone(dp)
 
-        json = { "$": "Night",
-                  "D": "SSW",
-                  "FNm": "7",
-                  "Gm": "16",
-                  "Hm": "86",
-                  "Nm": "9",
-                  "PPn": "57",
-                  "S": "7",
-                  "V": "GO",
-                  "W": "7"}
+        json = {
+            "$": "Night",
+            "D": "SSW",
+            "FNm": "7",
+            "Gm": "16",
+            "Hm": "86",
+            "Nm": "9",
+            "PPn": "57",
+            "S": "7",
+            "V": "GO",
+            "W": "7",
+        }
 
         dp.parse_json(json, "Night", "2017-04-03Z")
 
@@ -51,20 +54,25 @@ class DailyForecastNightDataPointTests(unittest.TestCase):
         self.assertEqual("7", dp._weather_type_code)
         self.assertEqual("Cloudy", dp._weather_type_text)
 
-        self.assertEqual("WEATHER TYPE Cloudy WINDDIR SSW WINDGUST 16 WINDSPEED 7 TEMP 9 FEELS 7 HUMID 86 RAINPROB 57 VISTEXT Good - Between 10-20 km WEATHER Cloudy", dp.to_program_y_text())
+        self.assertEqual(
+            "WEATHER TYPE Cloudy WINDDIR SSW WINDGUST 16 WINDSPEED 7 TEMP 9 FEELS 7 HUMID 86 RAINPROB 57 VISTEXT Good - Between 10-20 km WEATHER Cloudy",
+            dp.to_program_y_text(),
+        )
 
     def test_parse_json_v_w_missing(self):
         dp = DailyForecastNightDataPoint()
         self.assertIsNotNone(dp)
 
-        json = { "$": "Night",
-                  "D": "SSW",
-                  "FNm": "7",
-                  "Gm": "16",
-                  "Hm": "86",
-                  "Nm": "9",
-                  "PPn": "57",
-                  "S": "7"}
+        json = {
+            "$": "Night",
+            "D": "SSW",
+            "FNm": "7",
+            "Gm": "16",
+            "Hm": "86",
+            "Nm": "9",
+            "PPn": "57",
+            "S": "7",
+        }
 
         dp.parse_json(json, "Night", "2017-04-03Z")
 
@@ -81,5 +89,7 @@ class DailyForecastNightDataPointTests(unittest.TestCase):
         self.assertEqual(None, dp._weather_type_code)
         self.assertEqual(None, dp._weather_type_text)
 
-        self.assertEqual("WEATHER WINDDIR SSW WINDGUST 16 WINDSPEED 7 TEMP 9 FEELS 7 HUMID 86 RAINPROB 57", dp.to_program_y_text())
-
+        self.assertEqual(
+            "WEATHER WINDDIR SSW WINDGUST 16 WINDSPEED 7 TEMP 9 FEELS 7 HUMID 86 RAINPROB 57",
+            dp.to_program_y_text(),
+        )

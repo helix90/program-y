@@ -3,11 +3,11 @@ import unittest.mock
 from linebot import LineBotApi, WebhookParser
 from linebot.models import TextSendMessage
 from linebot.webhook import SignatureValidator
+from programytest.clients.arguments import MockArgumentParser
 
+from programy.clients.render.text import TextRenderer
 from programy.clients.restful.flask.line.client import LineBotClient
 from programy.clients.restful.flask.line.config import LineConfiguration
-from programy.clients.render.text import TextRenderer
-from programytest.clients.arguments import MockArgumentParser
 
 
 class MockLineApi(LineBotApi):
@@ -61,6 +61,7 @@ class MockLineBotClient(LineBotClient):
         if self._parser is None:
             self._parser = WebhookParser(self._channel_secret)
 
+
 class LineBotClientTests(unittest.TestCase):
 
     def test_line_client_init(self):
@@ -72,7 +73,7 @@ class LineBotClientTests(unittest.TestCase):
         self.assertEqual("LINE_ACCESS_TOKEN", client._channel_access_token)
 
         self.assertIsInstance(client.get_client_configuration(), LineConfiguration)
-        self.assertEqual('ProgramY AIML2.0 Client', client.get_description())
+        self.assertEqual("ProgramY AIML2.0 Client", client.get_description())
 
         self.assertFalse(client._render_callback())
         self.assertIsInstance(client.renderer, TextRenderer)
@@ -139,7 +140,9 @@ class LineBotClientTests(unittest.TestCase):
 
     def test_handle_message_request(self):
         arguments = MockArgumentParser()
-        client = MockLineBotClient(arguments, line_bot=MockLineApi("TOKEN"), parser=MockWebhookParser("SECRET"))
+        client = MockLineBotClient(
+            arguments, line_bot=MockLineApi("TOKEN"), parser=MockWebhookParser("SECRET")
+        )
         self.assertIsNotNone(client)
 
         body = '{"events": [{"type": "message", "source": {"source_id": "test", "type": "text", "user": {"user_id": "User123"}}}]}'
@@ -154,13 +157,15 @@ class LineBotClientTests(unittest.TestCase):
 
     def test_receive_message(self):
         arguments = MockArgumentParser()
-        client = MockLineBotClient(arguments, line_bot=MockLineApi("TOKEN"), parser=MockWebhookParser("SECRET"))
+        client = MockLineBotClient(
+            arguments, line_bot=MockLineApi("TOKEN"), parser=MockWebhookParser("SECRET")
+        )
         self.assertIsNotNone(client)
 
         client.test_question = "Hi there"
 
         request = unittest.mock.Mock()
-        request.headers = {'X-Line-Signature': "SECRET"}
+        request.headers = {"X-Line-Signature": "SECRET"}
         request.get_data.return_value = '{"events": [{"type": "message", "source": {"source_id": "test", "type": "text", "user": {"user_id": "User123"}}}]}'
 
         client.receive_message(request)

@@ -14,16 +14,17 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
-from programy.storage.stores.nosql.mongo.store.mongostore import MongoStore
+
 from programy.storage.entities.sets import SetsReadWriteStore
 from programy.storage.stores.nosql.mongo.dao.set import Set
+from programy.storage.stores.nosql.mongo.store.mongostore import MongoStore
+from programy.utils.logging.ylogger import YLogger
 
 
 class MongoSetsStore(MongoStore, SetsReadWriteStore):
-    SETS = 'sets'
-    NAME = 'name'
-    VALUES = 'values'
+    SETS = "sets"
+    NAME = "name"
+    VALUES = "values"
 
     def __init__(self, storage_engine):
         MongoStore.__init__(self, storage_engine)
@@ -49,7 +50,9 @@ class MongoSetsStore(MongoStore, SetsReadWriteStore):
                 return bool(result.modified_count > 0)
 
         else:
-            YLogger.info(self, "Creating new set [%s], initial value [%s]", name, uvalue)
+            YLogger.info(
+                self, "Creating new set [%s], initial value [%s]", name, uvalue
+            )
             aset = Set(name, [uvalue])
             return self.add_document(aset)
 
@@ -69,7 +72,6 @@ class MongoSetsStore(MongoStore, SetsReadWriteStore):
                     return bool(result.deleted_count > 0)
 
         return False
-
 
     def load_all(self, collector):
         YLogger.info(self, "Loading all sets from Mongo")

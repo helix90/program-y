@@ -1,10 +1,11 @@
 import unittest
 
+from programytest.client import TestClient
+
 from programy.bot import Bot
 from programy.config.bot.bot import BotConfiguration
 from programy.context import ClientContext
 from programy.processors.pre.normalize import NormalizePreProcessor
-from programytest.client import TestClient
 
 
 class NormalizeTests(unittest.TestCase):

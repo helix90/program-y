@@ -1,10 +1,11 @@
 import unittest
 
 import programytest.storage.engines as Engines
+from programytest.storage.asserts.store.assert_defaults import DefaultStoreAsserts
+
 from programy.storage.stores.sql.config import SQLStorageConfiguration
 from programy.storage.stores.sql.engine import SQLStorageEngine
 from programy.storage.stores.sql.store.properties import SQLDefaultVariableStore
-from programytest.storage.asserts.store.assert_defaults import DefaultStoreAsserts
 
 
 class SQLDefaultVariableStoreTests(DefaultStoreAsserts):

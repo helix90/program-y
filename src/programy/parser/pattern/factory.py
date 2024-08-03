@@ -14,11 +14,13 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 import os
-from programy.utils.logging.ylogger import YLogger
+
 from programy.parser.factory import NodeFactory
-from programy.utils.classes.loader import ClassLoader
 from programy.storage.factory import StorageFactory
+from programy.utils.classes.loader import ClassLoader
+from programy.utils.logging.ylogger import YLogger
 
 
 class PatternNodeFactory(NodeFactory):
@@ -31,16 +33,27 @@ class PatternNodeFactory(NodeFactory):
 
     def get_root_node(self):
         try:
-            root_class = self.new_node_class('root')
+            root_class = self.new_node_class("root")
             return root_class()
 
         except Exception as excep:
-            YLogger.exception_nostack(self, "Failed to get root pattern node, reverting to default", excep)
-            return ClassLoader.instantiate_class("programy.parser.pattern.nodes.root.PatternRootNode")()
+            YLogger.exception_nostack(
+                self, "Failed to get root pattern node, reverting to default", excep
+            )
+            return ClassLoader.instantiate_class(
+                "programy.parser.pattern.nodes.root.PatternRootNode"
+            )()
 
     def load(self, storage_factory):
-        if storage_factory.entity_storage_engine_available(StorageFactory.PATTERN_NODES) is True:
-            storage_engine = storage_factory.entity_storage_engine(StorageFactory.PATTERN_NODES)
+        if (
+            storage_factory.entity_storage_engine_available(
+                StorageFactory.PATTERN_NODES
+            )
+            is True
+        ):
+            storage_engine = storage_factory.entity_storage_engine(
+                StorageFactory.PATTERN_NODES
+            )
             pattern_store = storage_engine.pattern_nodes_store()
             pattern_store.load(self)
         else:

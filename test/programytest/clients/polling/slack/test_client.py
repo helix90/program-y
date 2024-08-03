@@ -1,11 +1,11 @@
 import unittest.mock
 
+from programytest.clients.arguments import MockArgumentParser
 from slack import WebClient
 
 from programy.clients.polling.slack.client import SlackBotClient
 from programy.clients.polling.slack.config import SlackConfiguration
 from programy.clients.render.text import TextRenderer
-from programytest.clients.arguments import MockArgumentParser
 
 
 class MockSlackClient(object):
@@ -32,8 +32,10 @@ class MockSlackBotClient(SlackBotClient):
     def set_question(self, question):
         self.test_question = question
 
-    def get_license_keys(self,):
-         self._bot_token = "SLACK_BOT_TOKEN"
+    def get_license_keys(
+        self,
+    ):
+        self._bot_token = "SLACK_BOT_TOKEN"
 
     def create_client(self):
         return MockSlackClient(self._bot_token)
@@ -49,7 +51,7 @@ class MockSlackBotClient(SlackBotClient):
     def create_client(self):
         if self.test_slack_client is not None:
             return self.test_slack_client
-        return super(MockSlackBotClient,self).create_client()
+        return super(MockSlackBotClient, self).create_client()
 
     def get_bot_id(self):
         return self._id
@@ -66,7 +68,7 @@ class SlackBotClientTests(unittest.TestCase):
         client = MockSlackBotClient(arguments)
         self.assertIsNotNone(client)
         self.assertEqual("SLACK_BOT_TOKEN", client._bot_token)
-        self.assertEqual('ProgramY AIML2.0 Client', client.get_description())
+        self.assertEqual("ProgramY AIML2.0 Client", client.get_description())
         self.assertIsInstance(client.get_client_configuration(), SlackConfiguration)
         self.assertIsInstance(client._slack_client, WebClient)
 
@@ -134,7 +136,9 @@ class SlackBotClientTests(unittest.TestCase):
         client.test_question = "Hi there"
 
         events = []
-        events.append({"type": "message", "text": "<@U024BE7LH> Hello", "channel": "test"})
+        events.append(
+            {"type": "message", "text": "<@U024BE7LH> Hello", "channel": "test"}
+        )
 
         client.parse_messages(events)
 
@@ -148,4 +152,3 @@ class SlackBotClientTests(unittest.TestCase):
         client = MockSlackBotClient(arguments)
 
         client.poll_and_answer()
-

@@ -22,21 +22,29 @@ class ExlodeAIMLTests(unittest.TestCase):
         self._client_context = client.create_client_context("testid")
 
     def test_explode(self):
-        response = self._client_context.bot.ask_question(self._client_context,  "MAKE EXPLODE")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "MAKE EXPLODE"
+        )
         self.assertIsNotNone(response)
         self.assertEqual(response, "H e l l o w o r l d.")
 
     def test_implode(self):
-        response = self._client_context.bot.ask_question(self._client_context, "MAKE IMPLODE")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "MAKE IMPLODE"
+        )
         self.assertIsNotNone(response)
         self.assertEqual(response, "Helloworld.")
 
     def test_nested_explode_implode(self):
-        response = self._client_context.bot.ask_question(self._client_context, "NESTED EXPLODE IMPLODE")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "NESTED EXPLODE IMPLODE"
+        )
         self.assertIsNotNone(response)
         self.assertEqual(response, "Helloworld.")
 
     def test_nested_implode_explode(self):
-        response = self._client_context.bot.ask_question(self._client_context, "NESTED IMPLODE EXPLODE")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "NESTED IMPLODE EXPLODE"
+        )
         self.assertIsNotNone(response)
         self.assertEqual(response, "H e l l o w o r l d.")

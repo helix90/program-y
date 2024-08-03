@@ -15,9 +15,8 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
-from programy.utils.logging.ylogger import YLogger
-
 from programy.dynamic.maps.map import DynamicMap
+from programy.utils.logging.ylogger import YLogger
 
 
 class SingularMap(DynamicMap):
@@ -37,12 +36,14 @@ class SingularMap(DynamicMap):
     def map_value(self, client_context, input_value):
         singular_value = SingularMap.static_map(input_value)
         if singular_value is None:
-            if input_value.endswith('IES'):
+            if input_value.endswith("IES"):
                 singular_value = input_value[:-3] + "Y"
-            elif input_value.endswith('S'):
+            elif input_value.endswith("S"):
                 singular_value = input_value[:-1]
             else:
                 singular_value = input_value
 
-        YLogger.debug(client_context, "SingleMap converted %s to %s", input_value, singular_value)
+        YLogger.debug(
+            client_context, "SingleMap converted %s to %s", input_value, singular_value
+        )
         return singular_value

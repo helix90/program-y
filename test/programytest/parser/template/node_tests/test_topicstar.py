@@ -1,5 +1,7 @@
 import xml.etree.ElementTree as ET
 
+from programytest.parser.base import ParserTestsBaseClass
+
 from programy.dialog.conversation import Conversation
 from programy.dialog.question import Question
 from programy.parser.pattern.match import Match
@@ -7,7 +9,6 @@ from programy.parser.pattern.matchcontext import MatchContext
 from programy.parser.pattern.nodes.oneormore import PatternOneOrMoreWildCardNode
 from programy.parser.template.nodes.base import TemplateNode
 from programy.parser.template.nodes.topicstar import TemplateTopicStarNode
-from programytest.parser.base import ParserTestsBaseClass
 
 
 class MockTemplateTopicStarNode(TemplateTopicStarNode):
@@ -16,6 +17,7 @@ class MockTemplateTopicStarNode(TemplateTopicStarNode):
 
     def resolve_to_string(self, context):
         raise Exception("This is an error")
+
 
 class TemplateNodeTests(ParserTestsBaseClass):
 
@@ -62,11 +64,19 @@ class TemplateNodeTests(ParserTestsBaseClass):
 
         conversation = Conversation(self._client_context)
 
-        question = Question.create_from_text(self._client_context, "Hello world", self._client_context.bot.sentence_splitter)
+        question = Question.create_from_text(
+            self._client_context,
+            "Hello world",
+            self._client_context.bot.sentence_splitter,
+        )
         question.current_sentence()._response = "Hello matey"
         conversation.record_dialog(question)
 
-        question = Question.create_from_text(self._client_context, "How are you", self._client_context.bot.sentence_splitter)
+        question = Question.create_from_text(
+            self._client_context,
+            "How are you",
+            self._client_context.bot.sentence_splitter,
+        )
         question.current_sentence()._response = "Very well thanks"
         conversation.record_dialog(question)
 
@@ -76,7 +86,9 @@ class TemplateNodeTests(ParserTestsBaseClass):
         question.current_sentence()._matched_context = context
         conversation.record_dialog(question)
 
-        self._client_context.bot._conversation_mgr._conversations["testid"] = conversation
+        self._client_context.bot._conversation_mgr._conversations["testid"] = (
+            conversation
+        )
 
         self.assertEqual("Matched", root.resolve(self._client_context))
 
@@ -109,7 +121,9 @@ class TemplateNodeTests(ParserTestsBaseClass):
         question.current_sentence()._matched_context = context
         conversation.record_dialog(question)
 
-        self._client_context.bot._conversation_mgr._conversations["testid"] = conversation
+        self._client_context.bot._conversation_mgr._conversations["testid"] = (
+            conversation
+        )
 
         self.assertEqual("Matched", node.resolve(self._client_context))
 

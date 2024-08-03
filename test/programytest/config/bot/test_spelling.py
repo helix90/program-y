@@ -11,14 +11,18 @@ class BotSpellingConfigurationTests(unittest.TestCase):
     def test_with_data(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         bot:
             spelling:
               classname: programy.spelling.norvig.NorvigSpellingChecker
               alphabet: abcdefghijklmnopqrstuvwxyz
               check_before: true
               check_and_retry: true
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         bot_config = yaml.get_section("bot")
 
@@ -28,7 +32,9 @@ class BotSpellingConfigurationTests(unittest.TestCase):
         license_keys = LicenseKeys()
         spelling_config.check_for_license_keys(license_keys)
 
-        self.assertEqual("programy.spelling.norvig.NorvigSpellingChecker", spelling_config.classname)
+        self.assertEqual(
+            "programy.spelling.norvig.NorvigSpellingChecker", spelling_config.classname
+        )
         self.assertEqual("abcdefghijklmnopqrstuvwxyz", spelling_config.alphabet)
         self.assertTrue(spelling_config.check_before)
         self.assertTrue(spelling_config.check_and_retry)
@@ -36,10 +42,14 @@ class BotSpellingConfigurationTests(unittest.TestCase):
     def test_without_data(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         bot:
             spelling:
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         bot_config = yaml.get_section("bot")
 
@@ -54,9 +64,13 @@ class BotSpellingConfigurationTests(unittest.TestCase):
     def test_with_no_data(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         bot:
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         bot_config = yaml.get_section("bot")
 
@@ -77,7 +91,9 @@ class BotSpellingConfigurationTests(unittest.TestCase):
 
     @staticmethod
     def assert_defaults(test, data):
-        test.assertEqual(data['classname'], "programy.spelling.norvig.NorvigSpellingChecker")
-        test.assertEqual(data['alphabet'], 'ABCDEFGHIJKLMNOPQRSTUVWXYZ')
-        test.assertEqual(data['check_before'], False)
-        test.assertEqual(data['check_and_retry'], False)
+        test.assertEqual(
+            data["classname"], "programy.spelling.norvig.NorvigSpellingChecker"
+        )
+        test.assertEqual(data["alphabet"], "ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+        test.assertEqual(data["check_before"], False)
+        test.assertEqual(data["check_and_retry"], False)

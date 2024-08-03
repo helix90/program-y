@@ -1,9 +1,9 @@
 import unittest
 
-from programy.context import ClientContext
-from programy.dynamic.maps.roman import MapDecimalToRoman
-from programy.dynamic.maps.roman import MapRomanToDecimal
 from programytest.client import TestClient
+
+from programy.context import ClientContext
+from programy.dynamic.maps.roman import MapDecimalToRoman, MapRomanToDecimal
 
 
 class IsRomanNumeralDynamicSetTests(unittest.TestCase):
@@ -42,4 +42,3 @@ class IsRomanNumeralDynamicSetTests(unittest.TestCase):
             dyn_map.map_value(self._client_context, 4000)
         with self.assertRaises(ValueError):
             dyn_map.map_value(self._client_context, -1)
-

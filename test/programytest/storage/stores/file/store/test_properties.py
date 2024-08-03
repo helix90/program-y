@@ -1,12 +1,16 @@
 import os
 import os.path
 from unittest.mock import patch
+
+from programytest.storage.asserts.store.assert_properties import PropertyStoreAsserts
+
 from programy.mappings.properties import PropertiesCollection
-from programy.storage.stores.file.config import FileStorageConfiguration
+from programy.storage.stores.file.config import (
+    FileStorageConfiguration,
+    FileStoreConfiguration,
+)
 from programy.storage.stores.file.engine import FileStorageEngine
 from programy.storage.stores.file.store.properties import FilePropertyStore
-from programytest.storage.asserts.store.assert_properties import PropertyStoreAsserts
-from programy.storage.stores.file.config import FileStoreConfiguration
 
 
 class FilePropertyStoreTests(PropertyStoreAsserts):
@@ -24,12 +28,25 @@ class FilePropertyStoreTests(PropertyStoreAsserts):
         engine.initialise()
         store = FilePropertyStore(engine)
 
-        self.assertEquals('/tmp/properties/properties.txt', store._get_storage_path())
+        self.assertEquals("/tmp/properties/properties.txt", store._get_storage_path())
         self.assertIsInstance(store.get_storage(), FileStoreConfiguration)
 
     def test_load_properties(self):
         config = FileStorageConfiguration()
-        config._properties_storage = FileStoreConfiguration(file=os.path.dirname(__file__) + os.sep + "data" + os.sep + "lookups" + os.sep + "text" + os.sep + "properties.txt", fileformat="text", encoding="utf-8", delete_on_start=False)
+        config._properties_storage = FileStoreConfiguration(
+            file=os.path.dirname(__file__)
+            + os.sep
+            + "data"
+            + os.sep
+            + "lookups"
+            + os.sep
+            + "text"
+            + os.sep
+            + "properties.txt",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
         engine = FileStorageEngine(config)
         engine.initialise()
         store = FilePropertyStore(engine)

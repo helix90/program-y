@@ -14,10 +14,11 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-import json
+
 import argparse
-from abc import ABC
-from abc import abstractmethod
+import json
+from abc import ABC, abstractmethod
+
 from programy.utils.console.console import outputLog
 
 
@@ -81,7 +82,7 @@ class StopIntent(SystemIntent):
         return "AMAZON.StopIntent"
 
 
-class QueryIntent():
+class QueryIntent:
 
     def __init__(self, query):
         self._query = query
@@ -92,13 +93,13 @@ class QueryIntent():
 
     def generate(self):
         slot = {}
-        slot['name'] = self.create_name()
-        slot['slots'] = [{"name": "text", "type": "AMAZON.SearchQuery"}]
-        slot['samples'] = ["%s {text}" % self._query]
+        slot["name"] = self.create_name()
+        slot["slots"] = [{"name": "text", "type": "AMAZON.SearchQuery"}]
+        slot["samples"] = ["%s {text}" % self._query]
         return slot
 
 
-class LanguageModel():
+class LanguageModel:
 
     def __init__(self, invocationName, intents):
 
@@ -117,7 +118,7 @@ class LanguageModel():
         return model
 
 
-class InteractionModel():
+class InteractionModel:
 
     def __init__(self, languageModel):
 
@@ -131,7 +132,7 @@ class InteractionModel():
         return model
 
 
-class Intents():
+class Intents:
 
     def __init__(self, interactionModel):
         assert isinstance(interactionModel, InteractionModel)
@@ -144,9 +145,16 @@ class Intents():
         return intents
 
 
-class IntentGenerator():
+class IntentGenerator:
 
-    def __init__(self, invocation_name, system_intents, intents_word_file, intents_json_file, intents_mapping_file):
+    def __init__(
+        self,
+        invocation_name,
+        system_intents,
+        intents_word_file,
+        intents_json_file,
+        intents_mapping_file,
+    ):
         self._invocation_name = invocation_name
         self._system_intents = system_intents
         self._intents_word_file = intents_word_file
@@ -164,7 +172,9 @@ class IntentGenerator():
                 intents.append(intent)
                 intent_mappings[intent.create_name()] = word
 
-        intents = Intents(InteractionModel(LanguageModel(self._invocation_name, intents)))
+        intents = Intents(
+            InteractionModel(LanguageModel(self._invocation_name, intents))
+        )
 
         with open(self._intents_json_file, "w+") as intent_json:
             intent_json.write(json.dumps(intents.generate(), indent=4, sort_keys=True))
@@ -173,23 +183,39 @@ class IntentGenerator():
             intent_json.write(json.dumps(intent_mappings, indent=4, sort_keys=True))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     outputLog(None, "Generating intents...")
 
-    parser = argparse.ArgumentParser(description='Program-Y Alexa Client Intent Generatorr')
+    parser = argparse.ArgumentParser(
+        description="Program-Y Alexa Client Intent Generatorr"
+    )
     try:
 
-        parser.add_argument('-in', '--invocation_name', required=True, help="Invocation Name")
-        parser.add_argument('-ci', '--cancel_intent', action='store_true', help="Include Cancel Intent")
-        parser.add_argument('-cif', '--cancel_intent_file', help="Cancel Intents file")
-        parser.add_argument('-hi', '--help_intent', action='store_true', help="Include Help Intent")
-        parser.add_argument('-hif', '--help_intent_file', help="Help Intent file")
-        parser.add_argument('-si', '--stop_intent', action='store_true', help="Include Stop Intent")
-        parser.add_argument('-sif', '--stop_intent_file', help="Stop Intent file")
-        parser.add_argument('-if', '--intents_file', required=True, help="Intents filename")
-        parser.add_argument('-ij', '--intents_json', required=True, help="Intents JSON filename")
-        parser.add_argument('-im', '--intents_maps', required=True, help="Intents Map filename")
+        parser.add_argument(
+            "-in", "--invocation_name", required=True, help="Invocation Name"
+        )
+        parser.add_argument(
+            "-ci", "--cancel_intent", action="store_true", help="Include Cancel Intent"
+        )
+        parser.add_argument("-cif", "--cancel_intent_file", help="Cancel Intents file")
+        parser.add_argument(
+            "-hi", "--help_intent", action="store_true", help="Include Help Intent"
+        )
+        parser.add_argument("-hif", "--help_intent_file", help="Help Intent file")
+        parser.add_argument(
+            "-si", "--stop_intent", action="store_true", help="Include Stop Intent"
+        )
+        parser.add_argument("-sif", "--stop_intent_file", help="Stop Intent file")
+        parser.add_argument(
+            "-if", "--intents_file", required=True, help="Intents filename"
+        )
+        parser.add_argument(
+            "-ij", "--intents_json", required=True, help="Intents JSON filename"
+        )
+        parser.add_argument(
+            "-im", "--intents_maps", required=True, help="Intents Map filename"
+        )
 
         args = parser.parse_args()
 
@@ -203,8 +229,13 @@ if __name__ == '__main__':
 
         outputLog(None, "\nReading [%s]" % args.intents_file)
 
-        generator = IntentGenerator(args.invocation_name, system_intents, args.intents_file, args.intents_json,
-                                    args.intents_maps)
+        generator = IntentGenerator(
+            args.invocation_name,
+            system_intents,
+            args.intents_file,
+            args.intents_json,
+            args.intents_maps,
+        )
         generator.generate()
 
         outputLog(None, "\nGenerated [%s]" % args.intents_json)

@@ -14,9 +14,10 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
+
 from programy.mappings.base import BaseCollection
 from programy.storage.factory import StorageFactory
+from programy.utils.logging.ylogger import YLogger
 
 
 class RDFEntity:
@@ -61,7 +62,7 @@ class RDFCollection(BaseCollection):
         if rdf_name is None:
             self._remove_all()
         else:
-           self._remove_entities_by_rdf_name(rdf_name)
+            self._remove_entities_by_rdf_name(rdf_name)
 
     def _remove_all(self):
         YLogger.debug(self, "Emptying RDF Collection")
@@ -130,8 +131,17 @@ class RDFCollection(BaseCollection):
 
         return False
 
-    def add_entity(self, subject, predicate, obj, rdf_name, rdf_store=None, entityid=None):
-        YLogger.debug(self, "Adding RDF Entity [%s] [%s] [%s] [%s]", subject, predicate, obj, rdf_name)
+    def add_entity(
+        self, subject, predicate, obj, rdf_name, rdf_store=None, entityid=None
+    ):
+        YLogger.debug(
+            self,
+            "Adding RDF Entity [%s] [%s] [%s] [%s]",
+            subject,
+            predicate,
+            obj,
+            rdf_name,
+        )
 
         subject = subject.upper()
         predicate = predicate.upper()
@@ -181,7 +191,9 @@ class RDFCollection(BaseCollection):
         return False
 
     def delete_entity(self, subject, predicate=None, obj=None):
-        YLogger.debug(self, "Deleting RDF Entity [%s] [%s] [%s]", subject, predicate, obj)
+        YLogger.debug(
+            self, "Deleting RDF Entity [%s] [%s] [%s]", subject, predicate, obj
+        )
 
         if self.has_subject(subject):
 
@@ -194,19 +206,35 @@ class RDFCollection(BaseCollection):
 
             if obj is None:
                 if self.has_predicate(subject, predicate):
-                    YLogger.debug(None, "Removing entire predicate %s, subject %s", predicate, subject)
+                    YLogger.debug(
+                        None,
+                        "Removing entire predicate %s, subject %s",
+                        predicate,
+                        subject,
+                    )
                     del entity.predicates[predicate.upper()]
             else:
                 if predicate.upper() in entity.predicates:
                     objects = entity.predicates[predicate.upper()]
 
                     if obj in objects:
-                        YLogger.debug(None, "Removing object %s from predicate %s, subject %s", obj, predicate, subject)
+                        YLogger.debug(
+                            None,
+                            "Removing object %s from predicate %s, subject %s",
+                            obj,
+                            predicate,
+                            subject,
+                        )
                         objects = entity.predicates[predicate.upper()]
                         objects.remove(obj)
 
                     if len(entity.predicates[predicate.upper()]) == 0:
-                        YLogger.debug(None, "Removing empty predicate %s, subject %s", predicate, subject)
+                        YLogger.debug(
+                            None,
+                            "Removing empty predicate %s, subject %s",
+                            predicate,
+                            subject,
+                        )
                         del entity.predicates[predicate.upper()]
 
             if len(entity.predicates.keys()) == 0:
@@ -229,9 +257,16 @@ class RDFCollection(BaseCollection):
                     if predicate is None or predicate == entity_predicate:
                         for entity_obj in entity_objects:
                             if obj is None or obj == entity_obj:
-                                YLogger.debug(None, "Matched tuple subject %s, predicate %s, object %s",
-                                              entity_subject, entity_predicate, entity_obj)
-                                tuples.append([entity_subject, entity_predicate, entity_obj])
+                                YLogger.debug(
+                                    None,
+                                    "Matched tuple subject %s, predicate %s, object %s",
+                                    entity_subject,
+                                    entity_predicate,
+                                    entity_obj,
+                                )
+                                tuples.append(
+                                    [entity_subject, entity_predicate, entity_obj]
+                                )
         return tuples
 
     def not_matched_as_tuples(self, subject=None, predicate=None, obj=None):
@@ -248,9 +283,17 @@ class RDFCollection(BaseCollection):
         if predicate is None and obj is None:
             YLogger.debug(self, "Removing subject=[%s]", subject)
         elif obj is None:
-            YLogger.debug(self, "Removing subject=[%s], predicate=[%s]", subject, predicate)
+            YLogger.debug(
+                self, "Removing subject=[%s], predicate=[%s]", subject, predicate
+            )
         else:
-            YLogger.debug(self, "Removing subject=[%s], predicate=[%s], object=[%s]", subject, predicate, obj)
+            YLogger.debug(
+                self,
+                "Removing subject=[%s], predicate=[%s], object=[%s]",
+                subject,
+                predicate,
+                obj,
+            )
 
         removes = []
         for entity in entities:
@@ -258,7 +301,11 @@ class RDFCollection(BaseCollection):
                 if predicate is not None:
 
                     if obj is not None:
-                        if subject == entity[0] and predicate == entity[1] and obj == entity[2]:
+                        if (
+                            subject == entity[0]
+                            and predicate == entity[1]
+                            and obj == entity[2]
+                        ):
                             removes.append(entity)
 
                     else:
@@ -291,7 +338,10 @@ class RDFCollection(BaseCollection):
                     removes.append(entity)
 
             else:
-                YLogger.warning(None, "RDF remove, no subject, predicte or object specified, nothing removed!")
+                YLogger.warning(
+                    None,
+                    "RDF remove, no subject, predicte or object specified, nothing removed!",
+                )
 
         return [entity for entity in entities if entity not in removes]
 
@@ -356,10 +406,18 @@ class RDFCollection(BaseCollection):
             YLogger.debug(self, "Matching subject=[%s]", subject)
 
         elif obj is None:
-            YLogger.debug(self, "Matching subject=[%s], predicate=[%s]", subject, predicate)
+            YLogger.debug(
+                self, "Matching subject=[%s], predicate=[%s]", subject, predicate
+            )
 
         else:
-            YLogger.debug(self, "Matching subject=[%s], predicate=[%s], object=[%s]", subject, predicate, obj)
+            YLogger.debug(
+                self,
+                "Matching subject=[%s], predicate=[%s], object=[%s]",
+                subject,
+                predicate,
+                obj,
+            )
 
         results = []
         for entity_subject, entity in self._entities.items():
@@ -367,11 +425,19 @@ class RDFCollection(BaseCollection):
 
             for entity_pred in entity.predicates:
 
-                pred_element = RDFCollection._get_predicate_element(predicate, entity_pred)
+                pred_element = RDFCollection._get_predicate_element(
+                    predicate, entity_pred
+                )
 
-                obj_elements = RDFCollection._get_object_elements(entity, obj, entity_pred)
+                obj_elements = RDFCollection._get_object_elements(
+                    entity, obj, entity_pred
+                )
 
-                if subj_element is not None and pred_element is not None and len(obj_elements) > 0:
+                if (
+                    subj_element is not None
+                    and pred_element is not None
+                    and len(obj_elements) > 0
+                ):
                     for objct in obj_elements:
                         results.append([subj_element, pred_element, objct])
 
@@ -381,9 +447,17 @@ class RDFCollection(BaseCollection):
         if predicate is None and obj is None:
             YLogger.debug(self, "Not matching subject=[%s]", subject)
         elif obj is None:
-            YLogger.debug(self, "Not matching subject=[%s], predicate=[%s]", subject, predicate)
+            YLogger.debug(
+                self, "Not matching subject=[%s], predicate=[%s]", subject, predicate
+            )
         else:
-            YLogger.debug(self, "Not matching subject=[%s], predicate=[%s], object=[%s]", subject, predicate, obj)
+            YLogger.debug(
+                self,
+                "Not matching subject=[%s], predicate=[%s], object=[%s]",
+                subject,
+                predicate,
+                obj,
+            )
 
         if subject is not None and subject.startswith("?") is True:
             all_subject = subject
@@ -416,9 +490,20 @@ class RDFCollection(BaseCollection):
         if predicate is None and obj is None:
             YLogger.debug(self, "Matching only vars subject=[%s]", subject)
         elif obj is None:
-            YLogger.debug(self, "Matching only vars subject=[%s], predicate=[%s]", subject, predicate)
+            YLogger.debug(
+                self,
+                "Matching only vars subject=[%s], predicate=[%s]",
+                subject,
+                predicate,
+            )
         else:
-            YLogger.debug(self, "Matching only vars subject=[%s], predicate=[%s], object=[%s]", subject, predicate, obj)
+            YLogger.debug(
+                self,
+                "Matching only vars subject=[%s], predicate=[%s], object=[%s]",
+                subject,
+                predicate,
+                obj,
+            )
 
         results = self.match_to_vars(subject, predicate, obj)
         returns = []
@@ -477,8 +562,8 @@ class RDFCollection(BaseCollection):
                 continue
             else:
                 unified = True
-            if num_set < len(sets)-1:
-                return self.unify_set(num_set+1, sets, unified_vars, depth+1)
+            if num_set < len(sets) - 1:
+                return self.unify_set(num_set + 1, sets, unified_vars, depth + 1)
 
         return unified
 

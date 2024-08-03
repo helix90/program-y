@@ -14,6 +14,7 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 from programy.storage.entities.store import Store
 
 
@@ -23,7 +24,9 @@ class SetsReadOnlyStore(Store):
         Store.__init__(self)
 
     def load_all(self, collector):
-        raise NotImplementedError("load_all missing from Sets Store")  # pragma: no cover
+        raise NotImplementedError(
+            "load_all missing from Sets Store"
+        )  # pragma: no cover
 
     def load(self, collector, name=None):
         raise NotImplementedError("load missing from Sets Store")  # pragma: no cover
@@ -51,7 +54,11 @@ class SetsReadWriteStore(SetsReadOnlyStore):
         return False
 
     def add_to_set(self, name, value, replace_existing=False):
-        raise NotImplementedError("add_to_set missing from Sets Store")  # pragma: no cover
+        raise NotImplementedError(
+            "add_to_set missing from Sets Store"
+        )  # pragma: no cover
 
     def remove_from_set(self, name, value):
-        raise NotImplementedError("remove_from_set missing from Sets Store")  # pragma: no cover
+        raise NotImplementedError(
+            "remove_from_set missing from Sets Store"
+        )  # pragma: no cover

@@ -2,6 +2,7 @@ import os
 import os.path
 import re
 import unittest
+
 from programy.mappings.person import PersonCollection
 from programy.storage.entities.store import Store
 
@@ -12,8 +13,8 @@ class Person2sStoreAsserts(unittest.TestCase):
 
         store.empty()
 
-        store.add_to_lookup(" I was "," he or she was ")
-        store.add_to_lookup(" he was "," I was ")
+        store.add_to_lookup(" I was ", " he or she was ")
+        store.add_to_lookup(" he was ", " I was ")
         store.commit()
 
         lookups = store.get_lookup()
@@ -37,7 +38,9 @@ class Person2sStoreAsserts(unittest.TestCase):
 
         store.empty()
 
-        store.upload_from_text(None, """
+        store.upload_from_text(
+            None,
+            """
                         " I was "," he or she was "
                         " he was "," I was "
                         " she was "," I was " 
@@ -47,34 +50,71 @@ class Person2sStoreAsserts(unittest.TestCase):
                         " my "," his or her " 
                         " myself "," him or herself "
                         " mine "," his or hers "
-                                """)
+                                """,
+        )
 
         collection = PersonCollection()
         store.load(collection)
 
-        self.assertEqual(collection.person(" I WAS "), [re.compile('(^I WAS | I WAS | I WAS$)', re.IGNORECASE), ' HE OR SHE WAS '])
-        self.assertEqual(collection.personalise_string("I was with him"), "he or she was with him")
+        self.assertEqual(
+            collection.person(" I WAS "),
+            [re.compile("(^I WAS | I WAS | I WAS$)", re.IGNORECASE), " HE OR SHE WAS "],
+        )
+        self.assertEqual(
+            collection.personalise_string("I was with him"), "he or she was with him"
+        )
 
     def assert_upload_from_text_file(self, store):
 
         store.empty()
 
-        store.upload_from_file(os.path.dirname(__file__) + os.sep + "data" + os.sep + "lookups" + os.sep + "text" + os.sep + "person2.txt")
+        store.upload_from_file(
+            os.path.dirname(__file__)
+            + os.sep
+            + "data"
+            + os.sep
+            + "lookups"
+            + os.sep
+            + "text"
+            + os.sep
+            + "person2.txt"
+        )
 
         collection = PersonCollection()
         store.load(collection)
 
-        self.assertEqual(collection.person(" I WAS "), [re.compile('(^I WAS | I WAS | I WAS$)', re.IGNORECASE), ' HE OR SHE WAS '])
-        self.assertEqual(collection.personalise_string("I was with him"), "he or she was with him")
+        self.assertEqual(
+            collection.person(" I WAS "),
+            [re.compile("(^I WAS | I WAS | I WAS$)", re.IGNORECASE), " HE OR SHE WAS "],
+        )
+        self.assertEqual(
+            collection.personalise_string("I was with him"), "he or she was with him"
+        )
 
     def assert_upload_csv_file(self, store):
 
         store.empty()
 
-        store.upload_from_file(os.path.dirname(__file__) + os.sep + "data" + os.sep + "lookups" + os.sep + "csv" + os.sep + "person2.csv", fileformat=Store.CSV_FORMAT)
+        store.upload_from_file(
+            os.path.dirname(__file__)
+            + os.sep
+            + "data"
+            + os.sep
+            + "lookups"
+            + os.sep
+            + "csv"
+            + os.sep
+            + "person2.csv",
+            fileformat=Store.CSV_FORMAT,
+        )
 
         collection = PersonCollection()
         store.load(collection)
 
-        self.assertEqual(collection.person(" I WAS "), [re.compile('(^I WAS | I WAS | I WAS$)', re.IGNORECASE), ' HE OR SHE WAS '])
-        self.assertEqual(collection.personalise_string("I was with him"), "he or she was with him")
+        self.assertEqual(
+            collection.person(" I WAS "),
+            [re.compile("(^I WAS | I WAS | I WAS$)", re.IGNORECASE), " HE OR SHE WAS "],
+        )
+        self.assertEqual(
+            collection.personalise_string("I was with him"), "he or she was with him"
+        )

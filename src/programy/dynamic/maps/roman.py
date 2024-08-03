@@ -23,7 +23,7 @@ from programy.dynamic.maps.map import DynamicMap
 class MapRomanToDecimal(DynamicMap):
 
     NAME = "ROMANTODEC"
-    NUMS = ('M', 'D', 'C', 'L', 'X', 'V', 'I')
+    NUMS = ("M", "D", "C", "L", "X", "V", "I")
     INTS = (1000, 500, 100, 50, 10, 5, 1)
 
     def __init__(self, config):
@@ -36,14 +36,18 @@ class MapRomanToDecimal(DynamicMap):
         places = []
         for char in input_value:
             if char not in MapRomanToDecimal.NUMS:
-                raise ValueError("input_value is not a valid roman numeral: %s" % input_value)
+                raise ValueError(
+                    "input_value is not a valid roman numeral: %s" % input_value
+                )
 
         charnum = 0
         for char in input_value:
             value = MapRomanToDecimal.INTS[MapRomanToDecimal.NUMS.index(char)]
             # If the next place holds a larger number, this value is negative.
             try:
-                nextvalue = MapRomanToDecimal.INTS[MapRomanToDecimal.NUMS.index(input_value[charnum + 1])]
+                nextvalue = MapRomanToDecimal.INTS[
+                    MapRomanToDecimal.NUMS.index(input_value[charnum + 1])
+                ]
                 if nextvalue > value:
                     value *= -1
             except IndexError:
@@ -61,7 +65,7 @@ class MapDecimalToRoman(DynamicMap):
 
     NAME = "DECTOROMAN"
     INTS = (1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1)
-    NUMS = ('M', 'CM', 'D', 'CD', 'C', 'XC', 'L', 'XL', 'X', 'IX', 'V', 'IV', 'I')
+    NUMS = ("M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I")
 
     def __init__(self, config):
         DynamicMap.__init__(self, config)

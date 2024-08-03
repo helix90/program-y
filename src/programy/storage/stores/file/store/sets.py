@@ -14,9 +14,10 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
-from programy.storage.stores.file.store.filestore import FileStore
+
 from programy.storage.entities.sets import SetsReadOnlyStore
+from programy.storage.stores.file.store.filestore import FileStore
+from programy.utils.logging.ylogger import YLogger
 
 
 class FileSetsStore(FileStore, SetsReadOnlyStore):
@@ -26,7 +27,7 @@ class FileSetsStore(FileStore, SetsReadOnlyStore):
         SetsReadOnlyStore.__init__(self)
 
     def _load_sets_from_file(self, filename, the_set):
-        with open(filename, 'r', encoding='utf8') as my_file:
+        with open(filename, "r", encoding="utf8") as my_file:
             for line in my_file:
                 line = line.strip()
                 self.add_set_values(the_set, line)

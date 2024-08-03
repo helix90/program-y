@@ -2,11 +2,11 @@ import unittest.mock
 
 from kik import KikApi
 from kik.messages import TextMessage
+from programytest.clients.arguments import MockArgumentParser
 
+from programy.clients.render.text import TextRenderer
 from programy.clients.restful.flask.kik.client import KikBotClient
 from programy.clients.restful.flask.kik.config import KikConfiguration
-from programy.clients.render.text import TextRenderer
-from programytest.clients.arguments import MockArgumentParser
 
 
 class MockKikApi(KikApi):
@@ -23,13 +23,13 @@ class MockKikApi(KikApi):
         return False
 
 
-class MockHeaders():
+class MockHeaders:
 
     def __init__(self, signature=None):
         self._signature = signature
 
     def get(self, name):
-        if name == 'X-Kik-Signature':
+        if name == "X-Kik-Signature":
             return self._signature
         else:
             return None
@@ -56,20 +56,22 @@ class MockKikBotClient(KikBotClient):
     def create_kik_bot(self):
         if self._kik_bot is not None:
             return self._kik_bot
-        return super(MockKikBotClient,self).create_kik_bot()
+        return super(MockKikBotClient, self).create_kik_bot()
 
 
 class KikBotClientTests(unittest.TestCase):
 
     def test_kik_client_init(self):
         arguments = MockArgumentParser()
-        client = MockKikBotClient(arguments, kik_bot=MockKikApi(bot="test", api_key="KEY"))
+        client = MockKikBotClient(
+            arguments, kik_bot=MockKikApi(bot="test", api_key="KEY")
+        )
         self.assertIsNotNone(client)
 
         self.assertEqual("KIK_BOT_API_KEY", client._bot_api_key)
 
         self.assertIsInstance(client.get_client_configuration(), KikConfiguration)
-        self.assertEqual('ProgramY AIML2.0 Client', client.get_description())
+        self.assertEqual("ProgramY AIML2.0 Client", client.get_description())
 
         self.assertIsInstance(client._kik_bot, KikApi)
 
@@ -78,7 +80,9 @@ class KikBotClientTests(unittest.TestCase):
 
     def test_handle_text_message(self):
         arguments = MockArgumentParser()
-        client = MockKikBotClient(arguments, kik_bot=MockKikApi(bot="test", api_key="KEY"))
+        client = MockKikBotClient(
+            arguments, kik_bot=MockKikApi(bot="test", api_key="KEY")
+        )
         self.assertIsNotNone(client)
 
         message = unittest.mock.Mock()
@@ -97,7 +101,9 @@ class KikBotClientTests(unittest.TestCase):
 
     def test_handle_unknown_message(self):
         arguments = MockArgumentParser()
-        client = MockKikBotClient(arguments, kik_bot=MockKikApi(bot="test", api_key="KEY"))
+        client = MockKikBotClient(
+            arguments, kik_bot=MockKikApi(bot="test", api_key="KEY")
+        )
         self.assertIsNotNone(client)
 
         message = unittest.mock.Mock()
@@ -117,7 +123,9 @@ class KikBotClientTests(unittest.TestCase):
 
     def test_handle_message_request(self):
         arguments = MockArgumentParser()
-        client = MockKikBotClient(arguments, kik_bot=MockKikApi(bot="test", api_key="KEY"))
+        client = MockKikBotClient(
+            arguments, kik_bot=MockKikApi(bot="test", api_key="KEY")
+        )
         self.assertIsNotNone(client)
 
         request = unittest.mock.Mock()
@@ -135,7 +143,9 @@ class KikBotClientTests(unittest.TestCase):
 
     def test_handle_message_request_unknown(self):
         arguments = MockArgumentParser()
-        client = MockKikBotClient(arguments, kik_bot=MockKikApi(bot="test", api_key="KEY"))
+        client = MockKikBotClient(
+            arguments, kik_bot=MockKikApi(bot="test", api_key="KEY")
+        )
         self.assertIsNotNone(client)
 
         request = unittest.mock.Mock()
@@ -154,7 +164,9 @@ class KikBotClientTests(unittest.TestCase):
 
     def test_receive_message_valid_message(self):
         arguments = MockArgumentParser()
-        client = MockKikBotClient(arguments, kik_bot=MockKikApi(bot="test", api_key="KEY"))
+        client = MockKikBotClient(
+            arguments, kik_bot=MockKikApi(bot="test", api_key="KEY")
+        )
         self.assertIsNotNone(client)
 
         request = unittest.mock.Mock()
@@ -167,7 +179,9 @@ class KikBotClientTests(unittest.TestCase):
 
     def test_receive_message_invalid_message(self):
         arguments = MockArgumentParser()
-        client = MockKikBotClient(arguments, kik_bot=MockKikApi(bot="test", api_key="KEY"))
+        client = MockKikBotClient(
+            arguments, kik_bot=MockKikApi(bot="test", api_key="KEY")
+        )
         self.assertIsNotNone(client)
 
         request = unittest.mock.Mock()

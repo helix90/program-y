@@ -15,13 +15,11 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
+__copyright__ = "Copyright 2016-2020 by Keith Sterling"
+__version__ = "0.9.0"
+__license__ = "MIT"
+__author__ = "Keith Sterling"
+__email__ = "keiffster@gmail.com"
+__source__ = "https://github.com/keiffster/programy/"
 
-__copyright__ = 'Copyright 2016-2020 by Keith Sterling'
-__version__ = '0.9.0'
-__license__ = 'MIT'
-__author__ = 'Keith Sterling'
-__email__ = 'keiffster@gmail.com'
-__source__ = 'https://github.com/keiffster/programy/'
-
-__all__ = [
-]
+__all__ = []

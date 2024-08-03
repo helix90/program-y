@@ -1,5 +1,6 @@
 import unittest
 from unittest.mock import patch
+
 from programy.storage.stores.file.config import FileStorageConfiguration
 from programy.storage.stores.file.engine import FileStorageEngine
 from programy.storage.stores.file.store.nodes import FileNodeStore
@@ -44,17 +45,36 @@ class FileNodeStoreTests(unittest.TestCase):
         node_factory = MockNodeFactory()
 
         self.assertFalse(store.process_config_line(node_factory, "", "nodes.txt"))
-        self.assertFalse(store.process_config_line(node_factory, "#not valud", "nodes.txt"))
-        self.assertFalse(store.process_config_line(node_factory, "root:baseline", "nodes.txt"))
+        self.assertFalse(
+            store.process_config_line(node_factory, "#not valud", "nodes.txt")
+        )
+        self.assertFalse(
+            store.process_config_line(node_factory, "root:baseline", "nodes.txt")
+        )
 
-        self.assertTrue(store.process_config_line(node_factory, "root=programy.parser.pattern.nodes.root.PatternRootNode", "nodes.txt"))
-        self.assertFalse(store.process_config_line(node_factory, "root=programy.parser.pattern.nodes.root.PatternRootNode", "nodes.txt"))
+        self.assertTrue(
+            store.process_config_line(
+                node_factory,
+                "root=programy.parser.pattern.nodes.root.PatternRootNode",
+                "nodes.txt",
+            )
+        )
+        self.assertFalse(
+            store.process_config_line(
+                node_factory,
+                "root=programy.parser.pattern.nodes.root.PatternRootNode",
+                "nodes.txt",
+            )
+        )
 
     @staticmethod
     def patch_instantiate_class(class_string):
         raise Exception("Mock Exception")
 
-    @patch("programy.utils.classes.loader.ClassLoader.instantiate_class", patch_instantiate_class)
+    @patch(
+        "programy.utils.classes.loader.ClassLoader.instantiate_class",
+        patch_instantiate_class,
+    )
     def test_process_config_line_with_exception(self):
         config = FileStorageConfiguration()
         engine = FileStorageEngine(config)
@@ -63,5 +83,10 @@ class FileNodeStoreTests(unittest.TestCase):
 
         node_factory = MockNodeFactory()
 
-        self.assertFalse(store.process_config_line(node_factory, "root=programy.parser.pattern.nodes.root.PatternRootNode", "nodes.txt"))
-
+        self.assertFalse(
+            store.process_config_line(
+                node_factory,
+                "root=programy.parser.pattern.nodes.root.PatternRootNode",
+                "nodes.txt",
+            )
+        )

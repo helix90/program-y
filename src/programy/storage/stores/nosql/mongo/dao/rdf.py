@@ -14,6 +14,7 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 from programy.storage.stores.utils import DAOUtils
 
 
@@ -27,28 +28,34 @@ class RDF:
         self.object = obj
 
     def __repr__(self):
-        return "<RDF(id='%s', name='%s', subject='%s', predicate='%s', object='%s')>" % \
-               (DAOUtils.valid_id(self.id),
+        return (
+            "<RDF(id='%s', name='%s', subject='%s', predicate='%s', object='%s')>"
+            % (
+                DAOUtils.valid_id(self.id),
                 self.name,
                 self.subject,
                 self.predicate,
-                self.object)
+                self.object,
+            )
+        )
 
     def to_document(self):
-        document = {"name": self.name,
-                    "subject": self.subject,
-                    "predicate": self.predicate,
-                    "object": self.object}
+        document = {
+            "name": self.name,
+            "subject": self.subject,
+            "predicate": self.predicate,
+            "object": self.object,
+        }
         if self.id is not None:
-            document['_id'] = self.id
+            document["_id"] = self.id
         return document
 
     @staticmethod
     def from_document(data):
         rdf = RDF(None, None, None, None)
-        rdf.id = DAOUtils.get_value_from_data(data, '_id')
-        rdf.name = DAOUtils.get_value_from_data(data, 'name')
-        rdf.subject = DAOUtils.get_value_from_data(data, 'subject')
-        rdf.predicate = DAOUtils.get_value_from_data(data, 'predicate')
-        rdf.object = DAOUtils.get_value_from_data(data, 'object')
+        rdf.id = DAOUtils.get_value_from_data(data, "_id")
+        rdf.name = DAOUtils.get_value_from_data(data, "name")
+        rdf.subject = DAOUtils.get_value_from_data(data, "subject")
+        rdf.predicate = DAOUtils.get_value_from_data(data, "predicate")
+        rdf.object = DAOUtils.get_value_from_data(data, "object")
         return rdf

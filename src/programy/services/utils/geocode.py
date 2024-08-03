@@ -15,6 +15,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
+
 class GeoCodeUtils:
 
     @staticmethod
@@ -38,10 +39,10 @@ class GeoCodeUtils:
     @staticmethod
     def aiml_string_to_float(text_sign, text_dec, text_frac):
 
-        if text_sign == 'POS':
+        if text_sign == "POS":
             str = "{0}.{1}".format(text_dec, text_frac)
 
-        elif text_sign == 'NEG':
+        elif text_sign == "NEG":
             str = "-{0}.{1}".format(text_dec, text_frac)
 
         else:

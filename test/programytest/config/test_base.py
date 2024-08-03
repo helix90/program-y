@@ -1,8 +1,8 @@
 import os
 import unittest
 
-from programy.config.base import BaseConfigurationData
 from programy.clients.events.console.config import ConsoleConfiguration
+from programy.config.base import BaseConfigurationData
 from programy.config.file.yaml_file import YamlConfigurationFile
 from programy.utils.license.keys import LicenseKeys
 
@@ -12,7 +12,9 @@ class MockBaseConfigurationData(BaseConfigurationData):
     def __init__(self, name):
         BaseConfigurationData.__init__(self, name)
 
-    def load_config_section(self, configuration_file, configuration, bot_root, subs = None):
+    def load_config_section(
+        self, configuration_file, configuration, bot_root, subs=None
+    ):
         service = configuration_file.get_section(self.section_name, configuration)
         if service is not None:
             self.load_additional_key_values(configuration_file, service)
@@ -26,17 +28,19 @@ class BaseConfigurationDataTests(unittest.TestCase):
     def test_sub_bot_root(self):
         config = BaseConfigurationData("test")
 
-        replaced = config.sub_bot_root( os.sep + "data",  os.sep + "root")
+        replaced = config.sub_bot_root(os.sep + "data", os.sep + "root")
         self.assertIsNotNone(replaced)
-        self.assertEqual(replaced,  os.sep + "data")
+        self.assertEqual(replaced, os.sep + "data")
 
-        replaced = config.sub_bot_root("$BOT_ROOT"+ os.sep + "data",  os.sep + "root")
+        replaced = config.sub_bot_root("$BOT_ROOT" + os.sep + "data", os.sep + "root")
         self.assertIsNotNone(replaced)
-        self.assertEqual(replaced,  os.sep + "root" + os.sep + "data")
+        self.assertEqual(replaced, os.sep + "root" + os.sep + "data")
 
-        replaced = config.sub_bot_root("$BOT_ROOT$BOT_ROOT"+ os.sep + "data",  os.sep + "root")
+        replaced = config.sub_bot_root(
+            "$BOT_ROOT$BOT_ROOT" + os.sep + "data", os.sep + "root"
+        )
         self.assertIsNotNone(replaced)
-        self.assertEqual(replaced,  os.sep + "root" + os.sep + "root" + os.sep + "data")
+        self.assertEqual(replaced, os.sep + "root" + os.sep + "root" + os.sep + "data")
 
     def test_additionals(self):
         config = BaseConfigurationData("test")
@@ -60,7 +64,9 @@ class BaseConfigurationDataTests(unittest.TestCase):
         license_keys = LicenseKeys()
         license_keys.add_key("key", "value")
 
-        self.assertEqual("value", config._extract_license_key("LICENSE:key", license_keys))
+        self.assertEqual(
+            "value", config._extract_license_key("LICENSE:key", license_keys)
+        )
 
     def test_extract_license_key_null_attr(self):
         config = BaseConfigurationData("test")
@@ -84,17 +90,23 @@ class BaseConfigurationDataTests(unittest.TestCase):
         license_keys = LicenseKeys()
         license_keys.add_key("key", "value")
 
-        self.assertEqual(None, config._extract_license_key("LICENSE:keyX", license_keys))
+        self.assertEqual(
+            None, config._extract_license_key("LICENSE:keyX", license_keys)
+        )
 
     def test_load_additional_key_values(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         base:
             test:
                 val1: test3
                 val2: test4
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         bot_config = yaml.get_section("base")
 

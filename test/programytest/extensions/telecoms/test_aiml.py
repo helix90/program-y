@@ -17,12 +17,16 @@ class TelecomsMinutesTestsClient(TestClient):
 
 class TelecomsMinutesAIMLTests(unittest.TestCase):
 
-    def setUp (self):
+    def setUp(self):
         client = TelecomsMinutesTestsClient()
         self._client_context = client.create_client_context("testid")
 
     def test_balance(self):
-        response = self._client_context.bot.ask_question(self._client_context, "HOW MANY MINUTES DO I HAVE LEFT")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "HOW MANY MINUTES DO I HAVE LEFT"
+        )
         self.assertIsNotNone(response)
-        self.assertEqual(response, 'This month you have 0 minutes available and have consumed 0 minutes.')
-
+        self.assertEqual(
+            response,
+            "This month you have 0 minutes available and have consumed 0 minutes.",
+        )

@@ -1,31 +1,36 @@
 import xml.etree.ElementTree as ET
-from os import walk, sep
+from os import sep, walk
 
 file_converters = {
-    "DefaultPredicates":    { "seperator": ":", "filename": "defaults.txt"},
-    "GenderSubstitutions":  { "seperator": ":", "filename": "gender.txt"},
-    "PersonSubstitutions":  { "seperator": ":", "filename": "person.txt"},
-    "Person2Substitutions": { "seperator": ":", "filename": "person2.txt"},
-    "Splitters":            {                   "filename": "converters.txt"},
-    "Substitutions":        { "seperator": ":", "filename": "denormals.txt"},
-    "Settings":             { "seperator": ":", "filename": "settings.txt", "ignores": [
-                                                                                        "aimldirectory",
-                                                                                        "configdirectory",
-                                                                                        "logdirectory",
-                                                                                        "convertersfile",
-                                                                                        "person2substitutionsfile",
-                                                                                        "personsubstitutionsfile",
-                                                                                        "gendersubstitutionsfile",
-                                                                                        "defaultpredicates",
-                                                                                        "substitutionsfile",
-                                                                                        "maxlogbuffersize",
-                                                                                        "notacceptinguserinputmessage",
-                                                                                        "stripperregex",
-                                                                                        "islogging",
-                                                                                        "willcallhome",
-                                                                                        "timeout",
-                                                                                        "timeoutmessage",]}
-    }
+    "DefaultPredicates": {"seperator": ":", "filename": "defaults.txt"},
+    "GenderSubstitutions": {"seperator": ":", "filename": "gender.txt"},
+    "PersonSubstitutions": {"seperator": ":", "filename": "person.txt"},
+    "Person2Substitutions": {"seperator": ":", "filename": "person2.txt"},
+    "Splitters": {"filename": "converters.txt"},
+    "Substitutions": {"seperator": ":", "filename": "denormals.txt"},
+    "Settings": {
+        "seperator": ":",
+        "filename": "settings.txt",
+        "ignores": [
+            "aimldirectory",
+            "configdirectory",
+            "logdirectory",
+            "convertersfile",
+            "person2substitutionsfile",
+            "personsubstitutionsfile",
+            "gendersubstitutionsfile",
+            "defaultpredicates",
+            "substitutionsfile",
+            "maxlogbuffersize",
+            "notacceptinguserinputmessage",
+            "stripperregex",
+            "islogging",
+            "willcallhome",
+            "timeout",
+            "timeoutmessage",
+        ],
+    },
+}
 
 
 class PandoraBotsFileConverter(object):
@@ -33,7 +38,7 @@ class PandoraBotsFileConverter(object):
     @staticmethod
     def all_files(path):
         files = []
-        for (_, _, names) in walk(path):
+        for _, _, names in walk(path):
             for name in names:
                 files.append(path + sep + name)
             break
@@ -53,17 +58,17 @@ class PandoraBotsFileConverter(object):
             xml = tree.getroot()
             for item in xml:
                 name = None
-                if 'name' in item.attrib:
-                    name = item.attrib['name'].strip()
-                value = item.attrib['value'].strip()
+                if "name" in item.attrib:
+                    name = item.attrib["name"].strip()
+                value = item.attrib["value"].strip()
 
                 seperator = ":"
-                if 'seperator' in converter:
-                    seperator = converter['seperator']
+                if "seperator" in converter:
+                    seperator = converter["seperator"]
 
                 ignores = []
-                if 'ignores' in converter:
-                    ignores = converter['ignores']
+                if "ignores" in converter:
+                    ignores = converter["ignores"]
 
                 if name:
                     if name not in ignores:
@@ -82,7 +87,7 @@ class PandoraBotsFileConverter(object):
                 self.convert_file(from_file, to_file, converter)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     from_files = "./pbfiles"
     to_files = "./yfiles"

@@ -14,10 +14,11 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 from programy.storage.stores.utils import DAOUtils
 
 
-class Error():
+class Error:
 
     def __init__(self, error, file, start, end):
         self.id = None
@@ -28,23 +29,30 @@ class Error():
 
     def __repr__(self):
         return "<Error(id='%s', error='%s', file='%s', start='%s', end='%s')>" % (
-            DAOUtils.valid_id(self.id), self.error, self.file, self.start, self.end)
+            DAOUtils.valid_id(self.id),
+            self.error,
+            self.file,
+            self.start,
+            self.end,
+        )
 
     def to_document(self):
-        document = {"error": self.error,
-                    "file": self.file,
-                    "start": self.start,
-                    "end": self.end}
+        document = {
+            "error": self.error,
+            "file": self.file,
+            "start": self.start,
+            "end": self.end,
+        }
         if self.id is not None:
-            document['_id'] = self.id
+            document["_id"] = self.id
         return document
 
     @staticmethod
     def from_document(data):
         error = Error(None, None, None, None)
-        error.id = DAOUtils.get_value_from_data(data, '_id')
-        error.error = DAOUtils.get_value_from_data(data, 'error')
-        error.file = DAOUtils.get_value_from_data(data, 'file')
-        error.start = DAOUtils.get_value_from_data(data, 'start')
-        error.end = DAOUtils.get_value_from_data(data, 'end')
+        error.id = DAOUtils.get_value_from_data(data, "_id")
+        error.error = DAOUtils.get_value_from_data(data, "error")
+        error.file = DAOUtils.get_value_from_data(data, "file")
+        error.start = DAOUtils.get_value_from_data(data, "start")
+        error.end = DAOUtils.get_value_from_data(data, "end")
         return error

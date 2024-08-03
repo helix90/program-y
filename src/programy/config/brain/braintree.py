@@ -14,9 +14,9 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
 
 from programy.config.section import BaseSectionConfigurationData
+from programy.utils.logging.ylogger import YLogger
 from programy.utils.substitutions.substitues import Substitutions
 
 
@@ -35,20 +35,27 @@ class BrainBraintreeConfiguration(BaseSectionConfigurationData):
     def save_as_user(self):
         return self._save_as_user
 
-    def load_config_section(self, configuration_file, configuration, bot_root, subs: Substitutions = None):
+    def load_config_section(
+        self, configuration_file, configuration, bot_root, subs: Substitutions = None
+    ):
         braintree = configuration_file.get_section("braintree", configuration)
         if braintree is not None:
-            self._create = configuration_file.get_option(braintree, "create", missing_value=None, subs=subs)
-            self._save_as_user = configuration_file.get_option(braintree, "save_as_user", missing_value="system",
-                                                               subs=subs)
+            self._create = configuration_file.get_option(
+                braintree, "create", missing_value=None, subs=subs
+            )
+            self._save_as_user = configuration_file.get_option(
+                braintree, "save_as_user", missing_value="system", subs=subs
+            )
         else:
-            YLogger.warning(self, "'braintree' section missing from bot config, using to defaults")
+            YLogger.warning(
+                self, "'braintree' section missing from bot config, using to defaults"
+            )
 
     def to_yaml(self, data, defaults=True):
         if defaults is True:
-            data['create'] = False
-            data['save_as_user'] = "system"
+            data["create"] = False
+            data["save_as_user"] = "system"
 
         else:
-            data['create'] = self._create
-            data['save_as_user'] = self._save_as_user
+            data["create"] = self._create
+            data["save_as_user"] = self._save_as_user

@@ -1,21 +1,26 @@
 import xml.etree.ElementTree as ET
 
+from programytest.parser.template.graph_tests.graph_test_client import (
+    TemplateGraphTestClient,
+)
+
 from programy.parser.template.nodes.base import TemplateNode
 from programy.parser.template.nodes.srai import TemplateSRAINode
 from programy.parser.template.nodes.word import TemplateWordNode
-from programytest.parser.template.graph_tests.graph_test_client import TemplateGraphTestClient
 
 
 class TemplateGraphSraiTests(TemplateGraphTestClient):
 
     def test_srai_template_simple(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
             <template>
                 <srai>
                     SRAI this text
                 </srai>
             </template>
-            """)
+            """
+        )
         ast = self._graph.parse_template_expression(template)
         self.assertIsNotNone(ast)
 
@@ -31,13 +36,15 @@ class TemplateGraphSraiTests(TemplateGraphTestClient):
         self.assertIsInstance(ast.children[0].children[2], TemplateWordNode)
 
     def test_srai_template_nested(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
             <template>
                 <srai>
                     SRAI This and <srai>SRAI that</srai>
                 </srai>
             </template>
-            """)
+            """
+        )
         ast = self._graph.parse_template_expression(template)
         self.assertIsNotNone(ast)
 
@@ -57,4 +64,3 @@ class TemplateGraphSraiTests(TemplateGraphTestClient):
         self.assertEqual(2, len(ast.children[0].children[3].children))
         self.assertIsInstance(ast.children[0].children[3].children[0], TemplateWordNode)
         self.assertIsInstance(ast.children[0].children[3].children[1], TemplateWordNode)
-

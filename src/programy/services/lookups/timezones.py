@@ -51,7 +51,11 @@ class Timezones:
         ["BRT", "Brasília Time", "UTC-03"],
         ["BST", "Bangladesh Standard Time", "UTC+06"],
         ["BST", "Bougainville Standard Time[6]", "UTC+11"],
-        ["BST", "British Summer Time [British Standard Time from Feb 1968 to Oct 1971]", "UTC+01"],
+        [
+            "BST",
+            "British Summer Time [British Standard Time from Feb 1968 to Oct 1971]",
+            "UTC+01",
+        ],
         ["BTT", "Bhutan Time", "UTC+06"],
         ["CAT", "Central Africa Time", "UTC+02"],
         ["CCT", "Cocos Islands Time", "UTC+06:30"],
@@ -110,7 +114,11 @@ class Timezones:
         ["GST", "Gulf Standard Time", "UTC+04"],
         ["GYT", "Guyana Time", "UTC-04"],
         ["HDT", "Hawaii–Aleutian Daylight Time", "UTC-09"],
-        ["HAEC", "Heure Avancée d'Europe Centrale French-language name for CEST", "UTC+02"],
+        [
+            "HAEC",
+            "Heure Avancée d'Europe Centrale French-language name for CEST",
+            "UTC+02",
+        ],
         ["HST", "Hawaii–Aleutian Standard Time", "UTC-10"],
         ["HKT", "Hong Kong Time", "UTC+08"],
         ["HMT", "Heard and McDonald Islands Time", "UTC+05"],
@@ -221,7 +229,7 @@ class Timezones:
         ["WIT", "Western Indonesian Time", "UTC+07"],
         ["WST", "Western Standard Time", "UTC+08"],
         ["YAKT", "Yakutsk Time", "UTC+09"],
-        ["YEKT", "Yekaterinburg Time", "UTC+05"]
+        ["YEKT", "Yekaterinburg Time", "UTC+05"],
     ]
 
     CODES = {timezone[0]: timezone for timezone in RAW_DATA}

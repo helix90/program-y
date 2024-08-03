@@ -14,15 +14,18 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
-from programy.parser.template.nodes.triple import TemplateTripleNode
+
 from programy.parser.exceptions import ParserException
+from programy.parser.template.nodes.triple import TemplateTripleNode
+from programy.utils.logging.ylogger import YLogger
 
 
 class TemplateDeleteTripleNode(TemplateTripleNode):
 
     def __init__(self, subj=None, pred=None, obj=None):
-        TemplateTripleNode.__init__(self, node_name="deletetriple", subj=subj, pred=pred, obj=obj)
+        TemplateTripleNode.__init__(
+            self, node_name="deletetriple", subj=subj, pred=pred, obj=obj
+        )
 
     def resolve_to_string(self, client_context):
         rdf_subject = self._subj.resolve(client_context)
@@ -31,7 +34,9 @@ class TemplateDeleteTripleNode(TemplateTripleNode):
 
         resolved = ""
         client_context.brain.rdf.delete_entity(rdf_subject, rdf_predicate, rdf_object)
-        YLogger.debug(client_context, "[%s] resolved to [%s]", self.to_string(), resolved)
+        YLogger.debug(
+            client_context, "[%s] resolved to [%s]", self.to_string(), resolved
+        )
         return resolved
 
     def to_string(self):
@@ -50,10 +55,16 @@ class TemplateDeleteTripleNode(TemplateTripleNode):
         super(TemplateDeleteTripleNode, self).parse_expression(graph, expression)
 
         if self._subj is None:
-            raise ParserException("<%s> node missing subject attribute/element" % self.node_name)
+            raise ParserException(
+                "<%s> node missing subject attribute/element" % self.node_name
+            )
 
         if self._pred is None:
-            YLogger.debug(self, "<%s> node missing predicate attribute/element", self.node_name)
+            YLogger.debug(
+                self, "<%s> node missing predicate attribute/element", self.node_name
+            )
 
         if self._obj is None:
-            YLogger.debug(self, "<%s> node missing object attribute/element", self.node_name)
+            YLogger.debug(
+                self, "<%s> node missing object attribute/element", self.node_name
+            )

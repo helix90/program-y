@@ -14,6 +14,7 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 from programy.extensions.base import Extension
 from programy.nlp.synsets.synsets import Synsets
 from programy.utils.logging.ylogger import YLogger
@@ -37,7 +38,7 @@ class SynsetsExtension(Extension):
         del client_context
 
         words = data.split(" ")
-        if words[0] == 'SIMILAR':
+        if words[0] == "SIMILAR":
             if len(words) == 3:
                 word1 = words[1]
                 word2 = words[2]
@@ -56,21 +57,21 @@ class SynsetsExtension(Extension):
             except Exception as e:
                 YLogger.exception_nostack(self, "Failed to get similarity", e)
 
-        elif words[0] == 'SIMILARS':
+        elif words[0] == "SIMILARS":
 
             if len(words) == 3:
                 word_type = words[1]
                 word = words[2]
 
-                if word_type == 'WORDS':
+                if word_type == "WORDS":
                     results = self._synsets.get_similar_words(word)
-                elif word_type == 'VERBS':
+                elif word_type == "VERBS":
                     results = self._synsets.get_similar_verbs(word)
-                elif word_type == 'NOUNS':
+                elif word_type == "NOUNS":
                     results = self._synsets.get_similar_nouns(word)
-                elif word_type == 'ADJECTIVES':
+                elif word_type == "ADJECTIVES":
                     results = self._synsets.get_similar_adjectives(word)
-                elif word_type == 'ADVERBS':
+                elif word_type == "ADVERBS":
                     results = self._synsets.get_similar_adverbs(word)
                 else:
                     return "FALSE"

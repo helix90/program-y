@@ -1,11 +1,12 @@
 import unittest
 import unittest.mock
 
+from programytest.clients.arguments import MockArgumentParser
+from programytest.clients.mocks import MockBotClient
+
 from programy.bot import Bot
 from programy.clients.client import BotFactory
 from programy.config.bot.bot import BotConfiguration
-from programytest.clients.arguments import MockArgumentParser
-from programytest.clients.mocks import MockBotClient
 
 
 class BotFactoryTests(unittest.TestCase):

@@ -1,8 +1,9 @@
 import unittest
 
+from programytest.client import TestClient
+
 from programy.context import ClientContext
 from programy.dynamic.sets.stopword import IsStopWord
-from programytest.client import TestClient
 
 
 class IsStopWordDynamicSetTests(unittest.TestCase):

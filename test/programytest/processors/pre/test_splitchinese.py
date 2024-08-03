@@ -1,8 +1,9 @@
 import unittest
 
+from programytest.client import TestClient
+
 from programy.context import ClientContext
 from programy.processors.pre.splitchinese import SplitChinesePreProcessor
-from programytest.client import TestClient
 
 
 class SplitChineseTests(unittest.TestCase):
@@ -11,7 +12,7 @@ class SplitChineseTests(unittest.TestCase):
         processor = SplitChinesePreProcessor()
 
         context = ClientContext(TestClient(), "testid")
-        
+
         result = processor.process(context, "Hello")
         self.assertIsNotNone(result)
         self.assertEqual("Hello", result)

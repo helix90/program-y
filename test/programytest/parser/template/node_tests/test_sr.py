@@ -1,5 +1,7 @@
 import xml.etree.ElementTree as ET
 
+from programytest.parser.base import ParserTestsBaseClass
+
 from programy.dialog.conversation import Conversation
 from programy.dialog.question import Question
 from programy.parser.pattern.match import Match
@@ -7,7 +9,6 @@ from programy.parser.pattern.matchcontext import MatchContext
 from programy.parser.pattern.nodes.oneormore import PatternOneOrMoreWildCardNode
 from programy.parser.template.nodes.base import TemplateNode
 from programy.parser.template.nodes.sr import TemplateSrNode
-from programytest.parser.base import ParserTestsBaseClass
 
 
 class MockTemplateSrNode(TemplateSrNode):
@@ -73,7 +74,9 @@ class TemplateSrNodeTests(ParserTestsBaseClass):
         question.current_sentence()._matched_context = context
 
         conversation.record_dialog(question)
-        self._client_context.bot._conversation_mgr._conversations["testid"] = conversation
+        self._client_context.bot._conversation_mgr._conversations["testid"] = (
+            conversation
+        )
 
         self.assertEqual("Unknown", root.resolve(self._client_context))
 
@@ -97,6 +100,8 @@ class TemplateSrNodeTests(ParserTestsBaseClass):
         question.current_sentence()._matched_context = context
 
         conversation.record_dialog(question)
-        self._client_context.bot._conversation_mgr._conversations["testid"] = conversation
+        self._client_context.bot._conversation_mgr._conversations["testid"] = (
+            conversation
+        )
 
         self.assertEqual("", root.resolve(self._client_context))

@@ -1,15 +1,19 @@
 import xml.etree.ElementTree as ET
 
+from programytest.parser.template.graph_tests.graph_test_client import (
+    TemplateGraphTestClient,
+)
+
 from programy.parser.template.nodes.base import TemplateNode
 from programy.parser.template.nodes.learn import LearnCategory
 from programy.parser.template.nodes.learnf import TemplateLearnfNode
-from programytest.parser.template.graph_tests.graph_test_client import TemplateGraphTestClient
 
 
 class TemplateGraphLearnfTests(TemplateGraphTestClient):
 
     def test_learnf_simple(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
 			<template>
 				<learnf>
 				    <category>
@@ -18,7 +22,8 @@ class TemplateGraphLearnfTests(TemplateGraphTestClient):
 				    </category>
 				</learnf>
 			</template>
-			""")
+			"""
+        )
 
         ast = self._graph.parse_template_expression(template)
         self.assertIsNotNone(ast)
@@ -43,5 +48,7 @@ class TemplateGraphLearnfTests(TemplateGraphTestClient):
         resolved = learn_node.resolve(self._client_context)
         self.assertEqual(resolved, "")
 
-        response = self._client_context.bot.ask_question(self._client_context, "HELLO WORLD THERE")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "HELLO WORLD THERE"
+        )
         self.assertEqual("HIYA.", response)

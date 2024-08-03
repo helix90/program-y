@@ -14,16 +14,17 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
-from programy.storage.entities.store import Store
-from programy.storage.stores.nosql.mongo.store.mongostore import MongoStore
+
 from programy.storage.entities.spelling import SpellingStore
+from programy.storage.entities.store import Store
 from programy.storage.stores.nosql.mongo.dao.corpus import Corpus
+from programy.storage.stores.nosql.mongo.store.mongostore import MongoStore
 from programy.utils.console.console import outputLog
+from programy.utils.logging.ylogger import YLogger
 
 
 class MongoSpellingStore(MongoStore, SpellingStore):
-    SPELLING = 'spelling'
+    SPELLING = "spelling"
 
     def __init__(self, storage_engine):
         MongoStore.__init__(self, storage_engine)
@@ -36,7 +37,7 @@ class MongoSpellingStore(MongoStore, SpellingStore):
         corpus_words = []
         with open(filename, "r") as text_file:
             for lines in text_file:
-                words = lines.split(' ')
+                words = lines.split(" ")
                 for word in words:
                     corpus_words.append(word)
 
@@ -47,7 +48,9 @@ class MongoSpellingStore(MongoStore, SpellingStore):
         count = len(corpus_words)
         return count, count
 
-    def upload_from_file(self, filename, fileformat=Store.TEXT_FORMAT, commit=True, verbose=False):
+    def upload_from_file(
+        self, filename, fileformat=Store.TEXT_FORMAT, commit=True, verbose=False
+    ):
 
         YLogger.info(self, "Uplading spelling corpus file [%s] to Mongo", filename)
 
@@ -56,7 +59,9 @@ class MongoSpellingStore(MongoStore, SpellingStore):
             count, success = self._read_corpus_from_file(filename, verbose)
 
         except Exception as excep:
-            YLogger.exception(self, "Failed to load spelling corpus from [%s]", excep, filename)
+            YLogger.exception(
+                self, "Failed to load spelling corpus from [%s]", excep, filename
+            )
 
         # Assume all words loaded are success, no need for additional count
         return count, success
@@ -67,4 +72,4 @@ class MongoSpellingStore(MongoStore, SpellingStore):
         collection = self.collection()
         corpus = collection.find_one({})
         if corpus is not None:
-            spell_checker.add_corpus(" ".join(corpus['words']))
+            spell_checker.add_corpus(" ".join(corpus["words"]))

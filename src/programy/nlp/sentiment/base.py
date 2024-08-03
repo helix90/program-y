@@ -14,14 +14,15 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
+
 from programy.utils.classes.loader import ClassLoader
+from programy.utils.logging.ylogger import YLogger
 
 
 class BaseSentimentAnalyser:
 
     def initialise(self, storage_factory=None):
-        pass    # pragma: no cover
+        pass  # pragma: no cover
 
     def analyse_each(self, text):
         raise NotImplementedError()  # pragma: no cover
@@ -36,8 +37,14 @@ class BaseSentimentAnalyser:
             scores = None
 
             try:
-                YLogger.info(None, "Loading sentiment analyser from class [%s]", sentiment_config.classname)
-                sentiment_class = ClassLoader.instantiate_class(sentiment_config.classname)
+                YLogger.info(
+                    None,
+                    "Loading sentiment analyser from class [%s]",
+                    sentiment_config.classname,
+                )
+                sentiment_class = ClassLoader.instantiate_class(
+                    sentiment_config.classname
+                )
                 analyser = sentiment_class()
                 analyser.initialise()
 
@@ -45,7 +52,11 @@ class BaseSentimentAnalyser:
                 YLogger.exception(None, "Failed to initiate sentiment analyser", excep)
 
             try:
-                YLogger.info(None, "Loading sentiment scores from class [%s]", sentiment_config.classname)
+                YLogger.info(
+                    None,
+                    "Loading sentiment scores from class [%s]",
+                    sentiment_config.classname,
+                )
                 scores_class = ClassLoader.instantiate_class(sentiment_config.scores)
                 scores = scores_class()
 

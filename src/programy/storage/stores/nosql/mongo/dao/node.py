@@ -14,10 +14,11 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 from programy.storage.stores.utils import DAOUtils
 
 
-class Node():
+class Node:
 
     def __init__(self, name, node_class):
         self.id = None
@@ -25,10 +26,9 @@ class Node():
         self.node_class = node_class
 
     def to_document(self):
-        document = {"name": self.name,
-                    "node_class": self.node_class}
+        document = {"name": self.name, "node_class": self.node_class}
         if self.id is not None:
-            document['_id'] = self.id
+            document["_id"] = self.id
         return document
 
 
@@ -39,14 +39,17 @@ class PatternNode(Node):
 
     def __repr__(self):
         return "<PatternNode(id='%s', name='%s', node_class='%s')>" % (
-            DAOUtils.valid_id(self.id), self.name, self.node_class)
+            DAOUtils.valid_id(self.id),
+            self.name,
+            self.node_class,
+        )
 
     @staticmethod
     def from_document(data):
         node = PatternNode(None, None)
-        node.id = DAOUtils.get_value_from_data(data, '_id')
-        node.name = DAOUtils.get_value_from_data(data, 'name')
-        node.node_class = DAOUtils.get_value_from_data(data, 'node_class')
+        node.id = DAOUtils.get_value_from_data(data, "_id")
+        node.name = DAOUtils.get_value_from_data(data, "name")
+        node.node_class = DAOUtils.get_value_from_data(data, "node_class")
         return node
 
 
@@ -57,12 +60,15 @@ class TemplateNode(Node):
 
     def __repr__(self):
         return "<TemplateNode(id='%s', name='%s', node_class='%s')>" % (
-            DAOUtils.valid_id(self.id), self.name, self.node_class)
+            DAOUtils.valid_id(self.id),
+            self.name,
+            self.node_class,
+        )
 
     @staticmethod
     def from_document(data):
         node = TemplateNode(None, None)
-        node.id = DAOUtils.get_value_from_data(data, '_id')
-        node.name = DAOUtils.get_value_from_data(data, 'name')
-        node.node_class = DAOUtils.get_value_from_data(data, 'node_class')
+        node.id = DAOUtils.get_value_from_data(data, "_id")
+        node.name = DAOUtils.get_value_from_data(data, "name")
+        node.node_class = DAOUtils.get_value_from_data(data, "node_class")
         return node

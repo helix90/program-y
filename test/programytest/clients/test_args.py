@@ -1,20 +1,20 @@
 import os
 import unittest
 
-from programy.clients.args import ClientArguments
-from programy.clients.args import CommandLineClientArguments
+from programy.clients.args import ClientArguments, CommandLineClientArguments
 
 
 class MockArguments(object):
 
-    def __init__(self,
-                    bot_root = ".",
-                    logging = "logging.yaml",
-                    config  = "config.yaml",
-                    cformat = "yaml",
-                    noloop = False,
-                    substitutions='subs.txt'
-                ):
+    def __init__(
+        self,
+        bot_root=".",
+        logging="logging.yaml",
+        config="config.yaml",
+        cformat="yaml",
+        noloop=False,
+        substitutions="subs.txt",
+    ):
         self.bot_root = bot_root
         self.logging = logging
         self.config = config
@@ -62,7 +62,7 @@ class ClientArgumentsTests(unittest.TestCase):
 
         args.bot_root = os.sep + "tmp"
         self.assertIsNotNone(args.bot_root)
-        self.assertEqual( os.sep + "tmp", args.bot_root)
+        self.assertEqual(os.sep + "tmp", args.bot_root)
 
 
 class CommandLineClientArgumentsTests(unittest.TestCase):

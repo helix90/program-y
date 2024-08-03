@@ -1,19 +1,24 @@
 import xml.etree.ElementTree as ET
 
+from programytest.parser.template.graph_tests.graph_test_client import (
+    TemplateGraphTestClient,
+)
+
 from programy.parser.exceptions import ParserException
 from programy.parser.template.nodes.base import TemplateNode
 from programy.parser.template.nodes.program import TemplateProgramNode
-from programytest.parser.template.graph_tests.graph_test_client import TemplateGraphTestClient
 
 
 class TemplateGraphProgramTests(TemplateGraphTestClient):
 
     def test_program_node_from_xml(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
 			<template>
 				<program />
 			</template>
-			""")
+			"""
+        )
         root = self._graph.parse_template_expression(template)
         self.assertIsNotNone(root)
         self.assertIsInstance(root, TemplateNode)
@@ -25,10 +30,12 @@ class TemplateGraphProgramTests(TemplateGraphTestClient):
         self.assertIsInstance(node, TemplateProgramNode)
 
     def test_program_with_childrenl(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
 			<template>
 				<program>Text</program>
 			</template>
-			""")
+			"""
+        )
         with self.assertRaises(ParserException):
             root = self._graph.parse_template_expression(template)

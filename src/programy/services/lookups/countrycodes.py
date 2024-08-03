@@ -275,7 +275,7 @@ class CountryCodes:
         ["Zimbabwe", "ZW", "ZWE", "716"],
         ["�land Islands", "AX", "ALA", "248"],
     ]
-    
+
     NAMES = {country[0]: country for country in RAW_DATA}
 
     TWO_DIGITS = {country[1]: country for country in RAW_DATA}

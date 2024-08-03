@@ -14,9 +14,10 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 import re
-from abc import ABC
-from abc import abstractmethod
+from abc import ABC, abstractmethod
+
 from programy.dialog.sentence import Sentence
 from programy.utils.logging.ylogger import YLogger
 
@@ -48,7 +49,7 @@ class ServiceQuery(ABC):
         try:
             value = matched[index]
 
-            if value is 'NONE':
+            if value is "NONE":
                 return None
             return value.strip()
 
@@ -92,7 +93,12 @@ class Service:
                 query = pattern[1].create(self)
                 if query is not None:
                     query.parse_matched(matched.groups())
-                    YLogger.debug(self, "Service matched question [{0}] to pattern [{0}]".format(question, pattern[0]))
+                    YLogger.debug(
+                        self,
+                        "Service matched question [{0}] to pattern [{0}]".format(
+                            question, pattern[0]
+                        ),
+                    )
                     return query
 
         return None
@@ -102,10 +108,13 @@ class Service:
         if query is not None:
             response = query.execute()
             if response is not None:
-                if response['response']['status'] == 'success':
+                if response["response"]["status"] == "success":
                     if aiml is True:
                         if self.configuration.success_prefix is not None:
-                            result = "{0} {1}".format(self.configuration.success_prefix, query.aiml_response(response))
+                            result = "{0} {1}".format(
+                                self.configuration.success_prefix,
+                                query.aiml_response(response),
+                            )
                         else:
                             result = query.aiml_response(response)
                     else:
@@ -114,13 +123,22 @@ class Service:
                     YLogger.debug(self, result)
                     return result
 
-                YLogger.error(self, "Service failed to execute query [%s] - [%s]", question, response)
+                YLogger.error(
+                    self,
+                    "Service failed to execute query [%s] - [%s]",
+                    question,
+                    response,
+                )
 
-        YLogger.debug(self, "Service failed to execute query [%s], empty response!", question)
+        YLogger.debug(
+            self, "Service failed to execute query [%s], empty response!", question
+        )
         return None
 
     def _get_bot_response(self, client_context, sentence):
-        return client_context.bot.ask_question(client_context, sentence)        # pragma: no cover
+        return client_context.bot.ask_question(
+            client_context, sentence
+        )  # pragma: no cover
 
     def _get_default_response(self, client_context):
         response = None

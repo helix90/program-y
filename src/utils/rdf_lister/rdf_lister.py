@@ -1,7 +1,7 @@
-import sys
 import os.path
+import sys
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     rdf_dir = sys.argv[1]
     csv_file = sys.argv[2]
@@ -24,7 +24,7 @@ if __name__ == '__main__':
                     entity.append(rdf_file)
                     entity += rdf_splits
                     entities.append(entity)
-            file.close ()
+            file.close()
 
     entities.sort(key=lambda x: x[1])
 
@@ -33,5 +33,5 @@ if __name__ == '__main__':
             new_line = ", ".join(entity)
             output_file.write(new_line)
 
-    print("Files: %d"%files)
-    print("RDFs:  %d"%len(entities))
+    print("Files: %d" % files)
+    print("RDFs:  %d" % len(entities))

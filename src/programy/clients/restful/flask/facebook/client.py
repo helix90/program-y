@@ -14,20 +14,22 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 from flask import Flask, request
 from pymessenger.bot import Bot
-from programy.utils.logging.ylogger import YLogger
+
 from programy.clients.restful.flask.client import FlaskRestBotClient
 from programy.clients.restful.flask.facebook.config import FacebookConfiguration
 from programy.clients.restful.flask.facebook.renderer import FacebookRenderer
 from programy.utils.console.console import outputLog
+from programy.utils.logging.ylogger import YLogger
 
 
 class FacebookBotClient(FlaskRestBotClient):
-    
+
     def __init__(self, argument_parser=None):
         self._access_token = None
-        FlaskRestBotClient.__init__(self, 'facebook', argument_parser)
+        FlaskRestBotClient.__init__(self, "facebook", argument_parser)
 
         YLogger.debug(self, "Facebook Client is running....")
 
@@ -57,7 +59,9 @@ class FacebookBotClient(FlaskRestBotClient):
         if self._access_token is not None:
             return Bot(self._access_token)
 
-        YLogger.error(self, "Facebook access token missing, unable to create facebook bot")
+        YLogger.error(
+            self, "Facebook access token missing, unable to create facebook bot"
+        )
         return None
 
     def get_hub_challenge(self, request):
@@ -76,7 +80,7 @@ class FacebookBotClient(FlaskRestBotClient):
             return self.get_hub_challenge(request)
 
         YLogger.error(self, "Facebook verify token failed received [%s]", token_sent)
-        return 'Invalid verification token'
+        return "Invalid verification token"
 
     def return_hub_challenge(self, request):
         """Before allowing people to message your bot, Facebook has implemented a verify token
@@ -90,7 +94,7 @@ class FacebookBotClient(FlaskRestBotClient):
         return "success"
 
     def receive_message(self, msg_request):
-        if msg_request.method == 'GET':
+        if msg_request.method == "GET":
             return self.return_hub_challenge(msg_request)
         else:
             data = msg_request.get_json()
@@ -98,47 +102,49 @@ class FacebookBotClient(FlaskRestBotClient):
         return "Message Processed"
 
     def get_recipitent_id(self, message):
-        if 'sender' in message:
-            if 'id' in message['sender']:
-                return message['sender']['id']
+        if "sender" in message:
+            if "id" in message["sender"]:
+                return message["sender"]["id"]
         return None
 
     def get_message_text(self, message):
-        if 'message' in message:
-            return message['message'].get('text')
+        if "message" in message:
+            return message["message"].get("text")
         return None
 
     def get_postback_text(self, message):
-        if 'postback' in message:
-            return message['postback'].get('payload')
+        if "postback" in message:
+            return message["postback"].get("payload")
         return None
 
     def has_attachements(self, message):
-        if 'message' in message:
-            if message['message'].get('attachments') is not None:
+        if "message" in message:
+            if message["message"].get("attachments") is not None:
                 return True
         return False
 
     def process_facebook_request(self, request):
-        if 'entry' in request:
-            for event in request['entry']:
-                if 'messaging' in event:
-                    messaging = event['messaging']
+        if "entry" in request:
+            for event in request["entry"]:
+                if "messaging" in event:
+                    messaging = event["messaging"]
                     self.process_facebook_message(messaging)
 
     def process_facebook_message(self, messaging):
         for message in messaging:
-            if message.get('message'):
+            if message.get("message"):
                 self.handle_message(message)
 
-            elif message.get('postback'):
+            elif message.get("postback"):
                 self.handle_postback(message)
 
     def ask_question(self, client_context, question, metadata=None):
         response = ""
         try:
             self._questions += 1
-            response = client_context.bot.ask_question(client_context, question, responselogger=self)
+            response = client_context.bot.ask_question(
+                client_context, question, responselogger=self
+            )
 
         except Exception as e:
             YLogger.exception(client_context, "Error asking Facebook:", e)
@@ -146,9 +152,9 @@ class FacebookBotClient(FlaskRestBotClient):
         return response
 
     def is_echo(self, message):
-        if 'message' in message:
-            if 'is_echo' in message['message']:
-                return message['message']['is_echo']
+        if "message" in message:
+            if "is_echo" in message["message"]:
+                return message["message"]["is_echo"]
         return False
 
     def handle_message(self, message):
@@ -172,7 +178,9 @@ class FacebookBotClient(FlaskRestBotClient):
 
                 # We have been send a text message, we can respond
                 if message_text is not None:
-                    response_text = self.handle_text_message(client_context, message_text)
+                    response_text = self.handle_text_message(
+                        client_context, message_text
+                    )
 
                 # else if user sends us a GIF, photo,video, or any other non-text item
                 elif self.has_attachements(message):
@@ -180,10 +188,14 @@ class FacebookBotClient(FlaskRestBotClient):
 
                 # otherwise its a general error
                 else:
-                    YLogger.error(client_context, "Facebook general error handling message")
+                    YLogger.error(
+                        client_context, "Facebook general error handling message"
+                    )
                     response_text = "Sorry, I do not understand you!"
 
-                YLogger.debug(client_context, "Facebook message response: [%s]", response_text)
+                YLogger.debug(
+                    client_context, "Facebook message response: [%s]", response_text
+                )
                 self.render_response(client_context, response_text)
 
         except Exception as e:
@@ -195,10 +207,10 @@ class FacebookBotClient(FlaskRestBotClient):
 
     def handle_attachement(self, client_context, payload):
         try:
-            message = payload.get('message')
-            attachements = message.get('attachments')
+            message = payload.get("message")
+            attachements = message.get("attachments")
             for attachment in attachements:
-                if attachment.get('type') == 'location':
+                if attachment.get("type") == "location":
                     return self.handle_location_attachment(client_context, attachment)
 
         except Exception as e:
@@ -208,10 +220,10 @@ class FacebookBotClient(FlaskRestBotClient):
 
     def handle_location_attachment(self, client_context, attachment):
         try:
-            payload = attachment.get('payload')
-            coordinates = payload.get('coordinates')
-            lat = coordinates.get('lat')
-            long = coordinates.get('long')
+            payload = attachment.get("payload")
+            coordinates = payload.get("coordinates")
+            lat = coordinates.get("lat")
+            long = coordinates.get("long")
             question = "RCS XLATLONG LOCATION XLAT %s XLONG %s" % (lat, long)
             return self.ask_question(client_context, question)
         except Exception as e:
@@ -243,6 +255,7 @@ class FacebookBotClient(FlaskRestBotClient):
             YLogger.debug(self, "Facebook postback response: [%s]", response_text)
             self.render_response(client_context, response_text)
 
+
 if __name__ == "__main__":
 
     outputLog(None, "Initiating Facebook Client...")
@@ -251,7 +264,9 @@ if __name__ == "__main__":
 
     APP = Flask(__name__)
 
-    @APP.route(FACEBOOK_CLIENT.configuration.client_configuration.api, methods=['GET', 'POST'])
+    @APP.route(
+        FACEBOOK_CLIENT.configuration.client_configuration.api, methods=["GET", "POST"]
+    )
     def receive_message():
         try:
             return FACEBOOK_CLIENT.receive_message(request)

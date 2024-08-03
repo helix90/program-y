@@ -1,10 +1,11 @@
 import xml.etree.ElementTree as ET
 
+from programytest.parser.base import ParserTestsBaseClass
+
 from programy.dialog.question import Question
 from programy.parser.template.nodes.base import TemplateNode
 from programy.parser.template.nodes.set import TemplateSetNode
 from programy.parser.template.nodes.word import TemplateWordNode
-from programytest.parser.base import ParserTestsBaseClass
 
 
 class MockTemplateSetNode(TemplateSetNode):
@@ -13,6 +14,7 @@ class MockTemplateSetNode(TemplateSetNode):
 
     def resolve_to_string(self, context):
         raise Exception("This is an error")
+
 
 class TemplateSetNodeTests(ParserTestsBaseClass):
 

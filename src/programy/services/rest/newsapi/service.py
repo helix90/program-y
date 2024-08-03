@@ -14,11 +14,12 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-import urllib.parse
+
 import os
+import urllib.parse
+
 from programy.services.base import ServiceQuery
-from programy.services.rest.base import RESTService
-from programy.services.rest.base import RESTServiceException
+from programy.services.rest.base import RESTService, RESTServiceException
 from programy.utils.logging.ylogger import YLogger
 
 
@@ -39,9 +40,9 @@ class NewsAPIFeedEverythingServiceQuery(ServiceQuery):
         return self._service.get_everything(self._query)
 
     def aiml_response(self, response):
-        payload = response['response']['payload']
-        articles = payload['articles']
-        headlines = ["<li>{0}</li>\n".format(x['title']) for x in articles]
+        payload = response["response"]["payload"]
+        articles = payload["articles"]
+        headlines = ["<li>{0}</li>\n".format(x["title"]) for x in articles]
         result = "EVERYTHING <ul>{0}</ul>".format("".join(headlines))
         YLogger.debug(self, result)
         return result
@@ -72,11 +73,11 @@ class NewsAPIServiceException(RESTServiceException):
 
 
 class NewsAPIService(RESTService):
-    """
-    """
+    """ """
+
     PATTERNS = [
         [r"COLLECTIONS", NewsAPIFeedCollectionsServiceQuery],
-        [r"EVERYTHING\s(.+)", NewsAPIFeedEverythingServiceQuery]
+        [r"EVERYTHING\s(.+)", NewsAPIFeedEverythingServiceQuery],
     ]
 
     COLLECTIONS = {
@@ -88,12 +89,16 @@ class NewsAPIService(RESTService):
         "SPORT": "sport",
         "TECHNOLOGY": "technology",
         "UK NEWS": "uk_news",
-        "UK NEWSPAPERS": "uk_newspapers"
+        "UK NEWSPAPERS": "uk_newspapers",
     }
 
     NEWSAPI_SOURCES_URL = "https://newsapi.org/v2/sources?apiKey={0}"
-    NEWSAPI_EVERYTHING_URL = "https://newsapi.org/v2/everything?q={0}&sortBy={1}&apiKey={2}"
-    NEWSAPI_HEADLINE_URL = "https://newsapi.org/v2/top-headlines?country={0}&category={1}&apiKey={2}"
+    NEWSAPI_EVERYTHING_URL = (
+        "https://newsapi.org/v2/everything?q={0}&sortBy={1}&apiKey={2}"
+    )
+    NEWSAPI_HEADLINE_URL = (
+        "https://newsapi.org/v2/top-headlines?country={0}&category={1}&apiKey={2}"
+    )
 
     def __init__(self, configuration):
         RESTService.__init__(self, configuration)
@@ -103,9 +108,12 @@ class NewsAPIService(RESTService):
         return NewsAPIService.PATTERNS
 
     def initialise(self, client):
-        self._api_key = client.license_keys.get_key('NEWSAPI_API_KEY')
+        self._api_key = client.license_keys.get_key("NEWSAPI_API_KEY")
         if self._api_key is None:
-            YLogger.error(self, "NEWSAPI_API_KEY missing from license.keys, service will not function correctly!")
+            YLogger.error(
+                self,
+                "NEWSAPI_API_KEY missing from license.keys, service will not function correctly!",
+            )
 
     def get_default_aiml_file(self):
         return os.path.dirname(__file__) + os.sep + "newsapi.aiml"
@@ -116,14 +124,12 @@ class NewsAPIService(RESTService):
 
     def get_collections(self):
         return {
-            'response': {
-                'service': self.name,
-                'category': self.category,
-                'status': 'success',
-                'call': 'DIRECT',
-                'payload': {
-                    'collections': NewsAPIService.COLLECTIONS.keys()[:]
-                }
+            "response": {
+                "service": self.name,
+                "category": self.category,
+                "status": "success",
+                "call": "DIRECT",
+                "payload": {"collections": NewsAPIService.COLLECTIONS.keys()[:]},
             }
         }
 
@@ -133,7 +139,7 @@ class NewsAPIService(RESTService):
 
     def get_sources(self):
         url = self._build_sources_url()
-        response = self.query('get_sources', url)
+        response = self.query("get_sources", url)
         return response
 
     def _build_everything_url(self, query, sortBy):
@@ -142,7 +148,7 @@ class NewsAPIService(RESTService):
 
     def get_everything(self, query, sortBy="top"):
         url = self._build_everything_url(query, sortBy)
-        response = self.query('get_everything', url)
+        response = self.query("get_everything", url)
         return response
 
     def _build_headlines_url(self, country, sortBy):
@@ -151,7 +157,7 @@ class NewsAPIService(RESTService):
 
     def get_headlines(self, country, sortBy="top"):
         url = self._build_headlines_url(country, sortBy)
-        response = self.query('get_headlines', url)
+        response = self.query("get_headlines", url)
         return response
 
     def get_business(self, api_key, max_articles, sort, reverse):
@@ -163,7 +169,9 @@ class NewsAPIService(RESTService):
         articles.extend(self.financial_times(api_key, max_articles, sort, reverse))
         articles.extend(self.fortune(api_key, max_articles, sort, reverse))
         articles.extend(self.the_economist(api_key, max_articles, sort, reverse))
-        articles.extend(self.the_wall_street_journal(api_key, max_articles, sort, reverse))
+        articles.extend(
+            self.the_wall_street_journal(api_key, max_articles, sort, reverse)
+        )
         return articles
 
     def get_entertainment(self, api_key, max_articles, sort, reverse):
@@ -234,4 +242,3 @@ class NewsAPIService(RESTService):
 
     def _response_to_json(self, api, response):
         return response.json()
-

@@ -1,10 +1,12 @@
 import unittest
 from unittest.mock import patch
+
 import programytest.externals as Externals
+from programytest.client import TestClient
+
 from programy.bot import Bot
 from programy.config.bot.bot import BotConfiguration
 from programy.processors.post.translate import TranslatorPostProcessor
-from programytest.client import TestClient
 
 
 class MockClientContext(object):
@@ -19,18 +21,25 @@ class TranslatorPostProcessorTest(unittest.TestCase):
         self.client = TestClient()
         config = BotConfiguration()
 
-        config.from_translator._classname = "programy.nlp.translate.textblob_translator.TextBlobTranslator"
+        config.from_translator._classname = (
+            "programy.nlp.translate.textblob_translator.TextBlobTranslator"
+        )
         config.from_translator._from_lang = "fr"
         config.from_translator._to_lang = "en"
 
-        config.to_translator._classname = "programy.nlp.translate.textblob_translator.TextBlobTranslator"
+        config.to_translator._classname = (
+            "programy.nlp.translate.textblob_translator.TextBlobTranslator"
+        )
         config.to_translator._from_lang = "en"
         config.to_translator._to_lang = "fr"
 
         self.bot = Bot(config=config, client=self.client)
         self.bot.initiate_translator()
 
-    @unittest.skipIf(Externals.google_translate is False or Externals.all_externals is False, Externals.google_translate_disabled)
+    @unittest.skipIf(
+        Externals.google_translate is False or Externals.all_externals is False,
+        Externals.google_translate_disabled,
+    )
     def test_post_process_translate(self):
         processor = TranslatorPostProcessor()
 
@@ -50,7 +59,10 @@ class TranslatorPostProcessorTest(unittest.TestCase):
     def patch_translate(self, context, translator, word_string, translator_config):
         raise Exception("Mock Exception")
 
-    @patch("programy.processors.post.translate.TranslatorPostProcessor._translate", patch_translate)
+    @patch(
+        "programy.processors.post.translate.TranslatorPostProcessor._translate",
+        patch_translate,
+    )
     def test_post_process_translate_translater_exception(self):
         processor = TranslatorPostProcessor()
 

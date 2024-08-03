@@ -3,9 +3,9 @@ import unittest
 
 from programy.utils.text.text import TextUtils
 
-
 #############################################################################
 #
+
 
 class TextUtilsTests(unittest.TestCase):
 
@@ -27,8 +27,12 @@ class TextUtilsTests(unittest.TestCase):
         self.assertEqual("", TextUtils.strip_whitespace("\r"))
         self.assertEqual("", TextUtils.strip_whitespace("\r\t\n"))
         self.assertEqual("test", TextUtils.strip_whitespace("\r\t\ntest\r\t\n"))
-        self.assertEqual("test test", TextUtils.strip_whitespace("\r\t\ntest test\r\t\n"))
-        self.assertEqual("test test", TextUtils.strip_whitespace("\r\t\ntest\n\r\ttest\r\t\n"))
+        self.assertEqual(
+            "test test", TextUtils.strip_whitespace("\r\t\ntest test\r\t\n")
+        )
+        self.assertEqual(
+            "test test", TextUtils.strip_whitespace("\r\t\ntest\n\r\ttest\r\t\n")
+        )
 
     def test_strip_all_whitespace(self):
         self.assertEqual("", TextUtils.strip_all_whitespace(""))
@@ -38,8 +42,12 @@ class TextUtilsTests(unittest.TestCase):
         self.assertEqual("", TextUtils.strip_all_whitespace("\r"))
         self.assertEqual("", TextUtils.strip_all_whitespace("\r\t\n"))
         self.assertEqual("test", TextUtils.strip_all_whitespace("\r\t\ntest\r\t\n"))
-        self.assertEqual("testtest", TextUtils.strip_all_whitespace("\r\t\ntest test\r\t\n"))
-        self.assertEqual("testtest", TextUtils.strip_all_whitespace("\r\t\ntest\n\r\ttest\r\t\n"))
+        self.assertEqual(
+            "testtest", TextUtils.strip_all_whitespace("\r\t\ntest test\r\t\n")
+        )
+        self.assertEqual(
+            "testtest", TextUtils.strip_all_whitespace("\r\t\ntest\n\r\ttest\r\t\n")
+        )
 
     def test_strip_all_punctuation(self):
         self.assertEqual("", TextUtils.strip_all_punctuation(""))
@@ -55,13 +63,15 @@ class TextUtilsTests(unittest.TestCase):
     def test_strip_html(self):
         self.assertEqual("", TextUtils.strip_html(""))
         self.assertEqual("", TextUtils.strip_html("<html></html>"))
-        self.assertEqual("Hello World", TextUtils.strip_html("<html>Hello <b>World</b></html>"))
+        self.assertEqual(
+            "Hello World", TextUtils.strip_html("<html>Hello <b>World</b></html>")
+        )
 
     def test_replace_path_seperator(self):
         self.assertEqual("", TextUtils.replace_path_seperator(""))
         self.assertEqual(" ", TextUtils.replace_path_seperator(" "))
         self.assertEqual(os.sep, TextUtils.replace_path_seperator("/"))
-        self.assertEqual(".."+os.sep, TextUtils.replace_path_seperator("../"))
+        self.assertEqual(".." + os.sep, TextUtils.replace_path_seperator("../"))
         self.assertEqual("\\", TextUtils.replace_path_seperator("/", "/", "\\"))
 
     def test_html_escape(self):
@@ -75,11 +85,15 @@ class TextUtilsTests(unittest.TestCase):
         self.assertFalse(TextUtils._is_not_tag("{http://alicebot.org/2001/AIML}aiml"))
 
     def test_extract_namespace_and_tag(self):
-        tag, namespace = TextUtils._extract_namespace_and_tag("{http://alicebot.org/2001/AIML}")
+        tag, namespace = TextUtils._extract_namespace_and_tag(
+            "{http://alicebot.org/2001/AIML}"
+        )
         self.assertEquals(None, namespace)
         self.assertEquals(None, tag)
 
-        tag, namespace = TextUtils._extract_namespace_and_tag("{http://alicebot.org/2001/AIML}aiml")
+        tag, namespace = TextUtils._extract_namespace_and_tag(
+            "{http://alicebot.org/2001/AIML}aiml"
+        )
         self.assertEquals("{http://alicebot.org/2001/AIML}", namespace)
         self.assertEquals("aiml", tag)
 
@@ -99,14 +113,17 @@ class TextUtilsTests(unittest.TestCase):
         self.assertEqual("{}", tag)
         self.assertIsNone(name)
 
-        tag, name = TextUtils.tag_and_namespace_from_text("{http://alicebot.org/2001/AIML}")
+        tag, name = TextUtils.tag_and_namespace_from_text(
+            "{http://alicebot.org/2001/AIML}"
+        )
         self.assertIsNotNone(tag)
         self.assertEqual("{http://alicebot.org/2001/AIML}", tag)
         self.assertIsNone(name)
 
-        tag, name = TextUtils.tag_and_namespace_from_text("{http://alicebot.org/2001/AIML}aiml")
+        tag, name = TextUtils.tag_and_namespace_from_text(
+            "{http://alicebot.org/2001/AIML}aiml"
+        )
         self.assertIsNotNone(tag)
         self.assertEqual("aiml", tag)
         self.assertIsNotNone(name)
         self.assertEqual("{http://alicebot.org/2001/AIML}", name)
-

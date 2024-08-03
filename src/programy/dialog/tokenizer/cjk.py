@@ -14,13 +14,15 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 import re
+
 from programy.dialog.tokenizer.tokenizer import Tokenizer
 
 
 class CjkTokenizer(Tokenizer):
 
-    def __init__(self, split_chars=' '):
+    def __init__(self, split_chars=" "):
         Tokenizer.__init__(self, split_chars)
 
     @staticmethod
@@ -37,8 +39,14 @@ class CjkTokenizer(Tokenizer):
     def _is_chinese_char(c):
         r = [
             # 标准CJK文字
-            (0x3400, 0x4DB5), (0x4E00, 0x9FA5), (0x9FA6, 0x9FBB), (0xF900, 0xFA2D),
-            (0xFA30, 0xFA6A), (0xFA70, 0xFAD9), (0x20000, 0x2A6D6), (0x2F800, 0x2FA1D),
+            (0x3400, 0x4DB5),
+            (0x4E00, 0x9FA5),
+            (0x9FA6, 0x9FBB),
+            (0xF900, 0xFA2D),
+            (0xFA30, 0xFA6A),
+            (0xFA70, 0xFAD9),
+            (0x20000, 0x2A6D6),
+            (0x2F800, 0x2FA1D),
             # 全角ASCII、全角中英文标点、半宽片假名、半宽平假名、半宽韩文字母
             (0xFF00, 0xFFEF),
             # CJK部首补充
@@ -46,11 +54,12 @@ class CjkTokenizer(Tokenizer):
             # CJK标点符号
             (0x3000, 0x303F),
             # CJK笔划
-            (0x31C0, 0x31EF)]
+            (0x31C0, 0x31EF),
+        ]
         return any(s <= ord(c) <= e for s, e in r)
 
     def _is_wildchar(self, ch):
-        MATCH_CHARS = ['^', '#', '', '*']
+        MATCH_CHARS = ["^", "#", "", "*"]
         return bool(ch in MATCH_CHARS)
 
     def texts_to_words(self, texts):
@@ -58,22 +67,22 @@ class CjkTokenizer(Tokenizer):
             return []
 
         words = []
-        last_word = ''
+        last_word = ""
         for ch in texts:
             if CjkTokenizer._is_chinese_char(ch):
                 if len(last_word) > 0:
                     words.append(last_word)
-                    last_word = ''
+                    last_word = ""
                 words.append(ch)
             elif ch == self.split_chars:
                 if len(last_word) > 0:
                     words.append(last_word)
-                    last_word = ''
+                    last_word = ""
             else:
                 if self._is_wildchar(ch):
                     if len(last_word) > 0:
                         words.append(last_word)
-                        last_word = ''
+                        last_word = ""
                     words.append(ch)
                 else:
                     last_word += ch
@@ -84,20 +93,20 @@ class CjkTokenizer(Tokenizer):
         return words
 
     def words_to_texts(self, words):
-        texts = ''
+        texts = ""
 
         if words is None:
-            words = ['']
+            words = [""]
 
         for word in words:
             if CjkTokenizer._is_chinese_word(word):
                 texts += word
             elif len(texts) > 0:
-                texts += ' ' + word
+                texts += " " + word
             else:
                 texts += word
 
-        texts = re.sub(r'\s+', ' ', texts)
+        texts = re.sub(r"\s+", " ", texts)
         stripped_text = texts.strip()
         return stripped_text
 

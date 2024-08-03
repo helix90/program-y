@@ -14,24 +14,27 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
-from programy.parser.pattern.nodes.base import PatternNode
-from programy.parser.pattern.equalsmatch import EqualsMatch
+
 from programy.parser.exceptions import ParserException
+from programy.parser.pattern.equalsmatch import EqualsMatch
+from programy.parser.pattern.nodes.base import PatternNode
+from programy.utils.logging.ylogger import YLogger
 
 
 class PatternBotNode(PatternNode):
 
-    def __init__(self, attribs, text, userid='*'):
+    def __init__(self, attribs, text, userid="*"):
         PatternNode.__init__(self, userid)
-        if 'name' in attribs:
-            self._property = attribs['name']
-        elif 'property' in attribs:
-            self._property = attribs['property']
+        if "name" in attribs:
+            self._property = attribs["name"]
+        elif "property" in attribs:
+            self._property = attribs["property"]
         elif text:
             self._property = text
         else:
-            raise ParserException("Invalid bot node, neither name or property specified as attribute or text")
+            raise ParserException(
+                "Invalid bot node, neither name or property specified as attribute or text"
+            )
 
     def is_bot(self):
         return True
@@ -52,7 +55,11 @@ class PatternBotNode(PatternNode):
 
     def to_string(self, verbose=True):
         if verbose is True:
-            return "BOT [%s] [%s] property=[%s]" % (self.userid, self._child_count(verbose), self.property)
+            return "BOT [%s] [%s] property=[%s]" % (
+                self.userid,
+                self._child_count(verbose),
+                self.property,
+            )
         return "BOT property=[%s]" % (self.property)
 
     def equivalent(self, other):
@@ -65,7 +72,7 @@ class PatternBotNode(PatternNode):
     def equals(self, client_context, words, word_no):
         word = words.word(word_no)
 
-        if self.userid != '*':
+        if self.userid != "*":
             if self.userid != client_context.userid:
                 return EqualsMatch(False, word_no)
 

@@ -14,9 +14,10 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
+from programy.parser.exceptions import ParserException
 from programy.parser.template.nodes.base import TemplateNode
 from programy.utils.text.text import TextUtils
-from programy.parser.exceptions import ParserException
 
 
 class TemplateLinkNode(TemplateNode):
@@ -44,11 +45,11 @@ class TemplateLinkNode(TemplateNode):
     #
 
     def parse_expression(self, graph, expression):
-        if 'text' in expression.attrib:
-            self._text = graph.get_word_node(expression.attrib['text'])
+        if "text" in expression.attrib:
+            self._text = graph.get_word_node(expression.attrib["text"])
 
-        if 'url' in expression.attrib:
-            self._url = graph.get_word_node(expression.attrib['url'])
+        if "url" in expression.attrib:
+            self._url = graph.get_word_node(expression.attrib["url"])
 
         head_text = self.get_text_from_element(expression)
         self.parse_text(graph, head_text)
@@ -56,9 +57,9 @@ class TemplateLinkNode(TemplateNode):
         for child in expression:
             tag_name = TextUtils.tag_from_text(child.tag)
 
-            if tag_name == 'text':
+            if tag_name == "text":
                 self._text = self.parse_children_as_word_node(graph, child)
-            elif tag_name == 'url':
+            elif tag_name == "url":
                 self._url = self.parse_children_as_word_node(graph, child)
             else:
                 raise ParserException("Invalid child nodes in link")

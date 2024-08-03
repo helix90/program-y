@@ -14,7 +14,9 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 import importlib
+
 from programy.utils.logging.ylogger import YLogger
 
 
@@ -27,7 +29,7 @@ class ClassLoader:
 
         last_dot = processor_path.rfind(".")
         module_path = processor_path[:last_dot]
-        class_name = processor_path[last_dot + 1:]
+        class_name = processor_path[last_dot + 1 :]
 
         YLogger.debug(None, "Importing module [%s]", module_path)
         imported_module = importlib.import_module(module_path)

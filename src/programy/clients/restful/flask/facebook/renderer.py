@@ -14,12 +14,12 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 import json
 import time
 
-from programy.utils.logging.ylogger import YLogger
-
 from programy.clients.render.renderer import RichMediaRenderer
+from programy.utils.logging.ylogger import YLogger
 
 
 class FacebookRenderer(RichMediaRenderer):
@@ -38,12 +38,8 @@ class FacebookRenderer(RichMediaRenderer):
         YLogger.debug(client_context, "Handling text...")
 
         payload = {
-            'recipient': {
-                'id': client_context.userid
-            },
-            'message': {
-                'text': text['text']
-            }
+            "recipient": {"id": client_context.userid},
+            "message": {"text": text["text"]},
         }
         return self.send_payload(payload)
 
@@ -51,34 +47,29 @@ class FacebookRenderer(RichMediaRenderer):
         YLogger.debug(client_context, "Handling url...")
 
         payload = {
-            "recipient": {
-                "id": client_context.userid
-            },
+            "recipient": {"id": client_context.userid},
             "message": {
                 "attachment": {
                     "type": "template",
                     "payload": {
                         "template_type": "button",
-                        "text": button['text'],
+                        "text": button["text"],
                         "buttons": [
                             {
                                 "type": "web_url",
-                                "url": button['url'],
-                                "title": button['text']
+                                "url": button["url"],
+                                "title": button["text"],
                             }
-                        ]
-                    }
+                        ],
+                    },
                 }
-            }
-
+            },
         }
         return self.send_payload(payload)
 
     def create_postback_button(self, userid, text, postback):
         return {
-            "recipient": {
-                "id": userid
-            },
+            "recipient": {"id": userid},
             "message": {
                 "attachment": {
                     "type": "template",
@@ -86,46 +77,42 @@ class FacebookRenderer(RichMediaRenderer):
                         "template_type": "button",
                         "text": text,
                         "buttons": [
-                            {
-                                "type": "postback",
-                                "title": text,
-                                "payload": postback
-                            }
-                        ]
-                    }
+                            {"type": "postback", "title": text, "payload": postback}
+                        ],
+                    },
                 }
-            }
+            },
         }
 
     def handle_postback_button(self, client_context, button):
         YLogger.debug(client_context, "Handling postback button...")
 
-        payload = self.create_postback_button(client_context.userid, button['text'], button['postback'])
+        payload = self.create_postback_button(
+            client_context.userid, button["text"], button["postback"]
+        )
         return self.send_payload(payload)
 
     def handle_link(self, client_context, link):
         YLogger.debug(client_context, "Handling link...")
 
         payload = {
-            "recipient": {
-                "id": client_context.userid
-            },
+            "recipient": {"id": client_context.userid},
             "message": {
                 "attachment": {
                     "type": "template",
                     "payload": {
                         "template_type": "button",
-                        "text": link['text'],
+                        "text": link["text"],
                         "buttons": [
                             {
                                 "type": "web_url",
-                                "title": link['text'],
-                                "url": link['url']
+                                "title": link["text"],
+                                "url": link["url"],
                             }
-                        ]
-                    }
+                        ],
+                    },
                 }
-            }
+            },
         }
         return self.send_payload(payload)
 
@@ -133,23 +120,16 @@ class FacebookRenderer(RichMediaRenderer):
         YLogger.debug(client_context, "Handling image...")
 
         payload = {
-            "recipient": {
-                "id": client_context.userid
-            },
+            "recipient": {"id": client_context.userid},
             "message": {
                 "attachment": {
                     "type": "template",
                     "payload": {
                         "template_type": "media",
-                        "elements": [
-                            {
-                                "media_type": "image",
-                                "url": image['url']
-                            }
-                        ]
-                    }
+                        "elements": [{"media_type": "image", "url": image["url"]}],
+                    },
                 }
-            }
+            },
         }
         return self.send_payload(payload)
 
@@ -157,146 +137,138 @@ class FacebookRenderer(RichMediaRenderer):
         YLogger.debug(client_context, "Handling video...")
 
         payload = {
-            "recipient": {
-                "id": client_context.userid
-            },
+            "recipient": {"id": client_context.userid},
             "message": {
                 "attachment": {
                     "type": "template",
                     "payload": {
                         "template_type": "media",
-                        "elements": [
-                            {
-                                "media_type": "video",
-                                "url": video['url']
-                            }
-                        ]
-                    }
+                        "elements": [{"media_type": "video", "url": video["url"]}],
+                    },
                 }
-            }
+            },
         }
         return self.send_payload(payload)
 
     def create_card_payload(self, card):
         payload = {
-            "title": card['title'],
-            "image_url": card['image'],
-            "subtitle": card['subtitle'],
-            "buttons": []
+            "title": card["title"],
+            "image_url": card["image"],
+            "subtitle": card["subtitle"],
+            "buttons": [],
         }
 
-        for button in card['buttons']:
-            if button['url'] is not None:
-                payload['buttons'].append({
-                    "type": "web_url",
-                    "title": button['text'],
-                    "url": button['url']
-                })
+        for button in card["buttons"]:
+            if button["url"] is not None:
+                payload["buttons"].append(
+                    {"type": "web_url", "title": button["text"], "url": button["url"]}
+                )
             else:
-                payload['buttons'].append({
-                    "type": "web_url",
-                    "title": button['text'],
-                    "postback": button['postback']
-                })
+                payload["buttons"].append(
+                    {
+                        "type": "web_url",
+                        "title": button["text"],
+                        "postback": button["postback"],
+                    }
+                )
 
         return payload
 
     def handle_card(self, client_context, card):
         YLogger.debug(client_context, "Handling card...")
 
-        if len(card['buttons']) > 3:
-            YLogger.warning(client_context, "More buttons than facebook allows for a card")
+        if len(card["buttons"]) > 3:
+            YLogger.warning(
+                client_context, "More buttons than facebook allows for a card"
+            )
 
         payload = {
-            'recipient': {
-                'id': client_context.userid
-            },
-            'message': {
+            "recipient": {"id": client_context.userid},
+            "message": {
                 "attachment": {
                     "type": "template",
-                    "payload": {
-                        "template_type": "generic",
-                        "elements": [
-                        ]
-                    }
+                    "payload": {"template_type": "generic", "elements": []},
                 }
-            }
+            },
         }
-        payload['message']['attachment']['payload']['elements'].append(self.create_card_payload(card))
+        payload["message"]["attachment"]["payload"]["elements"].append(
+            self.create_card_payload(card)
+        )
         return self.send_payload(payload)
 
     def handle_carousel(self, client_context, carousel):
         YLogger.debug(client_context, "Handling carousel...")
 
-        if len(carousel['cards']) > 10:
-            YLogger.warning(client_context, "More cards than facebook allows for a carousel")
+        if len(carousel["cards"]) > 10:
+            YLogger.warning(
+                client_context, "More cards than facebook allows for a carousel"
+            )
 
         payload = {
-            'recipient': {
-                'id': client_context.userid
-            },
-            'message': {
+            "recipient": {"id": client_context.userid},
+            "message": {
                 "attachment": {
                     "type": "template",
-                    "payload": {
-                        "template_type": "generic",
-                        "elements": []
-                    }
+                    "payload": {"template_type": "generic", "elements": []},
                 }
-            }
+            },
         }
 
-        for card in carousel['cards']:
+        for card in carousel["cards"]:
 
             element = {
-                "title": card['title'],
-                "image_url": card['image'],
-                "subtitle": card['subtitle'],
-                "buttons": []
+                "title": card["title"],
+                "image_url": card["image"],
+                "subtitle": card["subtitle"],
+                "buttons": [],
             }
 
-            for button in card['buttons']:
-                if button['url'] is not None:
-                    element['buttons'].append({
-                        "type": "web_url",
-                        "title": button['text'],
-                        "url": button['url']
-                    })
+            for button in card["buttons"]:
+                if button["url"] is not None:
+                    element["buttons"].append(
+                        {
+                            "type": "web_url",
+                            "title": button["text"],
+                            "url": button["url"],
+                        }
+                    )
                 else:
-                    element['buttons'].append({
-                        "type": "web_url",
-                        "title": button['text'],
-                        "postback": button['postback']
-                    })
+                    element["buttons"].append(
+                        {
+                            "type": "web_url",
+                            "title": button["text"],
+                            "postback": button["postback"],
+                        }
+                    )
 
-            payload['message']['attachment']['payload']['elements'].append(element)
+            payload["message"]["attachment"]["payload"]["elements"].append(element)
 
         return self.send_payload(payload)
 
     def handle_reply(self, client_context, reply):
         YLogger.debug(client_context, "Handling reply...")
 
-        if reply['postback'] is None:
-            payload = self.create_postback_button(client_context.userid, reply['text'], reply['text'])
+        if reply["postback"] is None:
+            payload = self.create_postback_button(
+                client_context.userid, reply["text"], reply["text"]
+            )
         else:
-            payload = self.create_postback_button(client_context.userid, reply['text'], reply['postback'])
+            payload = self.create_postback_button(
+                client_context.userid, reply["text"], reply["postback"]
+            )
         self.send_payload(payload)
 
     def handle_delay(self, client_context, delay):
         YLogger.debug(client_context, "Handling delay...")
         payload = {
-            "recipient": {
-                "id": client_context.userid
-            },
-            "sender_action": "typing_on"
+            "recipient": {"id": client_context.userid},
+            "sender_action": "typing_on",
         }
         self.send_payload(payload)
-        time.sleep(int(delay['seconds']))
+        time.sleep(int(delay["seconds"]))
         payload = {
-            "recipient": {
-                "id": client_context.userid
-            },
-            "sender_action": "typing_off"
+            "recipient": {"id": client_context.userid},
+            "sender_action": "typing_off",
         }
         return self.send_payload(payload)
 
@@ -304,30 +276,27 @@ class FacebookRenderer(RichMediaRenderer):
         YLogger.debug(client_context, "Handling split...")
 
     def convert_to_element(self, item):
-        if item["type"] == 'card':
+        if item["type"] == "card":
             return self.create_card_payload(item)
         return None
 
     def handle_list(self, client_context, lst):
         YLogger.debug(client_context, "Handling list...")
         payload = {
-            "recipient": {
-                "id": client_context.userid
-            },
+            "recipient": {"id": client_context.userid},
             "message": {
                 "attachment": {
                     "type": "template",
                     "payload": {
                         "template_type": "list",
                         "top_element_style": "compact",
-                        "elements": [
-                        ]
-                    }
+                        "elements": [],
+                    },
                 }
-            }
+            },
         }
 
-        for item in lst.get('items', []):
+        for item in lst.get("items", []):
             element = self.convert_to_element(item)
             if element is not None:
                 payload["message"]["attachment"]["payload"]["elements"].append(element)
@@ -338,23 +307,20 @@ class FacebookRenderer(RichMediaRenderer):
         YLogger.debug(client_context, "Handling ordered...")
 
         payload = {
-            "recipient": {
-                "id": client_context.userid
-            },
+            "recipient": {"id": client_context.userid},
             "message": {
                 "attachment": {
                     "type": "template",
                     "payload": {
                         "template_type": "list",
                         "top_element_style": "compact",
-                        "elements": [
-                        ]
-                    }
+                        "elements": [],
+                    },
                 }
-            }
+            },
         }
 
-        for item in lst.get('items', []):
+        for item in lst.get("items", []):
             element = self.convert_to_element(item)
             if element is not None:
                 payload["message"]["attachment"]["payload"]["elements"].append(element)
@@ -365,16 +331,10 @@ class FacebookRenderer(RichMediaRenderer):
         YLogger.debug(client_context, "Handling location...")
 
         payload = {
-            'recipient': {
-                'id': client_context.userid
-            },
+            "recipient": {"id": client_context.userid},
             "message": {
                 "text": "Your location",
-                "quick_replies": [
-                    {
-                        "content_type": "location"
-                    }
-                ]
-            }
+                "quick_replies": [{"content_type": "location"}],
+            },
         }
         return self.send_payload(payload)

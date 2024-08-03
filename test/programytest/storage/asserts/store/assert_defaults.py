@@ -1,6 +1,7 @@
 import os
 import os.path
 import unittest
+
 from programy.mappings.properties import DefaultVariablesCollection
 
 
@@ -72,12 +73,21 @@ class DefaultStoreAsserts(unittest.TestCase):
         self.assertFalse("name1" in new_defaults)
 
     def assert_upload_from_file(self, store):
-        
+
         store.empty()
-        
+
         default_collection = DefaultVariablesCollection()
 
-        store.upload_from_file(os.path.dirname(__file__) + os.sep + "data" + os.sep + "lookups" + os.sep + "text" + os.sep + "defaults.txt")
+        store.upload_from_file(
+            os.path.dirname(__file__)
+            + os.sep
+            + "data"
+            + os.sep
+            + "lookups"
+            + os.sep
+            + "text"
+            + os.sep
+            + "defaults.txt"
+        )
 
         store.load(default_collection)
-

@@ -1,8 +1,10 @@
 import unittest
+
+from programytest.client import TestClient
+
 from programy.dialog.conversation import Conversation as Convo
 from programy.dialog.question import Question
 from programy.storage.stores.nosql.mongo.dao.conversation import Conversation
-from programytest.client import TestClient
 
 
 class ConversationTests(unittest.TestCase):
@@ -37,8 +39,41 @@ class ConversationTests(unittest.TestCase):
         self.assertIsNotNone(conversation.conversation)
 
         doc = conversation.to_document()
-        self.assertEqual({'clientid': 'testclient', 'userid': 'testuser', 'botid': 'bot', 'brainid': 'brain', 'conversation': {'client_context': {'clientid': 'testclient', 'userid': 'testuser', 'botid': 'bot', 'brainid': 'brain', 'depth': 0}, 'questions': [{'srai': False, 'sentences': [{'words': ['Hello', 'world'], 'response': 'Hello matey', 'positivity': 0.0, 'subjectivity': 0.5}], 'current_sentence_no': -1, 'properties': {}}], 'max_histories': 100, 'properties': {'topic': '*'}}},
-                          doc)
+        self.assertEqual(
+            {
+                "clientid": "testclient",
+                "userid": "testuser",
+                "botid": "bot",
+                "brainid": "brain",
+                "conversation": {
+                    "client_context": {
+                        "clientid": "testclient",
+                        "userid": "testuser",
+                        "botid": "bot",
+                        "brainid": "brain",
+                        "depth": 0,
+                    },
+                    "questions": [
+                        {
+                            "srai": False,
+                            "sentences": [
+                                {
+                                    "words": ["Hello", "world"],
+                                    "response": "Hello matey",
+                                    "positivity": 0.0,
+                                    "subjectivity": 0.5,
+                                }
+                            ],
+                            "current_sentence_no": -1,
+                            "properties": {},
+                        }
+                    ],
+                    "max_histories": 100,
+                    "properties": {"topic": "*"},
+                },
+            },
+            doc,
+        )
 
         conversation2 = Conversation.from_document(client_context, doc)
         self.assertIsNotNone(conversation2)
@@ -59,11 +94,45 @@ class ConversationTests(unittest.TestCase):
         convo.record_dialog(question)
 
         conversation = Conversation(client_context, convo)
-        conversation.id = '666'
+        conversation.id = "666"
 
         doc = conversation.to_document()
-        self.assertEqual({'_id': '666', 'clientid': 'testclient', 'userid': 'testuser', 'botid': 'bot', 'brainid': 'brain', 'conversation': {'client_context': {'clientid': 'testclient', 'userid': 'testuser', 'botid': 'bot', 'brainid': 'brain', 'depth': 0}, 'questions': [{'srai': False, 'sentences': [{'words': ['Hello', 'world'], 'response': 'Hello matey', 'positivity': 0.0, 'subjectivity': 0.5}], 'current_sentence_no': -1, 'properties': {}}], 'max_histories': 100, 'properties': {'topic': '*'}}},
-                          doc)
+        self.assertEqual(
+            {
+                "_id": "666",
+                "clientid": "testclient",
+                "userid": "testuser",
+                "botid": "bot",
+                "brainid": "brain",
+                "conversation": {
+                    "client_context": {
+                        "clientid": "testclient",
+                        "userid": "testuser",
+                        "botid": "bot",
+                        "brainid": "brain",
+                        "depth": 0,
+                    },
+                    "questions": [
+                        {
+                            "srai": False,
+                            "sentences": [
+                                {
+                                    "words": ["Hello", "world"],
+                                    "response": "Hello matey",
+                                    "positivity": 0.0,
+                                    "subjectivity": 0.5,
+                                }
+                            ],
+                            "current_sentence_no": -1,
+                            "properties": {},
+                        }
+                    ],
+                    "max_histories": 100,
+                    "properties": {"topic": "*"},
+                },
+            },
+            doc,
+        )
 
     def test_repr_no_id(self):
         client = TestClient()
@@ -79,7 +148,10 @@ class ConversationTests(unittest.TestCase):
 
         dao = Conversation(client_context, conversation)
 
-        self.assertEquals("<Conversation(id='n/a', client='testclient', user='testuser', bot='bot', brain='brain')", str(dao))
+        self.assertEquals(
+            "<Conversation(id='n/a', client='testclient', user='testuser', bot='bot', brain='brain')",
+            str(dao),
+        )
 
     def test_repr_with_id(self):
         client = TestClient()
@@ -92,9 +164,12 @@ class ConversationTests(unittest.TestCase):
         convo.record_dialog(question)
 
         conversation = Conversation(client_context, convo)
-        conversation.id = '1'
+        conversation.id = "1"
 
-        self.assertEquals("<Conversation(id='1', client='testclient', user='testuser', bot='bot', brain='brain')", str(conversation))
+        self.assertEquals(
+            "<Conversation(id='1', client='testclient', user='testuser', bot='bot', brain='brain')",
+            str(conversation),
+        )
 
     def test_from_document_no_data(self):
         client = TestClient()
@@ -115,7 +190,13 @@ class ConversationTests(unittest.TestCase):
         client = TestClient()
         client_context = client.create_client_context("testuser")
 
-        data = {"_id": "1", "clientid": "client1", "userid": "user1", "botid": "bot1", "brainid": "brain1"}
+        data = {
+            "_id": "1",
+            "clientid": "client1",
+            "userid": "user1",
+            "botid": "bot1",
+            "brainid": "brain1",
+        }
         dao = Conversation.from_document(client_context, data)
 
         self.assertIsNotNone(dao)
@@ -125,4 +206,3 @@ class ConversationTests(unittest.TestCase):
         self.assertEquals("bot1", dao.botid)
         self.assertEquals("brain1", dao.brainid)
         self.assertIsNone(dao.conversation)
-

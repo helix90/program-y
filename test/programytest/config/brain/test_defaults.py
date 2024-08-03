@@ -10,13 +10,17 @@ class BrainDefaultsDefaultsConfigurationTests(unittest.TestCase):
     def test_with_data(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         brain:
             defaults:
                 default_get: unknown
                 default_property: unknown
                 default_map: unknown
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         brain_config = yaml.get_section("brain")
 
@@ -30,10 +34,14 @@ class BrainDefaultsDefaultsConfigurationTests(unittest.TestCase):
     def test_without_data(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         brain:
             defaults:
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         brain_config = yaml.get_section("brain")
 
@@ -47,9 +55,13 @@ class BrainDefaultsDefaultsConfigurationTests(unittest.TestCase):
     def test_with_no_data(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         brain:
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         brain_config = yaml.get_section("brain")
 
@@ -65,6 +77,6 @@ class BrainDefaultsDefaultsConfigurationTests(unittest.TestCase):
 
     @staticmethod
     def assert_defaults(test, data):
-        test.assertEqual(data['default_get'], "unknown")
-        test.assertEqual(data['default_property'], "unknown")
-        test.assertEqual(data['default_map'], "unknown")
+        test.assertEqual(data["default_get"], "unknown")
+        test.assertEqual(data["default_property"], "unknown")
+        test.assertEqual(data["default_map"], "unknown")

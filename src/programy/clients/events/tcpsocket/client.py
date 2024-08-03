@@ -14,16 +14,18 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-import socket
+
 import json
-from programy.utils.logging.ylogger import YLogger
+import socket
+
 from programy.clients.events.client import EventBotClient
 from programy.clients.events.tcpsocket.config import SocketConfiguration
 from programy.clients.render.json import JSONRenderer
 from programy.utils.console.console import outputLog
+from programy.utils.logging.ylogger import YLogger
 
 
-class ClientConnection():
+class ClientConnection:
 
     def __init__(self, clientsocket, addr, max_buffer):
         self._clientsocket = clientsocket
@@ -41,12 +43,12 @@ class ClientConnection():
 
         YLogger.debug(self, "Sent %s:", json_data)
 
-        self._clientsocket.send(json_data.encode('utf-8'))
+        self._clientsocket.send(json_data.encode("utf-8"))
 
     def send_error(self, error):
-        if hasattr(error, 'message') is True:
+        if hasattr(error, "message") is True:
             return_payload = {"result": "ERROR", "message": error.message}
-        elif hasattr(error, 'msg') is True:
+        elif hasattr(error, "msg") is True:
             return_payload = {"result": "ERROR", "message": error.msg}
         else:
             return_payload = {"result": "ERROR", "message": str(error)}
@@ -55,7 +57,7 @@ class ClientConnection():
 
         YLogger.debug(self, "Sent: %s", json_data)
 
-        self._clientsocket.send(json_data.encode('utf-8'))
+        self._clientsocket.send(json_data.encode("utf-8"))
 
     def close(self):
         if self._clientsocket is not None:
@@ -63,13 +65,13 @@ class ClientConnection():
             self._clientsocket = None
 
 
-class SocketFactory():
+class SocketFactory:
 
     def create_socket(self, family=socket.AF_INET, sockettype=socket.SOCK_STREAM):
         return socket.socket(family, sockettype)
 
 
-class SocketConnection():
+class SocketConnection:
 
     def __init__(self, host, port, queue, max_buffer=1024, factory=SocketFactory()):
         self._socket_connection = self._create_socket(host, port, queue, factory)
@@ -102,15 +104,26 @@ class SocketBotClient(EventBotClient):
 
         EventBotClient.__init__(self, "Socket", argument_parser)
 
-        if self._host is not None and \
-                self._port is not None and \
-                self._queue is not None:
-            outputLog(self, "TCP Socket Client server now listening on %s:%d" % (self._host, self._port))
-            self._server_socket = self.create_socket_connection(self._host, self._port, self._queue, self._max_buffer)
+        if (
+            self._host is not None
+            and self._port is not None
+            and self._queue is not None
+        ):
+            outputLog(
+                self,
+                "TCP Socket Client server now listening on %s:%d"
+                % (self._host, self._port),
+            )
+            self._server_socket = self.create_socket_connection(
+                self._host, self._port, self._queue, self._max_buffer
+            )
             self._renderer = JSONRenderer(self)
 
         else:
-            outputLog(self, "TCP Socket Client configuration not defined, unable to create socket!")
+            outputLog(
+                self,
+                "TCP Socket Client configuration not defined, unable to create socket!",
+            )
 
     def get_client_configuration(self):
         return SocketConfiguration()
@@ -123,16 +136,16 @@ class SocketBotClient(EventBotClient):
 
     def extract_question(self, receive_payload):
         question = None
-        if 'question' in receive_payload:
-            question = receive_payload['question']
+        if "question" in receive_payload:
+            question = receive_payload["question"]
         if question is None or question == "":
             raise Exception("question missing from payload")
         return question
 
     def extract_userid(self, receive_payload):
         userid = None
-        if 'userid' in receive_payload:
-            userid = receive_payload['userid']
+        if "userid" in receive_payload:
+            userid = receive_payload["userid"]
         if userid is None or userid == "":
             raise Exception("userid missing from payload")
         return userid
@@ -142,7 +155,9 @@ class SocketBotClient(EventBotClient):
 
     def process_question(self, client_context, question):
         self._questions += 1
-        response = client_context.bot.ask_question(client_context, question, responselogger=self)
+        response = client_context.bot.ask_question(
+            client_context, question, responselogger=self
+        )
         return self.renderer.render(client_context, response)
 
     def render_response(self, client_context, response):
@@ -154,7 +169,9 @@ class SocketBotClient(EventBotClient):
             self._client_connection.send_response(client_context.userid, response)
 
         else:
-            YLogger.error(client_context, "Not client connection, unable to process response")
+            YLogger.error(
+                client_context, "Not client connection, unable to process response"
+            )
 
     def wait_and_answer(self):
         running = True
@@ -189,13 +206,11 @@ class SocketBotClient(EventBotClient):
         return running
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     outputLog(None, "Initiating TCP Socket Client...")
-
 
     def run():
         tcpsocket_app = SocketBotClient()
         tcpsocket_app.run()
-
 
     run()

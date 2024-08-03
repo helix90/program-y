@@ -14,10 +14,12 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 import os
-from programy.utils.logging.ylogger import YLogger
+
 from programy.parser.factory import NodeFactory
 from programy.storage.factory import StorageFactory
+from programy.utils.logging.ylogger import YLogger
 
 
 class TemplateNodeFactory(NodeFactory):
@@ -29,8 +31,15 @@ class TemplateNodeFactory(NodeFactory):
         return os.path.dirname(__file__) + os.sep + "template_nodes.conf"
 
     def load(self, storage_factory):
-        if storage_factory.entity_storage_engine_available(StorageFactory.TEMPLATE_NODES) is True:
-            storage_engine = storage_factory.entity_storage_engine(StorageFactory.TEMPLATE_NODES)
+        if (
+            storage_factory.entity_storage_engine_available(
+                StorageFactory.TEMPLATE_NODES
+            )
+            is True
+        ):
+            storage_engine = storage_factory.entity_storage_engine(
+                StorageFactory.TEMPLATE_NODES
+            )
             template_store = storage_engine.template_nodes_store()
             template_store.load(self)
         else:

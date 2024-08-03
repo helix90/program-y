@@ -1,10 +1,11 @@
 import os
 import unittest
 
+from programytest.client import TestClient
+
 from programy.config.bot.splitter import BotSentenceSplitterConfiguration
 from programy.dialog.splitter.splitter import SentenceSplitter
 from programy.spelling.base import SpellingChecker
-from programytest.client import TestClient
 
 
 class MockSpellingChecker(SpellingChecker):
@@ -32,30 +33,52 @@ class SystemSetAIMLTests(unittest.TestCase):
     def setUp(self):
         client = SystemSetAIMLTestClient()
         self._client_context = client.create_client_context("testid")
-        self._client_context.brain.properties.load_from_text("""
+        self._client_context.brain.properties.load_from_text(
+            """
              default_get:unknown
-         """)
-        self._client_context.bot.brain.dynamics.add_dynamic_var('gettime', "programy.dynamic.variables.datetime.GetTime", None)
-        self._client_context.bot.brain.dynamics.add_dynamic_var('spelling', "programy.dynamic.variables.system.spelling.Spelling", None)
-        self._client_context.bot.brain.dynamics.add_dynamic_var('splitter', "programy.dynamic.variables.system.splitter.SentenceSplitter", None)
+         """
+        )
+        self._client_context.bot.brain.dynamics.add_dynamic_var(
+            "gettime", "programy.dynamic.variables.datetime.GetTime", None
+        )
+        self._client_context.bot.brain.dynamics.add_dynamic_var(
+            "spelling", "programy.dynamic.variables.system.spelling.Spelling", None
+        )
+        self._client_context.bot.brain.dynamics.add_dynamic_var(
+            "splitter",
+            "programy.dynamic.variables.system.splitter.SentenceSplitter",
+            None,
+        )
 
         config = BotSentenceSplitterConfiguration()
-        self._client_context.bot._sentence_splitter = SentenceSplitter.initiate_sentence_splitter(config)
+        self._client_context.bot._sentence_splitter = (
+            SentenceSplitter.initiate_sentence_splitter(config)
+        )
 
     def test_dynamic_splitter_on(self):
-        response = self._client_context.bot.ask_question(self._client_context, "START USERNAME WITH SPLITTER ON")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "START USERNAME WITH SPLITTER ON"
+        )
         self.assertIsNotNone(response)
         self.assertEqual("What is your username?", response)
 
-        response = self._client_context.bot.ask_question(self._client_context, "fred.smith")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "fred.smith"
+        )
         self.assertIsNotNone(response)
-        self.assertEqual("Thanks, you entered fred. Thanks, you entered smith.", response)
+        self.assertEqual(
+            "Thanks, you entered fred. Thanks, you entered smith.", response
+        )
 
     def test_dynamic_splitter_off(self):
-        response = self._client_context.bot.ask_question(self._client_context, "START USERNAME WITH SPLITTER OFF")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "START USERNAME WITH SPLITTER OFF"
+        )
         self.assertIsNotNone(response)
         self.assertEqual("What is your username?", response)
 
-        response = self._client_context.bot.ask_question(self._client_context, "fred.smith")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "fred.smith"
+        )
         self.assertIsNotNone(response)
         self.assertEqual("Thanks, you entered fred.smith.", response)

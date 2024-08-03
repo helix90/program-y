@@ -1,3 +1,5 @@
+from programytest.parser.base import ParserTestsBaseClass
+
 from programy.parser.exceptions import ParserException
 from programy.parser.pattern.nodes.root import PatternRootNode
 from programy.parser.pattern.nodes.template import PatternTemplateNode
@@ -5,7 +7,6 @@ from programy.parser.pattern.nodes.that import PatternThatNode
 from programy.parser.pattern.nodes.topic import PatternTopicNode
 from programy.parser.pattern.nodes.word import PatternWordNode
 from programy.parser.template.nodes.base import TemplateNode
-from programytest.parser.base import ParserTestsBaseClass
 
 
 class PatternTemplateNodeTests(ParserTestsBaseClass):
@@ -31,29 +32,42 @@ class PatternTemplateNodeTests(ParserTestsBaseClass):
         self.assertFalse(node.has_children())
 
         self.assertTrue(node.equivalent(PatternTemplateNode(TemplateNode())))
-        self.assertEqual(node.to_string(), "PTEMPLATE [*] [P(0)^(0)#(0)C(0)_(0)*(0)To(0)Th(0)Te(1)]")
+        self.assertEqual(
+            node.to_string(), "PTEMPLATE [*] [P(0)^(0)#(0)C(0)_(0)*(0)To(0)Th(0)Te(1)]"
+        )
         self.assertEqual(node.to_string(verbose=False), "PTEMPLATE")
-        self.assertEqual('<template></template>\n', node.to_xml(self._client_context))
+        self.assertEqual("<template></template>\n", node.to_xml(self._client_context))
 
         self.assertFalse(node.equivalent(PatternTopicNode()))
 
     def test_to_xml(self):
         node1 = PatternTemplateNode(TemplateNode())
-        self.assertEqual('<template></template>\n', node1.to_xml(self._client_context))
-        self.assertEqual('<template userid="*"></template>\n', node1.to_xml(self._client_context, include_user=True))
+        self.assertEqual("<template></template>\n", node1.to_xml(self._client_context))
+        self.assertEqual(
+            '<template userid="*"></template>\n',
+            node1.to_xml(self._client_context, include_user=True),
+        )
 
         node2 = PatternTemplateNode(TemplateNode(), userid="testid")
-        self.assertEqual('<template></template>\n', node2.to_xml(self._client_context))
-        self.assertEqual('<template userid="testid"></template>\n', node2.to_xml(self._client_context, include_user=True))
+        self.assertEqual("<template></template>\n", node2.to_xml(self._client_context))
+        self.assertEqual(
+            '<template userid="testid"></template>\n',
+            node2.to_xml(self._client_context, include_user=True),
+        )
 
     def test_to_string(self):
         node1 = PatternTemplateNode(TemplateNode())
         self.assertEqual(node1.to_string(verbose=False), "PTEMPLATE")
-        self.assertEqual(node1.to_string(), "PTEMPLATE [*] [P(0)^(0)#(0)C(0)_(0)*(0)To(0)Th(0)Te(1)]")
+        self.assertEqual(
+            node1.to_string(), "PTEMPLATE [*] [P(0)^(0)#(0)C(0)_(0)*(0)To(0)Th(0)Te(1)]"
+        )
 
         node2 = PatternTemplateNode(TemplateNode(), userid="testid")
         self.assertEqual(node2.to_string(verbose=False), "PTEMPLATE")
-        self.assertEqual(node2.to_string(), "PTEMPLATE [testid] [P(0)^(0)#(0)C(0)_(0)*(0)To(0)Th(0)Te(1)]")
+        self.assertEqual(
+            node2.to_string(),
+            "PTEMPLATE [testid] [P(0)^(0)#(0)C(0)_(0)*(0)To(0)Th(0)Te(1)]",
+        )
 
     def test_equivalent(self):
         node1 = PatternTemplateNode(TemplateNode())
@@ -65,7 +79,7 @@ class PatternTemplateNodeTests(ParserTestsBaseClass):
 
     def test_pattern_to_template(self):
         node1 = PatternTemplateNode(TemplateNode())
-        node2 = PatternWordNode('test')
+        node2 = PatternWordNode("test")
         node1.can_add(node2)
         node1.add_child(node2)
         self.assertEqual(node1.children[0], node2)
@@ -76,7 +90,9 @@ class PatternTemplateNodeTests(ParserTestsBaseClass):
 
         with self.assertRaises(ParserException) as raised:
             node1.can_add(node2)
-        self.assertEqual(str(raised.exception), "Cannot add 'root' node to template node")
+        self.assertEqual(
+            str(raised.exception), "Cannot add 'root' node to template node"
+        )
 
     def test_wrong_to_template(self):
         node1 = PatternTemplateNode(TemplateNode())
@@ -91,7 +107,9 @@ class PatternTemplateNodeTests(ParserTestsBaseClass):
 
         with self.assertRaises(ParserException) as raised:
             node1.can_add(node2)
-        self.assertEqual(str(raised.exception), "Cannot add 'template' node to template node")
+        self.assertEqual(
+            str(raised.exception), "Cannot add 'template' node to template node"
+        )
 
     def test_topic_to_template(self):
         node1 = PatternTemplateNode(TemplateNode())
@@ -99,7 +117,9 @@ class PatternTemplateNodeTests(ParserTestsBaseClass):
 
         with self.assertRaises(ParserException) as raised:
             node1.can_add(node2)
-        self.assertEqual(str(raised.exception), "Cannot add 'topic' node to template node")
+        self.assertEqual(
+            str(raised.exception), "Cannot add 'topic' node to template node"
+        )
 
     def test_that_to_template(self):
         node1 = PatternTemplateNode(TemplateNode())
@@ -107,7 +127,9 @@ class PatternTemplateNodeTests(ParserTestsBaseClass):
 
         with self.assertRaises(ParserException) as raised:
             node1.can_add(node2)
-        self.assertEqual(str(raised.exception), "Cannot add 'that' node to template node")
+        self.assertEqual(
+            str(raised.exception), "Cannot add 'that' node to template node"
+        )
 
     def test_multiple_templates(self):
         node1 = PatternTemplateNode(TemplateNode())
@@ -115,6 +137,6 @@ class PatternTemplateNodeTests(ParserTestsBaseClass):
 
         with self.assertRaises(ParserException) as raised:
             node1.can_add(node2)
-        self.assertEqual(str(raised.exception), "Cannot add 'template' node to template node")
-
-
+        self.assertEqual(
+            str(raised.exception), "Cannot add 'template' node to template node"
+        )

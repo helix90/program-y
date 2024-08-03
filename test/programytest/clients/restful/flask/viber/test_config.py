@@ -10,7 +10,8 @@ class ViberConfigurationTests(unittest.TestCase):
     def test_init(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         viber:
           host: 127.0.0.1
           port: 5000
@@ -18,7 +19,10 @@ class ViberConfigurationTests(unittest.TestCase):
           name: test
           avatar: avatar.jpg
           webhook: http://localhost
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         viber_config = ViberConfiguration()
         viber_config.load_configuration(yaml, ".")
@@ -33,9 +37,13 @@ class ViberConfigurationTests(unittest.TestCase):
     def test_init_no_values(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         viber:
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         viber_config = ViberConfiguration()
         viber_config.load_configuration(yaml, ".")
@@ -53,16 +61,20 @@ class ViberConfigurationTests(unittest.TestCase):
         data = {}
         config.to_yaml(data, True)
 
-        self.assertEqual(data['name'], "Program-Y")
-        self.assertEqual(data['avatar'], 'http://127.0.0.1/programy.png')
-        self.assertEqual(data['webhook'], 'https://127.0.0.1/api/viber/v1.0/ask')
+        self.assertEqual(data["name"], "Program-Y")
+        self.assertEqual(data["avatar"], "http://127.0.0.1/programy.png")
+        self.assertEqual(data["webhook"], "https://127.0.0.1/api/viber/v1.0/ask")
 
-        self.assertEqual(data['bot_selector'], "programy.clients.botfactory.DefaultBotSelector")
-        self.assertEqual(data['renderer'], "programy.clients.render.text.TextRenderer")
+        self.assertEqual(
+            data["bot_selector"], "programy.clients.botfactory.DefaultBotSelector"
+        )
+        self.assertEqual(data["renderer"], "programy.clients.render.text.TextRenderer")
 
-        self.assertTrue('bots' in data)
-        self.assertTrue('bot' in data['bots'])
-        self.assertEqual(data['bot_selector'], "programy.clients.botfactory.DefaultBotSelector")
+        self.assertTrue("bots" in data)
+        self.assertTrue("bot" in data["bots"])
+        self.assertEqual(
+            data["bot_selector"], "programy.clients.botfactory.DefaultBotSelector"
+        )
 
-        self.assertTrue('brains' in data['bots']['bot'])
-        self.assertTrue('brain' in data['bots']['bot']['brains'])
+        self.assertTrue("brains" in data["bots"]["bot"])
+        self.assertTrue("brain" in data["bots"]["bot"]["brains"])

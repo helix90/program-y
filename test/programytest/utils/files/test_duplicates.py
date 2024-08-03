@@ -1,8 +1,12 @@
 import os
 import unittest
-from programy.utils.files.filewriter import DuplicatesFileWriter
-from programy.utils.files.filewriter import FileWriterConfiguration
+
 from programytest.utils.files.utils import get_os_specific_path
+
+from programy.utils.files.filewriter import (
+    DuplicatesFileWriter,
+    FileWriterConfiguration,
+)
 
 
 class DuplicatesFileWriterTests(unittest.TestCase):
@@ -10,7 +14,13 @@ class DuplicatesFileWriterTests(unittest.TestCase):
     def test_init(self):
 
         filename = get_os_specific_path() + os.sep + "duplicates.txt"
-        config = FileWriterConfiguration(filename=filename, fileformat="txt", mode="a", encoding="utf-8", delete_on_start=False)
+        config = FileWriterConfiguration(
+            filename=filename,
+            fileformat="txt",
+            mode="a",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
 
         writer = DuplicatesFileWriter(config)
         self.assertIsNotNone(writer)

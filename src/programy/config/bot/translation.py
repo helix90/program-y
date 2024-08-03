@@ -15,9 +15,8 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
-from programy.utils.logging.ylogger import YLogger
-
 from programy.config.base import BaseConfigurationData
+from programy.utils.logging.ylogger import YLogger
 from programy.utils.substitutions.substitues import Substitutions
 
 
@@ -41,23 +40,35 @@ class BotTranslatorConfiguration(BaseConfigurationData):
     def to_lang(self):
         return self._to_lang
 
-    def load_config_section(self, configuration_file, configuration, bot_root, subs: Substitutions = None):
+    def load_config_section(
+        self, configuration_file, configuration, bot_root, subs: Substitutions = None
+    ):
         del bot_root
         translation = configuration_file.get_section(self._section_name, configuration)
         if translation is not None:
-            self._classname = configuration_file.get_option(translation, "classname", missing_value=None, subs=subs)
-            self._from_lang = configuration_file.get_option(translation, "from", missing_value=None, subs=subs)
-            self._to_lang = configuration_file.get_option(translation, "to", missing_value=None, subs=subs)
+            self._classname = configuration_file.get_option(
+                translation, "classname", missing_value=None, subs=subs
+            )
+            self._from_lang = configuration_file.get_option(
+                translation, "from", missing_value=None, subs=subs
+            )
+            self._to_lang = configuration_file.get_option(
+                translation, "to", missing_value=None, subs=subs
+            )
         else:
-            YLogger.warning(self, "'translation' section missing from bot config, using defaults")
+            YLogger.warning(
+                self, "'translation' section missing from bot config, using defaults"
+            )
 
     def to_yaml(self, data, defaults=True):
         if defaults is True:
-            data['classname'] = "programy.nlp.translate.textblob_translator.TextBlobTranslator"
-            data['from'] = None
-            data['to'] = None
+            data["classname"] = (
+                "programy.nlp.translate.textblob_translator.TextBlobTranslator"
+            )
+            data["from"] = None
+            data["to"] = None
 
         else:
-            data['classname'] = self._classname
-            data['from'] = self._from_lang
-            data['to'] = self._to_lang
+            data["classname"] = self._classname
+            data["from"] = self._from_lang
+            data["to"] = self._to_lang

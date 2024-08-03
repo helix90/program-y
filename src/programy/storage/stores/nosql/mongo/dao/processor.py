@@ -14,10 +14,11 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 from programy.storage.stores.utils import DAOUtils
 
 
-class Processor():
+class Processor:
 
     def __init__(self, classname):
         self.id = None
@@ -26,7 +27,7 @@ class Processor():
     def to_document(self):
         document = {"classname": self.classname}
         if self.id is not None:
-            document['_id'] = self.id
+            document["_id"] = self.id
         return document
 
 
@@ -37,13 +38,15 @@ class PreProcessor(Processor):
 
     def __repr__(self):
         return "<PreProcessor(id='%s', classname='%s')>" % (
-            DAOUtils.valid_id(self.id), self.classname)
+            DAOUtils.valid_id(self.id),
+            self.classname,
+        )
 
     @staticmethod
     def from_document(data):
         processor = PreProcessor(None)
-        processor.id = DAOUtils.get_value_from_data(data, '_id')
-        processor.classname = DAOUtils.get_value_from_data(data, 'classname')
+        processor.id = DAOUtils.get_value_from_data(data, "_id")
+        processor.classname = DAOUtils.get_value_from_data(data, "classname")
         return processor
 
 
@@ -54,13 +57,15 @@ class PostProcessor(Processor):
 
     def __repr__(self):
         return "<PostProcessor(id='%s', classname='%s')>" % (
-            DAOUtils.valid_id(self.id), self.classname)
+            DAOUtils.valid_id(self.id),
+            self.classname,
+        )
 
     @staticmethod
     def from_document(data):
         processor = PostProcessor(None)
-        processor.id = DAOUtils.get_value_from_data(data, '_id')
-        processor.classname = DAOUtils.get_value_from_data(data, 'classname')
+        processor.id = DAOUtils.get_value_from_data(data, "_id")
+        processor.classname = DAOUtils.get_value_from_data(data, "classname")
         return processor
 
 
@@ -71,11 +76,13 @@ class PostQuestionProcessor(Processor):
 
     def __repr__(self):
         return "<PostQuestionProcessor(id='%s', classname='%s')>" % (
-            DAOUtils.valid_id(self.id), self.classname)
+            DAOUtils.valid_id(self.id),
+            self.classname,
+        )
 
     @staticmethod
     def from_document(data):
         processor = PostQuestionProcessor(None)
-        processor.id = DAOUtils.get_value_from_data(data, '_id')
-        processor.classname = DAOUtils.get_value_from_data(data, 'classname')
+        processor.id = DAOUtils.get_value_from_data(data, "_id")
+        processor.classname = DAOUtils.get_value_from_data(data, "classname")
         return processor

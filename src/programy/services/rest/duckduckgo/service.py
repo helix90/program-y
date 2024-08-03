@@ -14,11 +14,12 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-import urllib.parse
+
 import os
+import urllib.parse
+
 from programy.services.base import ServiceQuery
-from programy.services.rest.base import RESTService
-from programy.services.rest.base import RESTServiceException
+from programy.services.rest.base import RESTService, RESTServiceException
 from programy.utils.logging.ylogger import YLogger
 
 
@@ -39,8 +40,8 @@ class DuckDuckInstantQuery(ServiceQuery):
         return self._service.instant(self._query)
 
     def aiml_response(self, response):
-        payload = response['response']['payload']
-        result = payload['AbstractText']
+        payload = response["response"]["payload"]
+        result = payload["AbstractText"]
         YLogger.debug(self, result)
         return result
 
@@ -62,8 +63,8 @@ class DuckDuckScrapeQuery(ServiceQuery):
         return self._service.scrape(self._query)
 
     def aiml_response(self, response):
-        payload = response['response']['payload']
-        result = payload['AbstractText']
+        payload = response["response"]["payload"]
+        result = payload["AbstractText"]
         YLogger.debug(self, result)
         return result
 
@@ -78,13 +79,14 @@ class DuckDuckGoService(RESTService):
     """
     http://www.duckduckgo.com
     """
+
     PATTERNS = [
         [r"INSTANT\s(.+)", DuckDuckInstantQuery],
-        [r"SCRAPE\s(.+)", DuckDuckScrapeQuery]
+        [r"SCRAPE\s(.+)", DuckDuckScrapeQuery],
     ]
 
-    BASE_INSTANT_URL="http://api.duckduckgo.com"
-    BASE_HTTPSCRAPE_URL="https://duckduckgo.com/html/q={0}"
+    BASE_INSTANT_URL = "http://api.duckduckgo.com"
+    BASE_HTTPSCRAPE_URL = "https://duckduckgo.com/html/q={0}"
 
     def __init__(self, configuration):
         RESTService.__init__(self, configuration)
@@ -109,7 +111,7 @@ class DuckDuckGoService(RESTService):
 
     def instant(self, term):
         url = self._build_instant_url(term)
-        response = self.query('instant', url)
+        response = self.query("instant", url)
         return response
 
     def _build_scrape_url(self, term):
@@ -118,7 +120,7 @@ class DuckDuckGoService(RESTService):
 
     def scrape(self, term):
         url = self._build_instant_url(term)
-        response = self.query('scrape', url)
+        response = self.query("scrape", url)
         return response
 
     def _response_to_json(self, api, response):

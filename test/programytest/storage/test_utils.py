@@ -1,8 +1,10 @@
 import datetime
 import unittest
+
+from programytest.client import TestClient
+
 from programy.dialog.conversation import Conversation
 from programy.dialog.question import Question
-from programytest.client import TestClient
 
 
 class StorageEngineTestUtils(unittest.TestCase):
@@ -22,15 +24,20 @@ class StorageEngineTestUtils(unittest.TestCase):
 
     def link_asserts(self, storage_engine):
         link_store = storage_engine.link_store()
-        link_store.create_link(primary_userid=1, generated_key='AFG37CE', provided_key="Password", expires=datetime.datetime.now())
-        link_store.commit ()
+        link_store.create_link(
+            primary_userid=1,
+            generated_key="AFG37CE",
+            provided_key="Password",
+            expires=datetime.datetime.now(),
+        )
+        link_store.commit()
 
     def property_asserts(self, storage_engine):
         property_store = storage_engine.property_store()
         property_store.add_property(name="topic", value="*")
-        property_store.add_properties({"name": "Fred",
-                                       "age": "47",
-                                       "occupation": "Gardener"})
+        property_store.add_properties(
+            {"name": "Fred", "age": "47", "occupation": "Gardener"}
+        )
         property_store.commit()
 
     def conversation_asserts(self, storage_engine, visit=True):
@@ -50,7 +57,14 @@ class StorageEngineTestUtils(unittest.TestCase):
 
     def category_asserts(self, storage_engine):
         category_store = storage_engine.category_store()
-        category_store.store_category(groupid="group1", userid="keiffster", topic="*", that=None, pattern="Hello", template="Hi there!")
+        category_store.store_category(
+            groupid="group1",
+            userid="keiffster",
+            topic="*",
+            that=None,
+            pattern="Hello",
+            template="Hi there!",
+        )
         category_store.commit()
 
     def twitter_asserts(self, storage_engine, visit=True):
@@ -61,4 +75,3 @@ class StorageEngineTestUtils(unittest.TestCase):
         last_direct_message_id, last_status_id = twitter_store.load_last_message_ids()
         self.assertEqual(1, int(last_direct_message_id))
         self.assertEqual(2, int(last_status_id))
-

@@ -14,9 +14,10 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
-from programy.parser.template.nodes.base import TemplateNode
+
 from programy.parser.exceptions import ParserException
+from programy.parser.template.nodes.base import TemplateNode
+from programy.utils.logging.ylogger import YLogger
 
 
 class TemplateResetLearnNode(TemplateNode):
@@ -25,7 +26,11 @@ class TemplateResetLearnNode(TemplateNode):
         TemplateNode.__init__(self)
 
     def resolve_to_string(self, client_context):
-        YLogger.debug(client_context, "Removing all learn nodes created by [%s]", client_context.userid)
+        YLogger.debug(
+            client_context,
+            "Removing all learn nodes created by [%s]",
+            client_context.userid,
+        )
         root = client_context.brain.aiml_parser.pattern_parser.root
         root.remove_children_with_userid(client_context.userid)
         return ""
@@ -43,4 +48,5 @@ class TemplateResetLearnNode(TemplateNode):
         self._parse_node(graph, expression)
         if self.children:
             raise ParserException(
-                "<resetlearn> node should not contain child text, use <resetlearn /> or <resetlearn></resetlearn> only")
+                "<resetlearn> node should not contain child text, use <resetlearn /> or <resetlearn></resetlearn> only"
+            )

@@ -14,10 +14,12 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.parsing.linenumxml import LineNumberingParser
+
 import xml.etree.ElementTree as ET  # pylint: disable=wrong-import-order
-from programy.utils.logging.ylogger import YLogger
+
 from programy.oob.callmom.oob import OutOfBandProcessor
+from programy.utils.logging.ylogger import YLogger
+from programy.utils.parsing.linenumxml import LineNumberingParser
 
 
 class ScheduleOutOfBandProcessor(OutOfBandProcessor):
@@ -36,20 +38,23 @@ class ScheduleOutOfBandProcessor(OutOfBandProcessor):
     def parse_oob_xml(self, oob: ET.Element):
         if oob is not None:
             for child in oob:
-                if child.tag == 'title':
+                if child.tag == "title":
                     self._title = child.text
-                elif child.tag == 'description':
+                elif child.tag == "description":
                     self._description = child.text
                 else:
-                    YLogger.error(self, "Unknown child element [%s] in schedule oob", child.tag)
+                    YLogger.error(
+                        self, "Unknown child element [%s] in schedule oob", child.tag
+                    )
 
-            if self._title is not None and \
-                    self._description is not None:
+            if self._title is not None and self._description is not None:
                 return True
 
         YLogger.error(self, "Invalid email schedule command")
         return False
 
     def execute_oob_command(self, client_context):
-        YLogger.info(client_context, "ScheduleOutOfBandProcessor: Scheduling=%s", self._title)
+        YLogger.info(
+            client_context, "ScheduleOutOfBandProcessor: Scheduling=%s", self._title
+        )
         return "SCHEDULE"

@@ -1,11 +1,12 @@
 import os
 import xml.etree.ElementTree as ET
 
+from programytest.parser.base import ParserTestsBaseClass
+
 from programy.parser.exceptions import ParserException
 from programy.parser.template.nodes.base import TemplateNode
 from programy.parser.template.nodes.system import TemplateSystemNode
 from programy.parser.template.nodes.word import TemplateWordNode
-from programytest.parser.base import ParserTestsBaseClass
 
 
 class MockTemplateSystemNode(TemplateSystemNode):
@@ -37,10 +38,10 @@ class TemplateSystemNodeTests(ParserTestsBaseClass):
         response = root.resolve(self._client_context)
         self.assertIsNotNone(response)
 
-        if os.name == 'posix':
+        if os.name == "posix":
             self.assertEqual(response, "Hello World")
-        elif os.name == 'nt':
-                self.assertEqual(response, '"Hello World"')
+        elif os.name == "nt":
+            self.assertEqual(response, '"Hello World"')
         else:
             self.assertFalse(True)
 
@@ -63,10 +64,10 @@ class TemplateSystemNodeTests(ParserTestsBaseClass):
 
         response = root.resolve(self._client_context)
         self.assertIsNotNone(response)
-        if os.name == 'posix':
+        if os.name == "posix":
             self.assertEqual(response, "Hello World")
-        elif os.name == 'nt':
-                self.assertEqual(response, '"Hello World"')
+        elif os.name == "nt":
+            self.assertEqual(response, '"Hello World"')
         else:
             self.assertFalse(True)
 
@@ -108,7 +109,9 @@ class TemplateSystemNodeTests(ParserTestsBaseClass):
         xml = root.xml_tree(self._client_context)
         self.assertIsNotNone(xml)
         xml_str = ET.tostring(xml, "utf-8").decode("utf-8")
-        self.assertEqual('<template><system>echo "Hello World"</system></template>', xml_str)
+        self.assertEqual(
+            '<template><system>echo "Hello World"</system></template>', xml_str
+        )
 
     def test_to_xml_with_timeout(self):
         root = TemplateNode()
@@ -121,7 +124,10 @@ class TemplateSystemNodeTests(ParserTestsBaseClass):
         xml = root.xml_tree(self._client_context)
         self.assertIsNotNone(xml)
         xml_str = ET.tostring(xml, "utf-8").decode("utf-8")
-        self.assertEqual('<template><system timeout="100">echo "Hello World"</system></template>', xml_str)
+        self.assertEqual(
+            '<template><system timeout="100">echo "Hello World"</system></template>',
+            xml_str,
+        )
 
     def test_to_xml_with_timeout_is_zero(self):
         root = TemplateNode()
@@ -134,7 +140,9 @@ class TemplateSystemNodeTests(ParserTestsBaseClass):
         xml = root.xml_tree(self._client_context)
         self.assertIsNotNone(xml)
         xml_str = ET.tostring(xml, "utf-8").decode("utf-8")
-        self.assertEqual('<template><system>echo "Hello World"</system></template>', xml_str)
+        self.assertEqual(
+            '<template><system>echo "Hello World"</system></template>', xml_str
+        )
 
     def test_node_exception_handling(self):
         root = TemplateNode()

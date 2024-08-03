@@ -1,8 +1,9 @@
 import unittest
 
+from programytest.client import TestClient
+
 from programy.context import ClientContext
 from programy.dynamic.maps.lemmatize import LemmatizeMap
-from programytest.client import TestClient
 
 
 class TestLemmatizeMaps(unittest.TestCase):

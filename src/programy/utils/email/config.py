@@ -15,9 +15,8 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
-from programy.utils.logging.ylogger import YLogger
-
 from programy.config.base import BaseConfigurationData
+from programy.utils.logging.ylogger import YLogger
 from programy.utils.substitutions.substitues import Substitutions
 
 
@@ -62,31 +61,45 @@ class EmailConfiguration(BaseConfigurationData):
 
         super(EmailConfiguration, self).check_for_license_keys(license_keys)
 
-    def load_config_section(self, configuration_file, configuration, bot_root, subs: Substitutions = None):
+    def load_config_section(
+        self, configuration_file, configuration, bot_root, subs: Substitutions = None
+    ):
         del bot_root
         del subs
         email = configuration_file.get_section(self._section_name, configuration)
         if email is not None:
-            self._host = configuration_file.get_option(email, "host", missing_value=None)
-            self._port = configuration_file.get_option(email, "port", missing_value=None)
-            self._username = configuration_file.get_option(email, "username", missing_value=None)
-            self._password = configuration_file.get_option(email, "password", missing_value=None)
-            self._from_addr = configuration_file.get_option(email, "from_addr", missing_value=None)
+            self._host = configuration_file.get_option(
+                email, "host", missing_value=None
+            )
+            self._port = configuration_file.get_option(
+                email, "port", missing_value=None
+            )
+            self._username = configuration_file.get_option(
+                email, "username", missing_value=None
+            )
+            self._password = configuration_file.get_option(
+                email, "password", missing_value=None
+            )
+            self._from_addr = configuration_file.get_option(
+                email, "from_addr", missing_value=None
+            )
             if self._from_addr is None:
                 self._from_addr = self._username
         else:
-            YLogger.warning(self, "'email' section missing from bot config, using defaults")
+            YLogger.warning(
+                self, "'email' section missing from bot config, using defaults"
+            )
 
     def to_yaml(self, data, defaults=True):
         if defaults is True:
-            data['host'] = None
-            data['port'] = None
-            data['username'] = None
-            data['password'] = None
-            data['from_addr'] = None
+            data["host"] = None
+            data["port"] = None
+            data["username"] = None
+            data["password"] = None
+            data["from_addr"] = None
         else:
-            data['host'] = self._host
-            data['port'] = self._port
-            data['username'] = self._username
-            data['password'] = self._password
-            data['from_addr'] = self._from_addr
+            data["host"] = self._host
+            data["port"] = self._port
+            data["username"] = self._username
+            data["password"] = self._password
+            data["from_addr"] = self._from_addr

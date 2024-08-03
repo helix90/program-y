@@ -14,14 +14,17 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 import os
-import metoffer
 from datetime import datetime
-from programy.services.library.metoffice.metoffice import MetOffice
-from programy.utils.logging.ylogger import YLogger
+
+import metoffer
+
 from programy.services.base import ServiceQuery
 from programy.services.library.base import PythonAPIService
+from programy.services.library.metoffice.metoffice import MetOffice
 from programy.services.utils.geocode import GeoCodeUtils
+from programy.utils.logging.ylogger import YLogger
 
 
 class MetOfficeObservationQuery(ServiceQuery):
@@ -50,7 +53,9 @@ class MetOfficeObservationQuery(ServiceQuery):
         return self._service.observation(self._lat, self._lng)
 
     def aiml_response(self, response):
-        observation = MetOffice.parse_observation(response['response']['payload']['observation'])
+        observation = MetOffice.parse_observation(
+            response["response"]["payload"]["observation"]
+        )
         current = observation.get_latest_observation()
         result = current.to_program_y_text()
         YLogger.debug(self, result)
@@ -90,8 +95,12 @@ class MetOfficeHoursForecastQuery(ServiceQuery):
         return time_now.strftime("%Y-%m-%dZ")
 
     def aiml_response(self, response):
-        forecasts = MetOffice.parse_forecast(response['response']['payload']['forecast'], metoffer.THREE_HOURLY)
-        forecast = forecasts.get_forecast_for_n_hours_ahead(self._hours, fromdate=self._get_current_date())
+        forecasts = MetOffice.parse_forecast(
+            response["response"]["payload"]["forecast"], metoffer.THREE_HOURLY
+        )
+        forecast = forecasts.get_forecast_for_n_hours_ahead(
+            self._hours, fromdate=self._get_current_date()
+        )
         YLogger.debug(self, forecast)
         return forecast
 
@@ -129,8 +138,12 @@ class MetOfficeDaysForecastQuery(ServiceQuery):
         return time_now.strftime("%Y-%m-%dZ")
 
     def aiml_response(self, response):
-        forecasts = MetOffice.parse_forecast(response['response']['payload']['forecast'], metoffer.DAILY)
-        forecast = forecasts.get_forecast_for_n_days_ahead(self._days, fromdate=self._get_current_date())
+        forecasts = MetOffice.parse_forecast(
+            response["response"]["payload"]["forecast"], metoffer.DAILY
+        )
+        forecast = forecasts.get_forecast_for_n_days_ahead(
+            self._days, fromdate=self._get_current_date()
+        )
         YLogger.debug(self, forecast)
         return forecast
 
@@ -138,9 +151,18 @@ class MetOfficeDaysForecastQuery(ServiceQuery):
 class MetOfficeService(PythonAPIService):
 
     PATTERNS = [
-        [r"OBSERVATION\sLAT\sSIGN\s(.+)\sDEC\s(.+)\sFRAC\s(.+)\sLNG\sSIGN\s(.+)\sDEC\s(.+)\sFRAC\s(.+)", MetOfficeObservationQuery],
-        [r"FORECAST\sLAT\sSIGN\s(.+)\sDEC\s(.+)\sFRAC\s(.+)\sLNG\sSIGN\s(.+)\sDEC\s(.+)\sFRAC\s(.+)\sHOURS\s(.+)", MetOfficeHoursForecastQuery],
-        [r"FORECAST\sLAT\sSIGN\s(.+)\sDEC\s(.+)\sFRAC\s(.+)\sLNG\sSIGN\s(.+)\sDEC\s(.+)\sFRAC\s(.+)\sDAYS\s(.+)", MetOfficeDaysForecastQuery]
+        [
+            r"OBSERVATION\sLAT\sSIGN\s(.+)\sDEC\s(.+)\sFRAC\s(.+)\sLNG\sSIGN\s(.+)\sDEC\s(.+)\sFRAC\s(.+)",
+            MetOfficeObservationQuery,
+        ],
+        [
+            r"FORECAST\sLAT\sSIGN\s(.+)\sDEC\s(.+)\sFRAC\s(.+)\sLNG\sSIGN\s(.+)\sDEC\s(.+)\sFRAC\s(.+)\sHOURS\s(.+)",
+            MetOfficeHoursForecastQuery,
+        ],
+        [
+            r"FORECAST\sLAT\sSIGN\s(.+)\sDEC\s(.+)\sFRAC\s(.+)\sLNG\sSIGN\s(.+)\sDEC\s(.+)\sFRAC\s(.+)\sDAYS\s(.+)",
+            MetOfficeDaysForecastQuery,
+        ],
     ]
 
     def __init__(self, configuration):
@@ -163,7 +185,10 @@ class MetOfficeService(PythonAPIService):
     def initialise(self, client):
         self._api_key = client.license_keys.get_key("METOFFICE_API_KEY")
         if self._api_key is None:
-            YLogger.error(self, "METOFFICE_API_KEY missing from license.keys, service will not function correctly!")
+            YLogger.error(
+                self,
+                "METOFFICE_API_KEY missing from license.keys, service will not function correctly!",
+            )
         self._met_office = MetOffice(self._api_key)
 
     def observation(self, lat, long):
@@ -175,12 +200,16 @@ class MetOfficeService(PythonAPIService):
 
             if data is not None:
                 result = {"observation": data}
-                return self._create_success_payload("observation", started, speed, result)
+                return self._create_success_payload(
+                    "observation", started, speed, result
+                )
 
             return self._create_failure_payload("observation", started, speed)
 
         except Exception as error:
-            return self._create_exception_failure_payload("observation", started, speed, error)
+            return self._create_exception_failure_payload(
+                "observation", started, speed, error
+            )
 
     def forecast(self, lat, long, forecast):
         started = datetime.now()
@@ -204,5 +233,6 @@ class MetOfficeService(PythonAPIService):
             return self._create_failure_payload("forecast", started, speed)
 
         except Exception as error:
-            return self._create_exception_failure_payload("forecast", started, speed, error)
-
+            return self._create_exception_failure_payload(
+                "forecast", started, speed, error
+            )

@@ -1,8 +1,9 @@
 import unittest
 
+from programytest.client import TestClient
+
 from programy.context import ClientContext
 from programy.processors.pre.toupper import ToUpperPreProcessor
-from programytest.client import TestClient
 
 
 class ToUpperTests(unittest.TestCase):

@@ -1,14 +1,17 @@
 import unittest
+
 from programy.clients.events.console.config import ConsoleConfiguration
 from programy.config.file.yaml_file import YamlConfigurationFile
-from programy.scheduling.config import SchedulerConfiguration
-from programy.scheduling.config import SchedulerJobStoreConfiguration
-from programy.scheduling.config import SchedulerThreadPoolConfiguration
-from programy.scheduling.config import SchedulerProcessPoolConfiguration
-from programy.scheduling.config import SchedulerJobDefaultsConfiguration
-from programy.scheduling.config import SchedulerMongoJobStoreConfiguration
-from programy.scheduling.config import SchedulerRedisJobStoreConfiguration
-from programy.scheduling.config import SchedulerSqlAlchemyJobStoreConfiguration
+from programy.scheduling.config import (
+    SchedulerConfiguration,
+    SchedulerJobDefaultsConfiguration,
+    SchedulerJobStoreConfiguration,
+    SchedulerMongoJobStoreConfiguration,
+    SchedulerProcessPoolConfiguration,
+    SchedulerRedisJobStoreConfiguration,
+    SchedulerSqlAlchemyJobStoreConfiguration,
+    SchedulerThreadPoolConfiguration,
+)
 
 
 class SchedulerConfigurationTests(unittest.TestCase):
@@ -16,7 +19,8 @@ class SchedulerConfigurationTests(unittest.TestCase):
     def test_with_data(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         console:
           scheduler:
             name: Scheduler1
@@ -47,7 +51,10 @@ class SchedulerConfigurationTests(unittest.TestCase):
                 coalesce: False
                 max_instances: 3
           
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         console_config = yaml.get_section("console")
 
@@ -76,10 +83,14 @@ class SchedulerConfigurationTests(unittest.TestCase):
     def test_without_data(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         bot:
             scheduler:
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         console_config = yaml.get_section("console")
 
@@ -99,9 +110,13 @@ class SchedulerConfigurationTests(unittest.TestCase):
     def test_with_no_data(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         bot:
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         console_config = yaml.get_section("console")
 
@@ -121,7 +136,8 @@ class SchedulerConfigurationTests(unittest.TestCase):
     def test_create_scheduler_config_mongo(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         console:
           scheduler:
             name: Scheduler1
@@ -145,7 +161,10 @@ class SchedulerConfigurationTests(unittest.TestCase):
                 coalesce: False
                 max_instances: 3
 
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         console_config = yaml.get_section("console")
 
@@ -158,7 +177,8 @@ class SchedulerConfigurationTests(unittest.TestCase):
     def test_create_scheduler_config_redis(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         console:
           scheduler:
             name: Scheduler1
@@ -183,7 +203,10 @@ class SchedulerConfigurationTests(unittest.TestCase):
                 coalesce: False
                 max_instances: 3
 
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         console_config = yaml.get_section("console")
 
@@ -196,7 +219,8 @@ class SchedulerConfigurationTests(unittest.TestCase):
     def test_create_scheduler_config_sqlalchemy(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         console:
           scheduler:
             name: Scheduler1
@@ -219,7 +243,10 @@ class SchedulerConfigurationTests(unittest.TestCase):
                 coalesce: False
                 max_instances: 3
 
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         console_config = yaml.get_section("console")
 
@@ -232,7 +259,8 @@ class SchedulerConfigurationTests(unittest.TestCase):
     def test_create_scheduler_config_unknown(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         console:
           scheduler:
             name: Scheduler1
@@ -253,7 +281,10 @@ class SchedulerConfigurationTests(unittest.TestCase):
                 coalesce: False
                 max_instances: 3
 
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         console_config = yaml.get_section("console")
 
@@ -266,7 +297,8 @@ class SchedulerConfigurationTests(unittest.TestCase):
     def test_jobstore_sqlachemy(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         console:
           scheduler:
             jobstore:
@@ -274,7 +306,10 @@ class SchedulerConfigurationTests(unittest.TestCase):
                 sqlalchemy:
                     url: sqlite:///jobs.sqlite
 
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         console_config = yaml.get_section("console")
         self.assertIsNotNone(console_config)
@@ -288,7 +323,8 @@ class SchedulerConfigurationTests(unittest.TestCase):
     def test_jobstore_mongo(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         console:
           scheduler:
             jobstore:
@@ -296,7 +332,10 @@ class SchedulerConfigurationTests(unittest.TestCase):
                 mongo:
                     collection: example_jobs
 
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         console_config = yaml.get_section("console")
         self.assertIsNotNone(console_config)
@@ -310,7 +349,8 @@ class SchedulerConfigurationTests(unittest.TestCase):
     def test_jobstore_redis(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         console:
           scheduler:
             jobstore:
@@ -319,7 +359,10 @@ class SchedulerConfigurationTests(unittest.TestCase):
                 jobs_key: example.jobs
                 run_times_key: example.run_times
 
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         console_config = yaml.get_section("console")
         self.assertIsNotNone(console_config)
@@ -333,11 +376,15 @@ class SchedulerConfigurationTests(unittest.TestCase):
     def test_jobstore_no_jobstore(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         console:
           scheduler:
 
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         console_config = yaml.get_section("console")
         self.assertIsNotNone(console_config)
@@ -348,13 +395,17 @@ class SchedulerConfigurationTests(unittest.TestCase):
     def test_jobstore_unknown(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         console:
           scheduler:
             jobstore:
                 name:   unknown
 
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         console_config = yaml.get_section("console")
         self.assertIsNotNone(console_config)
@@ -368,13 +419,17 @@ class SchedulerConfigurationTests(unittest.TestCase):
     def test_threadpool(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         console:
           scheduler:
             threadpool:
                 max_workers: 20
 
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         console_config = yaml.get_section("console")
         self.assertIsNotNone(console_config)
@@ -388,11 +443,15 @@ class SchedulerConfigurationTests(unittest.TestCase):
     def test_threadpool_no_threadpool(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
          console:
            scheduler:
 
-         """, ConsoleConfiguration(), ".")
+         """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         console_config = yaml.get_section("console")
         self.assertIsNotNone(console_config)
@@ -403,13 +462,17 @@ class SchedulerConfigurationTests(unittest.TestCase):
     def test_processpool(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         console:
           scheduler:
             processpool:
                 max_workers: 5   
 
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         console_config = yaml.get_section("console")
         self.assertIsNotNone(console_config)
@@ -423,11 +486,15 @@ class SchedulerConfigurationTests(unittest.TestCase):
     def test_processpool_no_processpool(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         console:
           scheduler:
 
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         console_config = yaml.get_section("console")
         self.assertIsNotNone(console_config)
@@ -438,14 +505,18 @@ class SchedulerConfigurationTests(unittest.TestCase):
     def test_job_defaults(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         console:
           scheduler:
             job_defaults:
                 coalesce: False
                 max_instances: 3
 
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         console_config = yaml.get_section("console")
         self.assertIsNotNone(console_config)
@@ -459,11 +530,15 @@ class SchedulerConfigurationTests(unittest.TestCase):
     def test_job_defaults_no_defaults(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         console:
           scheduler:
 
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         console_config = yaml.get_section("console")
         self.assertIsNotNone(console_config)
@@ -482,7 +557,10 @@ class SchedulerConfigurationTests(unittest.TestCase):
 
         data = {}
         config._create_mongo_jobstore_config(data)
-        self.assertEquals(data['apscheduler.jobstores.mongo'], {'type': 'mongodb', 'collection': 'mockcollection'})
+        self.assertEquals(
+            data["apscheduler.jobstores.mongo"],
+            {"type": "mongodb", "collection": "mockcollection"},
+        )
 
     def test_create_mongo_jobstore_config_no_jobstore(self):
         config = SchedulerConfiguration()
@@ -490,7 +568,7 @@ class SchedulerConfigurationTests(unittest.TestCase):
 
         data = {}
         config._create_mongo_jobstore_config(data)
-        self.assertEquals(data['apscheduler.jobstores.mongo'], {'type': 'mongodb'})
+        self.assertEquals(data["apscheduler.jobstores.mongo"], {"type": "mongodb"})
 
     def test_create_mongo_jobstore_config_no_storage(self):
         config = SchedulerConfiguration()
@@ -501,7 +579,7 @@ class SchedulerConfigurationTests(unittest.TestCase):
 
         data = {}
         config._create_mongo_jobstore_config(data)
-        self.assertEquals(data['apscheduler.jobstores.mongo'], {'type': 'mongodb'})
+        self.assertEquals(data["apscheduler.jobstores.mongo"], {"type": "mongodb"})
 
     def test_create_mongo_jobstore_config_no_storage_collection(self):
         config = SchedulerConfiguration()
@@ -512,7 +590,7 @@ class SchedulerConfigurationTests(unittest.TestCase):
 
         data = {}
         config._create_mongo_jobstore_config(data)
-        self.assertEquals(data['apscheduler.jobstores.mongo'], {'type': 'mongodb'})
+        self.assertEquals(data["apscheduler.jobstores.mongo"], {"type": "mongodb"})
 
     def test_create_redis_storage_config(self):
         config = SchedulerConfiguration()
@@ -526,7 +604,10 @@ class SchedulerConfigurationTests(unittest.TestCase):
 
         data = {}
         config._create_redis_jobstore_config(data)
-        self.assertEquals(data['apscheduler.jobstores.redis'], {'jobs_key': 'job', 'run_times_key': 'runtime', 'type': 'redis'})
+        self.assertEquals(
+            data["apscheduler.jobstores.redis"],
+            {"jobs_key": "job", "run_times_key": "runtime", "type": "redis"},
+        )
 
     def test_create_redis_jobstore_config_no_jobstore(self):
         config = SchedulerConfiguration()
@@ -534,7 +615,7 @@ class SchedulerConfigurationTests(unittest.TestCase):
 
         data = {}
         config._create_redis_jobstore_config(data)
-        self.assertEquals(data['apscheduler.jobstores.redis'], {'type': 'redis'})
+        self.assertEquals(data["apscheduler.jobstores.redis"], {"type": "redis"})
 
     def test_create_redis_jobstore_config_no_storage(self):
         config = SchedulerConfiguration()
@@ -545,7 +626,7 @@ class SchedulerConfigurationTests(unittest.TestCase):
 
         data = {}
         config._create_redis_jobstore_config(data)
-        self.assertEquals(data['apscheduler.jobstores.redis'], {'type': 'redis'})
+        self.assertEquals(data["apscheduler.jobstores.redis"], {"type": "redis"})
 
     def test_create_redis_jobstore_config_no_keys(self):
         config = SchedulerConfiguration()
@@ -557,7 +638,7 @@ class SchedulerConfigurationTests(unittest.TestCase):
 
         data = {}
         config._create_redis_jobstore_config(data)
-        self.assertEquals(data['apscheduler.jobstores.redis'], {'type': 'redis'})
+        self.assertEquals(data["apscheduler.jobstores.redis"], {"type": "redis"})
 
     def test_create_sqlalchemy_storage_config(self):
         config = SchedulerConfiguration()
@@ -570,7 +651,10 @@ class SchedulerConfigurationTests(unittest.TestCase):
 
         data = {}
         config._create_sqlalchemy_jobstore_config(data)
-        self.assertEquals(data['apscheduler.jobstores.sqlalchemy'], {'type': 'sqlalchemy', 'url': 'sqlite://programy'})
+        self.assertEquals(
+            data["apscheduler.jobstores.sqlalchemy"],
+            {"type": "sqlalchemy", "url": "sqlite://programy"},
+        )
 
     def test_create_sqlalchemy_jobstore_config_no_jobstore(self):
         config = SchedulerConfiguration()
@@ -578,7 +662,9 @@ class SchedulerConfigurationTests(unittest.TestCase):
 
         data = {}
         config._create_sqlalchemy_jobstore_config(data)
-        self.assertEquals(data['apscheduler.jobstores.sqlalchemy'], {'type': 'sqlalchemy'})
+        self.assertEquals(
+            data["apscheduler.jobstores.sqlalchemy"], {"type": "sqlalchemy"}
+        )
 
     def test_create_sqlalchemy_jobstore_config_no_storage(self):
         config = SchedulerConfiguration()
@@ -589,7 +675,9 @@ class SchedulerConfigurationTests(unittest.TestCase):
 
         data = {}
         config._create_sqlalchemy_jobstore_config(data)
-        self.assertEquals(data['apscheduler.jobstores.sqlalchemy'], {'type': 'sqlalchemy'})
+        self.assertEquals(
+            data["apscheduler.jobstores.sqlalchemy"], {"type": "sqlalchemy"}
+        )
 
     def test_create_sqlalchemy_jobstore_storage_no_url(self):
         config = SchedulerConfiguration()
@@ -601,7 +689,9 @@ class SchedulerConfigurationTests(unittest.TestCase):
 
         data = {}
         config._create_sqlalchemy_jobstore_config(data)
-        self.assertEquals(data['apscheduler.jobstores.sqlalchemy'], {'type': 'sqlalchemy'})
+        self.assertEquals(
+            data["apscheduler.jobstores.sqlalchemy"], {"type": "sqlalchemy"}
+        )
 
     def test_create_threadpool_config(self):
         config = SchedulerConfiguration()
@@ -612,7 +702,13 @@ class SchedulerConfigurationTests(unittest.TestCase):
 
         data = {}
         config._create_threadpool_config(data)
-        self.assertEquals(data['apscheduler.executors.default'], {'class': 'apscheduler.executors.pool:ThreadPoolExecutor', 'max_workers': '3'})
+        self.assertEquals(
+            data["apscheduler.executors.default"],
+            {
+                "class": "apscheduler.executors.pool:ThreadPoolExecutor",
+                "max_workers": "3",
+            },
+        )
 
     def test_create_threadpool_config_no_config(self):
         config = SchedulerConfiguration()
@@ -620,7 +716,10 @@ class SchedulerConfigurationTests(unittest.TestCase):
 
         data = {}
         config._create_threadpool_config(data)
-        self.assertEquals(data['apscheduler.executors.default'], {'class': 'apscheduler.executors.pool:ThreadPoolExecutor'})
+        self.assertEquals(
+            data["apscheduler.executors.default"],
+            {"class": "apscheduler.executors.pool:ThreadPoolExecutor"},
+        )
 
     def test_create_threadpool_config_no_maxworkers(self):
         config = SchedulerConfiguration()
@@ -630,7 +729,10 @@ class SchedulerConfigurationTests(unittest.TestCase):
 
         data = {}
         config._create_threadpool_config(data)
-        self.assertEquals(data['apscheduler.executors.default'], {'class': 'apscheduler.executors.pool:ThreadPoolExecutor'})
+        self.assertEquals(
+            data["apscheduler.executors.default"],
+            {"class": "apscheduler.executors.pool:ThreadPoolExecutor"},
+        )
 
     def test_create_processpool_config(self):
         config = SchedulerConfiguration()
@@ -641,7 +743,10 @@ class SchedulerConfigurationTests(unittest.TestCase):
 
         data = {}
         config._create_processpool_config(data)
-        self.assertEquals(data['apscheduler.executors.processpool'],  {'max_workers': '3', 'type': 'processpool'})
+        self.assertEquals(
+            data["apscheduler.executors.processpool"],
+            {"max_workers": "3", "type": "processpool"},
+        )
 
     def test_create_processpool_config_no_config(self):
         config = SchedulerConfiguration()
@@ -649,7 +754,9 @@ class SchedulerConfigurationTests(unittest.TestCase):
 
         data = {}
         config._create_processpool_config(data)
-        self.assertEquals(data['apscheduler.executors.processpool'],  {'type': 'processpool'})
+        self.assertEquals(
+            data["apscheduler.executors.processpool"], {"type": "processpool"}
+        )
 
     def test_create_processpool_config_no_max_workers(self):
         config = SchedulerConfiguration()
@@ -659,7 +766,9 @@ class SchedulerConfigurationTests(unittest.TestCase):
 
         data = {}
         config._create_processpool_config(data)
-        self.assertEquals(data['apscheduler.executors.processpool'],  {'type': 'processpool'})
+        self.assertEquals(
+            data["apscheduler.executors.processpool"], {"type": "processpool"}
+        )
 
     def test_create_job_defaults_config(self):
         config = SchedulerConfiguration()
@@ -671,7 +780,9 @@ class SchedulerConfigurationTests(unittest.TestCase):
 
         data = {}
         config._create_job_defaults_config(data)
-        self.assertEquals(data['apscheduler.job_defaults'],  {'coalesce': '1', 'max_instances': '3'})
+        self.assertEquals(
+            data["apscheduler.job_defaults"], {"coalesce": "1", "max_instances": "3"}
+        )
 
     def test_create_job_defaults_config_no_config(self):
         config = SchedulerConfiguration()
@@ -679,7 +790,7 @@ class SchedulerConfigurationTests(unittest.TestCase):
 
         data = {}
         config._create_job_defaults_config(data)
-        self.assertEquals(data['apscheduler.job_defaults'],  {})
+        self.assertEquals(data["apscheduler.job_defaults"], {})
 
     def test_create_job_defaults_config_no_values(self):
         config = SchedulerConfiguration()
@@ -689,7 +800,7 @@ class SchedulerConfigurationTests(unittest.TestCase):
 
         data = {}
         config._create_job_defaults_config(data)
-        self.assertEquals(data['apscheduler.job_defaults'],  {})
+        self.assertEquals(data["apscheduler.job_defaults"], {})
 
     def test_defaults(self):
         config = SchedulerConfiguration()
@@ -700,35 +811,38 @@ class SchedulerConfigurationTests(unittest.TestCase):
 
     @staticmethod
     def assert_defaults(test, data):
-        test.assertEqual(data['name'], "scheduler")
-        test.assertEqual(data['debug_level'], 0)
-        test.assertFalse(data['add_listeners'])
-        test.assertFalse(data['remove_all_jobs'])
+        test.assertEqual(data["name"], "scheduler")
+        test.assertEqual(data["debug_level"], 0)
+        test.assertFalse(data["add_listeners"])
+        test.assertFalse(data["remove_all_jobs"])
 
-        test.assertTrue('jobstore' in data)
-        SchedulerConfigurationTests.assert_jobstore_defaults(test, data['jobstore'])
+        test.assertTrue("jobstore" in data)
+        SchedulerConfigurationTests.assert_jobstore_defaults(test, data["jobstore"])
 
-        test.assertTrue('threadpool' in data)
-        SchedulerConfigurationTests.assert_threadpool_defaults(test, data['threadpool'])
+        test.assertTrue("threadpool" in data)
+        SchedulerConfigurationTests.assert_threadpool_defaults(test, data["threadpool"])
 
-        test.assertTrue('processpool' in data)
-        SchedulerConfigurationTests.assert_processpool_defaults(test, data['processpool'])
+        test.assertTrue("processpool" in data)
+        SchedulerConfigurationTests.assert_processpool_defaults(
+            test, data["processpool"]
+        )
 
-        test.assertTrue('job_defaults' in data)
-        SchedulerConfigurationTests.assert_job_defaults_defaults(test, data['job_defaults'])
+        test.assertTrue("job_defaults" in data)
+        SchedulerConfigurationTests.assert_job_defaults_defaults(
+            test, data["job_defaults"]
+        )
 
     def assert_jobstore_defaults(test, data):
-        test.assertEqual(data['name'], "mongo")
-        test.assertTrue('mongo' in data)
-        test.assertEqual(data['mongo']['collection'], "programy")
+        test.assertEqual(data["name"], "mongo")
+        test.assertTrue("mongo" in data)
+        test.assertEqual(data["mongo"]["collection"], "programy")
 
     def assert_threadpool_defaults(test, data):
-        test.assertEqual(data['max_workers'], 20)
+        test.assertEqual(data["max_workers"], 20)
 
     def assert_processpool_defaults(test, data):
-        test.assertEqual(data['max_workers'], 5)
+        test.assertEqual(data["max_workers"], 5)
 
     def assert_job_defaults_defaults(test, data):
-        test.assertFalse(data['coalesce'])
-        test.assertEqual(data['max_instances'], 3)
-
+        test.assertFalse(data["coalesce"])
+        test.assertEqual(data["max_instances"], 3)

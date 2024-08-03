@@ -1,7 +1,7 @@
+import argparse
 import csv
 import os
 import re
-import argparse
 import shutil
 
 
@@ -17,7 +17,7 @@ class VarType(object):
         self._values = []
 
     def extract_values_between_brackets(self, text, var_type):
-        search_str = '%s\((.+?)\)' % var_type
+        search_str = "%s\((.+?)\)" % var_type
         m = re.search(search_str, text)
         if m:
             return m.group(1)
@@ -49,15 +49,26 @@ class SelectVar(VarType):
             for value in self._values:
                 next_step = self.get_next_step(step, value)
                 aiml_file.write(
-                    '\t\t\t\t\t<li value="%s"><srai>%s STEP %s</srai></li>\n' % (value, topic_name, next_step))
-            aiml_file.write('\t\t\t\t\t<li><srai>%s STEP %s</srai></li>\n' % (topic_name, step._step))
-            aiml_file.write('\t\t\t\t</condition>\n')
+                    '\t\t\t\t\t<li value="%s"><srai>%s STEP %s</srai></li>\n'
+                    % (value, topic_name, next_step)
+                )
+            aiml_file.write(
+                "\t\t\t\t\t<li><srai>%s STEP %s</srai></li>\n"
+                % (topic_name, step._step)
+            )
+            aiml_file.write("\t\t\t\t</condition>\n")
         else:
             aiml_file.write('\t\t\t\t<condition name="%s">\n' % step._variable)
             for value in self._values:
-                aiml_file.write('\t\t\t\t\t<li value="%s"><srai>EXECUTE %s</srai></li>\n' % (value, topic_name))
-            aiml_file.write('\t\t\t\t\t<li><srai>%s STEP %s</srai></li>\n' % (topic_name, step._step))
-            aiml_file.write('\t\t\t\t</condition>\n')
+                aiml_file.write(
+                    '\t\t\t\t\t<li value="%s"><srai>EXECUTE %s</srai></li>\n'
+                    % (value, topic_name)
+                )
+            aiml_file.write(
+                "\t\t\t\t\t<li><srai>%s STEP %s</srai></li>\n"
+                % (topic_name, step._step)
+            )
+            aiml_file.write("\t\t\t\t</condition>\n")
 
 
 class DateVar(VarType):
@@ -73,23 +84,39 @@ class DateVar(VarType):
     def output_template(self, aiml_file, topic_name, step):
         if step._conditions:
             next_step = step._conditions[0]._next_step
-            aiml_file.write('\t\t\t\t<think><set name="Valid"><srai>VALID DATE <star /></srai></set></think>\n')
+            aiml_file.write(
+                '\t\t\t\t<think><set name="Valid"><srai>VALID DATE <star /></srai></set></think>\n'
+            )
             aiml_file.write('\t\t\t\t<condition name="Valid">\n')
-            aiml_file.write('\t\t\t\t\t<li value="TRUE"><srai>%s STEP %s</srai></li>\n' % (topic_name, next_step))
-            aiml_file.write('\t\t\t\t\t<li><srai>%s STEP %s</srai></li>\n' % (topic_name, step._step))
-            aiml_file.write('\t\t\t\t</condition>\n')
+            aiml_file.write(
+                '\t\t\t\t\t<li value="TRUE"><srai>%s STEP %s</srai></li>\n'
+                % (topic_name, next_step)
+            )
+            aiml_file.write(
+                "\t\t\t\t\t<li><srai>%s STEP %s</srai></li>\n"
+                % (topic_name, step._step)
+            )
+            aiml_file.write("\t\t\t\t</condition>\n")
         else:
-            aiml_file.write('\t\t\t\t<think><set name="Valid"><srai>VALID DATE <star /></srai></set></think>\n')
+            aiml_file.write(
+                '\t\t\t\t<think><set name="Valid"><srai>VALID DATE <star /></srai></set></think>\n'
+            )
             aiml_file.write('\t\t\t\t<condition name="Valid">\n')
-            aiml_file.write('\t\t\t\t\t<li value="TRUE"><srai>EXECUTE %s</srai></li>\n' % (topic_name))
-            aiml_file.write('\t\t\t\t\t<li><srai>%s STEP %s</srai></li>\n' % (topic_name, step._step))
-            aiml_file.write('\t\t\t\t</condition>\n')
+            aiml_file.write(
+                '\t\t\t\t\t<li value="TRUE"><srai>EXECUTE %s</srai></li>\n'
+                % (topic_name)
+            )
+            aiml_file.write(
+                "\t\t\t\t\t<li><srai>%s STEP %s</srai></li>\n"
+                % (topic_name, step._step)
+            )
+            aiml_file.write("\t\t\t\t</condition>\n")
 
 
 class IntVar(VarType):
     def __init__(self, text):
         VarType.__init__(self)
-        if '(' in text:
+        if "(" in text:
             ranges = self.extract_values_between_brackets(text, "Int")
             splits = ranges.split(",")
             if len(splits) > 1:
@@ -111,32 +138,53 @@ class IntVar(VarType):
             next_step = step._conditions[0]._next_step
             if len(self._values) == 2:
                 aiml_file.write(
-                    '\t\t\t\t<think><set name="Valid"><srai>VALID INT <star /> %s %s</srai></set></think>\n' % (
-                        self._values[0], self._values[1]))
+                    '\t\t\t\t<think><set name="Valid"><srai>VALID INT <star /> %s %s</srai></set></think>\n'
+                    % (self._values[0], self._values[1])
+                )
             elif len(self._values) == 1:
-                aiml_file.write('\t\t\t\t<think><set name="Valid"><srai>VALID INT <star /> %s</srai></set></think>\n' %
-                                self._values[0])
+                aiml_file.write(
+                    '\t\t\t\t<think><set name="Valid"><srai>VALID INT <star /> %s</srai></set></think>\n'
+                    % self._values[0]
+                )
             else:
-                aiml_file.write('\t\t\t\t<think><set name="Valid"><srai>VALID INT <star /></srai></set></think>\n')
+                aiml_file.write(
+                    '\t\t\t\t<think><set name="Valid"><srai>VALID INT <star /></srai></set></think>\n'
+                )
             aiml_file.write('\t\t\t\t<condition name="Valid">\n')
             aiml_file.write(
-                '\t\t\t\t\t<li value="TRUE"><srai>%s STEP %s</srai></li>\n' % (topic_name, next_step))
-            aiml_file.write('\t\t\t\t\t<li><srai>%s STEP %s</srai></li>\n' % (topic_name, step._step))
-            aiml_file.write('\t\t\t\t</condition>\n')
+                '\t\t\t\t\t<li value="TRUE"><srai>%s STEP %s</srai></li>\n'
+                % (topic_name, next_step)
+            )
+            aiml_file.write(
+                "\t\t\t\t\t<li><srai>%s STEP %s</srai></li>\n"
+                % (topic_name, step._step)
+            )
+            aiml_file.write("\t\t\t\t</condition>\n")
         else:
             if len(self._values) == 2:
                 aiml_file.write(
-                    '\t\t\t\t<think><set name="Valid"><srai>VALID INT <star /> %s %s</srai></set></think>\n' % (
-                        self._values[0], self._values[1]))
+                    '\t\t\t\t<think><set name="Valid"><srai>VALID INT <star /> %s %s</srai></set></think>\n'
+                    % (self._values[0], self._values[1])
+                )
             elif len(self._values) == 1:
-                aiml_file.write('\t\t\t\t<think><set name="Valid"><srai>VALID INT <star /> %s</srai></set></think>\n' %
-                                self._values[0])
+                aiml_file.write(
+                    '\t\t\t\t<think><set name="Valid"><srai>VALID INT <star /> %s</srai></set></think>\n'
+                    % self._values[0]
+                )
             else:
-                aiml_file.write('\t\t\t\t<think><set name="Valid"><srai>VALID INT <star /></srai></set></think>\n')
+                aiml_file.write(
+                    '\t\t\t\t<think><set name="Valid"><srai>VALID INT <star /></srai></set></think>\n'
+                )
             aiml_file.write('\t\t\t\t<condition name="Valid">\n')
-            aiml_file.write('\t\t\t\t\t<li value="TRUE"><srai>EXECUTE %s</srai></li>\n' % (topic_name))
-            aiml_file.write('\t\t\t\t\t<li><srai>%s STEP %s</srai></li>\n' % (topic_name, step._step))
-            aiml_file.write('\t\t\t\t</condition>\n')
+            aiml_file.write(
+                '\t\t\t\t\t<li value="TRUE"><srai>EXECUTE %s</srai></li>\n'
+                % (topic_name)
+            )
+            aiml_file.write(
+                "\t\t\t\t\t<li><srai>%s STEP %s</srai></li>\n"
+                % (topic_name, step._step)
+            )
+            aiml_file.write("\t\t\t\t</condition>\n")
 
 
 class TextVar(VarType):
@@ -149,9 +197,11 @@ class TextVar(VarType):
 
     def output_template(self, aiml_file, topic_name, step):
         if step is not None:
-            aiml_file.write('\t\t\t\t<srai>%s STEP %s</srai>\n' % (topic_name, step._next_step))
+            aiml_file.write(
+                "\t\t\t\t<srai>%s STEP %s</srai>\n" % (topic_name, step._next_step)
+            )
         else:
-            aiml_file.write('\t\t\t\t<srai>EXECUTE %s</srai>\n' % topic_name)
+            aiml_file.write("\t\t\t\t<srai>EXECUTE %s</srai>\n" % topic_name)
 
 
 class StepCondition(object):
@@ -180,7 +230,9 @@ class Step(object):
 
     def __str__(self):
         if self._conditions:
-            next_steps = ", ".join("%s %s"(x._next_step, x.condition) for x in self._conditions)
+            next_steps = ", ".join(
+                "%s %s"(x._next_step, x.condition) for x in self._conditions
+            )
         else:
             next_steps = "EXECUTE"
         return "[%s] - %s -> %s" % (self._step, self._prompt, next_steps)
@@ -199,43 +251,46 @@ class Step(object):
     def output_aiml(self, aiml_file, topic_name):
 
         # Step Question
-        aiml_file.write('\t\t<category>\n')
-        aiml_file.write('\t\t\t<pattern>\n')
-        aiml_file.write('\t\t\t\t%s STEP %s\n' % (topic_name, self._step))
-        aiml_file.write('\t\t\t</pattern>\n')
-        aiml_file.write('\t\t\t<template>\n')
+        aiml_file.write("\t\t<category>\n")
+        aiml_file.write("\t\t\t<pattern>\n")
+        aiml_file.write("\t\t\t\t%s STEP %s\n" % (topic_name, self._step))
+        aiml_file.write("\t\t\t</pattern>\n")
+        aiml_file.write("\t\t\t<template>\n")
         if self._type._values:
-            aiml_file.write('\t\t\t\t%s - (%s)\n' % (self._prompt, self._type.type_values_to_str()))
+            aiml_file.write(
+                "\t\t\t\t%s - (%s)\n" % (self._prompt, self._type.type_values_to_str())
+            )
         else:
-            aiml_file.write('\t\t\t\t%s\n' % self._prompt)
-        aiml_file.write('\t\t\t</template>\n')
-        aiml_file.write('\t\t</category>\n\n')
+            aiml_file.write("\t\t\t\t%s\n" % self._prompt)
+        aiml_file.write("\t\t\t</template>\n")
+        aiml_file.write("\t\t</category>\n\n")
 
-        aiml_file.write('\t\t<category>\n')
-        aiml_file.write('\t\t\t<pattern>*</pattern>\n')
+        aiml_file.write("\t\t<category>\n")
+        aiml_file.write("\t\t\t<pattern>*</pattern>\n")
         if self._type._values:
-            aiml_file.write('\t\t\t<that>%s *</that>\n' % self._prompt)
+            aiml_file.write("\t\t\t<that>%s *</that>\n" % self._prompt)
         else:
-            aiml_file.write('\t\t\t<that>%s</that>\n' % self._prompt)
-        aiml_file.write('\t\t\t<template>\n')
-        aiml_file.write('\t\t\t\t<think><set name="%s"><star /></set></think>\n' % self._variable)
+            aiml_file.write("\t\t\t<that>%s</that>\n" % self._prompt)
+        aiml_file.write("\t\t\t<template>\n")
+        aiml_file.write(
+            '\t\t\t\t<think><set name="%s"><star /></set></think>\n' % self._variable
+        )
 
         self._type.output_template(aiml_file, topic_name, self)
 
+        aiml_file.write("\t\t\t</template>\n")
+        aiml_file.write("\t\t</category>\n\n")
 
-        aiml_file.write('\t\t\t</template>\n')
-        aiml_file.write('\t\t</category>\n\n')
-
-        aiml_file.write('\t\t<category>\n')
-        aiml_file.write('\t\t\t<pattern>EXIT</pattern>\n')
+        aiml_file.write("\t\t<category>\n")
+        aiml_file.write("\t\t\t<pattern>EXIT</pattern>\n")
         if self._type._values:
-            aiml_file.write('\t\t\t<that>%s *</that>\n' % self._prompt)
+            aiml_file.write("\t\t\t<that>%s *</that>\n" % self._prompt)
         else:
-            aiml_file.write('\t\t\t<that>%s</that>\n' % self._prompt)
-        aiml_file.write('\t\t\t<template>\n')
-        aiml_file.write('\t\t\t\t<srai>EXIT %s</srai>\n' % topic_name)
-        aiml_file.write('\t\t\t</template>\n')
-        aiml_file.write('\t\t</category>\n\n')
+            aiml_file.write("\t\t\t<that>%s</that>\n" % self._prompt)
+        aiml_file.write("\t\t\t<template>\n")
+        aiml_file.write("\t\t\t\t<srai>EXIT %s</srai>\n" % topic_name)
+        aiml_file.write("\t\t\t</template>\n")
+        aiml_file.write("\t\t</category>\n\n")
 
 
 class BotFlow(object):
@@ -250,7 +305,7 @@ class BotFlow(object):
         self._name = name.upper()
 
         with open(flow_file, "r+") as csv_file:
-            csv_reader = csv.reader(csv_file, delimiter=',', quotechar='"')
+            csv_reader = csv.reader(csv_file, delimiter=",", quotechar='"')
             first = True
             for line in csv_reader:
                 if first is False:
@@ -262,32 +317,32 @@ class BotFlow(object):
 
     def write_aiml_header(self, aiml_file):
         aiml_file.write('<?xml version="1" encoding="UTF-8" ?>\n')
-        aiml_file.write('<aiml>\n\n')
+        aiml_file.write("<aiml>\n\n")
 
     def write_aiml_footer(self, aiml_file):
-        aiml_file.write('\n</aiml>')
+        aiml_file.write("\n</aiml>")
 
     def write_entry_category(self, aiml_file, first_step):
-        aiml_file.write('\t<category>\n')
-        aiml_file.write('\t\t<pattern>START %s</pattern>\n' % self._name)
-        aiml_file.write('\t\t<template>\n')
-        aiml_file.write('\t\t\t<think>\n')
+        aiml_file.write("\t<category>\n")
+        aiml_file.write("\t\t<pattern>START %s</pattern>\n" % self._name)
+        aiml_file.write("\t\t<template>\n")
+        aiml_file.write("\t\t\t<think>\n")
         # Set the topic
         aiml_file.write('\t\t\t\t<set name="topic">%s</set>\n' % self._name)
         # Clear variables before we start
         for step in self._steps:
             aiml_file.write('\t\t\t\t<set name="%s" />\n' % step._variable)
-        aiml_file.write('\t\t\t</think>\n')
+        aiml_file.write("\t\t\t</think>\n")
         # Jump to the first step
-        aiml_file.write('\t\t\t<srai>%s STEP %s</srai>\n' % (self._name, first_step))
-        aiml_file.write('\t\t</template>\n')
-        aiml_file.write('\t</category>\n\n')
+        aiml_file.write("\t\t\t<srai>%s STEP %s</srai>\n" % (self._name, first_step))
+        aiml_file.write("\t\t</template>\n")
+        aiml_file.write("\t</category>\n\n")
 
     def write_topic_open(self, aiml_file, name):
         aiml_file.write('\t<topic name="%s">\n\n' % name)
 
     def write_topic_close(self, aiml_file):
-        aiml_file.write('\t</topic>\n')
+        aiml_file.write("\t</topic>\n")
 
     def write_dialog_flow(self, aiml_file):
         for step in self._steps:
@@ -296,7 +351,9 @@ class BotFlow(object):
     def generate_aiml(self, aiml_dir):
         print("Generating aiml in [%s]" % aiml_dir)
 
-        with open(aiml_dir + os.sep + self._name + ".aiml", "w+", encoding="utf-8") as aiml_file:
+        with open(
+            aiml_dir + os.sep + self._name + ".aiml", "w+", encoding="utf-8"
+        ) as aiml_file:
             self.write_aiml_header(aiml_file)
 
             self.write_entry_category(aiml_file, self._steps[0]._step)
@@ -310,18 +367,26 @@ class BotFlow(object):
             self.write_aiml_footer(aiml_file)
 
     def copy_supporting_files(self, from_dir, to_dir):
-        shutil.copyfile(from_dir + os.sep + "aimlstandardlibrary.aiml", to_dir + os.sep + "aimlstandardlibrary.aiml")
-        shutil.copyfile(from_dir + os.sep + "botflowlibrary.aiml", to_dir + os.sep + "botflowlibrary.aiml")
+        shutil.copyfile(
+            from_dir + os.sep + "aimlstandardlibrary.aiml",
+            to_dir + os.sep + "aimlstandardlibrary.aiml",
+        )
+        shutil.copyfile(
+            from_dir + os.sep + "botflowlibrary.aiml",
+            to_dir + os.sep + "botflowlibrary.aiml",
+        )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
-    parser = argparse.ArgumentParser(description='Program-Y Flow Bot')
+    parser = argparse.ArgumentParser(description="Program-Y Flow Bot")
 
-    parser.add_argument('-flow', dest='flowfile', help='Flow file to load')
-    parser.add_argument('-topic', dest='topic', help='Topic name')
-    parser.add_argument('-lib', dest='lib', help='Library of aiml files')
-    parser.add_argument('-aiml', dest='aimldir', help='Directory to create aiml files in')
+    parser.add_argument("-flow", dest="flowfile", help="Flow file to load")
+    parser.add_argument("-topic", dest="topic", help="Topic name")
+    parser.add_argument("-lib", dest="lib", help="Library of aiml files")
+    parser.add_argument(
+        "-aiml", dest="aimldir", help="Directory to create aiml files in"
+    )
 
     args = parser.parse_args()
 

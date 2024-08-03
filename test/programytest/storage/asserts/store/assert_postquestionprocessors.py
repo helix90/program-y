@@ -10,7 +10,15 @@ class PostQuestionProcessorsStoreAsserts(unittest.TestCase):
     def assert_load(self, store):
         store.empty()
 
-        store.upload_from_file(os.path.dirname(__file__) + os.sep + "data" + os.sep + "processors" + os.sep + "postquestionprocessors.conf")
+        store.upload_from_file(
+            os.path.dirname(__file__)
+            + os.sep
+            + "data"
+            + os.sep
+            + "processors"
+            + os.sep
+            + "postquestionprocessors.conf"
+        )
 
         collection = PostQuestionProcessorCollection()
         store.load(collection)
@@ -20,7 +28,15 @@ class PostQuestionProcessorsStoreAsserts(unittest.TestCase):
     def assert_load_exception(self, store):
         store.empty()
 
-        store.upload_from_file(os.path.dirname(__file__) + os.sep + "data" + os.sep + "processors" + os.sep + "postquestionprocessors.conf")
+        store.upload_from_file(
+            os.path.dirname(__file__)
+            + os.sep
+            + "data"
+            + os.sep
+            + "processors"
+            + os.sep
+            + "postquestionprocessors.conf"
+        )
 
         collection = PostQuestionProcessorCollection()
         store.load(collection)
@@ -30,13 +46,30 @@ class PostQuestionProcessorsStoreAsserts(unittest.TestCase):
     def assert_upload_from_file(self, store, verbose=False):
         store.empty()
 
-        count, success = store.upload_from_file(os.path.dirname(__file__) + os.sep + "data" + os.sep + "processors" + os.sep + "postquestionprocessors.conf", verbose=verbose)
+        count, success = store.upload_from_file(
+            os.path.dirname(__file__)
+            + os.sep
+            + "data"
+            + os.sep
+            + "processors"
+            + os.sep
+            + "postquestionprocessors.conf",
+            verbose=verbose,
+        )
         self.assertEquals(1, count)
         self.assertEquals(1, success)
 
     def assert_upload_from_file_exception(self, store):
         store.empty()
 
-        count, success = store.upload_from_file(os.path.dirname(__file__) + os.sep + "data" + os.sep + "processors" + os.sep + "postquestionprocessors.conf")
+        count, success = store.upload_from_file(
+            os.path.dirname(__file__)
+            + os.sep
+            + "data"
+            + os.sep
+            + "processors"
+            + os.sep
+            + "postquestionprocessors.conf"
+        )
         self.assertEquals(0, count)
         self.assertEquals(0, success)

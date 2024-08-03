@@ -14,9 +14,11 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 import json
-from programy.utils.logging.ylogger import YLogger
+
 from programy.parser.template.nodes.base import TemplateNode
+from programy.utils.logging.ylogger import YLogger
 
 
 class TemplateRestNode(TemplateNode):
@@ -38,12 +40,16 @@ class TemplateRestNode(TemplateNode):
                     raise Exception("Not what I wanted")
 
             except Exception as excep:
-                YLogger.exception_nostack(self, "Failed to load REST json payload", excep)
+                YLogger.exception_nostack(
+                    self, "Failed to load REST json payload", excep
+                )
                 words = result.split(" ")
                 if len(words) > 1:
                     resolved = " ".join(words[1:])
 
-        YLogger.debug(client_context, "[%s] resolved to [%s]", self.to_string(), resolved)
+        YLogger.debug(
+            client_context, "[%s] resolved to [%s]", self.to_string(), resolved
+        )
         return resolved
 
     def to_string(self):

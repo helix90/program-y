@@ -14,12 +14,14 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 from urllib.error import URLError
+
 from textblob import TextBlob
-from textblob.exceptions import NotTranslated
-from textblob.exceptions import TranslatorError
-from programy.utils.logging.ylogger import YLogger
+from textblob.exceptions import NotTranslated, TranslatorError
+
 from programy.nlp.translate.base import BaseTranslator
+from programy.utils.logging.ylogger import YLogger
 
 languages = {
     "AFRIKAANS": "AF",
@@ -133,7 +135,7 @@ languages = {
     "XHOSA": "XH",
     "YIDDISH": "YI",
     "YORUBA": "YO",
-    "ZULU": "ZU"
+    "ZULU": "ZU",
 }
 
 
@@ -153,7 +155,7 @@ class TextBlobTranslator(BaseTranslator):
     def _get_textblob(self, text):
         return TextBlob(text)
 
-    def detect(self, text, default='EN'):
+    def detect(self, text, default="EN"):
         blob = self._get_textblob(text)
         try:
             return blob.detect_language().upper()
@@ -174,7 +176,13 @@ class TextBlobTranslator(BaseTranslator):
 
     def translate(self, text, from_lang=None, to_lang="EN"):
 
-        YLogger.debug(None, "Translating [%s] from [%s] to [%s], are they the same?", text, from_lang, to_lang)
+        YLogger.debug(
+            None,
+            "Translating [%s] from [%s] to [%s], are they the same?",
+            text,
+            from_lang,
+            to_lang,
+        )
 
         try:
             translated = self._do_translate(text, from_lang, to_lang)
@@ -182,8 +190,13 @@ class TextBlobTranslator(BaseTranslator):
             return translated
 
         except NotTranslated as nte:
-            YLogger.exception(None, "Unable to translate text from [%s] to [%s], are they the same?",
-                              nte, from_lang, to_lang)
+            YLogger.exception(
+                None,
+                "Unable to translate text from [%s] to [%s], are they the same?",
+                nte,
+                from_lang,
+                to_lang,
+            )
 
         except URLError as urle:
             YLogger.exception(None, "No connection to Google Translate", urle)

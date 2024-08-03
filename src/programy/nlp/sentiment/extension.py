@@ -17,8 +17,9 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR TH
 This is an example extension that allow you to call an external service to retreive the energy consumption data
 of the customer. Currently contains no authentication
 """
-from programy.utils.logging.ylogger import YLogger
+
 from programy.extensions.base import Extension
+from programy.utils.logging.ylogger import YLogger
 
 
 class SentimentExtension(Extension):
@@ -60,12 +61,14 @@ class SentimentExtension(Extension):
         if client_context.bot.sentiment_analyser is not None:
 
             if len(words) >= 3:
-                if words[2] == 'LAST':
+                if words[2] == "LAST":
                     if len(words) == 4:
                         if words[3].isdigit():
-                            return self._calc_question_sentiment(client_context, int(words[3]))
+                            return self._calc_question_sentiment(
+                                client_context, int(words[3])
+                            )
 
-                elif words[2] == 'OVERALL':
+                elif words[2] == "OVERALL":
                     return self._calc_conversation_sentiment(client_context)
 
             return "SENTIMENT INVALID COMMAND"
@@ -81,16 +84,23 @@ class SentimentExtension(Extension):
 
         if len(words) == 3:
 
-            if words[2] == 'NUMERIC':
-                return "SENTIMENT SCORES POSITIVITY %s SUBJECTIVITY %s" % (conversation.properties['positivity'],
-                                                                           conversation.properties['subjectivity'])
+            if words[2] == "NUMERIC":
+                return "SENTIMENT SCORES POSITIVITY %s SUBJECTIVITY %s" % (
+                    conversation.properties["positivity"],
+                    conversation.properties["subjectivity"],
+                )
 
-            if words[2] == 'TEXT':
-                pos_str = client_context.bot.sentiment_scores.positivity(float(conversation.properties['positivity']),
-                                                                         client_context)
+            if words[2] == "TEXT":
+                pos_str = client_context.bot.sentiment_scores.positivity(
+                    float(conversation.properties["positivity"]), client_context
+                )
                 subj_str = client_context.bot.sentiment_scores.subjectivity(
-                    float(conversation.properties['subjectivity']), client_context)
-                return "SENTIMENT SCORES POSITIVITY %s SUBJECTIVITY %s" % (pos_str, subj_str)
+                    float(conversation.properties["subjectivity"]), client_context
+                )
+                return "SENTIMENT SCORES POSITIVITY %s SUBJECTIVITY %s" % (
+                    pos_str,
+                    subj_str,
+                )
 
         return "SENTIMENT INVALID COMMAND"
 
@@ -99,30 +109,47 @@ class SentimentExtension(Extension):
 
             text = " ".join(words[2:])
 
-            positivity, subjectivity = client_context.bot.sentiment_analyser.analyse_all(text)
+            positivity, subjectivity = (
+                client_context.bot.sentiment_analyser.analyse_all(text)
+            )
 
             pos_str = "UNKNOWN"
             subj_str = "UNKNOWN"
             if client_context.bot.sentiment_scores is not None:
-                pos_str = client_context.bot.sentiment_scores.positivity(positivity, client_context)
-                subj_str = client_context.bot.sentiment_scores.subjectivity(subjectivity, client_context)
+                pos_str = client_context.bot.sentiment_scores.positivity(
+                    positivity, client_context
+                )
+                subj_str = client_context.bot.sentiment_scores.subjectivity(
+                    subjectivity, client_context
+                )
 
-            return "SENTIMENT SCORES POSITIVITY %s SUBJECTIVITY %s" % (pos_str, subj_str)
+            return "SENTIMENT SCORES POSITIVITY %s SUBJECTIVITY %s" % (
+                pos_str,
+                subj_str,
+            )
 
         else:
             return "SENTIMENT DISABLED"
 
     def _get_positivity(self, client_context, words):
         positivity = float(words[2])
-        return client_context.bot.sentiment_scores.positivity(positivity, client_context)
+        return client_context.bot.sentiment_scores.positivity(
+            positivity, client_context
+        )
 
     def _get_subjectivity(self, client_context, words):
         subjectivity = float(words[2])
-        return client_context.bot.sentiment_scores.subjectivity(subjectivity, client_context)
+        return client_context.bot.sentiment_scores.subjectivity(
+            subjectivity, client_context
+        )
 
     # execute() is the interface that is called from the <extension> tag in the AIML
     def execute(self, client_context, data):
-        YLogger.debug(client_context, "Sentiment - Calling external service for with extra data [%s]", data)
+        YLogger.debug(
+            client_context,
+            "Sentiment - Calling external service for with extra data [%s]",
+            data,
+        )
 
         # SENTIMENT SCORE <TEXT STRING>
         # SENTIMENT FEELING <TEXT STRING>
@@ -143,13 +170,13 @@ class SentimentExtension(Extension):
                 if words[1] == "FEELING":
                     return self._calc_feeling(client_context, words)
 
-                if words[1] == 'ENABLED':
+                if words[1] == "ENABLED":
                     return self._check_enabled(client_context)
 
-                if words[1] == 'POSITIVITY':
+                if words[1] == "POSITIVITY":
                     return self._get_positivity(client_context, words)
 
-                if words[1] == 'SUBJECTIVITY':
+                if words[1] == "SUBJECTIVITY":
                     return self._get_subjectivity(client_context, words)
 
         return "SENTIMENT INVALID COMMAND"

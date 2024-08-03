@@ -14,10 +14,11 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
+
+from programy.parser.exceptions import ParserException
 from programy.parser.template.nodes.base import TemplateNode
 from programy.services.handler import ServiceHandler
-from programy.parser.exceptions import ParserException
+from programy.utils.logging.ylogger import YLogger
 from programy.utils.text.text import TextUtils
 
 
@@ -37,16 +38,28 @@ class TemplateSRAIXNode(TemplateNode):
 
     def resolve_to_string(self, client_context):
         resolved = self.resolve_children_to_string(client_context)
-        YLogger.debug(client_context, "[%s] resolved to [%s]", self.to_string(), resolved)
+        YLogger.debug(
+            client_context, "[%s] resolved to [%s]", self.to_string(), resolved
+        )
 
         if self._service is not None:
-            bot_service = client_context.brain.service_handler.get_service(self._service)
+            bot_service = client_context.brain.service_handler.get_service(
+                self._service
+            )
             response = bot_service.ask_question(client_context, resolved)
-            YLogger.debug(client_context, "SRAIX service [%s] return [%s]", self._service, response)
+            YLogger.debug(
+                client_context,
+                "SRAIX service [%s] return [%s]",
+                self._service,
+                response,
+            )
             return response
         else:
-            YLogger.error(client_context, "Sorry SRAIX does not currently have an implementation for [%s]",
-                          self._service)
+            YLogger.error(
+                client_context,
+                "Sorry SRAIX does not currently have an implementation for [%s]",
+                self._service,
+            )
             return ""
 
     def to_string(self):
@@ -55,12 +68,12 @@ class TemplateSRAIXNode(TemplateNode):
         return "[SRAIX ()]"
 
     def to_xml(self, client_context):
-        xml = '<sraix'
+        xml = "<sraix"
         if self._service is not None:
             xml += ' service="%s"' % self.service
-        xml += '>'
+        xml += ">"
         xml += self.children_to_xml(client_context)
-        xml += '</sraix>'
+        xml += "</sraix>"
         return xml
 
     #######################################################################################################
@@ -71,17 +84,29 @@ class TemplateSRAIXNode(TemplateNode):
 
     def parse_expression(self, graph, expression):
 
-        if 'host' in expression.attrib:
-            YLogger.warning(self, "'host' attrib not supported in sraix, moved to config, see documentation")
-        if 'botid' in expression.attrib:
-            YLogger.warning(self, "'botid' attrib not supported in sraix, moved to config, see documentation")
-        if 'hint' in expression.attrib:
-            YLogger.warning(self, "'hint' attrib not supported in sraix, moved to config, see documentation")
-        if 'apikey' in expression.attrib:
-            YLogger.warning(self, "'apikey' attrib not supported in sraix, moved to config, see documentation")
+        if "host" in expression.attrib:
+            YLogger.warning(
+                self,
+                "'host' attrib not supported in sraix, moved to config, see documentation",
+            )
+        if "botid" in expression.attrib:
+            YLogger.warning(
+                self,
+                "'botid' attrib not supported in sraix, moved to config, see documentation",
+            )
+        if "hint" in expression.attrib:
+            YLogger.warning(
+                self,
+                "'hint' attrib not supported in sraix, moved to config, see documentation",
+            )
+        if "apikey" in expression.attrib:
+            YLogger.warning(
+                self,
+                "'apikey' attrib not supported in sraix, moved to config, see documentation",
+            )
 
-        if 'service' in expression.attrib:
-            self._service = expression.attrib['service']
+        if "service" in expression.attrib:
+            self._service = expression.attrib["service"]
 
         head_text = self.get_text_from_element(expression)
         self.parse_text(graph, head_text)
@@ -89,15 +114,27 @@ class TemplateSRAIXNode(TemplateNode):
         for child in expression:
             tag_name = TextUtils.tag_from_text(child.tag)
 
-            if tag_name == 'host':
-                YLogger.warning(self, "'host' element not supported in sraix, moved to config, see documentation")
-            elif tag_name == 'botid':
-                YLogger.warning(self, "'botid' element not supported in sraix, moved to config, see documentation")
-            elif tag_name == 'hint':
-                YLogger.warning(self, "'hint' element not supported in sraix, moved to config, see documentation")
-            elif tag_name == 'apikey':
-                YLogger.warning(self, "'apikey' element not supported in sraix, moved to config, see documentation")
-            elif tag_name == 'service':
+            if tag_name == "host":
+                YLogger.warning(
+                    self,
+                    "'host' element not supported in sraix, moved to config, see documentation",
+                )
+            elif tag_name == "botid":
+                YLogger.warning(
+                    self,
+                    "'botid' element not supported in sraix, moved to config, see documentation",
+                )
+            elif tag_name == "hint":
+                YLogger.warning(
+                    self,
+                    "'hint' element not supported in sraix, moved to config, see documentation",
+                )
+            elif tag_name == "apikey":
+                YLogger.warning(
+                    self,
+                    "'apikey' element not supported in sraix, moved to config, see documentation",
+                )
+            elif tag_name == "service":
                 self._service = self.get_text_from_element(child)
             else:
                 graph.parse_tag_expression(child, self)

@@ -1,7 +1,11 @@
 import unittest
+
 import metoffer
+from programytest.services.library.metoffice.payloads.forecast_daily import (
+    forecast_daily_payload,
+)
+
 from programy.services.library.metoffice.metoffice import MetOfficeForecast
-from programytest.services.library.metoffice.payloads.forecast_daily import forecast_daily_payload
 
 
 class MetOfficeForecastTests(unittest.TestCase):
@@ -13,4 +17,3 @@ class MetOfficeForecastTests(unittest.TestCase):
         forecast.parse_json(forecast_daily_payload)
 
         self.assertEquals(0, len(forecast.get_forecasts()))
-

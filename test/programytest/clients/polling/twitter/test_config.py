@@ -10,7 +10,8 @@ class TwitterConfigurationTests(unittest.TestCase):
     def test_init(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
             twitter:
               description: Program-Y Twitter Client
               polling_interval: 60
@@ -25,7 +26,10 @@ class TwitterConfigurationTests(unittest.TestCase):
                 #programy
             
               welcome_message: "Thanks for following me."
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         twitter_config = TwitterConfiguration()
         twitter_config.load_configuration(yaml, ".")
@@ -39,7 +43,7 @@ class TwitterConfigurationTests(unittest.TestCase):
         self.assertTrue(twitter_config.respond_to_mentions)
         self.assertFalse(twitter_config.respond_to_directs)
 
-        self.assertEqual(twitter_config.mentions, ['#askprogramy', '#programy'])
+        self.assertEqual(twitter_config.mentions, ["#askprogramy", "#programy"])
 
         self.assertEqual("Thanks for following me.", twitter_config.welcome_message)
 
@@ -49,31 +53,39 @@ class TwitterConfigurationTests(unittest.TestCase):
         data = {}
         config.to_yaml(data, True)
 
-        self.assertEqual(data['polling_interval'], 60)
-        self.assertEqual(data['rate_limit_sleep'], 900)
+        self.assertEqual(data["polling_interval"], 60)
+        self.assertEqual(data["rate_limit_sleep"], 900)
 
-        self.assertEqual(data['follow_followers'], True)
-        self.assertEqual(data['respond_to_mentions'], True)
-        self.assertEqual(data['respond_to_directs'], False)
+        self.assertEqual(data["follow_followers"], True)
+        self.assertEqual(data["respond_to_mentions"], True)
+        self.assertEqual(data["respond_to_directs"], False)
 
-        self.assertEqual(data['welcome_message'], "Thanks for following me.")
+        self.assertEqual(data["welcome_message"], "Thanks for following me.")
 
-        self.assertEqual(data['bot_selector'], "programy.clients.botfactory.DefaultBotSelector")
-        self.assertEqual(data['renderer'], "programy.clients.render.text.TextRenderer")
+        self.assertEqual(
+            data["bot_selector"], "programy.clients.botfactory.DefaultBotSelector"
+        )
+        self.assertEqual(data["renderer"], "programy.clients.render.text.TextRenderer")
 
-        self.assertTrue('bots' in data)
-        self.assertTrue('bot' in data['bots'])
-        self.assertEqual(data['bot_selector'], "programy.clients.botfactory.DefaultBotSelector")
+        self.assertTrue("bots" in data)
+        self.assertTrue("bot" in data["bots"])
+        self.assertEqual(
+            data["bot_selector"], "programy.clients.botfactory.DefaultBotSelector"
+        )
 
-        self.assertTrue('brains' in data['bots']['bot'])
-        self.assertTrue('brain' in data['bots']['bot']['brains'])
+        self.assertTrue("brains" in data["bots"]["bot"])
+        self.assertTrue("brain" in data["bots"]["bot"]["brains"])
 
     def test_to_yaml_no_data(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
             other:
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         twitter_config = TwitterConfiguration()
         twitter_config.load_configuration(yaml, ".")

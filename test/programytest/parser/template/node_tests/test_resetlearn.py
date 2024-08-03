@@ -1,6 +1,7 @@
+from programytest.parser.base import ParserTestsBaseClass
+
 from programy.parser.template.nodes.base import TemplateNode
 from programy.parser.template.nodes.resetlearn import TemplateResetLearnNode
-from programytest.parser.base import ParserTestsBaseClass
 
 
 class MockTemplateResetLearnNode(TemplateResetLearnNode):
@@ -9,6 +10,7 @@ class MockTemplateResetLearnNode(TemplateResetLearnNode):
 
     def resolve_to_string(self, context):
         raise Exception("This is an error")
+
 
 class TemplateResetLearnNodeTests(ParserTestsBaseClass):
 

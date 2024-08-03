@@ -14,14 +14,17 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
-from programy.utils.classes.loader import ClassLoader
-from programy.storage.entities.store import Store
-from programy.storage.stores.nosql.mongo.store.mongostore import MongoStore
+
 from programy.storage.entities.processors import ProcessorStore
-from programy.storage.stores.nosql.mongo.dao.processor import PreProcessor
-from programy.storage.stores.nosql.mongo.dao.processor import PostProcessor
-from programy.storage.stores.nosql.mongo.dao.processor import PostQuestionProcessor
+from programy.storage.entities.store import Store
+from programy.storage.stores.nosql.mongo.dao.processor import (
+    PostProcessor,
+    PostQuestionProcessor,
+    PreProcessor,
+)
+from programy.storage.stores.nosql.mongo.store.mongostore import MongoStore
+from programy.utils.classes.loader import ClassLoader
+from programy.utils.logging.ylogger import YLogger
 
 
 class MongoProcessorStore(MongoStore, ProcessorStore):
@@ -36,10 +39,17 @@ class MongoProcessorStore(MongoStore, ProcessorStore):
         nodes = self.get_all_nodes()
         for node in nodes:
             try:
-                collector.add_processor(ClassLoader.instantiate_class(node['classname'])())
+                collector.add_processor(
+                    ClassLoader.instantiate_class(node["classname"])()
+                )
 
             except Exception as excep:
-                YLogger.exception(self, "Failed pre-instantiating Processor [%s]", excep, node['classname'])
+                YLogger.exception(
+                    self,
+                    "Failed pre-instantiating Processor [%s]",
+                    excep,
+                    node["classname"],
+                )
 
     def get_all_nodes(self):
         collection = self.collection()
@@ -55,9 +65,16 @@ class MongoProcessorStore(MongoStore, ProcessorStore):
                 count += 1
         return count, success
 
-    def upload_from_file(self, filename, fileformat=Store.TEXT_FORMAT, commit=True, verbose=False):
+    def upload_from_file(
+        self, filename, fileformat=Store.TEXT_FORMAT, commit=True, verbose=False
+    ):
 
-        YLogger.info(self, "Uploading %s nodes to Mongo from [%s]", self.collection_name(), filename)
+        YLogger.info(
+            self,
+            "Uploading %s nodes to Mongo from [%s]",
+            self.collection_name(),
+            filename,
+        )
         try:
             return self._load_processors_from_file(filename, verbose)
 
@@ -68,12 +85,17 @@ class MongoProcessorStore(MongoStore, ProcessorStore):
 
     def process_config_line(self, line, verbose=False):
         line = line.strip()
-        if line.startswith('#') is False:
+        if line.startswith("#") is False:
             class_name = line.strip()
             node = self._get_entity(class_name)
 
             if verbose is True:
-                YLogger.debug(self, "Uploading %s node [%s] to Mongo", self.collection_name(), class_name)
+                YLogger.debug(
+                    self,
+                    "Uploading %s node [%s] to Mongo",
+                    self.collection_name(),
+                    class_name,
+                )
 
             return self.add_document(node)
 
@@ -84,7 +106,7 @@ class MongoProcessorStore(MongoStore, ProcessorStore):
 
 
 class MongoPreProcessorStore(MongoProcessorStore):
-    PREPROCESSORS = 'preprocessors'
+    PREPROCESSORS = "preprocessors"
 
     def __init__(self, storage_engine):
         MongoProcessorStore.__init__(self, storage_engine)
@@ -97,7 +119,7 @@ class MongoPreProcessorStore(MongoProcessorStore):
 
 
 class MongoPostProcessorStore(MongoProcessorStore):
-    POSTPROCESSORS = 'postprocessors'
+    POSTPROCESSORS = "postprocessors"
 
     def __init__(self, storage_engine):
         MongoProcessorStore.__init__(self, storage_engine)
@@ -110,7 +132,7 @@ class MongoPostProcessorStore(MongoProcessorStore):
 
 
 class MongoPostQuestionProcessorStore(MongoProcessorStore):
-    POSTQUESTIONPROCESSORS = 'postquestionprocessors'
+    POSTQUESTIONPROCESSORS = "postquestionprocessors"
 
     def __init__(self, storage_engine):
         MongoProcessorStore.__init__(self, storage_engine)

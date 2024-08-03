@@ -14,15 +14,15 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
 
 from programy.config.base import BaseConfigurationData
+from programy.utils.logging.ylogger import YLogger
 from programy.utils.substitutions.substitues import Substitutions
 
 
 class BotSentenceSplitterConfiguration(BaseConfigurationData):
     DEFAULT_CLASSNAME = "programy.dialog.splitter.regex.RegexSentenceSplitter"
-    DEFAULT_SPLITCHARS = '[:;,.?!]'
+    DEFAULT_SPLITCHARS = "[:;,.?!]"
     JAPANESE_SPLITTERS = "。"
     CHINESE_SPLITTERS = "？！"
     ALL_SPLITTERS = DEFAULT_SPLITCHARS + JAPANESE_SPLITTERS + CHINESE_SPLITTERS
@@ -40,24 +40,34 @@ class BotSentenceSplitterConfiguration(BaseConfigurationData):
     def split_chars(self):
         return self._split_chars
 
-    def load_config_section(self, configuration_file, configuration, bot_root, subs: Substitutions = None):
+    def load_config_section(
+        self, configuration_file, configuration, bot_root, subs: Substitutions = None
+    ):
         del bot_root
         splitter = configuration_file.get_section(self._section_name, configuration)
         if splitter is not None:
-            self._classname = configuration_file.\
-                get_option(splitter, "classname", missing_value=BotSentenceSplitterConfiguration.DEFAULT_CLASSNAME,
-                           subs=subs)
-            self._split_chars = configuration_file.\
-                get_option(splitter, "split_chars",
-                           missing_value=BotSentenceSplitterConfiguration.DEFAULT_SPLITCHARS, subs=subs)
+            self._classname = configuration_file.get_option(
+                splitter,
+                "classname",
+                missing_value=BotSentenceSplitterConfiguration.DEFAULT_CLASSNAME,
+                subs=subs,
+            )
+            self._split_chars = configuration_file.get_option(
+                splitter,
+                "split_chars",
+                missing_value=BotSentenceSplitterConfiguration.DEFAULT_SPLITCHARS,
+                subs=subs,
+            )
         else:
-            YLogger.warning(self, "'splitter' section missing from bot config, using defaults")
+            YLogger.warning(
+                self, "'splitter' section missing from bot config, using defaults"
+            )
 
     def to_yaml(self, data, defaults=True):
         if defaults is True:
-            data['classname'] = BotSentenceSplitterConfiguration.DEFAULT_CLASSNAME
-            data['split_chars'] = BotSentenceSplitterConfiguration.DEFAULT_SPLITCHARS
+            data["classname"] = BotSentenceSplitterConfiguration.DEFAULT_CLASSNAME
+            data["split_chars"] = BotSentenceSplitterConfiguration.DEFAULT_SPLITCHARS
 
         else:
-            data['classname'] = self._classname
-            data['split_chars'] = self._split_chars
+            data["classname"] = self._classname
+            data["split_chars"] = self._split_chars

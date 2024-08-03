@@ -14,7 +14,9 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 import sleekxmpp
+
 from programy.utils.logging.ylogger import YLogger
 
 
@@ -35,20 +37,19 @@ class XmppClient(sleekxmpp.ClientXMPP):
 
         if configuration.xep_0030 is True:
             YLogger.debug(self, "XMPPClient registering xep_0030 plugin")
-            self.register_plugin('xep_0030')
+            self.register_plugin("xep_0030")
 
         if configuration.xep_0004 is True:
             YLogger.debug(self, "XMPPClient registering xep_0004 plugin")
-            self.register_plugin('xep_0004')
+            self.register_plugin("xep_0004")
 
         if configuration.xep_0060 is True:
             YLogger.debug(self, "XMPPClient registering xep_0060 plugin")
-            self.register_plugin('xep_0060')
+            self.register_plugin("xep_0060")
 
         if configuration.xep_0199 is True:
             YLogger.debug(self, "XMPPClient registering xep_0199 plugin")
-            self.register_plugin('xep_0199')
-
+            self.register_plugin("xep_0199")
 
     def start(self, event):
         YLogger.debug(self, "XMPPClient starting....[%s]", str(event))
@@ -56,13 +57,13 @@ class XmppClient(sleekxmpp.ClientXMPP):
         self.get_roster()
 
     def is_valid_message(self, msg):
-        return bool(msg['type'] in ('chat', 'normal'))
+        return bool(msg["type"] in ("chat", "normal"))
 
     def get_question(self, msg):
-        return msg['body']
+        return msg["body"]
 
     def get_userid(self, msg):
-        return msg['from'].bare
+        return msg["from"].bare
 
     def send_response(self, msg, response):
         if response is not None:

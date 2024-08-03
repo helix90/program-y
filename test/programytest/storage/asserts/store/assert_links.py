@@ -8,34 +8,38 @@ class LinkStoreAsserts(unittest.TestCase):
 
         store.empty()
 
-        store.create_link('user1', 'Password123', 'ABCDEF', expires=datetime.datetime.now())
-        store.create_link('user2', 'Password123', 'ABCDEF', expires=datetime.datetime.now())
+        store.create_link(
+            "user1", "Password123", "ABCDEF", expires=datetime.datetime.now()
+        )
+        store.create_link(
+            "user2", "Password123", "ABCDEF", expires=datetime.datetime.now()
+        )
 
-        self.assertTrue(store.link_exists('user1', 'Password123', 'ABCDEF'))
-        self.assertFalse(store.link_exists('user99', 'Password123', 'ABCDEF'))
+        self.assertTrue(store.link_exists("user1", "Password123", "ABCDEF"))
+        self.assertFalse(store.link_exists("user99", "Password123", "ABCDEF"))
 
-        link = store.get_link('user1')
+        link = store.get_link("user1")
         self.assertIsNotNone(link)
-        self.assertEqual('user1', link.primary_user)
-        self.assertEqual('Password123', link.provided_key)
-        self.assertEqual('ABCDEF', link.generated_key)
+        self.assertEqual("user1", link.primary_user)
+        self.assertEqual("Password123", link.provided_key)
+        self.assertEqual("ABCDEF", link.generated_key)
 
-        link = store.get_link('user2')
+        link = store.get_link("user2")
         self.assertIsNotNone(link)
-        self.assertEqual('user2', link.primary_user)
-        self.assertEqual('Password123', link.provided_key)
-        self.assertEqual('ABCDEF', link.generated_key)
+        self.assertEqual("user2", link.primary_user)
+        self.assertEqual("Password123", link.provided_key)
+        self.assertEqual("ABCDEF", link.generated_key)
 
-        store.remove_link('user1')
+        store.remove_link("user1")
         store.commit()
-        link = store.get_link('user1')
+        link = store.get_link("user1")
         self.assertIsNone(link)
 
-        link = store.get_link('user2')
+        link = store.get_link("user2")
         self.assertIsNotNone(link)
-        self.assertEqual('user2', link.primary_user)
-        self.assertEqual('Password123', link.provided_key)
-        self.assertEqual('ABCDEF', link.generated_key)
+        self.assertEqual("user2", link.primary_user)
+        self.assertEqual("Password123", link.provided_key)
+        self.assertEqual("ABCDEF", link.generated_key)
 
         link.expired = True
         store.update_link(link)
@@ -43,17 +47,21 @@ class LinkStoreAsserts(unittest.TestCase):
     def assert_remove_link_with_exception(self, store):
         store.empty()
 
-        link1 = store.create_link('user1', 'Password123', 'ABCDEF', expires=datetime.datetime.now())
+        link1 = store.create_link(
+            "user1", "Password123", "ABCDEF", expires=datetime.datetime.now()
+        )
 
-        self.assertTrue(store.link_exists('user1', 'Password123', 'ABCDEF'))
+        self.assertTrue(store.link_exists("user1", "Password123", "ABCDEF"))
 
         self.assertFalse(store.remove_link(link1))
 
     def assert_update_link_not_found(self, store):
         store.empty()
 
-        link1 = store.create_link('user1', 'Password123', 'ABCDEF', expires=datetime.datetime.now())
+        link1 = store.create_link(
+            "user1", "Password123", "ABCDEF", expires=datetime.datetime.now()
+        )
 
-        self.assertTrue(store.link_exists('user1', 'Password123', 'ABCDEF'))
+        self.assertTrue(store.link_exists("user1", "Password123", "ABCDEF"))
 
         self.assertFalse(store.update_link(link1))

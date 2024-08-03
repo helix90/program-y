@@ -1,8 +1,10 @@
 import unittest
-from textblob.exceptions import NotTranslated
-from textblob import TextBlob
 from urllib.error import URLError
+
 import programytest.externals as Externals
+from textblob import TextBlob
+from textblob.exceptions import NotTranslated
+
 from programy.nlp.translate.textblob_translator import TextBlobTranslator
 
 
@@ -40,15 +42,18 @@ class TestTextBlobTranslator(unittest.TestCase):
         languages = translator.languages()
         self.assertTrue(languages.startswith("AFRIKAANS, ALBANIAN, "))
 
-        self.assertTrue(translator.supports_language('ENGLISH'))
-        self.assertFalse(translator.supports_language('KLINGON'))
+        self.assertTrue(translator.supports_language("ENGLISH"))
+        self.assertFalse(translator.supports_language("KLINGON"))
 
     def test_language_codes(self):
         translator = TextBlobTranslator()
         self.assertEqual("EN", translator.language_code("ENGLISH"))
         self.assertEqual("UNKNOWN", translator.language_code("KLINGON"))
 
-    @unittest.skipIf(Externals.google_translate is False or Externals.all_externals is False, Externals.google_translate_disabled)
+    @unittest.skipIf(
+        Externals.google_translate is False or Externals.all_externals is False,
+        Externals.google_translate_disabled,
+    )
     def test_detect_language(self):
         translator = TextBlobTranslator()
         self.assertEqual("EN", translator.detect("Hello"))
@@ -58,18 +63,22 @@ class TestTextBlobTranslator(unittest.TestCase):
 
     def test_translate_to_from(self):
         translator = TextBlobTranslator()
-        translated = translator.translate("Hello", from_lang='EN', to_lang='FR')
+        translated = translator.translate("Hello", from_lang="EN", to_lang="FR")
         self.assertTrue("Bonjour", translated)
 
     def test_translate_to_only(self):
         translator = TextBlobTranslator()
-        translated = translator.translate("Hello", to_lang='FR')
+        translated = translator.translate("Hello", to_lang="FR")
         self.assertTrue("Bonjour", translated)
 
     def test_translate_translate_error(self):
         translator = MockTextBlobTranslator(not_translated=True)
-        self.assertEquals("Hello", translator.translate("Hello", from_lang='EN', to_lang='FR'))
+        self.assertEquals(
+            "Hello", translator.translate("Hello", from_lang="EN", to_lang="FR")
+        )
 
     def test_translate_url_error(self):
         translator = MockTextBlobTranslator(url_error=True)
-        self.assertEquals("Hello", translator.translate("Hello", from_lang='EN', to_lang='FR'))
+        self.assertEquals(
+            "Hello", translator.translate("Hello", from_lang="EN", to_lang="FR")
+        )

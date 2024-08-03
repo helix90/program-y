@@ -14,9 +14,10 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
-from programy.utils.classes.loader import ClassLoader
+
 from programy.config.bot.joiner import BotSentenceJoinerConfiguration
+from programy.utils.classes.loader import ClassLoader
+from programy.utils.logging.ylogger import YLogger
 
 
 class SentenceJoiner:
@@ -42,7 +43,9 @@ class SentenceJoiner:
                     final_sentences.append(sentence)
                 else:
                     if srai is False:
-                        final_sentences.append(sentence + self._configuration.terminator)
+                        final_sentences.append(
+                            sentence + self._configuration.terminator
+                        )
                     else:
                         final_sentences.append(sentence)
 
@@ -58,7 +61,11 @@ class SentenceJoiner:
     def initiate_sentence_joiner(joiner_config):
         if joiner_config.classname is not None:
             try:
-                YLogger.info(None, "Loading sentence joiner from class [%s]", joiner_config.classname)
+                YLogger.info(
+                    None,
+                    "Loading sentence joiner from class [%s]",
+                    joiner_config.classname,
+                )
                 joiner_class = ClassLoader.instantiate_class(joiner_config.classname)
                 sentence_joiner = joiner_class(joiner_config)
                 return sentence_joiner

@@ -19,8 +19,8 @@ import re
 
 
 class DefaultLangauge:
-    SENTENCE_SPLIT_CHARS = r'[\.?!;:]'
-    WORD_SPLIT_CHARS = r'\s+'
+    SENTENCE_SPLIT_CHARS = r"[\.?!;:]"
+    WORD_SPLIT_CHARS = r"\s+"
 
     @staticmethod
     def split_into_sentences(text):

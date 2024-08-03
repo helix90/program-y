@@ -1,8 +1,8 @@
+from programytest.parser.base import ParserTestsBaseClass
+
 from programy.parser.template.nodes.base import TemplateNode
 from programy.parser.template.nodes.rand import TemplateRandomNode
 from programy.parser.template.nodes.word import TemplateWordNode
-
-from programytest.parser.base import ParserTestsBaseClass
 
 
 class TemplateNodeMixedTests(ParserTestsBaseClass):
@@ -26,10 +26,9 @@ class TemplateNodeMixedTests(ParserTestsBaseClass):
 
         resolved = root.resolve(self._client_context)
         self.assertIsNotNone(resolved)
-        self.assertOneOf(resolved, ["Test1 Test3",
-                                    "Test1 Test4",
-                                    "Test2 Test3",
-                                    "Test2 Test4"])
+        self.assertOneOf(
+            resolved, ["Test1 Test3", "Test1 Test4", "Test2 Test3", "Test2 Test4"]
+        )
 
     def test_nestedrandom(self):
         root = TemplateNode()
@@ -54,10 +53,7 @@ class TemplateNodeMixedTests(ParserTestsBaseClass):
 
         resolved = root.resolve(self._client_context)
         self.assertIsNotNone(resolved)
-        self.assertOneOf(resolved, ["Test1",
-                                    "Test2",
-                                    "Test3",
-                                    "Test4"])
+        self.assertOneOf(resolved, ["Test1", "Test2", "Test3", "Test4"])
 
     def test_mixednodes(self):
         root = TemplateNode()
@@ -77,6 +73,6 @@ class TemplateNodeMixedTests(ParserTestsBaseClass):
 
         resolved = root.resolve(self._client_context)
         self.assertIsNotNone(resolved)
-        self.assertOneOf(resolved, ["Hello Test1 World!", "Hello Test2 World!", "Hello Test3 World!"])
-
-
+        self.assertOneOf(
+            resolved, ["Hello Test1 World!", "Hello Test2 World!", "Hello Test3 World!"]
+        )

@@ -14,11 +14,12 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 import os
-from programy.utils.logging.ylogger import YLogger
+
 from programy.services.base import ServiceQuery
-from programy.services.rest.base import RESTService
-from programy.services.rest.base import RESTServiceException
+from programy.services.rest.base import RESTService, RESTServiceException
+from programy.utils.logging.ylogger import YLogger
 
 
 class GoogleDirectionsServiceQuery(ServiceQuery):
@@ -40,11 +41,11 @@ class GoogleDirectionsServiceQuery(ServiceQuery):
         return self._service.get_directions(self._origin, self._destination)
 
     def aiml_response(self, response):
-        payload = response['response']['payload']
-        routes = payload['routes']
-        legs = routes[0]['legs']
-        steps = legs[0]['steps']
-        instructions = [step['html_instructions'] for step in steps]
+        payload = response["response"]["payload"]
+        routes = payload["routes"]
+        legs = routes[0]["legs"]
+        steps = legs[0]["steps"]
+        instructions = [step["html_instructions"] for step in steps]
         alist = ["<li>{0}</li>\n".format(instruction) for instruction in instructions]
         result = "<ol>{0}</ol>".format("".join(alist))
         YLogger.debug(self, result)
@@ -58,20 +59,18 @@ class GoogleDirectionsServiceException(RESTServiceException):
 
 
 class GoogleDirectionsService(RESTService):
-    """
-    """
+    """ """
+
     PATTERNS = [
         [r"DIRECTIONS\sORIGIN\s(.+)\DESTINATION\s(.+)", GoogleDirectionsServiceQuery]
     ]
 
-    MODES = [
-        "DRIVING",
-        "WALKING",
-        "BICYCLING"
-    ]
+    MODES = ["DRIVING", "WALKING", "BICYCLING"]
 
-    DIRECTIONS_URL = "https://maps.googleapis.com/maps/api/directions/json?origin={0}&destination={1}" \
-                     "&region={2}&mode={3}&units={4}&key={5}"
+    DIRECTIONS_URL = (
+        "https://maps.googleapis.com/maps/api/directions/json?origin={0}&destination={1}"
+        "&region={2}&mode={3}&units={4}&key={5}"
+    )
 
     def __init__(self, configuration):
         RESTService.__init__(self, configuration)
@@ -81,9 +80,12 @@ class GoogleDirectionsService(RESTService):
         return GoogleDirectionsService.PATTERNS
 
     def initialise(self, client):
-        self._api_key = client.license_keys.get_key('GOOGLE_MAPS')
+        self._api_key = client.license_keys.get_key("GOOGLE_MAPS")
         if self._api_key is None:
-            YLogger.error(self, "GOOGLE_MAPS missing from license.keys, service will not function correctly!")
+            YLogger.error(
+                self,
+                "GOOGLE_MAPS missing from license.keys, service will not function correctly!",
+            )
 
     def get_default_aiml_file(self):
         return os.path.dirname(__file__) + os.sep + "directions.aiml"
@@ -93,14 +95,17 @@ class GoogleDirectionsService(RESTService):
         return os.path.dirname(__file__) + os.sep + "directions.conf"
 
     def _build_directions_url(self, origin, destination, region, mode, units):
-        url = GoogleDirectionsService.DIRECTIONS_URL.format(origin, destination, region, mode, units, self._api_key)
+        url = GoogleDirectionsService.DIRECTIONS_URL.format(
+            origin, destination, region, mode, units, self._api_key
+        )
         return url
 
-    def get_directions(self, origin, destination, region="uk", mode="DRIVING", units="imperial"):
+    def get_directions(
+        self, origin, destination, region="uk", mode="DRIVING", units="imperial"
+    ):
         url = self._build_directions_url(origin, destination, region, mode, units)
-        response = self.query('get_directions', url)
+        response = self.query("get_directions", url)
         return response
 
     def _response_to_json(self, api, response):
         return response.json()
-

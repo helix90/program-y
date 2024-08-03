@@ -1,11 +1,12 @@
 import unittest
 
+from programytest.client import TestClient
+
 from programy.bot import Bot
 from programy.config.bot.bot import BotConfiguration
 from programy.config.brain.security import BrainSecurityConfiguration
 from programy.context import ClientContext
 from programy.security.authenticate.authenticator import Authenticator
-from programytest.client import TestClient
 
 
 class AuthenticatorTests(unittest.TestCase):

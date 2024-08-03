@@ -22,6 +22,8 @@ class RegexAIMLTests(unittest.TestCase):
         self._client_context = client.create_client_context("testid")
 
     def test_regex(self):
-        response = self._client_context.bot.ask_question(self._client_context, "I AM LEGION")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "I AM LEGION"
+        )
         self.assertIsNotNone(response)
         self.assertEqual(response, "Hello Legion.")

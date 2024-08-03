@@ -1,10 +1,11 @@
 import unittest
 
 import programytest.externals as Externals
+from programytest.client import TestClient
+
 from programy.bot import Bot
 from programy.config.bot.bot import BotConfiguration
 from programy.nlp.translate.extension import TranslateExtension
-from programytest.client import TestClient
 
 
 class TranslateExtensionTests(unittest.TestCase):
@@ -13,7 +14,9 @@ class TranslateExtensionTests(unittest.TestCase):
         self._client = TestClient()
 
         config = BotConfiguration()
-        config._from_translator._classname = "programy.nlp.translate.textblob_translator.TextBlobTranslator"
+        config._from_translator._classname = (
+            "programy.nlp.translate.textblob_translator.TextBlobTranslator"
+        )
 
         self.client_context = self._client.create_client_context("testuser")
 
@@ -49,15 +52,21 @@ class TranslateExtensionTests(unittest.TestCase):
         self.assertIsNotNone(result)
         self.assertEqual("TRANSLATE INVALID COMMAND", result)
 
-        result = extension.execute(self.client_context, "OTHER FROM EN TO FR HELLO I LOVE YOU")
+        result = extension.execute(
+            self.client_context, "OTHER FROM EN TO FR HELLO I LOVE YOU"
+        )
         self.assertIsNotNone(result)
         self.assertEqual("TRANSLATE INVALID COMMAND", result)
 
-        result = extension.execute(self.client_context, "TRANSLATE OTHER EN TO FR HELLO I LOVE YOU")
+        result = extension.execute(
+            self.client_context, "TRANSLATE OTHER EN TO FR HELLO I LOVE YOU"
+        )
         self.assertIsNotNone(result)
         self.assertEqual("TRANSLATE INVALID COMMAND", result)
 
-        result = extension.execute(self.client_context, "TRANSLATE FROM EN OTHER FR HELLO I LOVE YOU")
+        result = extension.execute(
+            self.client_context, "TRANSLATE FROM EN OTHER FR HELLO I LOVE YOU"
+        )
         self.assertIsNotNone(result)
         self.assertEqual("TRANSLATE INVALID COMMAND", result)
 
@@ -73,7 +82,10 @@ class TranslateExtensionTests(unittest.TestCase):
         result = extension.execute(self.client_context, "TRANSLATE ENABLED")
         self.assertEquals("TRANSLATE DISABLED", result)
 
-    @unittest.skipIf(Externals.google_translate is False or Externals.all_externals is False, Externals.google_translate_disabled)
+    @unittest.skipIf(
+        Externals.google_translate is False or Externals.all_externals is False,
+        Externals.google_translate_disabled,
+    )
     def test_translate(self):
         extension = TranslateExtension()
         self.assertIsNotNone(extension)
@@ -82,7 +94,9 @@ class TranslateExtensionTests(unittest.TestCase):
         self.assertIsNotNone(result)
         self.assertEqual("TRANSLATE ENABLED", result)
 
-        result = extension.execute(self.client_context, "TRANSLATE FROM EN TO FR HELLO I LOVE YOU")
+        result = extension.execute(
+            self.client_context, "TRANSLATE FROM EN TO FR HELLO I LOVE YOU"
+        )
         self.assertIsNotNone(result)
         self.assertEqual("TRANSLATED SALUT JE T'AIME", result)
 
@@ -92,6 +106,8 @@ class TranslateExtensionTests(unittest.TestCase):
 
         self.client_context.bot._from_translator = None
 
-        result = extension.execute(self.client_context, "TRANSLATE FROM EN TO FR HELLO I LOVE YOU")
+        result = extension.execute(
+            self.client_context, "TRANSLATE FROM EN TO FR HELLO I LOVE YOU"
+        )
         self.assertIsNotNone(result)
         self.assertEqual("TRANSLATE DISABLED", result)

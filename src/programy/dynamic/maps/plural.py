@@ -15,18 +15,14 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
-from programy.utils.logging.ylogger import YLogger
-
 from programy.dynamic.maps.map import DynamicMap
+from programy.utils.logging.ylogger import YLogger
 
 
 class PluralMap(DynamicMap):
 
     NAME = "PLURAL"
-    STATICS = {"MOUSE": "MICE",
-               "MAN": "MEN",
-               "WOMAN": "WOMEN"
-              }
+    STATICS = {"MOUSE": "MICE", "MAN": "MEN", "WOMAN": "WOMEN"}
 
     def __init__(self, config):
         DynamicMap.__init__(self, config)
@@ -39,10 +35,12 @@ class PluralMap(DynamicMap):
     def map_value(self, client_context, input_value):
         plural_value = self.static_map(input_value)
         if plural_value is None:
-            if input_value.endswith('Y'):
-                plural_value = input_value[:-1] + 'IES'
+            if input_value.endswith("Y"):
+                plural_value = input_value[:-1] + "IES"
             else:
                 plural_value = input_value + "S"
 
-        YLogger.debug(client_context, "PluralMap converted %s to %s", input_value, plural_value)
+        YLogger.debug(
+            client_context, "PluralMap converted %s to %s", input_value, plural_value
+        )
         return plural_value

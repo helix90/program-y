@@ -14,9 +14,10 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
-from programy.storage.stores.file.store.filestore import FileStore
+
 from programy.storage.entities.license import LicenseStore
+from programy.storage.stores.file.store.filestore import FileStore
+from programy.utils.logging.ylogger import YLogger
 
 
 class FileLicenseStore(FileStore, LicenseStore):
@@ -39,11 +40,13 @@ class FileLicenseStore(FileStore, LicenseStore):
                     self._process_license_key_line(collection, line)
 
         except Exception as excep:
-            YLogger.exception_nostack(self, "Invalid license key file [%s]", excep, filename)
+            YLogger.exception_nostack(
+                self, "Invalid license key file [%s]", excep, filename
+            )
 
     def _process_license_key_line(self, license_collection, line):
         line = line.strip()
-        if line and line.startswith('#') is False:
+        if line and line.startswith("#") is False:
             splits = line.split("=")
             if len(splits) > 1:
                 key_name = splits[0].strip()

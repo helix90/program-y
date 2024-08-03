@@ -14,9 +14,10 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
+from programy.parser.exceptions import ParserException
 from programy.parser.template.nodes.base import TemplateNode
 from programy.utils.text.text import TextUtils
-from programy.parser.exceptions import ParserException
 
 
 class TemplateTripleNode(TemplateNode):
@@ -50,14 +51,14 @@ class TemplateTripleNode(TemplateNode):
 
     def parse_expression(self, graph, expression):
 
-        if 'subj' in expression.attrib:
-            self._subj = graph.get_word_node(expression.attrib['subj'])
+        if "subj" in expression.attrib:
+            self._subj = graph.get_word_node(expression.attrib["subj"])
 
-        if 'pred' in expression.attrib:
-            self._pred = graph.get_word_node(expression.attrib['pred'])
+        if "pred" in expression.attrib:
+            self._pred = graph.get_word_node(expression.attrib["pred"])
 
-        if 'obj' in expression.attrib:
-            self._obj = graph.get_word_node(expression.attrib['obj'])
+        if "obj" in expression.attrib:
+            self._obj = graph.get_word_node(expression.attrib["obj"])
 
         head_text = self.get_text_from_element(expression)
         self.parse_text(graph, head_text)
@@ -65,13 +66,13 @@ class TemplateTripleNode(TemplateNode):
         for child in expression:
             tag_name = TextUtils.tag_from_text(child.tag)
 
-            if tag_name == 'subj':
+            if tag_name == "subj":
                 self._subj = self.parse_children_as_word_node(graph, child)
 
-            elif tag_name == 'pred':
+            elif tag_name == "pred":
                 self._pred = self.parse_children_as_word_node(graph, child)
 
-            elif tag_name == 'obj':
+            elif tag_name == "obj":
                 self._obj = self.parse_children_as_word_node(graph, child)
 
             else:

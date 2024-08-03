@@ -1,8 +1,10 @@
 import unittest
-from programy.oob.default import DefaultOutOfBandProcessor
-from programy.oob.callmom.camera import CameraOutOfBandProcessor
-from programy.oob.handler import OOBHandler
+
 from programytest.client import TestClient
+
+from programy.oob.callmom.camera import CameraOutOfBandProcessor
+from programy.oob.default import DefaultOutOfBandProcessor
+from programy.oob.handler import OOBHandler
 
 
 class TestOOBHandler(unittest.TestCase):
@@ -24,14 +26,14 @@ class TestOOBHandler(unittest.TestCase):
     def test_load_configuration_only_default(self):
 
         handler = OOBHandler()
-        handler.oobs['default'] = DefaultOutOfBandProcessor()
+        handler.oobs["default"] = DefaultOutOfBandProcessor()
 
-        self.assertTrue('default' in handler.oobs)
+        self.assertTrue("default" in handler.oobs)
         self.assertIsInstance(handler.default_oob, DefaultOutOfBandProcessor)
 
     def test_load_configuration_no_default(self):
         handler = OOBHandler()
-        handler.oobs['test'] = DefaultOutOfBandProcessor()
+        handler.oobs["test"] = DefaultOutOfBandProcessor()
 
         self.assertTrue("test" in handler.oobs)
         self.assertEqual(None, handler.default_oob)
@@ -47,7 +49,9 @@ class TestOOBHandler(unittest.TestCase):
         self.assertEqual("Other Text", response)
         self.assertEqual("<oob><camera>on</camera></oob>", oob)
 
-        response, oob = handler.strip_oob("Some Text <oob><camera>on</camera></oob>Other Text")
+        response, oob = handler.strip_oob(
+            "Some Text <oob><camera>on</camera></oob>Other Text"
+        )
         self.assertEqual("Some Text Other Text", response)
         self.assertEqual("<oob><camera>on</camera></oob>", oob)
 
@@ -58,7 +62,7 @@ class TestOOBHandler(unittest.TestCase):
     def test_handle_with_oob(self):
         handler = OOBHandler()
 
-        handler.oobs['camera'] = CameraOutOfBandProcessor()
+        handler.oobs["camera"] = CameraOutOfBandProcessor()
 
         response = handler.handle(None, "<oob><camera>on</camera></oob>")
         self.assertEqual("CAMERA", response)
@@ -66,8 +70,8 @@ class TestOOBHandler(unittest.TestCase):
     def test_handle_with_oob_invalid_class_with_default(self):
         handler = OOBHandler()
 
-        handler.oobs['test'] = DefaultOutOfBandProcessor()
-        handler.oobs['default'] = DefaultOutOfBandProcessor()
+        handler.oobs["test"] = DefaultOutOfBandProcessor()
+        handler.oobs["default"] = DefaultOutOfBandProcessor()
 
         response = handler.handle(None, "<oob><camera>on</camera></oob>")
         self.assertEqual("", response)
@@ -84,10 +88,12 @@ class TestOOBHandler(unittest.TestCase):
 
         handler = OOBHandler()
 
-        handler.oobs['camera'] = CameraOutOfBandProcessor()
-        handler.oobs['default'] = DefaultOutOfBandProcessor()
+        handler.oobs["camera"] = CameraOutOfBandProcessor()
+        handler.oobs["default"] = DefaultOutOfBandProcessor()
 
-        response = handler.process_oob(self._client_context, "<oob><camera>on</camera></oob>")
+        response = handler.process_oob(
+            self._client_context, "<oob><camera>on</camera></oob>"
+        )
         self.assertEquals("CAMERA", response)
 
     def test_process_oob_no_oob(self):
@@ -96,8 +102,8 @@ class TestOOBHandler(unittest.TestCase):
 
         handler = OOBHandler()
 
-        handler.oobs['camera'] = CameraOutOfBandProcessor()
-        handler.oobs['default'] = DefaultOutOfBandProcessor()
+        handler.oobs["camera"] = CameraOutOfBandProcessor()
+        handler.oobs["default"] = DefaultOutOfBandProcessor()
 
         response = handler.process_oob(self._client_context, "<camera>on</camera>")
         self.assertEquals("", response)
@@ -108,9 +114,10 @@ class TestOOBHandler(unittest.TestCase):
 
         handler = OOBHandler()
 
-        handler.oobs['camera'] = CameraOutOfBandProcessor()
-        handler.oobs['default'] = DefaultOutOfBandProcessor()
+        handler.oobs["camera"] = CameraOutOfBandProcessor()
+        handler.oobs["default"] = DefaultOutOfBandProcessor()
 
-        response = handler.process_oob(self._client_context, "<oob><light>on</light></oob>")
+        response = handler.process_oob(
+            self._client_context, "<oob><light>on</light></oob>"
+        )
         self.assertEquals("", response)
-

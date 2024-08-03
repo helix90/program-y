@@ -1,7 +1,7 @@
 import unittest
 import unittest.mock
-from programy.storage.entities.sets import SetsReadOnlyStore
-from programy.storage.entities.sets import SetsReadWriteStore
+
+from programy.storage.entities.sets import SetsReadOnlyStore, SetsReadWriteStore
 
 
 class SetsStoreTests(unittest.TestCase):
@@ -27,6 +27,7 @@ class SetsReadOnlyStoreTests(unittest.TestCase):
             collector = unittest.mock.Mock()
             store.load(collector)
 
+
 class MockSetsReadWriteStore(SetsReadWriteStore):
 
     def __init__(self):
@@ -35,6 +36,7 @@ class MockSetsReadWriteStore(SetsReadWriteStore):
 
     def add_to_set(self, name, value, replace_existing=False):
         self.added = True
+
 
 class SetsReadWriteStoreTests(unittest.TestCase):
 
@@ -73,4 +75,3 @@ class SetsReadWriteStoreTests(unittest.TestCase):
             name = unittest.mock.Mock()
             key = unittest.mock.Mock()
             store.remove_from_set(name, key)
-

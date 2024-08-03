@@ -1,12 +1,14 @@
 import unittest
+
 import yaml
+
 from programy.services.config import ServiceConfiguration
 
 
 class ServiceTestCase(unittest.TestCase):
 
     def _load_conf_file(self, client_context, conf_file):
-        with open(conf_file, 'r+', encoding="utf-8") as yml_data_file:
+        with open(conf_file, "r+", encoding="utf-8") as yml_data_file:
             yaml_data = yaml.load(yml_data_file, Loader=yaml.FullLoader)
 
             config = ServiceConfiguration.new_from_yaml(yaml_data, conf_file)
@@ -28,20 +30,20 @@ class ServiceTestCase(unittest.TestCase):
     def assertResponse(self, response, api, service, category):
         self.assertIsNotNone(response)
 
-        self.assertTrue('response' in response)
-        response = response['response']
+        self.assertTrue("response" in response)
+        response = response["response"]
 
-        self.assertTrue('api' in response)
-        self.assertEqual(api, response['api'])
+        self.assertTrue("api" in response)
+        self.assertEqual(api, response["api"])
 
-        self.assertTrue('started' in response)
-        self.assertTrue('speed' in response)
-        self.assertTrue('status' in response)
-        self.assertEqual('success', response['status'])
-        self.assertTrue('service' in response)
-        self.assertEqual(service, response['service'])
-        self.assertTrue('category' in response)
-        self.assertEqual(category, response['category'])
-        self.assertTrue('payload' in response)
+        self.assertTrue("started" in response)
+        self.assertTrue("speed" in response)
+        self.assertTrue("status" in response)
+        self.assertEqual("success", response["status"])
+        self.assertTrue("service" in response)
+        self.assertEqual(service, response["service"])
+        self.assertTrue("category" in response)
+        self.assertEqual(category, response["category"])
+        self.assertTrue("payload" in response)
 
-        return response['payload']
+        return response["payload"]

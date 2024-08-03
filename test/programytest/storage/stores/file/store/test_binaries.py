@@ -2,6 +2,7 @@ import os.path
 import shutil
 import unittest
 from unittest.mock import patch
+
 from programy.storage.stores.file.config import FileStorageConfiguration
 from programy.storage.stores.file.engine import FileStorageEngine
 from programy.storage.stores.file.store.binaries import FileBinariesStore
@@ -29,7 +30,7 @@ class FileBinariesStoreTests(unittest.TestCase):
         engine.initialise()
         store = FileBinariesStore(engine)
 
-        self.assertEquals('/tmp/binaries/binaries.bin', store._get_storage_path())
+        self.assertEquals("/tmp/binaries/binaries.bin", store._get_storage_path())
         self.assertIsInstance(store.get_storage(), FileStoreConfiguration)
 
     def test_save_load_binaries(self):
@@ -64,7 +65,10 @@ class FileBinariesStoreTests(unittest.TestCase):
     def patch_save(self, aiml_parser):
         raise Exception("Mock Exception")
 
-    @patch('programy.storage.stores.file.store.binaries.FileBinariesStore._save', patch_save)
+    @patch(
+        "programy.storage.stores.file.store.binaries.FileBinariesStore._save",
+        patch_save,
+    )
     def test_save_binaries_exception(self):
         config = FileStorageConfiguration()
         tmpdir = os.path.dirname(__file__) + os.sep + "binaries"
@@ -87,7 +91,10 @@ class FileBinariesStoreTests(unittest.TestCase):
     def patch_load(self):
         raise Exception("Mock Exception")
 
-    @patch('programy.storage.stores.file.store.binaries.FileBinariesStore._load', patch_load)
+    @patch(
+        "programy.storage.stores.file.store.binaries.FileBinariesStore._load",
+        patch_load,
+    )
     def test_load_binaries_exception(self):
         config = FileStorageConfiguration()
         tmpdir = os.path.dirname(__file__) + os.sep + "binaries"

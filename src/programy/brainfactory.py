@@ -14,8 +14,9 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from abc import ABC
-from abc import abstractmethod
+
+from abc import ABC, abstractmethod
+
 from programy.brain import Brain
 from programy.utils.classes.loader import ClassLoader
 from programy.utils.logging.ylogger import YLogger
@@ -87,10 +88,15 @@ class BrainFactory:
             self._brain_selector = DefaultBrainSelector(configuration, self._brains)
         else:
             try:
-                self._brain_selector = ClassLoader.instantiate_class(configuration.brain_selector)(configuration,
-                                                                                                   self._brains)
+                self._brain_selector = ClassLoader.instantiate_class(
+                    configuration.brain_selector
+                )(configuration, self._brains)
             except Exception as excep:
-                YLogger.exception_nostack(self, "Failed to load defined brain selector, loadiing default", excep)
+                YLogger.exception_nostack(
+                    self,
+                    "Failed to load defined brain selector, loadiing default",
+                    excep,
+                )
                 self._brain_selector = DefaultBrainSelector(configuration, self._brains)
 
     def select_brain(self):
@@ -99,6 +105,5 @@ class BrainFactory:
     def get_question_counts(self):
         brains = []
         for brainid, brain in self._brains.items():
-            brains.append({"id": brainid,
-                           "questions": brain.num_questions})
+            brains.append({"id": brainid, "questions": brain.num_questions})
         return brains

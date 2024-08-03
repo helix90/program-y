@@ -14,18 +14,20 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 import os
 import os.path
-import shutil
 import re
-from programy.utils.logging.ylogger import YLogger
-from programy.storage.stores.file.store.filestore import FileStore
+import shutil
+
 from programy.storage.entities.property import PropertyStore
+from programy.storage.stores.file.store.filestore import FileStore
+from programy.utils.logging.ylogger import YLogger
 
 
 class FilePropertyStore(FileStore, PropertyStore):
-    SPLIT_CHAR = ':'
-    COMMENT = '#'
+    SPLIT_CHAR = ":"
+    COMMENT = "#"
 
     def __init__(self, storage_engine):
         FileStore.__init__(self, storage_engine)
@@ -38,10 +40,10 @@ class FilePropertyStore(FileStore, PropertyStore):
         return self.storage_engine.configuration.properties_storage
 
     def add_property(self, name, value):
-        pass        # pragma: no cover
+        pass  # pragma: no cover
 
     def add_properties(self, properties):
-        pass        # pragma: no cover
+        pass  # pragma: no cover
 
     def get_properties(self):
         property_filepath = self._get_storage_path()
@@ -73,7 +75,9 @@ class FilePropertyStore(FileStore, PropertyStore):
             self._load_properties_from_file(property_filepath, properties)
 
         except Exception as excep:
-            YLogger.exception_nostack(self, "Failed to load properties file [%s]", excep, property_filepath)
+            YLogger.exception_nostack(
+                self, "Failed to load properties file [%s]", excep, property_filepath
+            )
 
         return properties
 

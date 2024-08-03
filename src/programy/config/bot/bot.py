@@ -15,16 +15,15 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
-from programy.utils.logging.ylogger import YLogger
-
-from programy.config.container import BaseContainerConfigurationData
-from programy.config.brain.brain import BrainConfiguration
-from programy.config.bot.spelling import BotSpellingConfiguration
 from programy.config.bot.conversations import BotConversationsConfiguration
-from programy.config.bot.splitter import BotSentenceSplitterConfiguration
 from programy.config.bot.joiner import BotSentenceJoinerConfiguration
-from programy.config.bot.translation import BotTranslatorConfiguration
 from programy.config.bot.sentiment import BotSentimentAnalyserConfiguration
+from programy.config.bot.spelling import BotSpellingConfiguration
+from programy.config.bot.splitter import BotSentenceSplitterConfiguration
+from programy.config.bot.translation import BotTranslatorConfiguration
+from programy.config.brain.brain import BrainConfiguration
+from programy.config.container import BaseContainerConfigurationData
+from programy.utils.logging.ylogger import YLogger
 from programy.utils.substitutions.substitues import Substitutions
 
 
@@ -68,70 +67,118 @@ class BotConfiguration(BaseContainerConfigurationData):
         self._splitter = BotSentenceSplitterConfiguration()
         self._joiner = BotSentenceJoinerConfiguration()
 
-        brain_config = BrainConfiguration('brain')
+        brain_config = BrainConfiguration("brain")
         self._brain_configs = [brain_config]
         self._brain_selector = "programy.brainfactory.DefaultBrainSelector"
 
         BaseContainerConfigurationData.__init__(self, section_name)
 
-    def load_configuration(self, configuration_file, bot_root, subs: Substitutions = None):
+    def load_configuration(
+        self, configuration_file, bot_root, subs: Substitutions = None
+    ):
         pass
 
-    def load_configuration_section(self, configuration_file, bot, bot_root, subs: Substitutions = None):
+    def load_configuration_section(
+        self, configuration_file, bot, bot_root, subs: Substitutions = None
+    ):
 
-        self._default_response = configuration_file.get_option(bot, "default_response",
-                                                               BotConfiguration.DEFAULT_RESPONSE, subs=subs)
-        self._default_response_srai = configuration_file.get_option(bot, "default_response_srai",
-                                                                    BotConfiguration.DEFAULT_RESPONSE_SRAI,
-                                                                    subs=subs)
-        self._empty_string = configuration_file.get_option(bot, "empty_string",
-                                                           BotConfiguration.DEFAULT_EMPTY_STRING, subs=subs)
-        self._exit_response = configuration_file.get_option(bot, "exit_response",
-                                                            BotConfiguration.DEFAULT_EXIT_RESPONSE, subs=subs)
-        self._exit_response_srai = configuration_file.get_option(bot, "exit_response_srai",
-                                                                 BotConfiguration.DEFAULT_EXIT_RESPONSE_SRAI,
-                                                                 subs=subs)
-        self._initial_question = configuration_file.get_option(bot, "initial_question",
-                                                               BotConfiguration.DEFAULT_INITIAL_QUESTION, subs=subs)
-        self._initial_question_srai = configuration_file.get_option(bot, "initial_question_srai",
-                                                                    BotConfiguration.DEFAULT_INITIAL_QUESTION_SRAI,
-                                                                    subs=subs)
-        self._override_properties = configuration_file.get_option(bot, "override_properties",
-                                                                  BotConfiguration.DEFAULT_OVERRIDE_PREDICATES,
-                                                                  subs=subs)
-        self._max_question_recursion = configuration_file.\
-            get_int_option(bot, "max_question_recursion", BotConfiguration.DEFAULT_MAX_QUESTION_RECURSION,
-                           subs=subs)
-        self._max_question_timeout = configuration_file.get_int_option(bot, "max_question_timeout",
-                                                                       BotConfiguration.DEFAULT_MAX_QUESTION_TIMEOUT,
-                                                                       subs=subs)
-        self._max_search_depth = configuration_file.get_int_option(bot, "max_search_depth",
-                                                                   BotConfiguration.DEFAULT_MAX_SEARCH_DEPTH,
-                                                                   subs=subs)
-        self._max_search_timeout = configuration_file.get_int_option(bot, "max_search_timeout",
-                                                                     BotConfiguration.DEFAULT_MAX_SEARCH_TIMEOUT,
-                                                                     subs=subs)
-        self._tab_parse_output = configuration_file.get_bool_option(bot, "tab_parse_output",
-                                                                    BotConfiguration.DEFAULT_TAB_PARSE_OUTPUT,
-                                                                    subs=subs)
+        self._default_response = configuration_file.get_option(
+            bot, "default_response", BotConfiguration.DEFAULT_RESPONSE, subs=subs
+        )
+        self._default_response_srai = configuration_file.get_option(
+            bot,
+            "default_response_srai",
+            BotConfiguration.DEFAULT_RESPONSE_SRAI,
+            subs=subs,
+        )
+        self._empty_string = configuration_file.get_option(
+            bot, "empty_string", BotConfiguration.DEFAULT_EMPTY_STRING, subs=subs
+        )
+        self._exit_response = configuration_file.get_option(
+            bot, "exit_response", BotConfiguration.DEFAULT_EXIT_RESPONSE, subs=subs
+        )
+        self._exit_response_srai = configuration_file.get_option(
+            bot,
+            "exit_response_srai",
+            BotConfiguration.DEFAULT_EXIT_RESPONSE_SRAI,
+            subs=subs,
+        )
+        self._initial_question = configuration_file.get_option(
+            bot,
+            "initial_question",
+            BotConfiguration.DEFAULT_INITIAL_QUESTION,
+            subs=subs,
+        )
+        self._initial_question_srai = configuration_file.get_option(
+            bot,
+            "initial_question_srai",
+            BotConfiguration.DEFAULT_INITIAL_QUESTION_SRAI,
+            subs=subs,
+        )
+        self._override_properties = configuration_file.get_option(
+            bot,
+            "override_properties",
+            BotConfiguration.DEFAULT_OVERRIDE_PREDICATES,
+            subs=subs,
+        )
+        self._max_question_recursion = configuration_file.get_int_option(
+            bot,
+            "max_question_recursion",
+            BotConfiguration.DEFAULT_MAX_QUESTION_RECURSION,
+            subs=subs,
+        )
+        self._max_question_timeout = configuration_file.get_int_option(
+            bot,
+            "max_question_timeout",
+            BotConfiguration.DEFAULT_MAX_QUESTION_TIMEOUT,
+            subs=subs,
+        )
+        self._max_search_depth = configuration_file.get_int_option(
+            bot,
+            "max_search_depth",
+            BotConfiguration.DEFAULT_MAX_SEARCH_DEPTH,
+            subs=subs,
+        )
+        self._max_search_timeout = configuration_file.get_int_option(
+            bot,
+            "max_search_timeout",
+            BotConfiguration.DEFAULT_MAX_SEARCH_TIMEOUT,
+            subs=subs,
+        )
+        self._tab_parse_output = configuration_file.get_bool_option(
+            bot,
+            "tab_parse_output",
+            BotConfiguration.DEFAULT_TAB_PARSE_OUTPUT,
+            subs=subs,
+        )
 
         self._spelling.load_config_section(configuration_file, bot, bot_root, subs=subs)
 
-        self._conversations.load_config_section(configuration_file, bot, bot_root, subs=subs)
+        self._conversations.load_config_section(
+            configuration_file, bot, bot_root, subs=subs
+        )
 
         self._splitter.load_config_section(configuration_file, bot, bot_root, subs=subs)
 
         self._joiner.load_config_section(configuration_file, bot, bot_root, subs=subs)
 
-        self._from_translator.load_config_section(configuration_file, bot, bot_root, subs=subs)
+        self._from_translator.load_config_section(
+            configuration_file, bot, bot_root, subs=subs
+        )
 
-        self._to_translator.load_config_section(configuration_file, bot, bot_root, subs=subs)
+        self._to_translator.load_config_section(
+            configuration_file, bot, bot_root, subs=subs
+        )
 
-        self._sentiment.load_config_section(configuration_file, bot, bot_root, subs=subs)
+        self._sentiment.load_config_section(
+            configuration_file, bot, bot_root, subs=subs
+        )
 
         self.load_brain_configurations(configuration_file, bot, bot_root, subs)
 
-    def load_brain_configurations(self, configuration_file, bot, bot_root, subs: Substitutions = None):
+    def load_brain_configurations(
+        self, configuration_file, bot, bot_root, subs: Substitutions = None
+    ):
         brains = configuration_file.get_section("brains", bot)
         if brains is not None:
             brain_keys = configuration_file.get_keys(brains)
@@ -142,10 +189,14 @@ class BotConfiguration(BaseContainerConfigurationData):
                     first = False
                 brain_config = configuration_file.get_section(name, brains)
                 config = BrainConfiguration(name)
-                config.load_configuration(configuration_file, brain_config, bot_root, subs=subs)
+                config.load_configuration(
+                    configuration_file, brain_config, bot_root, subs=subs
+                )
                 self._brain_configs.append(config)
 
-        self._brain_selector = configuration_file.get_option(bot, "brain_selector", subs=subs)
+        self._brain_selector = configuration_file.get_option(
+            bot, "brain_selector", subs=subs
+        )
 
     @property
     def configurations(self):
@@ -273,39 +324,43 @@ class BotConfiguration(BaseContainerConfigurationData):
 
     def to_yaml(self, data, defaults=True):
 
-        data['bot_root'] = self.bot_root
-        data['default_response'] = self.default_response
-        data['default_response_srai'] = self.default_response_srai
-        data['exit_response'] = self.exit_response
-        data['exit_response_srai'] = self.exit_response_srai
-        data['initial_question'] = self.initial_question
-        data['initial_question_srai'] = self.initial_question_srai
-        data['empty_string'] = self.empty_string
-        data['override_properties'] = self.override_properties
-        data['max_question_recursion'] = self.max_question_recursion
-        data['max_question_timeout'] = self.max_question_timeout
-        data['max_search_depth'] = self.max_search_depth
-        data['max_search_timeout'] = self.max_search_timeout
-        data['tab_parse_output'] = self.tab_parse_output
+        data["bot_root"] = self.bot_root
+        data["default_response"] = self.default_response
+        data["default_response_srai"] = self.default_response_srai
+        data["exit_response"] = self.exit_response
+        data["exit_response_srai"] = self.exit_response_srai
+        data["initial_question"] = self.initial_question
+        data["initial_question_srai"] = self.initial_question_srai
+        data["empty_string"] = self.empty_string
+        data["override_properties"] = self.override_properties
+        data["max_question_recursion"] = self.max_question_recursion
+        data["max_question_timeout"] = self.max_question_timeout
+        data["max_search_depth"] = self.max_search_depth
+        data["max_search_timeout"] = self.max_search_timeout
+        data["tab_parse_output"] = self.tab_parse_output
         self.config_to_yaml(data, BotSpellingConfiguration(), defaults)
         self.config_to_yaml(data, BotConversationsConfiguration(), defaults)
         self.config_to_yaml(data, BotSentenceSplitterConfiguration(), defaults)
         self.config_to_yaml(data, BotSentenceJoinerConfiguration(), defaults)
-        self.config_to_yaml(data, BotTranslatorConfiguration(name="from_translator"), defaults)
-        self.config_to_yaml(data, BotTranslatorConfiguration(name="to_translator"), defaults)
+        self.config_to_yaml(
+            data, BotTranslatorConfiguration(name="from_translator"), defaults
+        )
+        self.config_to_yaml(
+            data, BotTranslatorConfiguration(name="to_translator"), defaults
+        )
         self.config_to_yaml(data, BotSentimentAnalyserConfiguration(), defaults)
 
-        data['brains'] = {}
+        data["brains"] = {}
         if defaults is True:
-            data['brains']['brain'] = {}
-            brain_config = BrainConfiguration('brain')
-            brain_config.to_yaml(data['brains']['brain'], defaults)
+            data["brains"]["brain"] = {}
+            brain_config = BrainConfiguration("brain")
+            brain_config.to_yaml(data["brains"]["brain"], defaults)
 
-            data['brain_selector'] = "programy.brainfactory.DefaultBrainSelector"
+            data["brain_selector"] = "programy.brainfactory.DefaultBrainSelector"
 
         else:
             for brainconfig in self._brain_configs:
-                data['brains'][brainconfig.id] = {}
-                brainconfig.to_yaml( data['brains'][brainconfig.id], defaults)
+                data["brains"][brainconfig.id] = {}
+                brainconfig.to_yaml(data["brains"][brainconfig.id], defaults)
 
-            data['brain_selector'] = self._brain_selector
+            data["brain_selector"] = self._brain_selector

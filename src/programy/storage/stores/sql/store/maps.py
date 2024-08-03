@@ -14,9 +14,10 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.storage.stores.sql.store.sqlstore import SQLStore
+
 from programy.storage.entities.maps import MapsReadWriteStore
 from programy.storage.stores.sql.dao.map import Map
+from programy.storage.stores.sql.store.sqlstore import SQLStore
 
 
 class SQLMapsStore(SQLStore, MapsReadWriteStore):
@@ -39,12 +40,17 @@ class SQLMapsStore(SQLStore, MapsReadWriteStore):
 
     def add_to_map(self, name, key, value, overwrite_existing=False):
         del overwrite_existing
-        amap = self. _get_entity(name, key, value)
+        amap = self._get_entity(name, key, value)
         self._storage_engine.session.add(amap)
         return True
 
     def remove_from_map(self, name, key):
-        if self._storage_engine.session.query(Map).filter(Map.name == name, Map.key == key).delete() > 0:
+        if (
+            self._storage_engine.session.query(Map)
+            .filter(Map.name == name, Map.key == key)
+            .delete()
+            > 0
+        ):
             return True
 
         return False
@@ -64,7 +70,7 @@ class SQLMapsStore(SQLStore, MapsReadWriteStore):
             the_map[item.key] = item.value
 
         if len(the_map):
-            collector.add_map(name, the_map, 'sql')
+            collector.add_map(name, the_map, "sql")
             return True
 
         return False

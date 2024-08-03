@@ -1,9 +1,10 @@
 import os
 
+from programytest.config.file.base_file_tests import ConfigurationBaseFileTests
+
 from programy.clients.events.console.config import ConsoleConfiguration
 from programy.config.file.xml_file import XMLConfigurationFile
 from programy.utils.substitutions.substitues import Substitutions
-from programytest.config.file.base_file_tests import ConfigurationBaseFileTests
 
 
 class XMLConfigurationFileTests(ConfigurationBaseFileTests):

@@ -1,6 +1,8 @@
 import xml.etree.ElementTree as ET
 
-from programytest.parser.template.graph_tests.graph_test_client import TemplateGraphTestClient
+from programytest.parser.template.graph_tests.graph_test_client import (
+    TemplateGraphTestClient,
+)
 
 
 class TemplateGraphFirstTests(TemplateGraphTestClient):
@@ -10,9 +12,12 @@ class TemplateGraphFirstTests(TemplateGraphTestClient):
         self._client_context.brain.rdf.add_entity("MONKEY", "LEGS", "2", "ANIMALS")
         self._client_context.brain.rdf.add_entity("MONKEY", "HASFUR", "true", "ANIMALS")
         self._client_context.brain.rdf.add_entity("ZEBRA", "LEGS", "4", "ANIMALS")
-        self._client_context.brain.rdf.add_entity("ELEPHANT", "TRUNK", "true", "ANIMALS")
+        self._client_context.brain.rdf.add_entity(
+            "ELEPHANT", "TRUNK", "true", "ANIMALS"
+        )
 
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
 			<template>
                <rest>
                     <select>
@@ -25,7 +30,8 @@ class TemplateGraphFirstTests(TemplateGraphTestClient):
                     </select>
                 </rest>
 			</template>
-			""")
+			"""
+        )
         self.assertIsNotNone(template)
 
         ast = self._graph.parse_template_expression(template)
@@ -33,7 +39,7 @@ class TemplateGraphFirstTests(TemplateGraphTestClient):
 
         result = ast.resolve(self._client_context)
         self.assertIsNotNone(result)
-        self.assertEqual('NIL', result)
+        self.assertEqual("NIL", result)
 
     def test_rest_single_var_multipe_result(self):
 
@@ -41,9 +47,12 @@ class TemplateGraphFirstTests(TemplateGraphTestClient):
         self._client_context.brain.rdf.add_entity("MONKEY", "HASFUR", "true", "ANIMALS")
         self._client_context.brain.rdf.add_entity("ZEBRA", "LEGS", "4", "ANIMALS")
         self._client_context.brain.rdf.add_entity("BIRD", "LEGS", "2", "ANIMALS")
-        self._client_context.brain.rdf.add_entity("ELEPHANT", "TRUNK", "true", "ANIMALS")
+        self._client_context.brain.rdf.add_entity(
+            "ELEPHANT", "TRUNK", "true", "ANIMALS"
+        )
 
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
 			<template>
                <rest>
                     <select>
@@ -56,7 +65,8 @@ class TemplateGraphFirstTests(TemplateGraphTestClient):
                     </select>
                 </rest>
 			</template>
-			""")
+			"""
+        )
         self.assertIsNotNone(template)
 
         ast = self._graph.parse_template_expression(template)
@@ -71,9 +81,12 @@ class TemplateGraphFirstTests(TemplateGraphTestClient):
         self._client_context.brain.rdf.add_entity("MONKEY", "LEGS", "2", "ANIMALS")
         self._client_context.brain.rdf.add_entity("MONKEY", "HASFUR", "true", "ANIMALS")
         self._client_context.brain.rdf.add_entity("ZEBRA", "LEGS", "4", "ANIMALS")
-        self._client_context.brain.rdf.add_entity("ELEPHANT", "TRUNK", "true", "ANIMALS")
+        self._client_context.brain.rdf.add_entity(
+            "ELEPHANT", "TRUNK", "true", "ANIMALS"
+        )
 
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
 			<template>
                <rest>
                     <select>
@@ -86,7 +99,8 @@ class TemplateGraphFirstTests(TemplateGraphTestClient):
                     </select>
                 </rest>
 			</template>
-			""")
+			"""
+        )
         self.assertIsNotNone(template)
 
         ast = self._graph.parse_template_expression(template)
@@ -94,7 +108,7 @@ class TemplateGraphFirstTests(TemplateGraphTestClient):
 
         result = ast.resolve(self._client_context)
         self.assertIsNotNone(result)
-        self.assertEqual('NIL', result)
+        self.assertEqual("NIL", result)
 
     def test_rest_multiple_var_multipe_result(self):
 
@@ -102,9 +116,12 @@ class TemplateGraphFirstTests(TemplateGraphTestClient):
         self._client_context.brain.rdf.add_entity("MONKEY", "HASFUR", "true", "ANIMALS")
         self._client_context.brain.rdf.add_entity("ZEBRA", "LEGS", "4", "ANIMALS")
         self._client_context.brain.rdf.add_entity("BIRD", "LEGS", "2", "ANIMALS")
-        self._client_context.brain.rdf.add_entity("ELEPHANT", "TRUNK", "true", "ANIMALS")
+        self._client_context.brain.rdf.add_entity(
+            "ELEPHANT", "TRUNK", "true", "ANIMALS"
+        )
 
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
 			<template>
                <rest>
                     <select>
@@ -117,7 +134,8 @@ class TemplateGraphFirstTests(TemplateGraphTestClient):
                     </select>
                 </rest>
 			</template>
-			""")
+			"""
+        )
         self.assertIsNotNone(template)
 
         ast = self._graph.parse_template_expression(template)
@@ -125,4 +143,6 @@ class TemplateGraphFirstTests(TemplateGraphTestClient):
 
         result = ast.resolve(self._client_context)
         self.assertIsNotNone(result)
-        self.assertEqual('[[["?x", "ZEBRA"], ["?y", "4"]], [["?x", "BIRD"], ["?y", "2"]]]', result)
+        self.assertEqual(
+            '[[["?x", "ZEBRA"], ["?y", "4"]], [["?x", "BIRD"], ["?y", "2"]]]', result
+        )

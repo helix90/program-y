@@ -10,13 +10,17 @@ class BrainBinariesConfigurationTests(unittest.TestCase):
     def test_with_data(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         brain:
             binaries:
               save_binary: true
               load_binary: true
               load_aiml_on_binary_fail: true
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         brain_config = yaml.get_section("brain")
 
@@ -30,10 +34,14 @@ class BrainBinariesConfigurationTests(unittest.TestCase):
     def test_without_data(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         brain:
             binaries:
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         brain_config = yaml.get_section("brain")
 
@@ -47,9 +55,13 @@ class BrainBinariesConfigurationTests(unittest.TestCase):
     def test_with_no_data(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         brain:
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         brain_config = yaml.get_section("brain")
 
@@ -69,6 +81,6 @@ class BrainBinariesConfigurationTests(unittest.TestCase):
 
     @staticmethod
     def assert_defaults(test, data):
-        test.assertFalse(data['save_binary'])
-        test.assertFalse(data['load_binary'])
-        test.assertTrue(data['load_aiml_on_binary_fail'])
+        test.assertFalse(data["save_binary"])
+        test.assertFalse(data["load_binary"])
+        test.assertTrue(data["load_aiml_on_binary_fail"])

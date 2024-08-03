@@ -14,11 +14,12 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-import urllib.parse
+
 import os
+import urllib.parse
+
 from programy.services.base import ServiceQuery
-from programy.services.rest.base import RESTService
-from programy.services.rest.base import RESTServiceException
+from programy.services.rest.base import RESTService, RESTServiceException
 from programy.utils.logging.ylogger import YLogger
 
 
@@ -41,11 +42,15 @@ class YelpBusinessSearchQuery(ServiceQuery):
         return self._service.search(self._term, self._location)
 
     def aiml_response(self, response):
-        payload = response['response']['payload']
-        businesses = payload['businesses']
+        payload = response["response"]["payload"]
+        businesses = payload["businesses"]
         result = "<ul>\n"
         for business in businesses:
-            details = "{0} - {1} - {2}".format(business['name'], ", ".join(business['location']['display_address']), business['phone'])
+            details = "{0} - {1} - {2}".format(
+                business["name"],
+                ", ".join(business["location"]["display_address"]),
+                business["phone"],
+            )
             result += "<li>{0}</li>\n".format(details)
         result += "<ul>"
         return result
@@ -61,20 +66,22 @@ class YelpBusinessSearchService(RESTService):
     """
     https://www.yelp.co.uk/developers/documentation/v3/business_search
     """
-    PATTERNS = [
-        [r"BUSINESS\sSEARCH\s(.+)\sLOCATION\s(.+)", YelpBusinessSearchQuery]
-    ]
 
-    BUSINESS_SEARCH_URL="https://api.yelp.com/v3/businesses/search"
+    PATTERNS = [[r"BUSINESS\sSEARCH\s(.+)\sLOCATION\s(.+)", YelpBusinessSearchQuery]]
+
+    BUSINESS_SEARCH_URL = "https://api.yelp.com/v3/businesses/search"
 
     def __init__(self, configuration):
         RESTService.__init__(self, configuration)
         self._api_key = None
-        
+
     def initialise(self, client):
-        self._api_key = client.license_keys.get_key('YELP_API_KEY')
+        self._api_key = client.license_keys.get_key("YELP_API_KEY")
         if self._api_key is None:
-            YLogger.error(self, "YELP_API_KEY missing from license.keys, service will not function correctly!")
+            YLogger.error(
+                self,
+                "YELP_API_KEY missing from license.keys, service will not function correctly!",
+            )
 
     def patterns(self) -> list:
         return YelpBusinessSearchService.PATTERNS
@@ -88,7 +95,9 @@ class YelpBusinessSearchService(RESTService):
 
     def _build_search_url(self, term, location, locale):
         url = YelpBusinessSearchService.BUSINESS_SEARCH_URL
-        url += "?term={0}&location={1}&locale={2}".format(urllib.parse.quote(term), location, locale)
+        url += "?term={0}&location={1}&locale={2}".format(
+            urllib.parse.quote(term), location, locale
+        )
         return url
 
     def _build_search_headers(self):
@@ -97,7 +106,7 @@ class YelpBusinessSearchService(RESTService):
     def search(self, term, location, locale="en_GB"):
         url = self._build_search_url(term, location, locale)
         headers = self._build_search_headers()
-        response = self.query('search', url, headers=headers)
+        response = self.query("search", url, headers=headers)
         return response
 
     def _response_to_json(self, api, response):

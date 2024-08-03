@@ -14,17 +14,19 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-import threading
+
 import datetime
+import threading
+
 import requests
 from flask import Flask, jsonify, request
 
-from programy.utils.logging.ylogger import YLogger
 from programy.clients.ping.config import PingResponderConfig
 from programy.utils.console.console import outputLog
+from programy.utils.logging.ylogger import YLogger
 
 
-class PingResponder():
+class PingResponder:
 
     def __init__(self, client):
         self._start_time = datetime.datetime.now()
@@ -37,29 +39,30 @@ class PingResponder():
 
     def ping(self):
 
-        payload = {"start_time": "%s" % self._start_time,
-                   "client": self._client.id,
-                   "questions": self._client.num_questions
-                   }
-        payload['bots'] = self._client.get_question_counts()
-        payload['logging'] = YLogger.snapshot().to_json()
+        payload = {
+            "start_time": "%s" % self._start_time,
+            "client": self._client.id,
+            "questions": self._client.num_questions,
+        }
+        payload["bots"] = self._client.get_question_counts()
+        payload["logging"] = YLogger.snapshot().to_json()
 
         return payload
 
     @staticmethod
     def ping_service(ping_app: Flask, config: PingResponderConfig):
 
-        if config.ssl_cert_file is not None and \
-                config.ssl_key_file is not None:
-            context = (config.ssl_cert_file,
-                       config.ssl_key_file)
+        if config.ssl_cert_file is not None and config.ssl_key_file is not None:
+            context = (config.ssl_cert_file, config.ssl_key_file)
 
             outputLog(None, "Healthcheck running in https mode")
             try:
-                ping_app.run(host=config.host,
-                             port=config.port,
-                             debug=config.debug,
-                             ssl_context=context)
+                ping_app.run(
+                    host=config.host,
+                    port=config.port,
+                    debug=config.debug,
+                    ssl_context=context,
+                )
 
             except Exception as error:
                 print("Healthcheck failed to start:", error)
@@ -67,23 +70,23 @@ class PingResponder():
         else:
             outputLog(None, "Healthcheck running in http mode, careful now !")
             try:
-                ping_app.run(host=config.host,
-                             port=config.port,
-                             debug=config.debug)
+                ping_app.run(host=config.host, port=config.port, debug=config.debug)
 
             except Exception as error:
                 print("Healthcheck failed to start:", error)
 
     def start_ping_service(self, ping_app: Flask):
-        t = threading.Thread(target=PingResponder.ping_service, args=(ping_app, self.config))
+        t = threading.Thread(
+            target=PingResponder.ping_service, args=(ping_app, self.config)
+        )
         t.daemon = False
         t.start()
         return t
 
     def stop_ping_service(self):
-        func = request.environ.get('werkzeug.server.shutdown')
+        func = request.environ.get("werkzeug.server.shutdown")
         if func is None:
-            raise RuntimeError('Not running with the Werkzeug Server')
+            raise RuntimeError("Not running with the Werkzeug Server")
         func()
 
     def shutdown_ping_service(self):
@@ -91,7 +94,11 @@ class PingResponder():
         self.unregister_with_healthchecker()
 
         try:
-            url = "http://%s:%d%s" % (self.config.host, self.config.port, self.config.shutdown)
+            url = "http://%s:%d%s" % (
+                self.config.host,
+                self.config.port,
+                self.config.shutdown,
+            )
             requests.get(url)
 
         except Exception:
@@ -113,8 +120,13 @@ class PingResponder():
                 port = self._client.configuration.client_configuration.port
 
             try:
-                url = "%s?name=%s&host=%s&port=%s&url=%s" % (self.config.register, self._client.id,
-                                                             host, port, self.config.url)
+                url = "%s?name=%s&host=%s&port=%s&url=%s" % (
+                    self.config.register,
+                    self._client.id,
+                    host,
+                    port,
+                    self.config.url,
+                )
                 requests.get(url)
 
             except Exception as e:
@@ -143,14 +155,16 @@ class PingResponder():
         ping_app = Flask(ping_responder.config.name)
 
         if ping_responder.config.url is not None:
-            @ping_app.route(ping_responder.config.url, methods=['GET'])
+
+            @ping_app.route(ping_responder.config.url, methods=["GET"])
             def ping():  # pylint: disable=unused-variable
                 return jsonify(ping_responder.ping())
 
         if ping_responder.config.shutdown is not None:
-            @ping_app.route(ping_responder.config.shutdown, methods=['GET'])
+
+            @ping_app.route(ping_responder.config.shutdown, methods=["GET"])
             def shutdown():  # pylint: disable=unused-variable
                 ping_responder.stop_ping_service()
-                return 'Server shutting down...'
+                return "Server shutting down..."
 
         ping_responder.start_ping_service(ping_app)

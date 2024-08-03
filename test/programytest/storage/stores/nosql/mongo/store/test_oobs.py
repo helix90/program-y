@@ -1,10 +1,12 @@
 import unittest
 from unittest.mock import patch
+
 import programytest.storage.engines as Engines
+from programytest.storage.asserts.store.assert_oobs import OOBsStoreAsserts
+
 from programy.storage.stores.nosql.mongo.config import MongoStorageConfiguration
 from programy.storage.stores.nosql.mongo.engine import MongoStorageEngine
 from programy.storage.stores.nosql.mongo.store.oobs import MongoOOBStore
-from programytest.storage.asserts.store.assert_oobs import OOBsStoreAsserts
 
 
 class MongoOOBStoreTests(OOBsStoreAsserts):
@@ -16,7 +18,7 @@ class MongoOOBStoreTests(OOBsStoreAsserts):
         engine.initialise()
         store = MongoOOBStore(engine)
         self.assertEqual(store.storage_engine, engine)
-        
+
     @unittest.skipIf(Engines.mongo is False, Engines.mongo_disabled)
     def test_load_oobs(self):
         config = MongoStorageConfiguration()
@@ -31,7 +33,10 @@ class MongoOOBStoreTests(OOBsStoreAsserts):
         raise Exception("Mock Exception")
 
     @unittest.skipIf(Engines.mongo is False, Engines.mongo_disabled)
-    @patch("programy.utils.classes.loader.ClassLoader.instantiate_class", patch_instantiate_class)
+    @patch(
+        "programy.utils.classes.loader.ClassLoader.instantiate_class",
+        patch_instantiate_class,
+    )
     def test_load_oobs_exception(self):
         config = MongoStorageConfiguration()
         engine = MongoStorageEngine(config)
@@ -62,7 +67,10 @@ class MongoOOBStoreTests(OOBsStoreAsserts):
         raise Exception("Mock Exception")
 
     @unittest.skipIf(Engines.mongo is False, Engines.mongo_disabled)
-    @patch("programy.storage.stores.nosql.mongo.store.oobs.MongoOOBStore._load_oobs_from_file", patch_load_oobs_from_file)
+    @patch(
+        "programy.storage.stores.nosql.mongo.store.oobs.MongoOOBStore._load_oobs_from_file",
+        patch_load_oobs_from_file,
+    )
     def test_upload_from_file_exception(self):
         config = MongoStorageConfiguration()
         engine = MongoStorageEngine(config)

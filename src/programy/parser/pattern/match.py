@@ -29,12 +29,13 @@ class Match:
 
         self._matched_node_words = []
 
-        if node is not None and \
-                (node.is_wildcard() or \
-                 node.is_set() or \
-                 node.is_iset() or \
-                 node.is_bot() or \
-                 node.is_regex()):
+        if node is not None and (
+            node.is_wildcard()
+            or node.is_set()
+            or node.is_iset()
+            or node.is_bot()
+            or node.is_regex()
+        ):
             self._matched_node_multi_word = True
         else:
             self._matched_node_multi_word = False
@@ -105,25 +106,29 @@ class Match:
 
     @staticmethod
     def string_to_type(match_type):
-        if match_type == 'Word':
+        if match_type == "Word":
             return Match.WORD
-        elif match_type == 'Topic':
+        elif match_type == "Topic":
             return Match.TOPIC
-        elif match_type == 'That':
+        elif match_type == "That":
             return Match.THAT
         return -1
 
     def to_string(self, client_context):
-        return "Match=(%s) Node=(%s) Matched=(%s)" % (Match.type_to_string(self.matched_node_type),
-                                                      self.matched_node_str,
-                                                      self.joined_words(client_context))
+        return "Match=(%s) Node=(%s) Matched=(%s)" % (
+            Match.type_to_string(self.matched_node_type),
+            self.matched_node_str,
+            self.joined_words(client_context),
+        )
 
     def to_json(self):
-        return {"type": Match.type_to_string(self.matched_node_type),
-                "node": self.matched_node_str,
-                "words": self.matched_node_words,
-                "multi_word": self.matched_node_multi_word,
-                "wild_card": self.matched_node_wildcard}
+        return {
+            "type": Match.type_to_string(self.matched_node_type),
+            "node": self.matched_node_str,
+            "words": self.matched_node_words,
+            "multi_word": self.matched_node_multi_word,
+            "wild_card": self.matched_node_wildcard,
+        }
 
     @staticmethod
     def from_json(json_data):

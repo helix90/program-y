@@ -21,22 +21,37 @@ class MockBaseConfigurationFile(BaseConfigurationFile):
     def get_child_section_keys(self, section_name, parent_section=None):
         return None
 
-    def get_option(self, section, option_name, missing_value=None, subs: Substitutions = None):
+    def get_option(
+        self, section, option_name, missing_value=None, subs: Substitutions = None
+    ):
         return None
 
-    def get_bool_option(self, section, option_name, missing_value=False, subs: Substitutions = None):
+    def get_bool_option(
+        self, section, option_name, missing_value=False, subs: Substitutions = None
+    ):
         return None
 
-    def get_int_option(self, section, option_name, missing_value=0, subs: Substitutions = None):
+    def get_int_option(
+        self, section, option_name, missing_value=0, subs: Substitutions = None
+    ):
         return None
 
     def get_keys(self, section):
         return None
 
-    def get_multi_option(self, section, option_name, missing_value=None, subs: Substitutions = None):
+    def get_multi_option(
+        self, section, option_name, missing_value=None, subs: Substitutions = None
+    ):
         return None
 
-    def get_multi_file_option(self, section, option_name, bot_root, missing_value=None, subs: Substitutions = None):
+    def get_multi_file_option(
+        self,
+        section,
+        option_name,
+        bot_root,
+        missing_value=None,
+        subs: Substitutions = None,
+    ):
         return None
 
 
@@ -68,8 +83,8 @@ class BaseConfigurationFileTests(unittest.TestCase):
     def test_convert_to_int(self):
         config = MockBaseConfigurationFile()
 
-        self.assertEqual(0, config.convert_to_int('0'))
-        self.assertEqual(10, config.convert_to_int('10'))
+        self.assertEqual(0, config.convert_to_int("0"))
+        self.assertEqual(10, config.convert_to_int("10"))
 
         with self.assertRaises(Exception):
             config.convert_to_int("")

@@ -10,9 +10,13 @@ class DiscordConfigurationTests(unittest.TestCase):
     def test_init(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         discord:
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         discord_config = DiscordConfiguration()
         discord_config.load_configuration(yaml, ".")
@@ -20,9 +24,13 @@ class DiscordConfigurationTests(unittest.TestCase):
     def test_init_no_values(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         discord:
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         discord_config = DiscordConfiguration()
         discord_config.load_configuration(yaml, ".")
@@ -30,9 +38,13 @@ class DiscordConfigurationTests(unittest.TestCase):
     def test_init_no_data(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         other:
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         discord_config = DiscordConfiguration()
         discord_config.load_configuration(yaml, ".")
@@ -42,4 +54,3 @@ class DiscordConfigurationTests(unittest.TestCase):
 
         data = {}
         config.to_yaml(data, True)
-

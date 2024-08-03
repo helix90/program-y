@@ -22,8 +22,8 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR TH
 #
 
 from sanic import Sanic
-from sanic.response import json
 from sanic.exceptions import ServerError
+from sanic.response import json
 
 from programy.clients.restful.client import RestBotClient
 from programy.clients.restful.sanic.config import SanicRestConfiguration
@@ -52,48 +52,62 @@ class SanicRestBotClient(RestBotClient):
 
     def run(self, app=None):
 
-        outputLog(self, "%s Client running on http://%s:%s" % (self.id, self.configuration.client_configuration.host,
-                                                               self.configuration.client_configuration.port))
+        outputLog(
+            self,
+            "%s Client running on http://%s:%s"
+            % (
+                self.id,
+                self.configuration.client_configuration.host,
+                self.configuration.client_configuration.port,
+            ),
+        )
 
         self.startup()
 
         if self.configuration.client_configuration.debug is True:
             outputLog(self, "%s Client running in debug mode" % self.id)
 
-        if self.configuration.client_configuration.ssl_cert_file is not None and \
-                self.configuration.client_configuration.ssl_key_file is not None:
-            context = (self.configuration.client_configuration.ssl_cert_file,
-                       self.configuration.client_configuration.ssl_key_file)
+        if (
+            self.configuration.client_configuration.ssl_cert_file is not None
+            and self.configuration.client_configuration.ssl_key_file is not None
+        ):
+            context = (
+                self.configuration.client_configuration.ssl_cert_file,
+                self.configuration.client_configuration.ssl_key_file,
+            )
 
             outputLog(self, "%s Client running in https mode" % self.id)
-            app.run(host=self.configuration.client_configuration.host,
-                    port=self.configuration.client_configuration.port,
-                    debug=self.configuration.client_configuration.debug,
-                    ssl_context=context)
+            app.run(
+                host=self.configuration.client_configuration.host,
+                port=self.configuration.client_configuration.port,
+                debug=self.configuration.client_configuration.debug,
+                ssl_context=context,
+            )
         else:
             outputLog(self, "%s Client running in http mode, careful now !" % self.id)
-            app.run(host=self.configuration.client_configuration.host,
-                    port=self.configuration.client_configuration.port,
-                    debug=self.configuration.client_configuration.debug,
-                    workers=self.configuration.client_configuration.workers)
+            app.run(
+                host=self.configuration.client_configuration.host,
+                port=self.configuration.client_configuration.port,
+                debug=self.configuration.client_configuration.debug,
+                workers=self.configuration.client_configuration.workers,
+            )
 
         self.shutdown()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     REST_CLIENT = None
 
     outputLog(None, "Initiating Sanic REST Service...")
 
     APP = Sanic()
 
-
-    @APP.route('/api/rest/v1.0/ask', methods=['GET', 'POST'])
+    @APP.route("/api/rest/v1.0/ask", methods=["GET", "POST"])
     async def ask(request):
         response, status = REST_CLIENT.process_request(request, version=1.0)
         return REST_CLIENT.create_response(response, status_code=status, version=1.0)
 
-    @APP.route('/api/rest/v2.0/ask', methods=['GET', 'POST'])
+    @APP.route("/api/rest/v2.0/ask", methods=["GET", "POST"])
     async def ask(request):
         response, status = REST_CLIENT.process_request(request, version=2.0)
         return REST_CLIENT.create_response(response, status_code=status, version=2.0)

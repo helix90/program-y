@@ -17,5 +17,3 @@ class LookupsStoreTests(unittest.TestCase):
         with self.assertRaises(NotImplementedError):
             collector = unittest.mock.Mock()
             category_store.load(collector)
-
-

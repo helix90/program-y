@@ -1,11 +1,12 @@
 import unittest
 
+from programytest.client import TestClient
+
 from programy.bot import Bot
 from programy.config.bot.bot import BotConfiguration
 from programy.dialog.conversation import Conversation
 from programy.dialog.question import Question
 from programy.dialog.sentence import Sentence
-from programytest.client import TestClient
 
 
 class SentimentScoreTests(unittest.TestCase):
@@ -14,8 +15,12 @@ class SentimentScoreTests(unittest.TestCase):
         self._client = TestClient()
 
         config = BotConfiguration()
-        config.sentiment_analyser._classname = "programy.nlp.sentiment.textblob_sentiment.TextBlobSentimentAnalyser"
-        config.sentiment_analyser._scores = "programy.nlp.sentiment.scores.SentimentScores"
+        config.sentiment_analyser._classname = (
+            "programy.nlp.sentiment.textblob_sentiment.TextBlobSentimentAnalyser"
+        )
+        config.sentiment_analyser._scores = (
+            "programy.nlp.sentiment.scores.SentimentScores"
+        )
 
         self.client_context = self._client.create_client_context("testuser")
 

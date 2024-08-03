@@ -1,15 +1,21 @@
 import unittest
+
+from programytest.config.bot.test_conversations import (
+    BotConversationsConfigurationTests,
+)
+from programytest.config.bot.test_joiner import BotSentenceJoinerConfigurationTests
+from programytest.config.bot.test_sentiment import (
+    BotSentimentAnalyserConfigurationTests,
+)
+from programytest.config.bot.test_spelling import BotSpellingConfigurationTests
+from programytest.config.bot.test_splitter import BotSentenceSplitterConfigurationTests
+from programytest.config.bot.test_translate import BotTranslatorConfigurationTests
+from programytest.config.brain.test_brain import BrainConfigurationTests
+
 from programy.clients.events.console.config import ConsoleConfiguration
 from programy.config.bot.bot import BotConfiguration
 from programy.config.file.yaml_file import YamlConfigurationFile
 from programy.utils.license.keys import LicenseKeys
-from programytest.config.brain.test_brain import BrainConfigurationTests
-from programytest.config.bot.test_conversations import BotConversationsConfigurationTests
-from programytest.config.bot.test_joiner import BotSentenceJoinerConfigurationTests
-from programytest.config.bot.test_sentiment import BotSentimentAnalyserConfigurationTests
-from programytest.config.bot.test_spelling import BotSpellingConfigurationTests
-from programytest.config.bot.test_splitter import BotSentenceSplitterConfigurationTests
-from programytest.config.bot.test_translate import BotTranslatorConfigurationTests
 
 
 class BotConfigurationTests(unittest.TestCase):
@@ -44,7 +50,8 @@ class BotConfigurationTests(unittest.TestCase):
     def test_with_data_single_bot(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         bot:
           bot_root: .
           default_response: Sorry, I don't have an answer for that!
@@ -139,7 +146,10 @@ class BotConfigurationTests(unittest.TestCase):
                 save_errors: false
                 save_duplicates: false
           brain_selector: programy.brainfactory.DefaultBrainSelector
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         bot_section = yaml.get_section("bot")
 
@@ -151,7 +161,9 @@ class BotConfigurationTests(unittest.TestCase):
 
         self.assertEqual("Hi, how can I help you today?", bot_config.initial_question)
         self.assertEqual("YINITIALQUESTION", bot_config.initial_question_srai)
-        self.assertEqual("Sorry, I don't have an answer for that!", bot_config.default_response)
+        self.assertEqual(
+            "Sorry, I don't have an answer for that!", bot_config.default_response
+        )
         self.assertEqual("YEMPTY", bot_config.default_response_srai)
         self.assertEqual("So long, and thanks for the fish!", bot_config.exit_response)
         self.assertEqual("YEXITRESPONSE", bot_config.exit_response_srai)
@@ -164,17 +176,25 @@ class BotConfigurationTests(unittest.TestCase):
 
         self.assertIsNotNone(bot_config.spelling)
         self.assertEqual(bot_config.spelling.section_name, "spelling")
-        self.assertEqual(bot_config.spelling.classname, "programy.spelling.norvig.NorvigSpellingChecker")
+        self.assertEqual(
+            bot_config.spelling.classname,
+            "programy.spelling.norvig.NorvigSpellingChecker",
+        )
         self.assertTrue(bot_config.spelling.check_before)
         self.assertTrue(bot_config.spelling.check_and_retry)
 
         self.assertIsNotNone(bot_config.splitter)
-        self.assertEqual("programy.dialog.splitter.regex.RegexSentenceSplitter", bot_config.splitter.classname)
-        self.assertEqual('[:;,.?!]', bot_config.splitter.split_chars)
+        self.assertEqual(
+            "programy.dialog.splitter.regex.RegexSentenceSplitter",
+            bot_config.splitter.classname,
+        )
+        self.assertEqual("[:;,.?!]", bot_config.splitter.split_chars)
 
         self.assertIsNotNone(bot_config.joiner)
-        self.assertEqual("programy.dialog.joiner.joiner.SentenceJoiner", bot_config.joiner.classname)
-        self.assertEqual('.?!', bot_config.joiner.join_chars)
+        self.assertEqual(
+            "programy.dialog.joiner.joiner.SentenceJoiner", bot_config.joiner.classname
+        )
+        self.assertEqual(".?!", bot_config.joiner.join_chars)
 
         self.assertIsNotNone(bot_config.conversations)
         self.assertIsNotNone(bot_config.conversations.max_histories, 100)
@@ -182,27 +202,45 @@ class BotConfigurationTests(unittest.TestCase):
         self.assertIsNotNone(bot_config.conversations.initial_topic, "TOPIC1")
         self.assertIsNotNone(bot_config.conversations.empty_on_start, False)
 
-        self.assertEqual("programy.nlp.translate.textblob_translator.TextBlobTranslator", bot_config.from_translator.classname)
+        self.assertEqual(
+            "programy.nlp.translate.textblob_translator.TextBlobTranslator",
+            bot_config.from_translator.classname,
+        )
         self.assertEqual("fr", bot_config.from_translator.to_lang)
         self.assertEqual("en", bot_config.from_translator.from_lang)
 
-        self.assertEqual("programy.nlp.translate.textblob_translator.TextBlobTranslator", bot_config.to_translator.classname)
+        self.assertEqual(
+            "programy.nlp.translate.textblob_translator.TextBlobTranslator",
+            bot_config.to_translator.classname,
+        )
         self.assertEqual("fr", bot_config.to_translator.to_lang)
         self.assertEqual("en", bot_config.to_translator.from_lang)
 
-        self.assertEqual("programy.nlp.sentiment.textblob_sentiment.TextBlobSentimentAnalyser", bot_config.sentiment_analyser.classname)
-        self.assertEqual("programy.nlp.sentiment.scores.SentimentScores", bot_config.sentiment_analyser.scores)
+        self.assertEqual(
+            "programy.nlp.sentiment.textblob_sentiment.TextBlobSentimentAnalyser",
+            bot_config.sentiment_analyser.classname,
+        )
+        self.assertEqual(
+            "programy.nlp.sentiment.scores.SentimentScores",
+            bot_config.sentiment_analyser.scores,
+        )
 
-        self.assertEqual("programy.brainfactory.DefaultBrainSelector", bot_config.brain_selector)
+        self.assertEqual(
+            "programy.brainfactory.DefaultBrainSelector", bot_config.brain_selector
+        )
         self.assertEqual(1, len(bot_config.configurations))
         BrainConfigurationTests.assert_brain_config(self, bot_config.configurations[0])
 
     def test_without_data(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         bot:
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         bot_section = yaml.get_section("bot")
 
@@ -225,12 +263,17 @@ class BotConfigurationTests(unittest.TestCase):
         self.assertIsNotNone(bot_config.spelling)
 
         self.assertIsNotNone(bot_config.splitter)
-        self.assertEqual("programy.dialog.splitter.regex.RegexSentenceSplitter", bot_config.splitter.classname)
-        self.assertEqual('[:;,.?!]', bot_config.splitter.split_chars)
+        self.assertEqual(
+            "programy.dialog.splitter.regex.RegexSentenceSplitter",
+            bot_config.splitter.classname,
+        )
+        self.assertEqual("[:;,.?!]", bot_config.splitter.split_chars)
 
         self.assertIsNotNone(bot_config.joiner)
-        self.assertEqual("programy.dialog.joiner.joiner.SentenceJoiner", bot_config.joiner.classname)
-        self.assertEqual('.?!', bot_config.joiner.join_chars)
+        self.assertEqual(
+            "programy.dialog.joiner.joiner.SentenceJoiner", bot_config.joiner.classname
+        )
+        self.assertEqual(".?!", bot_config.joiner.join_chars)
 
         self.assertIsNotNone(bot_config.conversations)
 
@@ -238,16 +281,22 @@ class BotConfigurationTests(unittest.TestCase):
         self.assertIsNotNone(bot_config.to_translator)
         self.assertIsNotNone(bot_config.sentiment_analyser)
 
-        self.assertEqual("programy.brainfactory.DefaultBrainSelector", bot_config.brain_selector)
+        self.assertEqual(
+            "programy.brainfactory.DefaultBrainSelector", bot_config.brain_selector
+        )
         self.assertEqual(1, len(bot_config.configurations))
 
     def test_with_no_data(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
 
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         other:
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         bot_config = BotConfiguration()
         bot_config.load_configuration(yaml, ".")
@@ -268,12 +317,17 @@ class BotConfigurationTests(unittest.TestCase):
         self.assertIsNotNone(bot_config.spelling)
 
         self.assertIsNotNone(bot_config.splitter)
-        self.assertEqual("programy.dialog.splitter.regex.RegexSentenceSplitter", bot_config.splitter.classname)
-        self.assertEqual('[:;,.?!]', bot_config.splitter.split_chars)
+        self.assertEqual(
+            "programy.dialog.splitter.regex.RegexSentenceSplitter",
+            bot_config.splitter.classname,
+        )
+        self.assertEqual("[:;,.?!]", bot_config.splitter.split_chars)
 
         self.assertIsNotNone(bot_config.joiner)
-        self.assertEqual("programy.dialog.joiner.joiner.SentenceJoiner", bot_config.joiner.classname)
-        self.assertEqual('.?!', bot_config.joiner.join_chars)
+        self.assertEqual(
+            "programy.dialog.joiner.joiner.SentenceJoiner", bot_config.joiner.classname
+        )
+        self.assertEqual(".?!", bot_config.joiner.join_chars)
 
         self.assertIsNotNone(bot_config.conversations)
 
@@ -281,7 +335,9 @@ class BotConfigurationTests(unittest.TestCase):
         self.assertIsNotNone(bot_config.to_translator)
         self.assertIsNotNone(bot_config.sentiment_analyser)
 
-        self.assertEqual("programy.brainfactory.DefaultBrainSelector", bot_config.brain_selector)
+        self.assertEqual(
+            "programy.brainfactory.DefaultBrainSelector", bot_config.brain_selector
+        )
         self.assertEqual(1, len(bot_config.configurations))
 
     def test_defaults(self):
@@ -293,39 +349,41 @@ class BotConfigurationTests(unittest.TestCase):
 
     @staticmethod
     def assert_defaults(test, data):
-        test.assertEqual(data['bot_root'], ".")
-        test.assertEqual(data['default_response'], "")
-        test.assertEqual(data['default_response_srai'], "")
-        test.assertEqual(data['exit_response'], "Bye!")
-        test.assertEqual(data['exit_response_srai'], "")
-        test.assertEqual(data['initial_question'], "Hello")
-        test.assertEqual(data['initial_question_srai'], "")
-        test.assertEqual(data['empty_string'], "")
-        test.assertEqual(data['override_properties'], True)
-        test.assertEqual(data['max_question_recursion'], 100)
-        test.assertEqual(data['max_question_timeout'], -1)
-        test.assertEqual(data['max_search_depth'], 100)
-        test.assertEqual(data['max_search_timeout'], -1)
-        test.assertEqual(data['tab_parse_output'], True)
+        test.assertEqual(data["bot_root"], ".")
+        test.assertEqual(data["default_response"], "")
+        test.assertEqual(data["default_response_srai"], "")
+        test.assertEqual(data["exit_response"], "Bye!")
+        test.assertEqual(data["exit_response_srai"], "")
+        test.assertEqual(data["initial_question"], "Hello")
+        test.assertEqual(data["initial_question_srai"], "")
+        test.assertEqual(data["empty_string"], "")
+        test.assertEqual(data["override_properties"], True)
+        test.assertEqual(data["max_question_recursion"], 100)
+        test.assertEqual(data["max_question_timeout"], -1)
+        test.assertEqual(data["max_search_depth"], 100)
+        test.assertEqual(data["max_search_timeout"], -1)
+        test.assertEqual(data["tab_parse_output"], True)
 
-        test.assertTrue('conversations' in data)
-        BotConversationsConfigurationTests.assert_defaults(test, data['conversations'])
-        test.assertTrue('spelling' in data)
-        BotSpellingConfigurationTests.assert_defaults(test, data['spelling'])
-        test.assertTrue('splitter' in data)
-        BotSentenceSplitterConfigurationTests.assert_defaults(test, data['splitter'])
-        test.assertTrue('joiner' in data)
-        BotSentenceJoinerConfigurationTests.assert_defaults(test, data['joiner'])
-        test.assertTrue('from_translator' in data)
-        BotTranslatorConfigurationTests.assert_defaults(test, data['from_translator'])
-        test.assertTrue('to_translator' in data)
-        BotTranslatorConfigurationTests.assert_defaults(test, data['to_translator'])
-        test.assertTrue('sentiment' in data)
-        BotSentimentAnalyserConfigurationTests.assert_defaults(test, data['sentiment'])
-        test.assertTrue('brains' in data)
-        test.assertTrue('brain' in data['brains'])
-        BrainConfigurationTests.assert_defaults(test, data['brains']['brain'])
+        test.assertTrue("conversations" in data)
+        BotConversationsConfigurationTests.assert_defaults(test, data["conversations"])
+        test.assertTrue("spelling" in data)
+        BotSpellingConfigurationTests.assert_defaults(test, data["spelling"])
+        test.assertTrue("splitter" in data)
+        BotSentenceSplitterConfigurationTests.assert_defaults(test, data["splitter"])
+        test.assertTrue("joiner" in data)
+        BotSentenceJoinerConfigurationTests.assert_defaults(test, data["joiner"])
+        test.assertTrue("from_translator" in data)
+        BotTranslatorConfigurationTests.assert_defaults(test, data["from_translator"])
+        test.assertTrue("to_translator" in data)
+        BotTranslatorConfigurationTests.assert_defaults(test, data["to_translator"])
+        test.assertTrue("sentiment" in data)
+        BotSentimentAnalyserConfigurationTests.assert_defaults(test, data["sentiment"])
+        test.assertTrue("brains" in data)
+        test.assertTrue("brain" in data["brains"])
+        BrainConfigurationTests.assert_defaults(test, data["brains"]["brain"])
 
-        test.assertEqual(data['brain_selector'], "programy.brainfactory.DefaultBrainSelector")
-        test.assertIsNotNone(data['brains'])
-        test.assertEqual(1, len(data['brains']))
+        test.assertEqual(
+            data["brain_selector"], "programy.brainfactory.DefaultBrainSelector"
+        )
+        test.assertIsNotNone(data["brains"])
+        test.assertEqual(1, len(data["brains"]))

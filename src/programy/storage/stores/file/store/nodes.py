@@ -14,10 +14,11 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
-from programy.storage.stores.file.store.filestore import FileStore
+
 from programy.storage.entities.nodes import NodesStore
+from programy.storage.stores.file.store.filestore import FileStore
 from programy.utils.classes.loader import ClassLoader
+from programy.utils.logging.ylogger import YLogger
 
 
 class FileNodeStore(FileStore, NodesStore):
@@ -56,14 +57,22 @@ class FileNodeStore(FileStore, NodesStore):
                 return False
 
             class_name = splits[1].strip()
-            YLogger.debug(self, "Pre-instantiating %s Node [%s]", node_factory.type, class_name)
+            YLogger.debug(
+                self, "Pre-instantiating %s Node [%s]", node_factory.type, class_name
+            )
             try:
-                node_factory.add_node(node_name, ClassLoader.instantiate_class(class_name))
+                node_factory.add_node(
+                    node_name, ClassLoader.instantiate_class(class_name)
+                )
                 return True
 
             except Exception as e:
-                YLogger.exception_nostack(self,
-                                          "Failed pre-instantiating %s Node [%s]" % (node_factory.type, class_name), e)
+                YLogger.exception_nostack(
+                    self,
+                    "Failed pre-instantiating %s Node [%s]"
+                    % (node_factory.type, class_name),
+                    e,
+                )
 
         return False
 
@@ -72,7 +81,7 @@ class FileNodeStore(FileStore, NodesStore):
         if not line:
             return False
 
-        if line.startswith('#'):
+        if line.startswith("#"):
             return False
 
         if "=" not in line:

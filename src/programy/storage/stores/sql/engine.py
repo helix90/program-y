@@ -14,41 +14,51 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from programy.storage.stores.sql.store.users import SQLUserStore
-from programy.storage.stores.sql.store.linkedaccounts import SQLLinkedAccountStore
-from programy.storage.stores.sql.store.links import SQLLinkStore
-from programy.storage.stores.sql.store.properties import SQLPropertyStore
-from programy.storage.stores.sql.store.properties import SQLRegexStore
-from programy.storage.stores.sql.store.properties import SQLDefaultVariableStore
-from programy.storage.stores.sql.store.categories import SQLCategoryStore
-from programy.storage.stores.sql.store.learnf import SQLLearnfStore
-from programy.storage.stores.sql.store.conversations import SQLConversationStore
-from programy.storage.stores.sql.store.sets import SQLSetsStore
-from programy.storage.stores.sql.store.maps import SQLMapsStore
-from programy.storage.stores.sql.store.rdfs import SQLRDFsStore
-from programy.storage.stores.sql.store.lookups import SQLDenormalStore
-from programy.storage.stores.sql.store.lookups import SQLNormalStore
-from programy.storage.stores.sql.store.lookups import SQLGenderStore
-from programy.storage.stores.sql.store.lookups import SQLPersonStore
-from programy.storage.stores.sql.store.lookups import SQLPerson2Store
-from programy.storage.stores.sql.store.errors import SQLErrorsStore
-from programy.storage.stores.sql.store.duplicates import SQLDuplicatesStore
-from programy.storage.stores.sql.store.twitter import SQLTwitterStore
-from programy.storage.stores.sql.store.spelling import SQLSpellingStore
-from programy.storage.stores.sql.store.licensekeys import SQLLicenseKeysStore
-from programy.storage.stores.sql.store.nodes import SQLPatternNodesStore
-from programy.storage.stores.sql.store.nodes import SQLTemplateNodesStore
-from programy.storage.stores.sql.store.processors import SQLPreProcessorsStore
-from programy.storage.stores.sql.store.processors import SQLPostProcessorsStore
-from programy.storage.stores.sql.store.processors import SQLPostQuestionProcessorsStore
-from programy.storage.stores.sql.store.usergroups import SQLUserGroupStore
-from programy.storage.stores.sql.store.triggers import SQLTriggersStore
-from programy.storage.stores.sql.store.oobs import SQLOOBsStore
-from programy.storage.stores.sql.store.services import SQLServicesStore
+
 from programy.storage.engine import StorageEngine
 from programy.storage.stores.sql.base import Base
+from programy.storage.stores.sql.store.categories import SQLCategoryStore
+from programy.storage.stores.sql.store.conversations import SQLConversationStore
+from programy.storage.stores.sql.store.duplicates import SQLDuplicatesStore
+from programy.storage.stores.sql.store.errors import SQLErrorsStore
+from programy.storage.stores.sql.store.learnf import SQLLearnfStore
+from programy.storage.stores.sql.store.licensekeys import SQLLicenseKeysStore
+from programy.storage.stores.sql.store.linkedaccounts import SQLLinkedAccountStore
+from programy.storage.stores.sql.store.links import SQLLinkStore
+from programy.storage.stores.sql.store.lookups import (
+    SQLDenormalStore,
+    SQLGenderStore,
+    SQLNormalStore,
+    SQLPerson2Store,
+    SQLPersonStore,
+)
+from programy.storage.stores.sql.store.maps import SQLMapsStore
+from programy.storage.stores.sql.store.nodes import (
+    SQLPatternNodesStore,
+    SQLTemplateNodesStore,
+)
+from programy.storage.stores.sql.store.oobs import SQLOOBsStore
+from programy.storage.stores.sql.store.processors import (
+    SQLPostProcessorsStore,
+    SQLPostQuestionProcessorsStore,
+    SQLPreProcessorsStore,
+)
+from programy.storage.stores.sql.store.properties import (
+    SQLDefaultVariableStore,
+    SQLPropertyStore,
+    SQLRegexStore,
+)
+from programy.storage.stores.sql.store.rdfs import SQLRDFsStore
+from programy.storage.stores.sql.store.services import SQLServicesStore
+from programy.storage.stores.sql.store.sets import SQLSetsStore
+from programy.storage.stores.sql.store.spelling import SQLSpellingStore
+from programy.storage.stores.sql.store.triggers import SQLTriggersStore
+from programy.storage.stores.sql.store.twitter import SQLTwitterStore
+from programy.storage.stores.sql.store.usergroups import SQLUserGroupStore
+from programy.storage.stores.sql.store.users import SQLUserStore
 
 
 class SQLStorageEngine(StorageEngine):
@@ -69,9 +79,11 @@ class SQLStorageEngine(StorageEngine):
         self._session = Session()
 
     def initialise(self):
-        self._engine = create_engine(self.configuration.url,
-                                     encoding=self.configuration.encoding,
-                                     echo=self.configuration.echo)
+        self._engine = create_engine(
+            self.configuration.url,
+            encoding=self.configuration.encoding,
+            echo=self.configuration.echo,
+        )
 
         if self.configuration.drop_all_first is True:
             self._drop_all()

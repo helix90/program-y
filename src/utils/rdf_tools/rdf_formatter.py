@@ -1,8 +1,8 @@
-
-import sys
 import os
+import sys
 
-class RDFFormatter():
+
+class RDFFormatter:
 
     def __init__(self):
         self._rdf_file = sys.argv[1]
@@ -31,7 +31,7 @@ class RDFFormatter():
 
                             if subject not in rdfs:
                                 rdfs[subject] = {}
-                                rdfs[subject]['CATEGORY'] = category
+                                rdfs[subject]["CATEGORY"] = category
 
                             rdfs[subject][predicate] = object
         return rdfs
@@ -40,9 +40,11 @@ class RDFFormatter():
         temp_filename = self._rdf_file + ".tmp"
         with open(temp_filename, "w+") as rdf_output_tmp:
             for subject in rdfs.keys():
-                rdf_output_tmp.write ( "#%s\n"%subject)
-                for predicate in rdfs[subject].keys ():
-                    rdf_output_tmp.write("%s:%s:%s\n"%(subject, predicate, rdfs[subject][predicate]))
+                rdf_output_tmp.write("#%s\n" % subject)
+                for predicate in rdfs[subject].keys():
+                    rdf_output_tmp.write(
+                        "%s:%s:%s\n" % (subject, predicate, rdfs[subject][predicate])
+                    )
                 rdf_output_tmp.write("\n")
 
         os.remove(self._rdf_file)
@@ -57,7 +59,7 @@ class RDFFormatter():
         self.write_new_rdf_file(rdfs)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     def run():
         print("Formatting RDF File")

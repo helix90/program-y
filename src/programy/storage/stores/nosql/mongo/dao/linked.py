@@ -14,10 +14,11 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 from programy.storage.stores.utils import DAOUtils
 
 
-class LinkedAccount():
+class LinkedAccount:
 
     def __init__(self, primary_userid, linked_userid):
         self.id = None
@@ -25,21 +26,25 @@ class LinkedAccount():
         self.linked_userid = linked_userid
 
     def __repr__(self):
-        return "<Linked(id='%s', primary='%s', linked='%s')>" % (DAOUtils.valid_id(self.id),
-                                                                 self.primary_userid,
-                                                                 self.linked_userid)
+        return "<Linked(id='%s', primary='%s', linked='%s')>" % (
+            DAOUtils.valid_id(self.id),
+            self.primary_userid,
+            self.linked_userid,
+        )
 
     def to_document(self):
-        document = {"primary_userid": self.primary_userid,
-                    "linked_userid": self.linked_userid}
+        document = {
+            "primary_userid": self.primary_userid,
+            "linked_userid": self.linked_userid,
+        }
         if self.id is not None:
-            document['_id'] = self.id
+            document["_id"] = self.id
         return document
 
     @staticmethod
     def from_document(data):
         linked = LinkedAccount(None, None)
-        linked.id = DAOUtils.get_value_from_data(data, '_id')
-        linked.primary_userid = DAOUtils.get_value_from_data(data, 'primary_userid')
-        linked.linked_userid = DAOUtils.get_value_from_data(data, 'linked_userid')
+        linked.id = DAOUtils.get_value_from_data(data, "_id")
+        linked.primary_userid = DAOUtils.get_value_from_data(data, "primary_userid")
+        linked.linked_userid = DAOUtils.get_value_from_data(data, "linked_userid")
         return linked

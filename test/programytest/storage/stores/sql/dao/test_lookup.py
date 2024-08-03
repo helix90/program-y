@@ -1,11 +1,12 @@
-
 import unittest
 
-from programy.storage.stores.sql.dao.lookup import Denormal
-from programy.storage.stores.sql.dao.lookup import Gender
-from programy.storage.stores.sql.dao.lookup import Normal
-from programy.storage.stores.sql.dao.lookup import Person
-from programy.storage.stores.sql.dao.lookup import Person2
+from programy.storage.stores.sql.dao.lookup import (
+    Denormal,
+    Gender,
+    Normal,
+    Person,
+    Person2,
+)
 
 
 class DenormalTests(unittest.TestCase):
@@ -31,6 +32,7 @@ class NormalTests(unittest.TestCase):
         self.assertIsNotNone(lookup2)
         self.assertEqual("<Normal(id='1', key='key', value='value')>", str(lookup2))
 
+
 class GenderTests(unittest.TestCase):
 
     def test_init(self):
@@ -42,6 +44,7 @@ class GenderTests(unittest.TestCase):
         self.assertIsNotNone(lookup2)
         self.assertEqual("<Gender(id='1', key='key', value='value')>", str(lookup2))
 
+
 class PersonTests(unittest.TestCase):
 
     def test_init(self):
@@ -52,6 +55,7 @@ class PersonTests(unittest.TestCase):
         lookup2 = Person(id=1, key="key", value="value")
         self.assertIsNotNone(lookup2)
         self.assertEqual("<Person(id='1', key='key', value='value')>", str(lookup2))
+
 
 class Person2Tests(unittest.TestCase):
 

@@ -1,10 +1,12 @@
 import unittest
 from unittest.mock import patch
+
 import programytest.storage.engines as Engines
+from programytest.storage.asserts.store.assert_properties import PropertyStoreAsserts
+
 from programy.storage.stores.nosql.mongo.config import MongoStorageConfiguration
 from programy.storage.stores.nosql.mongo.engine import MongoStorageEngine
 from programy.storage.stores.nosql.mongo.store.properties import MongoPropertyStore
-from programytest.storage.asserts.store.assert_properties import PropertyStoreAsserts
 
 
 class MongoPropertyStoreTests(PropertyStoreAsserts):
@@ -26,8 +28,8 @@ class MongoPropertyStoreTests(PropertyStoreAsserts):
 
         self.assertEquals(None, store.split_into_fields(""))
         self.assertEquals(None, store.split_into_fields("X"))
-        self.assertEquals(['X', 'Y'], store.split_into_fields('"X","Y"'))
-        self.assertEquals(['X', 'Y'], store.split_into_fields('"X","Y","Z"'))
+        self.assertEquals(["X", "Y"], store.split_into_fields('"X","Y"'))
+        self.assertEquals(["X", "Y"], store.split_into_fields('"X","Y","Z"'))
 
     @unittest.skipIf(Engines.mongo is False, Engines.mongo_disabled)
     def test_properties_storage(self):
@@ -87,7 +89,10 @@ class MongoPropertyStoreTests(PropertyStoreAsserts):
         raise Exception("Mock Exception")
 
     @unittest.skipIf(Engines.mongo is False, Engines.mongo_disabled)
-    @patch("programy.storage.stores.nosql.mongo.store.properties.MongoPropertyStore._read_lines_from_file", patch_read_lines_from_file)
+    @patch(
+        "programy.storage.stores.nosql.mongo.store.properties.MongoPropertyStore._read_lines_from_file",
+        patch_read_lines_from_file,
+    )
     def test_upload_from_file_with_exception(self):
         config = MongoStorageConfiguration()
         engine = MongoStorageEngine(config)

@@ -14,16 +14,15 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from sqlalchemy import Column
-from sqlalchemy import Integer
-from sqlalchemy import String
-from sqlalchemy import TEXT
+
+from sqlalchemy import TEXT, Column, Integer, String
+
 from programy.storage.stores.sql.base import Base
 from programy.storage.stores.utils import DAOUtils
 
 
 class Category(Base):
-    __tablename__ = 'categories'
+    __tablename__ = "categories"
 
     id = Column(Integer, primary_key=True)
 
@@ -35,6 +34,15 @@ class Category(Base):
     template = Column(TEXT)
 
     def __repr__(self):
-        return "<Category(id='%s', groupid='%s', userid='%s', topic='%s', that='%s', pattern='%s', template='%s'>" % \
-               (DAOUtils.valid_id(self.id), self.groupid, self.userid, self.topic, self.that, self.pattern,
-                self.template)
+        return (
+            "<Category(id='%s', groupid='%s', userid='%s', topic='%s', that='%s', pattern='%s', template='%s'>"
+            % (
+                DAOUtils.valid_id(self.id),
+                self.groupid,
+                self.userid,
+                self.topic,
+                self.that,
+                self.pattern,
+                self.template,
+            )
+        )

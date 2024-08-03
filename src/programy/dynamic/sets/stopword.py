@@ -16,7 +16,6 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR TH
 """
 
 from programy.dynamic.sets.set import DynamicSet
-
 from programy.nlp.stopwords import StopWords
 
 

@@ -1,10 +1,14 @@
 import unittest
 from unittest.mock import patch
+
 import programytest.storage.engines as Engines
+from programytest.storage.asserts.store.assert_patternnodes import (
+    PatternNodesStoreAsserts,
+)
+
 from programy.storage.stores.sql.config import SQLStorageConfiguration
 from programy.storage.stores.sql.engine import SQLStorageEngine
 from programy.storage.stores.sql.store.nodes import SQLPatternNodesStore
-from programytest.storage.asserts.store.assert_patternnodes import PatternNodesStoreAsserts
 
 
 class SQLPatternNodesStoreTests(PatternNodesStoreAsserts):
@@ -31,7 +35,10 @@ class SQLPatternNodesStoreTests(PatternNodesStoreAsserts):
         raise Exception("Mock Exception")
 
     @unittest.skipIf(Engines.sql is False, Engines.sql_disabled)
-    @patch("programy.utils.classes.loader.ClassLoader.instantiate_class", patch_instantiate_class)
+    @patch(
+        "programy.utils.classes.loader.ClassLoader.instantiate_class",
+        patch_instantiate_class,
+    )
     def test_load_nodes_exception(self):
         config = SQLStorageConfiguration()
         engine = SQLStorageEngine(config)
@@ -62,8 +69,10 @@ class SQLPatternNodesStoreTests(PatternNodesStoreAsserts):
         raise Exception("Mock Exception")
 
     @unittest.skipIf(Engines.sql is False, Engines.sql_disabled)
-    @patch("programy.storage.stores.sql.store.nodes.SQLNodesStore._load_nodes_from_file",
-           patch_load_nodes_from_file)
+    @patch(
+        "programy.storage.stores.sql.store.nodes.SQLNodesStore._load_nodes_from_file",
+        patch_load_nodes_from_file,
+    )
     def test_upload_from_file_exception(self):
         config = SQLStorageConfiguration()
         engine = SQLStorageEngine(config)

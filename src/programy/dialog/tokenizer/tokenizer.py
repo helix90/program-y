@@ -14,13 +14,14 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
+
 from programy.utils.classes.loader import ClassLoader
+from programy.utils.logging.ylogger import YLogger
 
 
 class Tokenizer:
 
-    def __init__(self, split_chars=' '):
+    def __init__(self, split_chars=" "):
         self.split_chars = split_chars
 
     def texts_to_words(self, texts):
@@ -30,13 +31,13 @@ class Tokenizer:
 
     def words_to_texts(self, words):
         if not words:
-            return ''
+            return ""
         to_join = [word.strip() for word in words if word]
         return self.split_chars.join(to_join)
 
     def words_from_current_pos(self, words, current_pos):
         if not words:
-            return ''
+            return ""
         return self.split_chars.join(words[current_pos:])
 
     def compare(self, value1, value2):
@@ -46,10 +47,14 @@ class Tokenizer:
     def load_tokenizer(configuration):
         if configuration is not None and configuration.classname is not None:
             try:
-                YLogger.info(None, "Loading tokenizer from class [%s]", configuration.classname)
+                YLogger.info(
+                    None, "Loading tokenizer from class [%s]", configuration.classname
+                )
                 tokenizer_class = ClassLoader.instantiate_class(configuration.classname)
                 return tokenizer_class(configuration.split_chars)
             except Exception as error:
-                YLogger.exception(None, "Failed to load tokenizer, defaulting to default", error)
+                YLogger.exception(
+                    None, "Failed to load tokenizer, defaulting to default", error
+                )
 
         return Tokenizer(configuration.split_chars)

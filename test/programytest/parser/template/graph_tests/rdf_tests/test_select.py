@@ -1,12 +1,14 @@
 import json
 import xml.etree.ElementTree as ET
 
+from programytest.parser.template.graph_tests.graph_test_client import (
+    TemplateGraphTestClient,
+)
+
 from programy.parser.exceptions import ParserException
 from programy.parser.template.nodes.base import TemplateNode
-from programy.parser.template.nodes.select import Query, NotQuery
-from programy.parser.template.nodes.select import TemplateSelectNode
+from programy.parser.template.nodes.select import NotQuery, Query, TemplateSelectNode
 from programy.parser.template.nodes.word import TemplateWordNode
-from programytest.parser.template.graph_tests.graph_test_client import TemplateGraphTestClient
 
 
 class TemplateGraphSelectTests(TemplateGraphTestClient):
@@ -16,14 +18,16 @@ class TemplateGraphSelectTests(TemplateGraphTestClient):
     #
 
     def test_select_single_vars_single_query(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
 			<template>
 			    <select>
 			        <vars>?x</vars>
 			        <q><subj>?x</subj><pred>Y</pred><obj>Z</obj></q>
 			    </select>
 			</template>
-			""")
+			"""
+        )
 
         ast = self._graph.parse_template_expression(template)
         self.assertIsNotNone(ast)
@@ -53,14 +57,16 @@ class TemplateGraphSelectTests(TemplateGraphTestClient):
         self.assertEqual("Z", query1.obj.resolve(self._client_context))
 
     def test_select_multi_vars_single_query(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
 			<template>
 			    <select>
 			        <vars>?x ?y</vars>
 			        <q><subj>?x</subj><pred>?y</pred><obj>Z</obj></q>
 			    </select>
 			</template>
-			""")
+			"""
+        )
 
         ast = self._graph.parse_template_expression(template)
         self.assertIsNotNone(ast)
@@ -91,7 +97,8 @@ class TemplateGraphSelectTests(TemplateGraphTestClient):
         self.assertEqual("Z", query1.obj.resolve(self._client_context))
 
     def test_select_single_vars_multie_query(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
 			<template>
 			    <select>
 			        <vars>?x</vars>
@@ -99,7 +106,8 @@ class TemplateGraphSelectTests(TemplateGraphTestClient):
 			        <q><subj>?x</subj><pred>Y</pred><obj>Z</obj></q>
 			    </select>
 			</template>
-			""")
+			"""
+        )
 
         ast = self._graph.parse_template_expression(template)
         self.assertIsNotNone(ast)
@@ -140,7 +148,8 @@ class TemplateGraphSelectTests(TemplateGraphTestClient):
         self.assertEqual("Z", query2.obj.resolve(self._client_context))
 
     def test_select_multi_vars_multi_query(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
 			<template>
 			    <select>
 			        <vars>?x ?y</vars>
@@ -148,7 +157,8 @@ class TemplateGraphSelectTests(TemplateGraphTestClient):
 			        <q><subj>?x</subj><pred>?y</pred><obj>Z</obj></q>
 			    </select>
 			</template>
-			""")
+			"""
+        )
 
         ast = self._graph.parse_template_expression(template)
         self.assertIsNotNone(ast)
@@ -190,7 +200,8 @@ class TemplateGraphSelectTests(TemplateGraphTestClient):
         self.assertEqual("Z", query2.obj.resolve(self._client_context))
 
     def test_select_single_vars_mixed_query(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
 			<template>
 			    <select>
 			        <vars>?x</vars>
@@ -198,7 +209,8 @@ class TemplateGraphSelectTests(TemplateGraphTestClient):
 			        <notq><subj>?x</subj><pred>?x</pred><obj>Z</obj></notq>
 			    </select>
 			</template>
-			""")
+			"""
+        )
 
         ast = self._graph.parse_template_expression(template)
         self.assertIsNotNone(ast)
@@ -239,7 +251,8 @@ class TemplateGraphSelectTests(TemplateGraphTestClient):
         self.assertEqual("Z", query2.obj.resolve(self._client_context))
 
     def test_select_multi_vars_mixed_query(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
 			<template>
 			    <select>
 			        <vars>?A ?X</vars>
@@ -247,7 +260,8 @@ class TemplateGraphSelectTests(TemplateGraphTestClient):
 			        <notq><subj>?X</subj><pred>Y</pred><obj>Z</obj></notq>
 			    </select>
 			</template>
-			""")
+			"""
+        )
 
         ast = self._graph.parse_template_expression(template)
         self.assertIsNotNone(ast)
@@ -290,13 +304,15 @@ class TemplateGraphSelectTests(TemplateGraphTestClient):
         self.assertEqual("Z", query2.obj.resolve(self._client_context))
 
     def test_select_no_vars_single_query(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
                 <template>
                     <select>
                         <q><subj>A</subj><pred>B</pred><obj>C</obj></q>
                     </select>
                 </template>
-                """)
+                """
+        )
 
         ast = self._graph.parse_template_expression(template)
         self.assertIsNotNone(ast)
@@ -335,15 +351,19 @@ class TemplateGraphSelectTests(TemplateGraphTestClient):
         self._client_context.brain.rdf.add_entity("MONKEY", "HASFUR", "true", "ANIMALS")
         self._client_context.brain.rdf.add_entity("ZEBRA", "LEGS", "4", "ANIMALS")
         self._client_context.brain.rdf.add_entity("BIRD", "LEGS", "2", "ANIMALS")
-        self._client_context.brain.rdf.add_entity("ELEPHANT", "TRUNK", "true", "ANIMALS")
+        self._client_context.brain.rdf.add_entity(
+            "ELEPHANT", "TRUNK", "true", "ANIMALS"
+        )
 
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
                 <template>
                     <select>
                         <q><subj>MONKEY</subj><pred>LEGS</pred><obj>2</obj></q>
                     </select>
                 </template>
-                """)
+                """
+        )
 
         ast = self._graph.parse_template_expression(template)
 
@@ -363,15 +383,19 @@ class TemplateGraphSelectTests(TemplateGraphTestClient):
         self._client_context.brain.rdf.add_entity("MONKEY", "HASFUR", "true", "ANIMALS")
         self._client_context.brain.rdf.add_entity("ZEBRA", "LEGS", "4", "ANIMALS")
         self._client_context.brain.rdf.add_entity("BIRD", "LEGS", "2", "ANIMALS")
-        self._client_context.brain.rdf.add_entity("ELEPHANT", "TRUNK", "true", "ANIMALS")
+        self._client_context.brain.rdf.add_entity(
+            "ELEPHANT", "TRUNK", "true", "ANIMALS"
+        )
 
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
                 <template>
                     <select>
                         <notq><subj>MONKEY</subj><pred>LEGS</pred><obj>2</obj></notq>
                     </select>
                 </template>
-                """)
+                """
+        )
 
         ast = self._graph.parse_template_expression(template)
 
@@ -380,25 +404,36 @@ class TemplateGraphSelectTests(TemplateGraphTestClient):
         query_results = json.loads(result)
         self.assertIsNotNone(query_results)
 
-        self.assertTrue([['subj', 'ZEBRA'], ['pred', 'LEGS'], ['obj', '4']] in query_results[0])
-        self.assertTrue([['subj', 'BIRD'], ['pred', 'LEGS'], ['obj', '2']] in query_results[0])
-        self.assertTrue([['subj', 'ELEPHANT'], ['pred', 'TRUNK'], ['obj', 'true']] in query_results[0])
+        self.assertTrue(
+            [["subj", "ZEBRA"], ["pred", "LEGS"], ["obj", "4"]] in query_results[0]
+        )
+        self.assertTrue(
+            [["subj", "BIRD"], ["pred", "LEGS"], ["obj", "2"]] in query_results[0]
+        )
+        self.assertTrue(
+            [["subj", "ELEPHANT"], ["pred", "TRUNK"], ["obj", "true"]]
+            in query_results[0]
+        )
 
     def test_query_var(self):
         self._client_context.brain.rdf.add_entity("MONKEY", "LEGS", "2", "ANIMALS")
         self._client_context.brain.rdf.add_entity("MONKEY", "HASFUR", "true", "ANIMALS")
         self._client_context.brain.rdf.add_entity("ZEBRA", "LEGS", "4", "ANIMALS")
         self._client_context.brain.rdf.add_entity("BIRD", "LEGS", "2", "ANIMALS")
-        self._client_context.brain.rdf.add_entity("ELEPHANT", "TRUNK", "true", "ANIMALS")
+        self._client_context.brain.rdf.add_entity(
+            "ELEPHANT", "TRUNK", "true", "ANIMALS"
+        )
 
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
                 <template>
                     <select>
                         <vars>?x</vars>
                         <q><subj>?x</subj><pred>LEGS</pred><obj>2</obj></q>
                     </select>
                 </template>
-                """)
+                """
+        )
 
         ast = self._graph.parse_template_expression(template)
 
@@ -415,16 +450,20 @@ class TemplateGraphSelectTests(TemplateGraphTestClient):
         self._client_context.brain.rdf.add_entity("MONKEY", "HASFUR", "true", "ANIMALS")
         self._client_context.brain.rdf.add_entity("ZEBRA", "LEGS", "4", "ANIMALS")
         self._client_context.brain.rdf.add_entity("BIRD", "LEGS", "2", "ANIMALS")
-        self._client_context.brain.rdf.add_entity("ELEPHANT", "TRUNK", "true", "ANIMALS")
+        self._client_context.brain.rdf.add_entity(
+            "ELEPHANT", "TRUNK", "true", "ANIMALS"
+        )
 
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
                 <template>
                     <select>
                         <vars>?x</vars>
                         <notq><subj>?x</subj><pred>LEGS</pred><obj>2</obj></notq>
                     </select>
                 </template>
-                """)
+                """
+        )
 
         ast = self._graph.parse_template_expression(template)
 
@@ -441,16 +480,20 @@ class TemplateGraphSelectTests(TemplateGraphTestClient):
         self._client_context.brain.rdf.add_entity("MONKEY", "HASFUR", "true", "ANIMALS")
         self._client_context.brain.rdf.add_entity("ZEBRA", "LEGS", "4", "ANIMALS")
         self._client_context.brain.rdf.add_entity("BIRD", "LEGS", "2", "ANIMALS")
-        self._client_context.brain.rdf.add_entity("ELEPHANT", "TRUNK", "true", "ANIMALS")
+        self._client_context.brain.rdf.add_entity(
+            "ELEPHANT", "TRUNK", "true", "ANIMALS"
+        )
 
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
                 <template>
                     <select>
                         <vars>?x ?y</vars>
                         <q><subj>?x</subj><pred>?y</pred><obj>2</obj></q>
                     </select>
                 </template>
-                """)
+                """
+        )
 
         ast = self._graph.parse_template_expression(template)
 
@@ -467,9 +510,12 @@ class TemplateGraphSelectTests(TemplateGraphTestClient):
         self._client_context.brain.rdf.add_entity("MONKEY", "HASFUR", "true", "ANIMALS")
         self._client_context.brain.rdf.add_entity("ZEBRA", "LEGS", "4", "ANIMALS")
         self._client_context.brain.rdf.add_entity("BIRD", "LEGS", "2", "ANIMALS")
-        self._client_context.brain.rdf.add_entity("ELEPHANT", "TRUNK", "true", "ANIMALS")
+        self._client_context.brain.rdf.add_entity(
+            "ELEPHANT", "TRUNK", "true", "ANIMALS"
+        )
 
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
                 <template>
                     <select>
                         <vars>?x</vars>
@@ -477,7 +523,8 @@ class TemplateGraphSelectTests(TemplateGraphTestClient):
                         <q><subj>?x</subj><pred>HASFUR</pred><obj>true</obj></q>
                     </select>
                 </template>
-                """)
+                """
+        )
 
         ast = self._graph.parse_template_expression(template)
 
@@ -494,9 +541,12 @@ class TemplateGraphSelectTests(TemplateGraphTestClient):
         self._client_context.brain.rdf.add_entity("MONKEY", "HASFUR", "true", "ANIMALS")
         self._client_context.brain.rdf.add_entity("ZEBRA", "LEGS", "4", "ANIMALS")
         self._client_context.brain.rdf.add_entity("BIRD", "LEGS", "2", "ANIMALS")
-        self._client_context.brain.rdf.add_entity("ELEPHANT", "TRUNK", "true", "ANIMALS")
+        self._client_context.brain.rdf.add_entity(
+            "ELEPHANT", "TRUNK", "true", "ANIMALS"
+        )
 
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
                 <template>
                     <select>
                         <vars>?x</vars>
@@ -504,7 +554,8 @@ class TemplateGraphSelectTests(TemplateGraphTestClient):
                         <notq><subj>?x</subj><pred>HASFUR</pred><obj>true</obj></notq>
                     </select>
                 </template>
-                """)
+                """
+        )
 
         ast = self._graph.parse_template_expression(template)
 
@@ -517,107 +568,124 @@ class TemplateGraphSelectTests(TemplateGraphTestClient):
         self.assertTrue([["?x", "BIRD"]] in query_results)
 
     def test_parse_query_subj_not_in_vars(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
                 <template>
                     <select>
                         <vars>?x</vars>
                         <q><subj>?y</subj><pred>LEGS</pred><obj>2</obj></q>
                     </select>
                 </template>
-                """)
+                """
+        )
 
         ast = self._graph.parse_template_expression(template)
 
     def test_parse_query_pred_not_in_vars(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
                 <template>
                     <select>
                         <vars>?x</vars>
                         <q><subj>MONKEY</subj><pred>?y</pred><obj>2</obj></q>
                     </select>
                 </template>
-                """)
+                """
+        )
 
         ast = self._graph.parse_template_expression(template)
 
     def test_parse_query_obj_not_in_vars(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
                 <template>
                     <select>
                         <vars>?x</vars>
                         <q><subj>MONKEY</subj><pred>LEGS</pred><obj>?y</obj></q>
                     </select>
                 </template>
-                """)
+                """
+        )
 
         ast = self._graph.parse_template_expression(template)
 
     def test_parse_query_obj_in_vars(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
                 <template>
                     <select>
                         <vars>?y</vars>
                         <q><subj>MONKEY</subj><pred>LEGS</pred><obj>?y</obj></q>
                     </select>
                 </template>
-                """)
+                """
+        )
 
         ast = self._graph.parse_template_expression(template)
 
     def test_parse_subj_missing(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
                 <template>
                     <select>
                         <vars>?x</vars>
                         <q><pred>LEGS</pred><obj>2</obj></q>
                     </select>
                 </template>
-                """)
+                """
+        )
 
         with self.assertRaises(ParserException):
             _ = self._graph.parse_template_expression(template)
 
     def test_parse_pred_missing(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
                 <template>
                     <select>
                         <vars>?x</vars>
                         <q><subj>MONKEY</subj><obj>?y</obj></q>
                     </select>
                 </template>
-                """)
+                """
+        )
 
         with self.assertRaises(ParserException):
             _ = self._graph.parse_template_expression(template)
 
     def test_parse_obj_missing(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
                 <template>
                     <select>
                         <vars>?x</vars>
                         <q><subj>MONKEY</subj><pred>LEGS</pred></q>
                     </select>
                 </template>
-                """)
+                """
+        )
 
         with self.assertRaises(ParserException):
             _ = self._graph.parse_template_expression(template)
 
     def test_parse_extra(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
                 <template>
                     <select>
                         <vars>?x</vars>
                         <q><subj>MONKEY</subj><pred>LEGS</pred><obj>?y</obj><other>?z</other></q>
                     </select>
                 </template>
-                """)
+                """
+        )
 
         with self.assertRaises(ParserException):
             _ = self._graph.parse_template_expression(template)
 
     def test_parse_multi_vars(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
                 <template>
                     <select>
                         <vars>?x</vars>
@@ -625,13 +693,15 @@ class TemplateGraphSelectTests(TemplateGraphTestClient):
                         <vars>?y</vars>
                     </select>
                 </template>
-                """)
+                """
+        )
 
         with self.assertRaises(ParserException):
             _ = self._graph.parse_template_expression(template)
 
     def test_parse_other_children(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
                 <template>
                     <select>
                         <vars>?x</vars>
@@ -639,8 +709,8 @@ class TemplateGraphSelectTests(TemplateGraphTestClient):
                         <id />>
                     </select>
                 </template>
-                """)
+                """
+        )
 
         with self.assertRaises(ParserException):
             _ = self._graph.parse_template_expression(template)
-

@@ -14,20 +14,18 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-import uuid
+
 import datetime
-from flask import Flask
-from flask import jsonify
-from flask import request
-from flask import make_response
-from flask import abort
-from flask import current_app
-from programy.utils.logging.ylogger import YLogger
-from programy.clients.restful.flask.client import FlaskRestBotClient
-from programy.clients.restful.flask.webchat.config import WebChatConfiguration
+import uuid
+
+from flask import Flask, abort, current_app, jsonify, make_response, request
+
 from programy.clients.render.html import HtmlRenderer
 from programy.clients.restful.auth import RestAuthorizationHandler
+from programy.clients.restful.flask.client import FlaskRestBotClient
+from programy.clients.restful.flask.webchat.config import WebChatConfiguration
 from programy.utils.console.console import outputLog
+from programy.utils.logging.ylogger import YLogger
 
 
 class WebChatBotClient(FlaskRestBotClient):
@@ -47,11 +45,11 @@ class WebChatBotClient(FlaskRestBotClient):
         return HtmlRenderer()
 
     def unauthorised_access_response(self, error_code=401):
-        return make_response(jsonify({'error': 'Unauthorized access'}), error_code)
+        return make_response(jsonify({"error": "Unauthorized access"}), error_code)
 
     def get_question(self, request):
-        if 'question' in request.args:
-            return request.args['question']
+        if "question" in request.args:
+            return request.args["question"]
         return None
 
     def get_userid(self, request):
@@ -75,22 +73,29 @@ class WebChatBotClient(FlaskRestBotClient):
         return client_context.bot.default_response
 
     def create_error_response_data(self, client_context, question, error):
-        return {"question": question,
-                "answer": self.get_default_response(client_context),
-                "error": error
-                }
+        return {
+            "question": question,
+            "answer": self.get_default_response(client_context),
+            "error": error,
+        }
 
     def create_webchat_response(self, response_data, userid, userid_expire_date):
-        response = jsonify({'response': response_data})
-        response.set_cookie(self.configuration.client_configuration.cookie_id, userid, expires=userid_expire_date)
+        response = jsonify({"response": response_data})
+        response.set_cookie(
+            self.configuration.client_configuration.cookie_id,
+            userid,
+            expires=userid_expire_date,
+        )
         return response
 
     def get_answer(self, client_context, question):
-        if question == 'YINITIALQUESTION':
+        if question == "YINITIALQUESTION":
             answer = client_context.bot.get_initial_question(client_context)
         else:
             self._questions += 1
-            answer = client_context.bot.ask_question(client_context, question, responselogger=self)
+            answer = client_context.bot.ask_question(
+                client_context, question, responselogger=self
+            )
         return answer
 
     def receive_message(self, request):
@@ -111,23 +116,27 @@ class WebChatBotClient(FlaskRestBotClient):
 
         userid = self.get_userid(request)
 
-        userid_expire_date = self.get_userid_cookie_expirary_date(self.configuration.client_configuration.cookie_expires)
+        userid_expire_date = self.get_userid_cookie_expirary_date(
+            self.configuration.client_configuration.cookie_expires
+        )
 
         client_context = self.create_client_context(userid)
         try:
             answer = self.get_answer(client_context, question)
-            answer = answer.replace('\n', '').strip()
+            answer = answer.replace("\n", "").strip()
             rendered = self._renderer.render(client_context, answer)
             response_data = self.create_success_response_data(question, rendered)
 
         except Exception as excep:
             YLogger.exception(self, "Failed receving message", excep)
-            response_data = self.create_error_response_data(client_context, question, str(excep))
+            response_data = self.create_error_response_data(
+                client_context, question, str(excep)
+            )
 
         return self.create_webchat_response(response_data, userid, userid_expire_date)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     outputLog(None, "Initiating WebChat Client...")
 
@@ -135,11 +144,11 @@ if __name__ == '__main__':
 
     WEB_CLIENT = WebChatBotClient()
 
-    @APP.route('/')
+    @APP.route("/")
     def index():
-        return current_app.send_static_file('webchat.html')
+        return current_app.send_static_file("webchat.html")
 
-    @APP.route(WEB_CLIENT.configuration.client_configuration.api, methods=['GET'])
+    @APP.route(WEB_CLIENT.configuration.client_configuration.api, methods=["GET"])
     def receive_message():
         try:
             return WEB_CLIENT.receive_message(request)
@@ -149,14 +158,16 @@ if __name__ == '__main__':
             return "500"
 
     if WEB_CLIENT.ping_responder.config.url is not None:
-        @APP.route(WEB_CLIENT.ping_responder.config.url, methods=['GET'])
+
+        @APP.route(WEB_CLIENT.ping_responder.config.url, methods=["GET"])
         def ping():
             return jsonify(WEB_CLIENT.ping_responder.ping())
 
     if WEB_CLIENT.ping_responder.config.shutdown is not None:
-        @APP.route(WEB_CLIENT.ping_responder.config.shutdown, methods=['GET'])
+
+        @APP.route(WEB_CLIENT.ping_responder.config.shutdown, methods=["GET"])
         def shutdown():
             WEB_CLIENT.ping_responder.stop_ping_service()
-            return 'Server shutting down...'
+            return "Server shutting down..."
 
     WEB_CLIENT.run(APP)

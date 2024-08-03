@@ -1,15 +1,19 @@
 import xml.etree.ElementTree as ET
 
+from programytest.parser.template.graph_tests.graph_test_client import (
+    TemplateGraphTestClient,
+)
+
 from programy.parser.exceptions import ParserException
 from programy.parser.template.nodes.base import TemplateNode
 from programy.parser.template.nodes.richmedia.carousel import TemplateCarouselNode
-from programytest.parser.template.graph_tests.graph_test_client import TemplateGraphTestClient
 
 
 class TemplateGraphCarouselTests(TemplateGraphTestClient):
 
     def test_carousel_node_from_xml(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
 			<template>
 			    <carousel>
                     <card>
@@ -27,7 +31,8 @@ class TemplateGraphCarouselTests(TemplateGraphTestClient):
                     </card>
                 </carousel>
 			</template>
-			""")
+			"""
+        )
         root = self._graph.parse_template_expression(template)
         self.assertIsNotNone(root)
         self.assertIsInstance(root, TemplateNode)
@@ -41,18 +46,21 @@ class TemplateGraphCarouselTests(TemplateGraphTestClient):
         self.assertEqual(1, len(node._cards))
 
     def test_carousel_no_cards(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
 			<template>
 			    <carousel>
                 </carousel>
 			</template>
-			""")
+			"""
+        )
 
         with self.assertRaises(ParserException):
             _ = self._graph.parse_template_expression(template)
 
     def test_carousel_invalid_children(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
 			<template>
 			    <carousel>
                      <card>
@@ -71,7 +79,8 @@ class TemplateGraphCarouselTests(TemplateGraphTestClient):
                     <id />
                </carousel>
 			</template>
-			""")
+			"""
+        )
 
         with self.assertRaises(ParserException):
             _ = self._graph.parse_template_expression(template)

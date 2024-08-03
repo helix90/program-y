@@ -14,15 +14,17 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 import yaml
-from programy.utils.logging.ylogger import YLogger
-from programy.utils.classes.loader import ClassLoader
-from programy.storage.stores.sql.store.sqlstore import SQLStore
-from programy.storage.entities.services import ServicesStore
-from programy.storage.stores.sql.dao.service import Service
-from programy.storage.entities.store import Store
+
 from programy.services.config import ServiceConfiguration
+from programy.storage.entities.services import ServicesStore
+from programy.storage.entities.store import Store
+from programy.storage.stores.sql.dao.service import Service
+from programy.storage.stores.sql.store.sqlstore import SQLStore
+from programy.utils.classes.loader import ClassLoader
 from programy.utils.console.console import outputLog
+from programy.utils.logging.ylogger import YLogger
 
 
 class SQLServicesStore(SQLStore, ServicesStore):
@@ -41,41 +43,59 @@ class SQLServicesStore(SQLStore, ServicesStore):
         return self._storage_engine.session.query(Service)
 
     def _get_entity(self, service_data):
-        name = service_data.get('name')
-        category = service_data.get('category')
-        service_class = service_data.get('service_class')
+        name = service_data.get("name")
+        category = service_data.get("category")
+        service_class = service_data.get("service_class")
 
-        type = 'generic'
+        type = "generic"
         rest_timeout = None
         rest_retries = None
-        if 'rest' in service_data:
-            type = 'rest'
-            rest_data = service_data.get('rest')
+        if "rest" in service_data:
+            type = "rest"
+            rest_data = service_data.get("rest")
             if rest_data is not None:
-                rest_timeout = rest_data.get('timeout')
-                rest_retries = rest_data.get('retries')
+                rest_timeout = rest_data.get("timeout")
+                rest_retries = rest_data.get("retries")
 
-        return Service(type=type, name=name, category=category, service_class=service_class,
-                       rest_timeout=rest_timeout, rest_retries=rest_retries)
+        return Service(
+            type=type,
+            name=name,
+            category=category,
+            service_class=service_class,
+            rest_timeout=rest_timeout,
+            rest_retries=rest_retries,
+        )
 
     def load(self, handler, name=None):
         services = self.get_all_services()
         for service in services:
             try:
                 configuration = ServiceConfiguration.from_sql(service)
-                handler.add_service(service.name, ClassLoader.instantiate_class(service.service_class)(configuration))
+                handler.add_service(
+                    service.name,
+                    ClassLoader.instantiate_class(service.service_class)(configuration),
+                )
 
             except Exception as e:
-                YLogger.exception(self, "Failed pre-instantiating Service [%s]", e, service.service_class)
+                YLogger.exception(
+                    self,
+                    "Failed pre-instantiating Service [%s]",
+                    e,
+                    service.service_class,
+                )
 
-    def upload_from_file(self, filename, fileformat=Store.TEXT_FORMAT, commit=True, verbose=False):
+    def upload_from_file(
+        self, filename, fileformat=Store.TEXT_FORMAT, commit=True, verbose=False
+    ):
         try:
             if self._load_services_from_file(filename, verbose) is True:
                 self.commit(commit)
                 return 1, 1
 
         except Exception as error:
-            YLogger.exception(self, "Failed to load services from [%s]", error, filename)
+            YLogger.exception(
+                self, "Failed to load services from [%s]", error, filename
+            )
 
         return 0, 0
 
@@ -84,12 +104,15 @@ class SQLServicesStore(SQLStore, ServicesStore):
         with open(filename, "r+") as file:
             yaml_data = yaml.load(file, Loader=yaml.FullLoader)
 
-            service_data = yaml_data['service']
+            service_data = yaml_data["service"]
             service = self._get_entity(service_data)
             self.storage_engine.session.add(service)
 
             if verbose is True:
-                outputLog(self, "[%s] = [%s]" % (service_data['name'], service_data['service_class']))
+                outputLog(
+                    self,
+                    "[%s] = [%s]"
+                    % (service_data["name"], service_data["service_class"]),
+                )
 
         return True
-

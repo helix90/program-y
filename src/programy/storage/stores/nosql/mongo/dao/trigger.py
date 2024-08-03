@@ -14,6 +14,7 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 from programy.storage.stores.utils import DAOUtils
 
 
@@ -25,20 +26,22 @@ class Trigger:
         self.trigger_class = trigger_class
 
     def to_document(self):
-        document = {"name": self.name,
-                    "trigger_class": self.trigger_class}
+        document = {"name": self.name, "trigger_class": self.trigger_class}
         if self.id is not None:
-            document['_id'] = self.id
+            document["_id"] = self.id
         return document
 
     def __repr__(self):
         return "<Trigger(id='%s', name='%s', trigger_class='%s')>" % (
-            DAOUtils.valid_id(self.id), self.name, self.trigger_class)
+            DAOUtils.valid_id(self.id),
+            self.name,
+            self.trigger_class,
+        )
 
     @staticmethod
     def from_document(data):
         trigger = Trigger(None, None)
-        trigger.id = DAOUtils.get_value_from_data(data, '_id')
-        trigger.name = DAOUtils.get_value_from_data(data, 'name')
-        trigger.trigger_class = DAOUtils.get_value_from_data(data, 'trigger_class')
+        trigger.id = DAOUtils.get_value_from_data(data, "_id")
+        trigger.name = DAOUtils.get_value_from_data(data, "name")
+        trigger.trigger_class = DAOUtils.get_value_from_data(data, "trigger_class")
         return trigger

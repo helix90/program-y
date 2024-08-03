@@ -1,7 +1,7 @@
 import unittest
 import unittest.mock
-from programy.storage.entities.rdf import RDFReadOnlyStore
-from programy.storage.entities.rdf import RDFReadWriteStore
+
+from programy.storage.entities.rdf import RDFReadOnlyStore, RDFReadWriteStore
 
 
 class RDFStoreTests(unittest.TestCase):
@@ -63,7 +63,7 @@ class RDFReadWriteStoreTests(unittest.TestCase):
     def test_process_line(self):
         store = MockRDFReadWriteStore()
         self.assertFalse(store.added)
-        store.process_line("TESTRDF",["subject1", "predicate1", "object1"])
+        store.process_line("TESTRDF", ["subject1", "predicate1", "object1"])
         self.assertTrue(store.added)
 
     def test_process_line_no_fields(self):

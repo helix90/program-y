@@ -13,7 +13,9 @@ class RegexTemplatesTestClient(TestClient):
         super(RegexTemplatesTestClient, self).load_storage()
         self.add_default_stores()
         self.add_categories_store([os.path.dirname(__file__)])
-        self.add_regex_templates_store(os.path.dirname(__file__) + os.sep + "regex-templates.txt")
+        self.add_regex_templates_store(
+            os.path.dirname(__file__) + os.sep + "regex-templates.txt"
+        )
 
 
 class RegexTemplatesAIMLTests(unittest.TestCase):
@@ -23,6 +25,8 @@ class RegexTemplatesAIMLTests(unittest.TestCase):
         self._client_context = client.create_client_context("testid")
 
     def test_regex_template(self):
-        response = self._client_context.bot.ask_question(self._client_context, "I AM 27 YEARS OLD")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "I AM 27 YEARS OLD"
+        )
         self.assertIsNotNone(response)
         self.assertEqual(response, "Thats Great! You are 27.")

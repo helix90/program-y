@@ -2,8 +2,9 @@ import unittest
 import unittest.mock
 import xml.etree.ElementTree as ET
 
-from programy.oob.callmom.alarm import AlarmOutOfBandProcessor
 from programytest.client import TestClient
+
+from programy.oob.callmom.alarm import AlarmOutOfBandProcessor
 
 
 class AlarmOutOfBandProcessorTests(unittest.TestCase):
@@ -41,14 +42,20 @@ class AlarmOutOfBandProcessorTests(unittest.TestCase):
         self.assertIsNotNone(oob_processor)
 
         oob_content = ET.fromstring("<alarm><hour>11</hour><minute>30</minute></alarm>")
-        self.assertEqual("ALARM", oob_processor.process_out_of_bounds(self._client_context, oob_content))
+        self.assertEqual(
+            "ALARM",
+            oob_processor.process_out_of_bounds(self._client_context, oob_content),
+        )
 
     def test_processor_version2(self):
         oob_processor = AlarmOutOfBandProcessor()
         self.assertIsNotNone(oob_processor)
 
         oob_content = ET.fromstring("<alarm><message>Alert!</message></alarm>")
-        self.assertEqual("ALARM", oob_processor.process_out_of_bounds(self._client_context, oob_content))
+        self.assertEqual(
+            "ALARM",
+            oob_processor.process_out_of_bounds(self._client_context, oob_content),
+        )
 
     def test_missing_hour(self):
         oob_processor = AlarmOutOfBandProcessor()

@@ -15,8 +15,9 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 """
-from programy.utils.logging.ylogger import YLogger
+
 from programy.extensions.base import Extension
+from programy.utils.logging.ylogger import YLogger
 
 
 class RDFAdminExtension(Extension):
@@ -25,13 +26,13 @@ class RDFAdminExtension(Extension):
     def execute(self, client_context, data):
         YLogger.debug(client_context, "RDF Admin - [%s]", data)
 
-        #TODO Add better parsing protextion to the splits
+        # TODO Add better parsing protextion to the splits
 
         rdf = ""
         segments = data.split()
-        if segments[0] == 'SUBJECTS':
+        if segments[0] == "SUBJECTS":
             subjects = client_context.brain.rdf.subjects()
-            if segments[1] == 'LIST':
+            if segments[1] == "LIST":
                 rdf += "<ul>"
                 for subject in subjects:
                     rdf += "<li>%s</li>" % subject
@@ -58,6 +59,8 @@ class RDFAdminExtension(Extension):
             rdf += "</ul>"
 
         else:
-            YLogger.error(client_context, "Invalid RDF Admin command [%s]" % segments[0])
+            YLogger.error(
+                client_context, "Invalid RDF Admin command [%s]" % segments[0]
+            )
 
         return rdf

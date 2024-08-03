@@ -1,13 +1,14 @@
-import unittest
-from unittest.mock import patch
-from unittest.mock import Mock
 import os
-from programy.services.rest.microsoft.news.service import MicrosoftNewsService
-from programy.services.config import ServiceConfiguration
-from programytest.services.testclient import ServiceTestClient
-from programytest.services.testcase import ServiceTestCase
+import unittest
+from unittest.mock import Mock, patch
+
 from programytest.externals import integration_tests_active, integration_tests_disabled
 from programytest.services.rest.microsoft.news.responses import news_success_reponse
+from programytest.services.testcase import ServiceTestCase
+from programytest.services.testclient import ServiceTestClient
+
+from programy.services.config import ServiceConfiguration
+from programy.services.rest.microsoft.news.service import MicrosoftNewsService
 
 
 class MicrosoftNewsServiceTestClient(ServiceTestClient):
@@ -23,8 +24,14 @@ class MicrosoftNewsServiceTestClient(ServiceTestClient):
 class MicrosoftNewsServiceTests(ServiceTestCase):
 
     def test_init(self):
-        service = MicrosoftNewsService(ServiceConfiguration.from_data("rest", "microsoft.news", "news",
-                                                                        url="https://chatilly.cognitiveservices.azure.com/bing/v7.0"))
+        service = MicrosoftNewsService(
+            ServiceConfiguration.from_data(
+                "rest",
+                "microsoft.news",
+                "news",
+                url="https://chatilly.cognitiveservices.azure.com/bing/v7.0",
+            )
+        )
         self.assertIsNotNone(service)
 
     def patch_requests_news_success_reponse(self, url, headers, timeout):
@@ -34,29 +41,47 @@ class MicrosoftNewsServiceTests(ServiceTestCase):
         return mock_response
 
     def _do_news(self):
-        service = MicrosoftNewsService(ServiceConfiguration.from_data("rest", "microsoft.news", "news",
-                                                                        url="https://chatilly.cognitiveservices.azure.com/bing/v7.0"))
+        service = MicrosoftNewsService(
+            ServiceConfiguration.from_data(
+                "rest",
+                "microsoft.news",
+                "news",
+                url="https://chatilly.cognitiveservices.azure.com/bing/v7.0",
+            )
+        )
         self.assertIsNotNone(service)
 
         client = MicrosoftNewsServiceTestClient()
         service.initialise(client)
 
         response = service.news("chatbots")
-        self.assertResponse(response, 'news', "microsoft.news", "news")
+        self.assertResponse(response, "news", "microsoft.news", "news")
 
     @unittest.skipIf(integration_tests_active() is False, integration_tests_disabled)
     def test_news_integration(self):
         self._do_news()
 
-    @patch("programy.services.rest.base.RESTService._requests_get", patch_requests_news_success_reponse)
+    @patch(
+        "programy.services.rest.base.RESTService._requests_get",
+        patch_requests_news_success_reponse,
+    )
     def test_news_unit(self):
         self._do_news()
 
-    @patch("programy.services.rest.base.RESTService._requests_get", patch_requests_news_success_reponse)
+    @patch(
+        "programy.services.rest.base.RESTService._requests_get",
+        patch_requests_news_success_reponse,
+    )
     def test_news_aiml(self):
         client = MicrosoftNewsServiceTestClient()
         conf_file = MicrosoftNewsService.get_default_conf_file()
 
-        response = self._do_handler_load(client, conf_file, "microsoft.news", "MICROSOFT NEWS CHATBOTS")
+        response = self._do_handler_load(
+            client, conf_file, "microsoft.news", "MICROSOFT NEWS CHATBOTS"
+        )
         self.assertIsNotNone(response)
-        self.assertTrue(response.startswith("<ul>\n<li>How Europe deals with terror offenders when they are freed from jail"))
+        self.assertTrue(
+            response.startswith(
+                "<ul>\n<li>How Europe deals with terror offenders when they are freed from jail"
+            )
+        )

@@ -1,10 +1,11 @@
 import unittest
 
 import programytest.storage.engines as Engines
+from programytest.storage.asserts.store.assert_normals import NormalsStoreAsserts
+
 from programy.storage.stores.sql.config import SQLStorageConfiguration
 from programy.storage.stores.sql.engine import SQLStorageEngine
 from programy.storage.stores.sql.store.lookups import SQLNormalStore
-from programytest.storage.asserts.store.assert_normals import NormalsStoreAsserts
 
 
 class SQLNormalStoreTests(NormalsStoreAsserts):

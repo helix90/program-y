@@ -1,8 +1,9 @@
 import unittest
 
+from programytest.client import TestClient
+
 from programy.context import ClientContext
 from programy.processors.post.multispaces import RemoveMultiSpacePostProcessor
-from programytest.client import TestClient
 
 
 class RemoveMultiSpaceTests(unittest.TestCase):
@@ -11,7 +12,7 @@ class RemoveMultiSpaceTests(unittest.TestCase):
         processor = RemoveMultiSpacePostProcessor()
 
         context = ClientContext(TestClient(), "testid")
-        
+
         result = processor.process(context, "Hello World")
         self.assertIsNotNone(result)
         self.assertEqual("Hello World", result)

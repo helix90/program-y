@@ -2,6 +2,7 @@ import os
 import os.path
 import re
 import unittest
+
 from programy.mappings.normal import NormalCollection
 from programy.storage.entities.store import Store
 
@@ -12,8 +13,8 @@ class NormalsStoreAsserts(unittest.TestCase):
 
         store.empty()
 
-        store.add_to_lookup(".uk"," dot uk " )
-        store.add_to_lookup(".net"," dot net ")
+        store.add_to_lookup(".uk", " dot uk ")
+        store.add_to_lookup(".net", " dot net ")
         store.commit()
 
         lookups = store.get_lookup()
@@ -37,7 +38,9 @@ class NormalsStoreAsserts(unittest.TestCase):
 
         store.empty()
 
-        store.upload_from_text(None, """
+        store.upload_from_text(
+            None,
+            """
                                 ".uk"," dot uk " 	
                                 ".net"," dot net " 	
                                 ".ca"," dot ca "	
@@ -53,34 +56,71 @@ class NormalsStoreAsserts(unittest.TestCase):
                                 ".se"," dot se "
                                 ".no"," dot no "
                                 ".es"," dot es "                                
-                                """)
+                                """,
+        )
 
         collection = NormalCollection()
         store.load(collection)
 
-        self.assertEqual(collection.normalise(".UK"), [re.compile('(^\\.UK|\\.UK|\\.UK$)', re.IGNORECASE), ' DOT UK '])
-        self.assertEqual(collection.normalise_string("keiffster.uk"), "keiffster dot uk")
+        self.assertEqual(
+            collection.normalise(".UK"),
+            [re.compile("(^\\.UK|\\.UK|\\.UK$)", re.IGNORECASE), " DOT UK "],
+        )
+        self.assertEqual(
+            collection.normalise_string("keiffster.uk"), "keiffster dot uk"
+        )
 
     def assert_upload_from_text_file(self, store):
 
         store.empty()
 
-        store.upload_from_file(os.path.dirname(__file__) + os.sep + "data" + os.sep + "lookups" + os.sep + "text" + os.sep + "normal.txt")
+        store.upload_from_file(
+            os.path.dirname(__file__)
+            + os.sep
+            + "data"
+            + os.sep
+            + "lookups"
+            + os.sep
+            + "text"
+            + os.sep
+            + "normal.txt"
+        )
 
         collection = NormalCollection()
         store.load(collection)
 
-        self.assertEqual(collection.normalise(".UK"), [re.compile('(^\\.UK|\\.UK|\\.UK$)', re.IGNORECASE), ' DOT UK '])
-        self.assertEqual(collection.normalise_string("keiffster.uk"), "keiffster dot uk")
+        self.assertEqual(
+            collection.normalise(".UK"),
+            [re.compile("(^\\.UK|\\.UK|\\.UK$)", re.IGNORECASE), " DOT UK "],
+        )
+        self.assertEqual(
+            collection.normalise_string("keiffster.uk"), "keiffster dot uk"
+        )
 
     def assert_upload_csv_file(self, store):
 
         store.empty()
 
-        store.upload_from_file(os.path.dirname(__file__) + os.sep + "data" + os.sep + "lookups" + os.sep + "csv" + os.sep + "normal.csv", fileformat=Store.CSV_FORMAT)
+        store.upload_from_file(
+            os.path.dirname(__file__)
+            + os.sep
+            + "data"
+            + os.sep
+            + "lookups"
+            + os.sep
+            + "csv"
+            + os.sep
+            + "normal.csv",
+            fileformat=Store.CSV_FORMAT,
+        )
 
         collection = NormalCollection()
         store.load(collection)
 
-        self.assertEqual(collection.normalise(".UK"), [re.compile('(^\\.UK|\\.UK|\\.UK$)', re.IGNORECASE), ' DOT UK '])
-        self.assertEqual(collection.normalise_string("keiffster.uk"), "keiffster dot uk")
+        self.assertEqual(
+            collection.normalise(".UK"),
+            [re.compile("(^\\.UK|\\.UK|\\.UK$)", re.IGNORECASE), " DOT UK "],
+        )
+        self.assertEqual(
+            collection.normalise_string("keiffster.uk"), "keiffster dot uk"
+        )

@@ -15,8 +15,9 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 """
-from programy.utils.logging.ylogger import YLogger
+
 from programy.extensions.base import Extension
+from programy.utils.logging.ylogger import YLogger
 
 
 class SchedulerAdminExtension(Extension):
@@ -26,14 +27,16 @@ class SchedulerAdminExtension(Extension):
 
     def _list(self, commands, client_context):
         if len(commands) == 2:
-            if commands[1] == 'JOBS':
+            if commands[1] == "JOBS":
                 jobs = client_context.client.scheduler.list_jobs()
                 if jobs:
                     response = ""
                     for jobid, job in jobs.items():
-                        response += "> Job ID:%s, Next Run: %s, Args: %s\n" % (jobid,
-                                                                               job.next_run_time,
-                                                                               str(job.args))
+                        response += "> Job ID:%s, Next Run: %s, Args: %s\n" % (
+                            jobid,
+                            job.next_run_time,
+                            str(job.args),
+                        )
                     return response
 
                 return "No job information available"
@@ -47,7 +50,7 @@ class SchedulerAdminExtension(Extension):
     def _kill(self, commands, client_context):
         if len(commands) == 3:
 
-            if commands[1] == 'JOB':
+            if commands[1] == "JOB":
                 client_context.client.scheduler.remove_existing_job(commands[2])
                 return "Job removed"
 
@@ -74,25 +77,27 @@ class SchedulerAdminExtension(Extension):
 
             command = commands[0]
 
-            if command == 'COMMANDS':
+            if command == "COMMANDS":
                 return self._commands()
 
-            elif command == 'LIST':
+            elif command == "LIST":
                 return self._list(commands, client_context)
 
-            elif command == 'KILL':
+            elif command == "KILL":
                 return self._kill(commands, client_context)
 
-            elif command == 'PAUSE':
+            elif command == "PAUSE":
                 return self._pause(client_context)
 
-            elif command == 'RESUME':
+            elif command == "RESUME":
                 return self._resume(client_context)
 
             else:
                 return "Invalid Scheduler Admin command [%s]" % command
 
         except Exception as e:
-            YLogger.exception(client_context, "Failed to execute scheduler extension", e)
+            YLogger.exception(
+                client_context, "Failed to execute scheduler extension", e
+            )
 
         return "Scheduler Admin Error"

@@ -3,8 +3,10 @@ import os.path
 import unittest
 
 from programy.parser.pattern.factory import PatternNodeFactory
-from programy.storage.stores.file.config import FileStorageConfiguration
-from programy.storage.stores.file.config import FileStoreConfiguration
+from programy.storage.stores.file.config import (
+    FileStorageConfiguration,
+    FileStoreConfiguration,
+)
 from programy.storage.stores.file.engine import FileStorageEngine
 from programy.storage.stores.file.store.nodes import FilePatternNodeStore
 
@@ -24,12 +26,23 @@ class FilePatternNodeStoreTests(unittest.TestCase):
         engine.initialise()
         store = FilePatternNodeStore(engine)
 
-        self.assertEquals('/tmp/nodes/pattern_nodes.conf', store._get_storage_path())
+        self.assertEquals("/tmp/nodes/pattern_nodes.conf", store._get_storage_path())
         self.assertIsInstance(store.get_storage(), FileStoreConfiguration)
 
     def test_load_variables(self):
         config = FileStorageConfiguration()
-        config._pattern_nodes_storage = FileStoreConfiguration(file=os.path.dirname(__file__) + os.sep + "data" + os.sep + "nodes" + os.sep + "pattern_nodes.conf", fileformat="text", encoding="utf-8", delete_on_start=False)
+        config._pattern_nodes_storage = FileStoreConfiguration(
+            file=os.path.dirname(__file__)
+            + os.sep
+            + "data"
+            + os.sep
+            + "nodes"
+            + os.sep
+            + "pattern_nodes.conf",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
         engine = FileStorageEngine(config)
         engine.initialise()
         store = FilePatternNodeStore(engine)

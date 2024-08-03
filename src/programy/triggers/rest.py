@@ -14,12 +14,15 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 from typing import Dict
+
 import requests
-from programy.utils.logging.ylogger import YLogger
-from programy.triggers.config import TriggerConfiguration
+
 from programy.context import ClientContext
+from programy.triggers.config import TriggerConfiguration
 from programy.triggers.manager import TriggerManager
+from programy.utils.logging.ylogger import YLogger
 
 
 class RestTriggerManager(TriggerManager):
@@ -28,40 +31,53 @@ class RestTriggerManager(TriggerManager):
         TriggerManager.__init__(self, config)
 
     def post_data(self, api_url_base, headers, payload):
-        return requests.post(api_url_base, headers=headers, json=payload)   # pragma: no cover
+        return requests.post(
+            api_url_base, headers=headers, json=payload
+        )  # pragma: no cover
 
-    def trigger(self, event: str, client_context: ClientContext = None, additional: Dict[str, str] = None) -> bool:
+    def trigger(
+        self,
+        event: str,
+        client_context: ClientContext = None,
+        additional: Dict[str, str] = None,
+    ) -> bool:
 
         if client_context is not None:
             assert isinstance(client_context, ClientContext)
 
         YLogger.debug(client_context, "Event triggered [%s]", event)
 
-        payload = {'event': event}
+        payload = {"event": event}
 
         if client_context is not None:
             conversation = client_context.bot.get_conversation(client_context)
-            payload['conversation'] = conversation.to_json()
+            payload["conversation"] = conversation.to_json()
 
         if additional is not None:
-            payload['additional'] = additional
+            payload["additional"] = additional
 
         api_url_base = self._config.value("url")
         api_method = self._config.value("method")
         api_token = self._config.value("token")
 
-        headers = {'Content-Type': 'application/json'}
+        headers = {"Content-Type": "application/json"}
         if api_token is not None:
-            headers['Authorisation'] = 'Bearer %s' % api_token
+            headers["Authorisation"] = "Bearer %s" % api_token
 
-        if api_method is None or api_method.upper() == 'POST':
+        if api_method is None or api_method.upper() == "POST":
             try:
-                response = self.post_data(api_url_base, headers=headers, payload=payload)
+                response = self.post_data(
+                    api_url_base, headers=headers, payload=payload
+                )
 
                 if response.status_code == 200:
                     return True
 
-                YLogger.error(None, "Failed to send trigger info via REST [%d]", response.status_code)
+                YLogger.error(
+                    None,
+                    "Failed to send trigger info via REST [%d]",
+                    response.status_code,
+                )
 
             except Exception as error:
                 YLogger.exception(client_context, "Failed to post data", error)

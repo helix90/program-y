@@ -17,12 +17,16 @@ class EnergyUsageTestsClient(TestClient):
 
 class EnergyUsageAIMLTests(unittest.TestCase):
 
-    def setUp (self):
+    def setUp(self):
         client = EnergyUsageTestsClient()
         self._client_context = client.create_client_context("testid")
 
     def test_usage(self):
-        response =  self._client_context.bot.ask_question(self._client_context, "WHAT IS MY ENERGY USAGE")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "WHAT IS MY ENERGY USAGE"
+        )
         self.assertIsNotNone(response)
-        self.assertEqual(response, 'So far this month you have used 0 KWh of Gas and 0 KWh of Electricity.')
-
+        self.assertEqual(
+            response,
+            "So far this month you have used 0 KWh of Gas and 0 KWh of Electricity.",
+        )

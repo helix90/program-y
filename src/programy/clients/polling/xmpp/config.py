@@ -14,6 +14,7 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 from programy.clients.config import ClientConfigurationData
 from programy.utils.substitutions.substitues import Substitutions
 
@@ -53,31 +54,45 @@ class XmppConfiguration(ClientConfigurationData):
     def xep_0199(self):
         return self._xep_0199
 
-    def load_configuration_section(self, configuration_file, section, bot_root, subs: Substitutions = None):
+    def load_configuration_section(
+        self, configuration_file, section, bot_root, subs: Substitutions = None
+    ):
         assert section is not None
 
         self._server = configuration_file.get_option(section, "server", subs=subs)
-        self._port = configuration_file.get_int_option(section, "port", missing_value=5222, subs=subs)
-        self._xep_0030 = configuration_file.get_bool_option(section, "xep_0030", subs=subs)
-        self._xep_0004 = configuration_file.get_bool_option(section, "xep_0004", subs=subs)
-        self._xep_0060 = configuration_file.get_bool_option(section, "xep_0060", subs=subs)
-        self._xep_0199 = configuration_file.get_bool_option(section, "xep_0199", subs=subs)
-        super(XmppConfiguration, self).load_configuration_section(configuration_file, section, bot_root, subs=subs)
+        self._port = configuration_file.get_int_option(
+            section, "port", missing_value=5222, subs=subs
+        )
+        self._xep_0030 = configuration_file.get_bool_option(
+            section, "xep_0030", subs=subs
+        )
+        self._xep_0004 = configuration_file.get_bool_option(
+            section, "xep_0004", subs=subs
+        )
+        self._xep_0060 = configuration_file.get_bool_option(
+            section, "xep_0060", subs=subs
+        )
+        self._xep_0199 = configuration_file.get_bool_option(
+            section, "xep_0199", subs=subs
+        )
+        super(XmppConfiguration, self).load_configuration_section(
+            configuration_file, section, bot_root, subs=subs
+        )
 
     def to_yaml(self, data, defaults=True):
         if defaults is True:
-            data['server'] = "talk.google.com"
-            data['port'] = 5222
-            data['xep_0030'] = True
-            data['xep_0004'] = True
-            data['xep_0060'] = True
-            data['xep_0199'] = True
+            data["server"] = "talk.google.com"
+            data["port"] = 5222
+            data["xep_0030"] = True
+            data["xep_0004"] = True
+            data["xep_0060"] = True
+            data["xep_0199"] = True
         else:
-            data['server'] = self._server
-            data['port'] = self._port
-            data['xep_0030'] = self._xep_0030
-            data['xep_0004'] = self._xep_0004
-            data['xep_0060'] = self._xep_0060
-            data['xep_0199'] = self._xep_0199
+            data["server"] = self._server
+            data["port"] = self._port
+            data["xep_0030"] = self._xep_0030
+            data["xep_0004"] = self._xep_0004
+            data["xep_0060"] = self._xep_0060
+            data["xep_0199"] = self._xep_0199
 
         super(XmppConfiguration, self).to_yaml(data, defaults)

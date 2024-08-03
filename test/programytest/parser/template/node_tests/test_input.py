@@ -1,10 +1,11 @@
 import xml.etree.ElementTree as ET
 
+from programytest.parser.base import ParserTestsBaseClass
+
 from programy.dialog.conversation import Conversation
 from programy.dialog.question import Question
 from programy.parser.template.nodes.base import TemplateNode
 from programy.parser.template.nodes.input import TemplateInputNode
-from programytest.parser.base import ParserTestsBaseClass
 
 
 class MockTemplateInputNode(TemplateInputNode):
@@ -60,11 +61,17 @@ class TemplateInputNodeTests(ParserTestsBaseClass):
 
         conversation = Conversation(self._client_context)
 
-        question = Question.create_from_text(self._client_context, "Hello world", self._client_context.bot.sentence_splitter)
+        question = Question.create_from_text(
+            self._client_context,
+            "Hello world",
+            self._client_context.bot.sentence_splitter,
+        )
         question.current_sentence()._response = "Hello matey"
         conversation.record_dialog(question)
 
-        self._client_context.bot._conversation_mgr._conversations["testid"] = conversation
+        self._client_context.bot._conversation_mgr._conversations["testid"] = (
+            conversation
+        )
 
         response = root.resolve(self._client_context)
         self.assertIsNotNone(response)
@@ -89,11 +96,15 @@ class TemplateInputNodeTests(ParserTestsBaseClass):
         question.current_sentence()._response = "Hello matey"
         conversation.record_dialog(question)
 
-        question = Question.create_from_text(self._client_context, "How are you. Are you well")
+        question = Question.create_from_text(
+            self._client_context, "How are you. Are you well"
+        )
         question.current_sentence()._response = "Fine thanks"
         conversation.record_dialog(question)
 
-        self._client_context.bot._conversation_mgr._conversations["testid"] = conversation
+        self._client_context.bot._conversation_mgr._conversations["testid"] = (
+            conversation
+        )
 
         response = root.resolve(self._client_context)
         self.assertIsNotNone(response)
@@ -114,15 +125,25 @@ class TemplateInputNodeTests(ParserTestsBaseClass):
 
         conversation = Conversation(self._client_context)
 
-        question = Question.create_from_text(self._client_context, "Hello world", self._client_context.bot.sentence_splitter)
+        question = Question.create_from_text(
+            self._client_context,
+            "Hello world",
+            self._client_context.bot.sentence_splitter,
+        )
         question.current_sentence()._response = "Hello matey"
         conversation.record_dialog(question)
 
-        question = Question.create_from_text(self._client_context, "How are you. Are you well", self._client_context.bot.sentence_splitter)
+        question = Question.create_from_text(
+            self._client_context,
+            "How are you. Are you well",
+            self._client_context.bot.sentence_splitter,
+        )
         question.current_sentence()._response = "Fine thanks"
         conversation.record_dialog(question)
 
-        self._client_context.bot._conversation_mgr._conversations["testid"] = conversation
+        self._client_context.bot._conversation_mgr._conversations["testid"] = (
+            conversation
+        )
 
         response = root.resolve(self._client_context)
         self.assertIsNotNone(response)

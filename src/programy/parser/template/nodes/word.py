@@ -14,8 +14,9 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
+
 from programy.parser.template.nodes.base import TemplateNode
+from programy.utils.logging.ylogger import YLogger
 from programy.utils.text.text import TextUtils
 
 
@@ -34,14 +35,18 @@ class TemplateWordNode(TemplateNode):
         self._word = word
 
     def resolve_to_string(self, client_context):
-        YLogger.debug(client_context, "[%s] resolved to [%s]", self.to_string(), self.word)
+        YLogger.debug(
+            client_context, "[%s] resolved to [%s]", self.to_string(), self.word
+        )
         if self.word is not None:
             return self.word
 
         return ""
 
     def resolve(self, client_context):
-        YLogger.debug(client_context, "[%s] resolved to [%s]", self.to_string(), self.word)
+        YLogger.debug(
+            client_context, "[%s] resolved to [%s]", self.to_string(), self.word
+        )
         if self.word is not None:
             return self.word
 
@@ -57,4 +62,6 @@ class TemplateWordNode(TemplateNode):
         return TextUtils.html_escape(self.word)
 
     def parse_expression(self, graph, expression):
-        raise NotImplementedError("Never call this directly, call the subclass instead!")  # pragma: no cover
+        raise NotImplementedError(
+            "Never call this directly, call the subclass instead!"
+        )  # pragma: no cover

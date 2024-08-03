@@ -1,12 +1,14 @@
 import os
 import unittest
 from unittest.mock import patch
+
+from programytest.client import TestClient
+
 from programy.brain import Brain
 from programy.clients.events.console.config import ConsoleConfiguration
 from programy.config.brain.brain import BrainConfiguration
 from programy.config.file.yaml_file import YamlConfigurationFile
 from programy.oob.default import DefaultOutOfBandProcessor
-from programytest.client import TestClient
 
 
 class BrainTests(unittest.TestCase):
@@ -16,12 +18,28 @@ class BrainTests(unittest.TestCase):
         self._client_context = client.create_client_context("testid")
 
     def load_os_specific_configuration(self, yaml, linux_filename, windows_filename):
-        if os.name == 'posix':
-            yaml.load_from_file(os.path.dirname(__file__)+ os.sep + "testdata" + os.sep + linux_filename, ConsoleConfiguration(), os.path.dirname(__file__))
-        elif os.name == 'nt':
-            yaml.load_from_file(os.path.dirname(__file__)+ os.sep + "testdata" + os.sep + windows_filename, ConsoleConfiguration(), os.path.dirname(__file__))
+        if os.name == "posix":
+            yaml.load_from_file(
+                os.path.dirname(__file__)
+                + os.sep
+                + "testdata"
+                + os.sep
+                + linux_filename,
+                ConsoleConfiguration(),
+                os.path.dirname(__file__),
+            )
+        elif os.name == "nt":
+            yaml.load_from_file(
+                os.path.dirname(__file__)
+                + os.sep
+                + "testdata"
+                + os.sep
+                + windows_filename,
+                ConsoleConfiguration(),
+                os.path.dirname(__file__),
+            )
         else:
-            raise Exception("Unknown os [%s]"%os.name)
+            raise Exception("Unknown os [%s]" % os.name)
 
     def test_brain_init_no_config(self):
         client = TestClient()
@@ -46,7 +64,9 @@ class BrainTests(unittest.TestCase):
     def test_brain_init_with_config(self):
 
         yaml = YamlConfigurationFile()
-        self.load_os_specific_configuration(yaml, "test_brain.yaml", "test_brain.windows.yaml")
+        self.load_os_specific_configuration(
+            yaml, "test_brain.yaml", "test_brain.windows.yaml"
+        )
 
         brains_section = yaml.get_section("brains")
         brain_section = yaml.get_section("brain", brains_section)
@@ -76,7 +96,9 @@ class BrainTests(unittest.TestCase):
     def test_brain_init_with_secure_config(self):
 
         yaml = YamlConfigurationFile()
-        self.load_os_specific_configuration(yaml, "test_secure_brain.yaml", "test_secure_brain.windows.yaml")
+        self.load_os_specific_configuration(
+            yaml, "test_secure_brain.yaml", "test_secure_brain.windows.yaml"
+        )
 
         brains_section = yaml.get_section("brains")
         brain_section = yaml.get_section("brain", brains_section)
@@ -106,7 +128,9 @@ class BrainTests(unittest.TestCase):
     def test_oob_loading(self):
 
         yaml = YamlConfigurationFile()
-        self.load_os_specific_configuration(yaml, "test_brain.yaml", "test_brain.windows.yaml")
+        self.load_os_specific_configuration(
+            yaml, "test_brain.yaml", "test_brain.windows.yaml"
+        )
 
         brains_section = yaml.get_section("brains")
         brain_section = yaml.get_section("brain", brains_section)
@@ -123,7 +147,9 @@ class BrainTests(unittest.TestCase):
     def test_reload_unknowns(self):
 
         yaml = YamlConfigurationFile()
-        self.load_os_specific_configuration(yaml, "test_brain.yaml", "test_brain.windows.yaml")
+        self.load_os_specific_configuration(
+            yaml, "test_brain.yaml", "test_brain.windows.yaml"
+        )
 
         brains_section = yaml.get_section("brains")
         brain_section = yaml.get_section("brain", brains_section)
@@ -142,7 +168,9 @@ class BrainTests(unittest.TestCase):
     def test_load_save_binaries(self):
 
         yaml = YamlConfigurationFile()
-        self.load_os_specific_configuration(yaml, "test_secure_brain.yaml", "test_secure_brain.windows.yaml")
+        self.load_os_specific_configuration(
+            yaml, "test_secure_brain.yaml", "test_secure_brain.windows.yaml"
+        )
 
         brains_section = yaml.get_section("brains")
         brain_section = yaml.get_section("brain", brains_section)
@@ -167,7 +195,9 @@ class BrainTests(unittest.TestCase):
 
     def test_post_process_question_no_processing(self):
         yaml = YamlConfigurationFile()
-        self.load_os_specific_configuration(yaml, "test_brain.yaml", "test_brain.windows.yaml")
+        self.load_os_specific_configuration(
+            yaml, "test_brain.yaml", "test_brain.windows.yaml"
+        )
 
         brains_section = yaml.get_section("brains")
         brain_section = yaml.get_section("brain", brains_section)
@@ -189,7 +219,9 @@ class BrainTests(unittest.TestCase):
     @patch("programy.processors.processing.ProcessorCollection.process", patch_process)
     def test_post_process_question_with_processing(self):
         yaml = YamlConfigurationFile()
-        self.load_os_specific_configuration(yaml, "test_brain.yaml", "test_brain.windows.yaml")
+        self.load_os_specific_configuration(
+            yaml, "test_brain.yaml", "test_brain.windows.yaml"
+        )
 
         brains_section = yaml.get_section("brains")
         brain_section = yaml.get_section("brain", brains_section)

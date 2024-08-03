@@ -1,11 +1,11 @@
 import csv
-import re
 import datetime
 import os
+import re
 
 from programy.clients.client import BotClient
-from programy.utils.files.filefinder import FileFinder
 from programy.clients.events.console.config import ConsoleConfiguration
+from programy.utils.files.filefinder import FileFinder
 
 
 class TestQuestion(object):
@@ -27,7 +27,7 @@ class TestQuestion(object):
                     else:
                         self._answers_regex.append(("+", re.compile(answer)))
                 except Exception as e:
-                    print ("Failed to add answer [%s]" % answer)
+                    print("Failed to add answer [%s]" % answer)
 
         self._response = None
 
@@ -85,10 +85,10 @@ class TestFileFileFinder(FileFinder):
         return bool(len(row) < 2)
 
     def is_comment(self, question):
-        return bool(question[0] == '#')
+        return bool(question[0] == "#")
 
     def is_template(self, question):
-        return bool(question[0] == '$')
+        return bool(question[0] == "$")
 
     def clean_up_answer(self, text):
         return text.replace('"', "").strip()
@@ -111,8 +111,8 @@ class TestFileFileFinder(FileFinder):
         print("Loading aiml_tests from file [%s]" % filename)
         questions = []
         templates = {}
-        with open(filename, 'r') as csvfile:
-            csvreader = csv.reader(csvfile, delimiter=',', quotechar='"')
+        with open(filename, "r") as csvfile:
+            csvreader = csv.reader(csvfile, delimiter=",", quotechar='"')
             for row in csvreader:
                 if self.empty_row(row) is False:
                     question = row[0]
@@ -128,23 +128,33 @@ class TestFileFileFinder(FileFinder):
                                 answer = answer.strip()
                                 if answer:
                                     if self.is_template(answer) is True:
-                                        self.add_template_answers(templates, answer, answers)
+                                        self.add_template_answers(
+                                            templates, answer, answers
+                                        )
 
                                     else:
-                                        if answer.startswith("\"THAT="):
-                                            thatsplits = self.clean_up_answer(answer).split("=")
+                                        if answer.startswith('"THAT='):
+                                            thatsplits = self.clean_up_answer(
+                                                answer
+                                            ).split("=")
 
                                             that = thatsplits[1]
-                                        elif answer.startswith("\"TOPIC="):
-                                            topicsplits = self.clean_up_answer(answer).split("=")
+                                        elif answer.startswith('"TOPIC='):
+                                            topicsplits = self.clean_up_answer(
+                                                answer
+                                            ).split("=")
                                             topic = topicsplits[1]
 
                                         else:
                                             answers.append(self.clean_up_answer(answer))
 
-                            questions.append(TestQuestion(question, answers, filename, topic=topic, that=that))
+                            questions.append(
+                                TestQuestion(
+                                    question, answers, filename, topic=topic, that=that
+                                )
+                            )
 
-        print("\tTotal %d questions"%len(questions))
+        print("\tTotal %d questions" % len(questions))
         return questions
 
 
@@ -178,16 +188,39 @@ class TestRunnerBotClient(BotClient):
         return self.arguments.args.verbose
 
     def get_description(self):
-        return 'ProgramY Test Runner Client'
+        return "ProgramY Test Runner Client"
 
     def add_client_arguments(self, parser=None):
         if parser is not None:
-            parser.add_argument('--test_dir', dest='test_dir', help='directory containing test files to run against grammar')
-            parser.add_argument('--qna_dir', dest='qna_dir', help='directory where test results will be written, matches test_dir for structure')
-            parser.add_argument('--test_file', dest='test_file', help='Single file of aiml_tests to run against grammar')
-            parser.add_argument('--qna_file', dest='qna_file', help='A file containing questions and answers')
-            parser.add_argument('--fail_file', dest='fail_file', help='A file containing all failures')
-            parser.add_argument('--verbose', dest='verbose', action='store_true', help='print out each question to be asked')
+            parser.add_argument(
+                "--test_dir",
+                dest="test_dir",
+                help="directory containing test files to run against grammar",
+            )
+            parser.add_argument(
+                "--qna_dir",
+                dest="qna_dir",
+                help="directory where test results will be written, matches test_dir for structure",
+            )
+            parser.add_argument(
+                "--test_file",
+                dest="test_file",
+                help="Single file of aiml_tests to run against grammar",
+            )
+            parser.add_argument(
+                "--qna_file",
+                dest="qna_file",
+                help="A file containing questions and answers",
+            )
+            parser.add_argument(
+                "--fail_file", dest="fail_file", help="A file containing all failures"
+            )
+            parser.add_argument(
+                "--verbose",
+                dest="verbose",
+                action="store_true",
+                help="print out each question to be asked",
+            )
 
     def set_environment(self):
         self.bot.brain.properties.add_property("env", "TestRunner")
@@ -196,13 +229,17 @@ class TestRunnerBotClient(BotClient):
         return ConsoleConfiguration()
 
     def make_output_filename(self, filename):
-        return filename.replace(self.test_dir, self.qna_dir).replace(".tests", ".results")
+        return filename.replace(self.test_dir, self.qna_dir).replace(
+            ".tests", ".results"
+        )
 
     def run(self):
         file_finder = TestFileFileFinder()
         if self.test_dir is not None:
             print("Loading Tests from directory [%s]" % self.test_dir)
-            questions, file_maps = file_finder.load_dir_contents(self.test_dir, extension=".tests", subdir=True)
+            questions, file_maps = file_finder.load_dir_contents(
+                self.test_dir, extension=".tests", subdir=True
+            )
 
         else:
             questions = file_finder.load_single_file_contents(self.test_file)
@@ -232,13 +269,19 @@ class TestRunnerBotClient(BotClient):
 
                 new_filename = self.make_output_filename(test.filename)
 
-                if question_and_answers_name is None or question_and_answers_name != new_filename:
+                if (
+                    question_and_answers_name is None
+                    or question_and_answers_name != new_filename
+                ):
 
                     if question_and_answers_name is not None:
                         question_and_answers.flush()
                         question_and_answers.close()
 
-                    print("Testing [%d] -> %s: " % (len(questions[category]), new_filename))
+                    print(
+                        "Testing [%d] -> %s: "
+                        % (len(questions[category]), new_filename)
+                    )
 
                     directory = os.path.dirname(new_filename)
                     if not os.path.exists(directory):
@@ -247,10 +290,10 @@ class TestRunnerBotClient(BotClient):
                     question_and_answers = open(new_filename, "w+")
                     question_and_answers_name = new_filename
 
-                if any((c in '$*_^#') for c in test.question):
+                if any((c in "$*_^#") for c in test.question):
                     if self.verbose:
-                        print("WARNING: Wildcards in question! [%s]"%test.question)
-                    warnings = warnings +1
+                        print("WARNING: Wildcards in question! [%s]" % test.question)
+                    warnings = warnings + 1
 
                 if test.topic is not None:
                     if self.verbose:
@@ -266,7 +309,9 @@ class TestRunnerBotClient(BotClient):
 
                     if self.verbose:
                         print("Asking:", test.question)
-                    response = client_context.bot.ask_question(client_context, test.question)
+                    response = client_context.bot.ask_question(
+                        client_context, test.question
+                    )
                     success = False
                     test.response = response
 
@@ -276,7 +321,9 @@ class TestRunnerBotClient(BotClient):
                 except Exception as error:
                     print("****** Error asking %s", test.question)
 
-                question_and_answers.write('"%s", "%s"\n'%(test.question, test.response))
+                question_and_answers.write(
+                    '"%s", "%s"\n' % (test.question, test.response)
+                )
 
                 if not test.answers_regex:
                     if test.response == "":
@@ -304,12 +351,12 @@ class TestRunnerBotClient(BotClient):
         print("Test run complete....")
 
         if question_and_answers_name is not None:
-            question_and_answers.flush ()
-            question_and_answers.close ()
+            question_and_answers.flush()
+            question_and_answers.close()
 
         stop = datetime.datetime.now()
-        diff = stop-start
-        total_tests = len(successes)+len(failures)
+        diff = stop - start
+        total_tests = len(successes) + len(failures)
 
         print("Successes: %d" % len(successes))
         print("Failures:  %d" % len(failures))
@@ -323,15 +370,25 @@ class TestRunnerBotClient(BotClient):
         print("Writing failure file...")
         with open(self.fail_file, "w+") as fail_file:
             for failure in failures:
-                fail_file.write("%s: [%s] expected [%s], got [%s]\n" % (failure.category, failure.question, failure.answers_string, failure.response))
+                fail_file.write(
+                    "%s: [%s] expected [%s], got [%s]\n"
+                    % (
+                        failure.category,
+                        failure.question,
+                        failure.answers_string,
+                        failure.response,
+                    )
+                )
             fail_file.flush()
             fail_file.close()
 
-        print("Total processing time %f.2 secs"%diff.total_seconds())
-        print("That's approx %f aiml tests per sec"%(total_tests/diff.total_seconds()))
+        print("Total processing time %f.2 secs" % diff.total_seconds())
+        print(
+            "That's approx %f aiml tests per sec" % (total_tests / diff.total_seconds())
+        )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     def run():
         print("Loading, please wait...")

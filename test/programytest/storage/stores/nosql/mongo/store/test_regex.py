@@ -1,10 +1,12 @@
 import unittest
 from unittest.mock import patch
+
 import programytest.storage.engines as Engines
+from programytest.storage.asserts.store.assert_regex import RegexStoreAsserts
+
 from programy.storage.stores.nosql.mongo.config import MongoStorageConfiguration
 from programy.storage.stores.nosql.mongo.engine import MongoStorageEngine
 from programy.storage.stores.nosql.mongo.store.properties import MongoRegexesStore
-from programytest.storage.asserts.store.assert_regex import RegexStoreAsserts
 
 
 class MongoRegexesStoreTests(RegexStoreAsserts):
@@ -66,7 +68,10 @@ class MongoRegexesStoreTests(RegexStoreAsserts):
         raise Exception("Mock Exception")
 
     @unittest.skipIf(Engines.mongo is False, Engines.mongo_disabled)
-    @patch("programy.mappings.properties.RegexTemplatesCollection.add_regex", patch_add_regex)
+    @patch(
+        "programy.mappings.properties.RegexTemplatesCollection.add_regex",
+        patch_add_regex,
+    )
     def test_add_to_collection_exception(self):
         config = MongoStorageConfiguration()
         engine = MongoStorageEngine(config)

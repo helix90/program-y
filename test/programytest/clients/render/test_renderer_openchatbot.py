@@ -92,7 +92,9 @@ class OpenChatBotRichMediaRendererTests(unittest.TestCase):
         renderer = MockRichMediaRenderer(mock_config)
         self.assertIsNotNone(renderer)
 
-        renderer.render("testuser", """
+        renderer.render(
+            "testuser",
+            """
 			<card>
 				<image>https://www.ikea.com/fr/fr/images/products/strandmon-fauteuil-enfant-gris__0574584_PE668407_S4.JPG</image>
 				<title>Fauteuil enfant, Visslegris</title>
@@ -101,17 +103,27 @@ class OpenChatBotRichMediaRendererTests(unittest.TestCase):
 					<text>Acheter en ligne</text>
 					<url>https://serv-api.target2sell.com/1.1/R/cookie/OFCBMN5RRHSG5L/1200/OFCBMN5RRHSG5L-1200-5/20343224/1/viewTogether-%7BtypeOfContextList%3A%5B%22current%22%2C%22view%22%5D%7D/f082e51f-561d-47f7-c0cb-13735e58bfc1</url>
 				</button>
-            </card>""")
+            </card>""",
+        )
 
         self.assertEqual(renderer._userid, "testuser")
         self.assertIsNotNone(renderer._card)
-        self.assertEqual("card", renderer._card['type'])
-        self.assertEqual(renderer._card['image'], "https://www.ikea.com/fr/fr/images/products/strandmon-fauteuil-enfant-gris__0574584_PE668407_S4.JPG")
-        self.assertEqual(renderer._card['title'], "Fauteuil enfant, Visslegris")
-        self.assertEqual(renderer._card['subtitle'], "Quand ils peuvent imiter les adultes, les enfants sesentent spéciaux et importants. C'est pourquoi nous avons créé une version miniature du fauteuil STRANDMON, l'un de nos produits favoris.")
-        self.assertEqual(len(renderer._card['buttons']), 1)
+        self.assertEqual("card", renderer._card["type"])
+        self.assertEqual(
+            renderer._card["image"],
+            "https://www.ikea.com/fr/fr/images/products/strandmon-fauteuil-enfant-gris__0574584_PE668407_S4.JPG",
+        )
+        self.assertEqual(renderer._card["title"], "Fauteuil enfant, Visslegris")
+        self.assertEqual(
+            renderer._card["subtitle"],
+            "Quand ils peuvent imiter les adultes, les enfants sesentent spéciaux et importants. C'est pourquoi nous avons créé une version miniature du fauteuil STRANDMON, l'un de nos produits favoris.",
+        )
+        self.assertEqual(len(renderer._card["buttons"]), 1)
 
-        button1 = renderer._card['buttons'][0]
-        self.assertEqual("button", button1['type'])
-        self.assertEqual(button1['text'], "Acheter en ligne")
-        self.assertEqual(button1['url'], "https://serv-api.target2sell.com/1.1/R/cookie/OFCBMN5RRHSG5L/1200/OFCBMN5RRHSG5L-1200-5/20343224/1/viewTogether-%7BtypeOfContextList%3A%5B%22current%22%2C%22view%22%5D%7D/f082e51f-561d-47f7-c0cb-13735e58bfc1")
+        button1 = renderer._card["buttons"][0]
+        self.assertEqual("button", button1["type"])
+        self.assertEqual(button1["text"], "Acheter en ligne")
+        self.assertEqual(
+            button1["url"],
+            "https://serv-api.target2sell.com/1.1/R/cookie/OFCBMN5RRHSG5L/1200/OFCBMN5RRHSG5L-1200-5/20343224/1/viewTogether-%7BtypeOfContextList%3A%5B%22current%22%2C%22view%22%5D%7D/f082e51f-561d-47f7-c0cb-13735e58bfc1",
+        )

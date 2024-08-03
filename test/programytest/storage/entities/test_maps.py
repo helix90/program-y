@@ -1,7 +1,7 @@
 import unittest
 import unittest.mock
-from programy.storage.entities.maps import MapsReadOnlyStore
-from programy.storage.entities.maps import MapsReadWriteStore
+
+from programy.storage.entities.maps import MapsReadOnlyStore, MapsReadWriteStore
 
 
 class MapsStoreTests(unittest.TestCase):
@@ -13,9 +13,9 @@ class MapsStoreTests(unittest.TestCase):
     def test_split_into_fields(self):
         store = MapsReadOnlyStore()
         fields = store.split_into_fields("FIELD1")
-        self.assertEquals(["FIELD1", ''], fields)
+        self.assertEquals(["FIELD1", ""], fields)
         fields = store.split_into_fields("FIELD1!FIELD2")
-        self.assertEquals(["FIELD1!FIELD2", ''], fields)
+        self.assertEquals(["FIELD1!FIELD2", ""], fields)
         fields = store.split_into_fields("FIELD1:FIELD2")
         self.assertEquals(["FIELD1", "FIELD2"], fields)
         fields = store.split_into_fields("FIELD1:FIELD2:FIELD3:FIELD4")

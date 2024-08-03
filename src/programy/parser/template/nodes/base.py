@@ -14,9 +14,11 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.parsing.linenumxml import LineNumberingParser
+
 import xml.etree.ElementTree as ET  # pylint: disable=wrong-import-order
+
 from programy.utils.logging.ylogger import YLogger
+from programy.utils.parsing.linenumxml import LineNumberingParser
 
 
 ######################################################################################################################
@@ -42,7 +44,7 @@ class TemplateNode:
 
     def output_child(self, node, tabs, eol, output_func):
         for child in node.children:
-            if output_func == print:    #pylint: disable=comparison-with-callable
+            if output_func == print:  # pylint: disable=comparison-with-callable
                 output_func("{0}{1}{2}".format(tabs, child.to_string(), eol))
             else:
                 output_func(self, "{0}{1}{2}".format(tabs, child.to_string(), eol))
@@ -61,7 +63,9 @@ class TemplateNode:
     def resolve(self, client_context):
         try:
             resolved = self.resolve_to_string(client_context)
-            YLogger.debug(client_context, "[%s] resolved to [%s]", self.to_string(), resolved)
+            YLogger.debug(
+                client_context, "[%s] resolved to [%s]", self.to_string(), resolved
+            )
             return resolved
         except Exception as excep:
             YLogger.exception(client_context, "Template node failed to resolve", excep)
@@ -98,7 +102,7 @@ class TemplateNode:
 
                 for word in words:
                     if word is not None and word:
-                        word_class = graph.get_node_class_by_name('word')
+                        word_class = graph.get_node_class_by_name("word")
                         word_node = word_class(word.strip())
                         self.children.append(word_node)
                 return True
@@ -135,10 +139,13 @@ class TemplateNode:
             found_sub = True
 
         if head_result is False and found_sub is False:
-            if hasattr(pattern, '_end_line_number'):  # pragma: no cover
-                YLogger.warning(self, "No context in template tag at [line(%d), column(%d)]",  # pragma: no cover
-                                pattern._end_line_number,  # pylint: disable=protected-access
-                                pattern._end_column_number)  # pylint: disable=protected-access
+            if hasattr(pattern, "_end_line_number"):  # pragma: no cover
+                YLogger.warning(
+                    self,
+                    "No context in template tag at [line(%d), column(%d)]",  # pragma: no cover
+                    pattern._end_line_number,  # pylint: disable=protected-access
+                    pattern._end_column_number,
+                )  # pylint: disable=protected-access
             else:
                 YLogger.warning(self, "No context in template tag")
 
@@ -158,8 +165,10 @@ class TemplateNode:
 
         if expression_text is False and expression_children is False:
             if self.add_default_star() is True:
-                YLogger.debug(self, "Node has no content (text or children), default to <star/>")
-                star_class = graph.get_node_class_by_name('star')
+                YLogger.debug(
+                    self, "Node has no content (text or children), default to <star/>"
+                )
+                star_class = graph.get_node_class_by_name("star")
                 star_node = star_class()
                 self.append(star_node)
 
@@ -180,4 +189,6 @@ class TemplateNode:
         return node
 
     def parse_expression(self, graph, expression):
-        raise NotImplementedError("Never call this directly, call the subclass instead!")  # pragma: no cover
+        raise NotImplementedError(
+            "Never call this directly, call the subclass instead!"
+        )  # pragma: no cover

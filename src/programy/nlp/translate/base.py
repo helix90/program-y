@@ -14,14 +14,15 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
+
 from programy.utils.classes.loader import ClassLoader
+from programy.utils.logging.ylogger import YLogger
 
 
 class BaseTranslator:
 
     def initialise(self):
-        pass    # pragma: no cover
+        pass  # pragma: no cover
 
     def languages(self):
         raise NotImplementedError()  # pragma: no cover
@@ -32,7 +33,7 @@ class BaseTranslator:
     def language_code(self, code):
         raise NotImplementedError()  # pragma: no cover
 
-    def detect(self, text, default='EN'):
+    def detect(self, text, default="EN"):
         raise NotImplementedError()  # pragma: no cover
 
     def translate(self, text, from_lang, to_lang="EN"):
@@ -42,8 +43,14 @@ class BaseTranslator:
     def initiate_translator(translator_config):
         if translator_config.classname is not None:
             try:
-                YLogger.info(None, "Loading translator from class [%s]", translator_config.classname)
-                translator_config = ClassLoader.instantiate_class(translator_config.classname)
+                YLogger.info(
+                    None,
+                    "Loading translator from class [%s]",
+                    translator_config.classname,
+                )
+                translator_config = ClassLoader.instantiate_class(
+                    translator_config.classname
+                )
                 translator = translator_config()
                 translator.initialise()
                 return translator

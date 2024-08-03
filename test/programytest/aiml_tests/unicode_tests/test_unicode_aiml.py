@@ -22,6 +22,6 @@ class UnicodeAIMLTests(unittest.TestCase):
         self._client_context = client.create_client_context("testid")
 
     def test_cantonese_unicode(self):
-        response = self._client_context.bot.ask_question(self._client_context,  u'喂')
+        response = self._client_context.bot.ask_question(self._client_context, "喂")
         self.assertIsNotNone(response)
-        self.assertEqual(response, u'你好.')
+        self.assertEqual(response, "你好.")

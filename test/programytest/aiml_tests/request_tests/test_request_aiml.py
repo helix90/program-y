@@ -26,6 +26,8 @@ class RequestAIMLTests(unittest.TestCase):
         self.assertIsNotNone(Request)
         self.assertEqual(Request, "Hi! It's delightful to see you.")
 
-        Request = self._client_context.bot.ask_question(self._client_context, "WHAT DID I SAY")
+        Request = self._client_context.bot.ask_question(
+            self._client_context, "WHAT DID I SAY"
+        )
         self.assertIsNotNone(Request)
         self.assertEqual(Request, "You said, HELLO.")

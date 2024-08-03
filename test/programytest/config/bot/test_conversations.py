@@ -11,7 +11,8 @@ class BotConversationsConfigurationTests(unittest.TestCase):
     def test_with_data(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         bot:
             conversations:
               max_histories: 666
@@ -19,7 +20,10 @@ class BotConversationsConfigurationTests(unittest.TestCase):
               restore_last_topic: true
               multi_client: true
         
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         bot_config = yaml.get_section("bot")
 
@@ -39,10 +43,14 @@ class BotConversationsConfigurationTests(unittest.TestCase):
     def test_with_defaults(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         bot:
             conversations:
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         bot_config = yaml.get_section("bot")
 
@@ -59,9 +67,13 @@ class BotConversationsConfigurationTests(unittest.TestCase):
     def test_without_data(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         bot:
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         bot_config = yaml.get_section("bot")
 
@@ -84,8 +96,8 @@ class BotConversationsConfigurationTests(unittest.TestCase):
 
     @staticmethod
     def assert_defaults(test, data):
-        test.assertEqual(data['max_histories'], 100)
-        test.assertEqual(data['restore_last_topic'], True)
-        test.assertEqual(data['initial_topic'], "*")
-        test.assertEqual(data['empty_on_start'], True)
-        test.assertEqual(data['multi_client'], False)
+        test.assertEqual(data["max_histories"], 100)
+        test.assertEqual(data["restore_last_topic"], True)
+        test.assertEqual(data["initial_topic"], "*")
+        test.assertEqual(data["empty_on_start"], True)
+        test.assertEqual(data["multi_client"], False)

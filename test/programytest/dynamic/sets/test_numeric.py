@@ -1,8 +1,9 @@
 import unittest
 
+from programytest.client import TestClient
+
 from programy.context import ClientContext
 from programy.dynamic.sets.numeric import IsNumeric
-from programytest.client import TestClient
 
 
 class IsNumericDynamicSetTests(unittest.TestCase):

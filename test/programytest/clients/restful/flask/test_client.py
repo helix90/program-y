@@ -2,8 +2,9 @@ import os
 import unittest
 import unittest.mock
 
-from programy.clients.restful.flask.client import FlaskRestBotClient
 from programytest.clients.arguments import MockArgumentParser
+
+from programy.clients.restful.flask.client import FlaskRestBotClient
 
 
 class MockFlaskRestBotClient(FlaskRestBotClient):
@@ -45,20 +46,28 @@ class FlaskRestBotClientTests(unittest.TestCase):
 
         request = unittest.mock.Mock()
         request.args = {}
-        request.args['apikey'] = '11111111'
+        request.args["apikey"] = "11111111"
 
-        self.assertEqual('11111111', client.api_keys.get_api_key(request))
+        self.assertEqual("11111111", client.api_keys.get_api_key(request))
 
     def test_verify_api_key_usage_active(self):
         arguments = MockArgumentParser()
         client = FlaskRestBotClient("flask", arguments)
         self.assertIsNotNone(client)
         client.configuration.client_configuration._use_api_keys = True
-        client.configuration.client_configuration._api_key_file = os.path.dirname(__file__) + os.sep + ".." + os.sep + ".." + os.sep + "api_keys.txt"
+        client.configuration.client_configuration._api_key_file = (
+            os.path.dirname(__file__)
+            + os.sep
+            + ".."
+            + os.sep
+            + ".."
+            + os.sep
+            + "api_keys.txt"
+        )
         client.initialise()
         request = unittest.mock.Mock()
         request.args = {}
-        request.args['apikey'] = '11111111'
+        request.args["apikey"] = "11111111"
         self.assertTrue(client.api_keys.verify_api_key_usage(request))
 
     def test_verify_api_key_usage_active_no_apikey(self):
@@ -79,8 +88,7 @@ class FlaskRestBotClientTests(unittest.TestCase):
 
         request = unittest.mock.Mock()
         request.args = {}
-        request.args['apikey'] = 'invalid'
+        request.args["apikey"] = "invalid"
 
         response = client.api_keys.verify_api_key_usage(request)
         self.assertIsNotNone(response)
-

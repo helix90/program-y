@@ -14,14 +14,15 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
-from programy.storage.stores.nosql.mongo.store.mongostore import MongoStore
+
 from programy.storage.entities.twitter import TwitterStore
 from programy.storage.stores.nosql.mongo.dao.twitter import Twitter
+from programy.storage.stores.nosql.mongo.store.mongostore import MongoStore
+from programy.utils.logging.ylogger import YLogger
 
 
 class MongoTwitterStore(MongoStore, TwitterStore):
-    TWITTER = 'twitter'
+    TWITTER = "twitter"
 
     def __init__(self, storage_engine):
         MongoStore.__init__(self, storage_engine)
@@ -31,14 +32,19 @@ class MongoTwitterStore(MongoStore, TwitterStore):
         return MongoTwitterStore.TWITTER
 
     def store_last_message_ids(self, last_direct_message_id, last_status_id):
-        YLogger.info(self, "Storing last message ids (%s, %s) to Mongo", last_direct_message_id, last_status_id)
+        YLogger.info(
+            self,
+            "Storing last message ids (%s, %s) to Mongo",
+            last_direct_message_id,
+            last_status_id,
+        )
 
         collection = self.collection()
         twitter = collection.find_one({})
         if twitter is not None:
-            twitter['last_direct_message_id'] = last_direct_message_id
-            twitter['last_status_id'] = last_status_id
-            result = collection.replace_one({'_id': twitter['_id']}, twitter)
+            twitter["last_direct_message_id"] = last_direct_message_id
+            twitter["last_status_id"] = last_status_id
+            result = collection.replace_one({"_id": twitter["_id"]}, twitter)
             return bool(result.modified_count > 0)
 
         else:
@@ -51,7 +57,7 @@ class MongoTwitterStore(MongoStore, TwitterStore):
         collection = self.collection()
         twitter = collection.find_one({})
         if twitter is not None:
-            return twitter['last_direct_message_id'], twitter['last_status_id']
+            return twitter["last_direct_message_id"], twitter["last_status_id"]
 
         else:
             return "-1", "-1"

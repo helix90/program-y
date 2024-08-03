@@ -14,6 +14,7 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 from programy.dialog.sentence import Sentence
 
 
@@ -126,10 +127,18 @@ class Question:
         return self._sentences[previous]
 
     def combine_sentences(self, client_context):
-        return ". ".join([sentence.text(client_context) for sentence in self._sentences])
+        return ". ".join(
+            [sentence.text(client_context) for sentence in self._sentences]
+        )
 
     def combine_answers(self):
-        return ". ".join([sentence.response for sentence in self.sentences if sentence.response is not None])
+        return ". ".join(
+            [
+                sentence.response
+                for sentence in self.sentences
+                if sentence.response is not None
+            ]
+        )
 
     def split_into_sentences(self, client_context, text):
         if client_context.bot.sentence_splitter.is_active():
@@ -169,7 +178,7 @@ class Question:
             "srai": self._srai,
             "sentences": [],
             "current_sentence_no": self._current_sentence_no,
-            "properties": self._properties
+            "properties": self._properties,
         }
 
         for sentence in self._sentences:

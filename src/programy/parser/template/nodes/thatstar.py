@@ -14,8 +14,9 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
+
 from programy.parser.template.nodes.indexed import TemplateIndexedNode
+from programy.utils.logging.ylogger import YLogger
 
 
 class TemplateThatStarNode(TemplateIndexedNode):
@@ -36,20 +37,30 @@ class TemplateThatStarNode(TemplateIndexedNode):
 
             matched_context = current_sentence.matched_context
             if matched_context is None:
-                YLogger.error(client_context, "ThatStar node has no matched context for clientid %s",
-                              client_context.userid)
+                YLogger.error(
+                    client_context,
+                    "ThatStar node has no matched context for clientid %s",
+                    client_context.userid,
+                )
             else:
                 int_index = int(self.index.resolve(client_context))
                 resolved = matched_context.thatstar(client_context, int_index)
                 if resolved is None:
-                    YLogger.error(client_context, "ThatStar index not in range [%d]", int_index)
+                    YLogger.error(
+                        client_context, "ThatStar index not in range [%d]", int_index
+                    )
 
-        YLogger.debug(client_context, "ThatStar Node [%s] resolved to [%s]", self.to_string(), resolved)
+        YLogger.debug(
+            client_context,
+            "ThatStar Node [%s] resolved to [%s]",
+            self.to_string(),
+            resolved,
+        )
         return resolved
 
     def to_string(self):
         string = "[THATSTAR"
-        string += self.index.to_string() + ']'
+        string += self.index.to_string() + "]"
         return string
 
     def to_xml(self, client_context):

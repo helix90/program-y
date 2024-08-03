@@ -1,8 +1,9 @@
 import unittest
 
+from programytest.client import TestClient
+
 from programy.context import ClientContext
 from programy.dynamic.maps.successor import SuccessorMap
-from programytest.client import TestClient
 
 
 class TestSingularMaps(unittest.TestCase):
@@ -17,4 +18,3 @@ class TestSingularMaps(unittest.TestCase):
     def test_successor_text(self):
         map = SuccessorMap(None)
         self.assertEqual("", map.map_value(self._client_context, "one"))
-

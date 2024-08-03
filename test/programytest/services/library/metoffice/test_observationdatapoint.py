@@ -1,4 +1,5 @@
 import unittest
+
 from programy.services.library.metoffice.metoffice import ObservationDataPoint
 
 
@@ -37,7 +38,7 @@ class ObservationDataPointTests(unittest.TestCase):
             "S": "11",
             "T": "11.2",
             "V": "35000",
-            "W": "3"
+            "W": "3",
         }
 
         dp.parse_json(json, "Day", "660")
@@ -57,7 +58,10 @@ class ObservationDataPointTests(unittest.TestCase):
         self.assertEqual("3.2", dp._dew_point)
         self.assertEqual("57.3", dp._screen_relative_humidity)
 
-        self.assertEqual("OBSERVATION TYPE Partly cloudy (day) TEMP PLUS 11 2 HUMIDITY 57 3 VISIBILITY V 35000 VF Very Good PRESSURE P 1021 PT R PTF Rising WIND D W DF West S 11", dp.to_program_y_text())
+        self.assertEqual(
+            "OBSERVATION TYPE Partly cloudy (day) TEMP PLUS 11 2 HUMIDITY 57 3 VISIBILITY V 35000 VF Very Good PRESSURE P 1021 PT R PTF Rising WIND D W DF West S 11",
+            dp.to_program_y_text(),
+        )
 
     def test_parse_json_V_D_W_Pt(self):
         dp = ObservationDataPoint()
@@ -69,7 +73,7 @@ class ObservationDataPointTests(unittest.TestCase):
             "H": "57.3",
             "P": "1021",
             "S": "11",
-            "T": "11.2"
+            "T": "11.2",
         }
 
         dp.parse_json(json, "Day", "660")
@@ -89,7 +93,10 @@ class ObservationDataPointTests(unittest.TestCase):
         self.assertEqual("3.2", dp._dew_point)
         self.assertEqual("57.3", dp._screen_relative_humidity)
 
-        self.assertEqual("OBSERVATION TEMP PLUS 11 2 HUMIDITY 57 3 PRESSURE P 1021 S 11", dp.to_program_y_text())
+        self.assertEqual(
+            "OBSERVATION TEMP PLUS 11 2 HUMIDITY 57 3 PRESSURE P 1021 S 11",
+            dp.to_program_y_text(),
+        )
 
     def test_parse_visibility_to_text(self):
         dp = ObservationDataPoint()
@@ -116,10 +123,9 @@ class ObservationDataPointTests(unittest.TestCase):
         dp = ObservationDataPoint()
         self.assertIsNotNone(dp)
 
-        self.assertEqual("Rising", dp.parse_pressure_tendancy('R'))
-        self.assertEqual("Falling", dp.parse_pressure_tendancy('F'))
+        self.assertEqual("Rising", dp.parse_pressure_tendancy("R"))
+        self.assertEqual("Falling", dp.parse_pressure_tendancy("F"))
 
         self.assertEqual("Unknown", dp.parse_pressure_tendancy(None))
-        self.assertEqual("Unknown", dp.parse_pressure_tendancy(''))
-        self.assertEqual("Unknown", dp.parse_pressure_tendancy('X'))
-
+        self.assertEqual("Unknown", dp.parse_pressure_tendancy(""))
+        self.assertEqual("Unknown", dp.parse_pressure_tendancy("X"))

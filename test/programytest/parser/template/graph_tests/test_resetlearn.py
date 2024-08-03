@@ -1,19 +1,24 @@
 import xml.etree.ElementTree as ET
 
+from programytest.parser.template.graph_tests.graph_test_client import (
+    TemplateGraphTestClient,
+)
+
 from programy.parser.exceptions import ParserException
 from programy.parser.template.nodes.base import TemplateNode
 from programy.parser.template.nodes.resetlearn import TemplateResetLearnNode
-from programytest.parser.template.graph_tests.graph_test_client import TemplateGraphTestClient
 
 
 class TemplateGraphResetLearnTests(TemplateGraphTestClient):
 
-     def test_learnf_type1(self):
-        template = ET.fromstring("""
+    def test_learnf_type1(self):
+        template = ET.fromstring(
+            """
 			<template>
 				<resetlearn />
 			</template>
-			""")
+			"""
+        )
 
         ast = self._graph.parse_template_expression(template)
         self.assertIsNotNone(ast)
@@ -24,12 +29,14 @@ class TemplateGraphResetLearnTests(TemplateGraphTestClient):
         self.assertIsInstance(ast.children[0], TemplateResetLearnNode)
         self.assertEqual(0, len(ast.children[0].children))
 
-     def test_learnf_type2(self):
-        template = ET.fromstring("""
+    def test_learnf_type2(self):
+        template = ET.fromstring(
+            """
 			<template>
 				<resetlearn></resetlearn>
 			</template>
-			""")
+			"""
+        )
 
         ast = self._graph.parse_template_expression(template)
         self.assertIsNotNone(ast)
@@ -40,19 +47,22 @@ class TemplateGraphResetLearnTests(TemplateGraphTestClient):
         self.assertIsInstance(ast.children[0], TemplateResetLearnNode)
         self.assertEqual(0, len(ast.children[0].children))
 
-     def test_request_with_children(self):
-        template = ET.fromstring("""
+    def test_request_with_children(self):
+        template = ET.fromstring(
+            """
 			<template>
 				<resetlearn>Error</resetlearn>
 			</template>
-			""")
+			"""
+        )
         with self.assertRaises(ParserException):
             ast = self._graph.parse_template_expression(template)
 
-     def test_removal(self):
+    def test_removal(self):
         client_context1 = self.create_client_context("testid")
 
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
         			<template>
         				<learn>
         				    <category>
@@ -61,7 +71,8 @@ class TemplateGraphResetLearnTests(TemplateGraphTestClient):
         				    </category>
         				</learn>
         			</template>
-        			""")
+        			"""
+        )
 
         ast = self._graph.parse_template_expression(template)
 
@@ -74,7 +85,8 @@ class TemplateGraphResetLearnTests(TemplateGraphTestClient):
 
         client_context2 = self.create_client_context("testid")
 
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
         			<template>
         				<learn>
         				    <category>
@@ -83,7 +95,8 @@ class TemplateGraphResetLearnTests(TemplateGraphTestClient):
         				    </category>
         				</learn>
         			</template>
-        			""")
+        			"""
+        )
 
         ast = self._graph.parse_template_expression(template)
 
@@ -94,15 +107,16 @@ class TemplateGraphResetLearnTests(TemplateGraphTestClient):
         response = client_context2.bot.ask_question(client_context2, "HELLO THERE")
         self.assertEqual("HIYA TWO.", response)
 
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
         			<template>
         				<resetlearn />
         			</template>
-        			""")
+        			"""
+        )
 
         ast = self._graph.parse_template_expression(template)
 
         learn_node = ast.children[0]
 
         learn_node.resolve(client_context2)
-

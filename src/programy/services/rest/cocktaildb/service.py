@@ -14,12 +14,13 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-import urllib.parse
+
 import os
-from programy.utils.logging.ylogger import YLogger
+import urllib.parse
+
 from programy.services.base import ServiceQuery
-from programy.services.rest.base import RESTService
-from programy.services.rest.base import RESTServiceException
+from programy.services.rest.base import RESTService, RESTServiceException
+from programy.utils.logging.ylogger import YLogger
 
 
 class CocktailDBSearchByNameServiceQuery(ServiceQuery):
@@ -39,18 +40,20 @@ class CocktailDBSearchByNameServiceQuery(ServiceQuery):
         return self._service.search_by_name(self._name)
 
     def aiml_response(self, response):
-        payload = response['response']['payload']
-        drinks = payload['drinks']
+        payload = response["response"]["payload"]
+        drinks = payload["drinks"]
         drink = drinks[0]
 
-        name = drink['strDrink']
-        instructions = drink['strInstructions']
-        glass = drink['strGlass']
+        name = drink["strDrink"]
+        instructions = drink["strInstructions"]
+        glass = drink["strGlass"]
 
         ingredients = self._get_ingredients(drink)
         formatted = self._format_ingredients(ingredients)
 
-        result= "NAME {0} INGREDIENTS {1} INSTRUCTIONS {2}".format(name, formatted, instructions)
+        result = "NAME {0} INGREDIENTS {1} INSTRUCTIONS {2}".format(
+            name, formatted, instructions
+        )
         YLogger.debug(self, result)
         return result
 
@@ -60,8 +63,8 @@ class CocktailDBSearchByNameServiceQuery(ServiceQuery):
         count = 1
         ingredients = []
         while more is True and count < 16:
-            ingredient_num = 'strIngredient{0}'.format(count)
-            measure_num = 'strMeasure{0}'.format(count)
+            ingredient_num = "strIngredient{0}".format(count)
+            measure_num = "strMeasure{0}".format(count)
 
             ingredient = drink.get(ingredient_num, None)
             measure = drink.get(measure_num, None)
@@ -96,12 +99,12 @@ class CocktailDBSearchByIngredientServiceQuery(ServiceQuery):
         return self._service.search_by_ingredient(self._ingredient)
 
     def aiml_response(self, response):
-        payload = response['response']['payload']
-        drinks = payload['ingredients']
+        payload = response["response"]["payload"]
+        drinks = payload["ingredients"]
         drink = drinks[0]
 
-        name = drink['strIngredient']
-        description = drink['strDescription']
+        name = drink["strIngredient"]
+        description = drink["strDescription"]
 
         result = "NAME {0} DESCRIPTION {1}".format(name, description)
         YLogger.debug(self, result)
@@ -115,15 +118,19 @@ class CocktailDBServiceException(RESTServiceException):
 
 
 class CocktailDBService(RESTService):
-    """
-    """
+    """ """
+
     PATTERNS = [
         [r"SEARCH\sNAME\s(.+)", CocktailDBSearchByNameServiceQuery],
-        [r"SEARCH\sINGREDIENT\s(.+)", CocktailDBSearchByIngredientServiceQuery]
+        [r"SEARCH\sINGREDIENT\s(.+)", CocktailDBSearchByIngredientServiceQuery],
     ]
 
-    SEARCH_BY_NAME_URL="https://www.thecocktaildb.com/api/json/v1/{0}/search.php?s={1}"
-    SEARCH_BY_INGREDIENT_URL="https://www.thecocktaildb.com/api/json/v1/{0}/search.php?i={1}"
+    SEARCH_BY_NAME_URL = (
+        "https://www.thecocktaildb.com/api/json/v1/{0}/search.php?s={1}"
+    )
+    SEARCH_BY_INGREDIENT_URL = (
+        "https://www.thecocktaildb.com/api/json/v1/{0}/search.php?i={1}"
+    )
 
     def __init__(self, configuration):
         RESTService.__init__(self, configuration)
@@ -133,9 +140,12 @@ class CocktailDBService(RESTService):
         return CocktailDBService.PATTERNS
 
     def initialise(self, client):
-        self._api_key = client.license_keys.get_key('THECOCKTAILDB_APIKEY')
+        self._api_key = client.license_keys.get_key("THECOCKTAILDB_APIKEY")
         if self._api_key is None:
-            YLogger.error(self, "THECOCKTAILDB_APIKEY missing from license.keys, service will not function correctly!")
+            YLogger.error(
+                self,
+                "THECOCKTAILDB_APIKEY missing from license.keys, service will not function correctly!",
+            )
 
     def get_default_aiml_file(self):
         return os.path.dirname(__file__) + os.sep + "cocktaildb.aiml"
@@ -150,16 +160,18 @@ class CocktailDBService(RESTService):
 
     def search_by_name(self, name):
         url = self._build_search_by_name_url(name)
-        response = self.query('search_by_name', url)
+        response = self.query("search_by_name", url)
         return response
 
     def _build_search_by_ingredient_url(self, ingredient):
-        url = CocktailDBService.SEARCH_BY_INGREDIENT_URL.format(self._api_key, ingredient)
+        url = CocktailDBService.SEARCH_BY_INGREDIENT_URL.format(
+            self._api_key, ingredient
+        )
         return url
 
     def search_by_ingredient(self, ingredient):
         url = self._build_search_by_ingredient_url(ingredient)
-        response = self.query('search_by_ingredient', url)
+        response = self.query("search_by_ingredient", url)
         return response
 
     def _response_to_json(self, api, response):

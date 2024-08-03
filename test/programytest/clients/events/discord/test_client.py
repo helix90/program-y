@@ -1,10 +1,10 @@
 import unittest
 
-from programy.clients.events.discord.client import DiscordBotClient
-from programy.clients.events.discord.client import DiscordClient
+from programytest.clients.arguments import MockArgumentParser
+
+from programy.clients.events.discord.client import DiscordBotClient, DiscordClient
 from programy.clients.events.discord.config import DiscordConfiguration
 from programy.clients.render.text import TextRenderer
-from programytest.clients.arguments import MockArgumentParser
 
 
 class MockDiscordBotClient(DiscordBotClient):
@@ -16,18 +16,19 @@ class MockDiscordBotClient(DiscordBotClient):
         return 1234567890
 
     def get_license_keys(self):
-        return 'XYZ'
+        return "XYZ"
 
     def ask_question(self, client_context, question):
         return "Hello there."
 
-class MockAuthor():
+
+class MockAuthor:
 
     def __init__(self, id):
         self.id = id
 
 
-class MockDiscordClient():
+class MockDiscordClient:
 
     def __init__(self, user=MockAuthor("testid")):
         self.user = user
@@ -36,7 +37,7 @@ class MockDiscordClient():
         return other.id == self.user.id
 
 
-class MockMessage():
+class MockMessage:
 
     def __init__(self, author, content):
         self.author = author
@@ -52,7 +53,7 @@ class DiscordBotClientTests(unittest.TestCase):
         self.assertIsNotNone(client)
         self.assertIsNotNone(client.arguments)
         self.assertEqual(client.id, "Discord")
-        self.assertEqual('ProgramY AIML2.0 Client', client.get_description())
+        self.assertEqual("ProgramY AIML2.0 Client", client.get_description())
         self.assertIsInstance(client.get_client_configuration(), DiscordConfiguration)
 
         self.assertFalse(client._render_callback())
@@ -85,4 +86,4 @@ class DiscordBotClientTests(unittest.TestCase):
         self.assertIsNotNone(client)
 
         response = client.on_message(MockMessage(user, "hello"))
-        self.assertEqual('Hello there.', response)
+        self.assertEqual("Hello there.", response)

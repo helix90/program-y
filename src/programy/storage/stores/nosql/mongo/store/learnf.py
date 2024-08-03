@@ -14,11 +14,12 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
-from programy.storage.stores.nosql.mongo.store.mongostore import MongoStore
+
 from programy.storage.entities.learnf import LearnfStore
 from programy.storage.stores.nosql.mongo.dao.category import Category
 from programy.storage.stores.nosql.mongo.store.categories import MongoCategoryStore
+from programy.storage.stores.nosql.mongo.store.mongostore import MongoStore
+from programy.utils.logging.ylogger import YLogger
 
 
 class MongoLearnfStore(MongoStore, LearnfStore):
@@ -31,18 +32,21 @@ class MongoLearnfStore(MongoStore, LearnfStore):
         return MongoCategoryStore.CATEGORIES
 
     def save_learnf(self, client_context, category):
-        YLogger.debug(self, "Storing learnf category in Mongo [%s] [%s] [%s] [%s] [%s] [%s]",
-                      client_context.client.id,
-                      client_context.userid,
-                      category.pattern,
-                      category.topic,
-                      category.that,
-                      category.template)
+        YLogger.debug(
+            self,
+            "Storing learnf category in Mongo [%s] [%s] [%s] [%s] [%s] [%s]",
+            client_context.client.id,
+            client_context.userid,
+            category.pattern,
+            category.topic,
+            category.that,
+            category.template,
+        )
 
-        #pattern = category.pattern
-        #topic = category.topic
-        #that = category.that
-        #template = category.template
+        # pattern = category.pattern
+        # topic = category.topic
+        # that = category.that
+        # template = category.template
         # Changes
         pattern = category.pattern.text
         topic = category.topic.text
@@ -53,5 +57,12 @@ class MongoLearnfStore(MongoStore, LearnfStore):
         groupid = "LEARNF"
         userid = client_context.userid
 
-        category = Category(groupid=groupid, userid=userid, pattern=pattern, topic=topic, that=that, template=template)
+        category = Category(
+            groupid=groupid,
+            userid=userid,
+            pattern=pattern,
+            topic=topic,
+            that=that,
+            template=template,
+        )
         return self.add_document(category)

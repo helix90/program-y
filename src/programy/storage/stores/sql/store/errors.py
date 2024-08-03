@@ -14,9 +14,10 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.storage.stores.sql.store.sqlstore import SQLStore
+
 from programy.storage.entities.errors import ErrorsStore
 from programy.storage.stores.sql.dao.error import Error
+from programy.storage.stores.sql.store.sqlstore import SQLStore
 
 
 class SQLErrorsStore(SQLStore, ErrorsStore):

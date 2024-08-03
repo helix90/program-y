@@ -14,9 +14,11 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 import re
-from programy.utils.logging.ylogger import YLogger
+
 from programy.processors.processing import PostProcessor
+from programy.utils.logging.ylogger import YLogger
 
 
 class FormatNumbersPostProcessor(PostProcessor):
@@ -25,7 +27,7 @@ class FormatNumbersPostProcessor(PostProcessor):
 
     def process(self, context, word_string):
         YLogger.debug(context, "Formatting numbers...")
-        word_string = re.sub(r'(\d)([\.|,])\s+(\d)', r'\1\2\3', word_string)
-        word_string = re.sub(r'(\d)\s+([\.|,])(\d)', r'\1\2\3', word_string)
-        word_string = re.sub(r'(\d)\s+([\.|,])\s+(\d)', r'\1\2\3', word_string)
+        word_string = re.sub(r"(\d)([\.|,])\s+(\d)", r"\1\2\3", word_string)
+        word_string = re.sub(r"(\d)\s+([\.|,])(\d)", r"\1\2\3", word_string)
+        word_string = re.sub(r"(\d)\s+([\.|,])\s+(\d)", r"\1\2\3", word_string)
         return word_string

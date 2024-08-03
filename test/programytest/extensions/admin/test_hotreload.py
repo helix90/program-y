@@ -2,9 +2,11 @@ import os
 import re
 import unittest.mock
 from unittest.mock import patch
+
+from programytest.client import TestClient
+
 from programy.extensions.admin.hotreload import HotReloadAdminExtension
 from programy.storage.factory import StorageFactory
-from programytest.client import TestClient
 
 
 class ReloadTestClient(TestClient):
@@ -87,18 +89,30 @@ class HotReloadAdminExtensionTests(unittest.TestCase):
         extension = HotReloadAdminExtension()
         client = ReloadTestClient()
         client_context = client.create_client_context("testid")
-        self.assertEqual("Unknown reload command [XXXXXX]" , extension.execute(client_context, "XXXXXX"))
+        self.assertEqual(
+            "Unknown reload command [XXXXXX]",
+            extension.execute(client_context, "XXXXXX"),
+        )
 
     def test_hotreload_commands(self):
         extension = HotReloadAdminExtension()
         client = ReloadTestClient()
         client_context = client.create_client_context("testid")
-        self.assertEqual("RELOAD [DENORMAL|NORMAL|GENDER|PERSON|PERSON2|PROPERTIES|DEFAULTS|REGEX|PATTERNS|TEMPLATES] | [SET|MAP|RDF] NAME | ALL [AIML|MAPS|SETS|RDFS]", extension.execute(client_context, "COMMANDS"))
+        self.assertEqual(
+            "RELOAD [DENORMAL|NORMAL|GENDER|PERSON|PERSON2|PROPERTIES|DEFAULTS|REGEX|PATTERNS|TEMPLATES] | [SET|MAP|RDF] NAME | ALL [AIML|MAPS|SETS|RDFS]",
+            extension.execute(client_context, "COMMANDS"),
+        )
 
     def test_reload_other(self):
         extension = HotReloadAdminExtension()
 
-        ReloadTestClient.denormal = os.path.dirname(__file__) + os.sep + "test_config" + os.sep + "denormal1.txt"
+        ReloadTestClient.denormal = (
+            os.path.dirname(__file__)
+            + os.sep
+            + "test_config"
+            + os.sep
+            + "denormal1.txt"
+        )
 
         client = ReloadTestClient()
         client_context = client.create_client_context("testid")
@@ -109,7 +123,13 @@ class HotReloadAdminExtensionTests(unittest.TestCase):
     def test_reload_denormal(self):
         extension = HotReloadAdminExtension()
 
-        ReloadTestClient.denormal = os.path.dirname(__file__) + os.sep + "test_config" + os.sep + "denormal1.txt"
+        ReloadTestClient.denormal = (
+            os.path.dirname(__file__)
+            + os.sep
+            + "test_config"
+            + os.sep
+            + "denormal1.txt"
+        )
 
         client = ReloadTestClient()
         client_context = client.create_client_context("testid")
@@ -118,9 +138,17 @@ class HotReloadAdminExtensionTests(unittest.TestCase):
         self.assertTrue(client_context.brain.denormals.has_key(" DOT COM "))
         self.assertFalse(client_context.brain.denormals.has_key(" DOT EDU "))
 
-        lookups_engine = client.storage_factory.entity_storage_engine(StorageFactory.DENORMAL)
+        lookups_engine = client.storage_factory.entity_storage_engine(
+            StorageFactory.DENORMAL
+        )
         lookups_store = lookups_engine.denormal_store()
-        lookups_store.get_storage()._dirs = [os.path.dirname(__file__) + os.sep + "test_config" + os.sep + "denormal2.txt"]
+        lookups_store.get_storage()._dirs = [
+            os.path.dirname(__file__)
+            + os.sep
+            + "test_config"
+            + os.sep
+            + "denormal2.txt"
+        ]
 
         result = extension.execute(client_context, "RELOAD DENORMAL")
         self.assertEqual("HOTRELOAD OK", result)
@@ -132,7 +160,9 @@ class HotReloadAdminExtensionTests(unittest.TestCase):
     def test_reload_normal(self):
         extension = HotReloadAdminExtension()
 
-        ReloadTestClient.normal = os.path.dirname(__file__) + os.sep + "test_config" + os.sep + "normal1.txt"
+        ReloadTestClient.normal = (
+            os.path.dirname(__file__) + os.sep + "test_config" + os.sep + "normal1.txt"
+        )
 
         client = ReloadTestClient()
         client_context = client.create_client_context("testid")
@@ -141,9 +171,13 @@ class HotReloadAdminExtensionTests(unittest.TestCase):
         self.assertTrue(client_context.brain.normals.has_key("%20"))
         self.assertFalse(client_context.brain.normals.has_key("%2C"))
 
-        lookups_engine = client.storage_factory.entity_storage_engine(StorageFactory.NORMAL)
+        lookups_engine = client.storage_factory.entity_storage_engine(
+            StorageFactory.NORMAL
+        )
         lookups_store = lookups_engine.normal_store()
-        lookups_store.get_storage()._dirs = [os.path.dirname(__file__) + os.sep + "test_config" + os.sep + "normal2.txt"]
+        lookups_store.get_storage()._dirs = [
+            os.path.dirname(__file__) + os.sep + "test_config" + os.sep + "normal2.txt"
+        ]
 
         result = extension.execute(client_context, "RELOAD NORMAL")
         self.assertEqual("HOTRELOAD OK", result)
@@ -155,7 +189,9 @@ class HotReloadAdminExtensionTests(unittest.TestCase):
     def test_reload_gender(self):
         extension = HotReloadAdminExtension()
 
-        ReloadTestClient.gender = os.path.dirname(__file__) + os.sep + "test_config" + os.sep + "gender1.txt"
+        ReloadTestClient.gender = (
+            os.path.dirname(__file__) + os.sep + "test_config" + os.sep + "gender1.txt"
+        )
 
         client = ReloadTestClient()
         client_context = client.create_client_context("testid")
@@ -164,9 +200,13 @@ class HotReloadAdminExtensionTests(unittest.TestCase):
         self.assertTrue(client_context.brain.genders.has_key(" WITH HIM "))
         self.assertFalse(client_context.brain.genders.has_key(" TO HIM "))
 
-        lookups_engine = client.storage_factory.entity_storage_engine(StorageFactory.GENDER)
+        lookups_engine = client.storage_factory.entity_storage_engine(
+            StorageFactory.GENDER
+        )
         lookups_store = lookups_engine.gender_store()
-        lookups_store.get_storage()._dirs = [os.path.dirname(__file__) + os.sep + "test_config" + os.sep + "gender2.txt"]
+        lookups_store.get_storage()._dirs = [
+            os.path.dirname(__file__) + os.sep + "test_config" + os.sep + "gender2.txt"
+        ]
 
         result = extension.execute(client_context, "RELOAD GENDER")
         self.assertEqual("HOTRELOAD OK", result)
@@ -178,7 +218,9 @@ class HotReloadAdminExtensionTests(unittest.TestCase):
     def test_reload_person(self):
         extension = HotReloadAdminExtension()
 
-        ReloadTestClient.person = os.path.dirname(__file__) + os.sep + "test_config" + os.sep + "person1.txt"
+        ReloadTestClient.person = (
+            os.path.dirname(__file__) + os.sep + "test_config" + os.sep + "person1.txt"
+        )
 
         client = ReloadTestClient()
         client_context = client.create_client_context("testid")
@@ -187,9 +229,13 @@ class HotReloadAdminExtensionTests(unittest.TestCase):
         self.assertTrue(client_context.brain.persons.has_key(" WITH YOU "))
         self.assertFalse(client_context.brain.persons.has_key(" TO YOU "))
 
-        lookups_engine = client.storage_factory.entity_storage_engine(StorageFactory.PERSON)
+        lookups_engine = client.storage_factory.entity_storage_engine(
+            StorageFactory.PERSON
+        )
         lookups_store = lookups_engine.person_store()
-        lookups_store.get_storage()._dirs = [os.path.dirname(__file__) + os.sep + "test_config" + os.sep + "person2.txt"]
+        lookups_store.get_storage()._dirs = [
+            os.path.dirname(__file__) + os.sep + "test_config" + os.sep + "person2.txt"
+        ]
 
         result = extension.execute(client_context, "RELOAD PERSON")
         self.assertEqual("HOTRELOAD OK", result)
@@ -201,7 +247,13 @@ class HotReloadAdminExtensionTests(unittest.TestCase):
     def test_reload_person2(self):
         extension = HotReloadAdminExtension()
 
-        ReloadTestClient.person2 = os.path.dirname(__file__) + os.sep + "test_config" + os.sep + "person2_1.txt"
+        ReloadTestClient.person2 = (
+            os.path.dirname(__file__)
+            + os.sep
+            + "test_config"
+            + os.sep
+            + "person2_1.txt"
+        )
 
         client = ReloadTestClient()
         client_context = client.create_client_context("testid")
@@ -210,9 +262,17 @@ class HotReloadAdminExtensionTests(unittest.TestCase):
         self.assertTrue(client_context.brain.person2s.has_key(" I WAS "))
         self.assertFalse(client_context.brain.person2s.has_key(" SHE WAS "))
 
-        lookups_engine = client.storage_factory.entity_storage_engine(StorageFactory.PERSON2)
+        lookups_engine = client.storage_factory.entity_storage_engine(
+            StorageFactory.PERSON2
+        )
         lookups_store = lookups_engine.person2_store()
-        lookups_store.get_storage()._dirs = [os.path.dirname(__file__) + os.sep + "test_config" + os.sep + "person2_2.txt"]
+        lookups_store.get_storage()._dirs = [
+            os.path.dirname(__file__)
+            + os.sep
+            + "test_config"
+            + os.sep
+            + "person2_2.txt"
+        ]
 
         result = extension.execute(client_context, "RELOAD PERSON2")
         self.assertEqual("HOTRELOAD OK", result)
@@ -224,7 +284,13 @@ class HotReloadAdminExtensionTests(unittest.TestCase):
     def test_reload_properties(self):
         extension = HotReloadAdminExtension()
 
-        ReloadTestClient.properties = os.path.dirname(__file__) + os.sep + "test_config" + os.sep + "properties1.txt"
+        ReloadTestClient.properties = (
+            os.path.dirname(__file__)
+            + os.sep
+            + "test_config"
+            + os.sep
+            + "properties1.txt"
+        )
 
         client = ReloadTestClient()
         client_context = client.create_client_context("testid")
@@ -233,9 +299,17 @@ class HotReloadAdminExtensionTests(unittest.TestCase):
         self.assertTrue(client_context.brain.properties.has_property("name"))
         self.assertEqual("Y-Bot", client_context.brain.properties.property("name"))
 
-        lookups_engine = client.storage_factory.entity_storage_engine(StorageFactory.PROPERTIES)
+        lookups_engine = client.storage_factory.entity_storage_engine(
+            StorageFactory.PROPERTIES
+        )
         lookups_store = lookups_engine.property_store()
-        lookups_store.get_storage()._dirs = [os.path.dirname(__file__) + os.sep + "test_config" + os.sep + "properties2.txt"]
+        lookups_store.get_storage()._dirs = [
+            os.path.dirname(__file__)
+            + os.sep
+            + "test_config"
+            + os.sep
+            + "properties2.txt"
+        ]
 
         result = extension.execute(client_context, "RELOAD PROPERTIES")
         self.assertEqual("HOTRELOAD OK", result)
@@ -247,93 +321,185 @@ class HotReloadAdminExtensionTests(unittest.TestCase):
     def test_reload_defaults(self):
         extension = HotReloadAdminExtension()
 
-        ReloadTestClient.defaults = os.path.dirname(__file__) + os.sep + "test_config" + os.sep + "defaults1.txt"
+        ReloadTestClient.defaults = (
+            os.path.dirname(__file__)
+            + os.sep
+            + "test_config"
+            + os.sep
+            + "defaults1.txt"
+        )
 
         client = ReloadTestClient()
         client_context = client.create_client_context("testid")
 
         self.assertIsNotNone(client_context.brain.default_variables)
         self.assertTrue(client_context.brain.default_variables.has_property("name"))
-        self.assertEqual("Y-Bot", client_context.brain.default_variables.property("name"))
+        self.assertEqual(
+            "Y-Bot", client_context.brain.default_variables.property("name")
+        )
 
-        default_variables_engine = client.storage_factory.entity_storage_engine(StorageFactory.DEFAULTS)
+        default_variables_engine = client.storage_factory.entity_storage_engine(
+            StorageFactory.DEFAULTS
+        )
         default_variables_store = default_variables_engine.defaults_store()
-        default_variables_store.get_storage()._dirs = [os.path.dirname(__file__) + os.sep + "test_config" + os.sep + "defaults2.txt"]
+        default_variables_store.get_storage()._dirs = [
+            os.path.dirname(__file__)
+            + os.sep
+            + "test_config"
+            + os.sep
+            + "defaults2.txt"
+        ]
 
         result = extension.execute(client_context, "RELOAD DEFAULTS")
         self.assertEqual("HOTRELOAD OK", result)
 
         self.assertIsNotNone(client_context.brain.default_variables)
         self.assertTrue(client_context.brain.default_variables.has_property("name"))
-        self.assertEqual("Y-Bot2", client_context.brain.default_variables.property("name"))
+        self.assertEqual(
+            "Y-Bot2", client_context.brain.default_variables.property("name")
+        )
 
     def test_reload_regex(self):
         extension = HotReloadAdminExtension()
 
-        ReloadTestClient.regex_templates = os.path.dirname(__file__) + os.sep + "test_config" + os.sep + "regex-templates1.txt"
+        ReloadTestClient.regex_templates = (
+            os.path.dirname(__file__)
+            + os.sep
+            + "test_config"
+            + os.sep
+            + "regex-templates1.txt"
+        )
 
         client = ReloadTestClient()
         client_context = client.create_client_context("testid")
 
         self.assertIsNotNone(client_context.brain.regex_templates)
         self.assertIsNotNone(client_context.brain.regex_templates.has_regex("anything"))
-        self.assertEqual(re.compile('^.*$', re.IGNORECASE), client_context.brain.regex_templates.regex("anything"))
+        self.assertEqual(
+            re.compile("^.*$", re.IGNORECASE),
+            client_context.brain.regex_templates.regex("anything"),
+        )
 
-        regex_engine = client.storage_factory.entity_storage_engine(StorageFactory.REGEX_TEMPLATES)
+        regex_engine = client.storage_factory.entity_storage_engine(
+            StorageFactory.REGEX_TEMPLATES
+        )
         regex_store = regex_engine.regex_store()
-        regex_store.get_storage()._dirs = [os.path.dirname(__file__) + os.sep + "test_config" + os.sep + "regex-templates2.txt"]
+        regex_store.get_storage()._dirs = [
+            os.path.dirname(__file__)
+            + os.sep
+            + "test_config"
+            + os.sep
+            + "regex-templates2.txt"
+        ]
 
         result = extension.execute(client_context, "RELOAD REGEX")
         self.assertEqual("HOTRELOAD OK", result)
 
         self.assertIsNotNone(client_context.brain.regex_templates)
         self.assertIsNotNone(client_context.brain.regex_templates.has_regex("anything"))
-        self.assertEqual(re.compile('^.2*$', re.IGNORECASE), client_context.brain.regex_templates.regex("anything"))
+        self.assertEqual(
+            re.compile("^.2*$", re.IGNORECASE),
+            client_context.brain.regex_templates.regex("anything"),
+        )
 
     def test_reload_patterns(self):
         extension = HotReloadAdminExtension()
 
-        ReloadTestClient.pattern_nodes = os.path.dirname(__file__) + os.sep + "test_config" + os.sep + "pattern_nodes1.conf"
+        ReloadTestClient.pattern_nodes = (
+            os.path.dirname(__file__)
+            + os.sep
+            + "test_config"
+            + os.sep
+            + "pattern_nodes1.conf"
+        )
 
         client = ReloadTestClient()
         client_context = client.create_client_context("testid")
 
-        self.assertTrue(client_context.brain.aiml_parser.pattern_parser._pattern_factory.exists("word"))
+        self.assertTrue(
+            client_context.brain.aiml_parser.pattern_parser._pattern_factory.exists(
+                "word"
+            )
+        )
 
-        lookups_engine = client.storage_factory.entity_storage_engine(StorageFactory.PATTERN_NODES)
+        lookups_engine = client.storage_factory.entity_storage_engine(
+            StorageFactory.PATTERN_NODES
+        )
         lookups_store = lookups_engine.pattern_nodes_store()
-        lookups_store.get_storage()._dirs = [os.path.dirname(__file__) + os.sep + "test_config" + os.sep + "pattern_nodes2.conf"]
+        lookups_store.get_storage()._dirs = [
+            os.path.dirname(__file__)
+            + os.sep
+            + "test_config"
+            + os.sep
+            + "pattern_nodes2.conf"
+        ]
 
         result = extension.execute(client_context, "RELOAD PATTERNS")
         self.assertEqual("HOTRELOAD OK", result)
 
-        self.assertFalse(client_context.brain.aiml_parser.pattern_parser._pattern_factory.exists("word"))
-        self.assertTrue(client_context.brain.aiml_parser.pattern_parser._pattern_factory.exists("word2"))
+        self.assertFalse(
+            client_context.brain.aiml_parser.pattern_parser._pattern_factory.exists(
+                "word"
+            )
+        )
+        self.assertTrue(
+            client_context.brain.aiml_parser.pattern_parser._pattern_factory.exists(
+                "word2"
+            )
+        )
 
     def test_reload_templates(self):
         extension = HotReloadAdminExtension()
 
-        ReloadTestClient.template_nodes = os.path.dirname(__file__) + os.sep + "test_config" + os.sep + "template_nodes1.conf"
+        ReloadTestClient.template_nodes = (
+            os.path.dirname(__file__)
+            + os.sep
+            + "test_config"
+            + os.sep
+            + "template_nodes1.conf"
+        )
 
         client = ReloadTestClient()
         client_context = client.create_client_context("testid")
 
-        self.assertTrue(client_context.brain.aiml_parser.template_parser._template_factory.exists("word"))
+        self.assertTrue(
+            client_context.brain.aiml_parser.template_parser._template_factory.exists(
+                "word"
+            )
+        )
 
-        lookups_engine = client.storage_factory.entity_storage_engine(StorageFactory.TEMPLATE_NODES)
+        lookups_engine = client.storage_factory.entity_storage_engine(
+            StorageFactory.TEMPLATE_NODES
+        )
         lookups_store = lookups_engine.template_nodes_store()
-        lookups_store.get_storage()._dirs = [os.path.dirname(__file__) + os.sep + "test_config" + os.sep + "template_nodes2.conf"]
+        lookups_store.get_storage()._dirs = [
+            os.path.dirname(__file__)
+            + os.sep
+            + "test_config"
+            + os.sep
+            + "template_nodes2.conf"
+        ]
 
         result = extension.execute(client_context, "RELOAD TEMPLATES")
         self.assertEqual("HOTRELOAD OK", result)
 
-        self.assertFalse(client_context.brain.aiml_parser.template_parser._template_factory.exists("word"))
-        self.assertTrue(client_context.brain.aiml_parser.template_parser._template_factory.exists("word2"))
+        self.assertFalse(
+            client_context.brain.aiml_parser.template_parser._template_factory.exists(
+                "word"
+            )
+        )
+        self.assertTrue(
+            client_context.brain.aiml_parser.template_parser._template_factory.exists(
+                "word2"
+            )
+        )
 
     def test_reload_set_missing(self):
         extension = HotReloadAdminExtension()
 
-        ReloadTestClient.set_files = os.path.dirname(__file__) + os.sep + "test_config" + os.sep + "sets1"
+        ReloadTestClient.set_files = (
+            os.path.dirname(__file__) + os.sep + "test_config" + os.sep + "sets1"
+        )
 
         client = ReloadTestClient()
         client_context = client.create_client_context("testid")
@@ -341,9 +507,9 @@ class HotReloadAdminExtensionTests(unittest.TestCase):
         self.assertIsNotNone(client_context.brain.sets)
         self.assertTrue(client_context.brain.sets.contains("animal"))
         set = client_context.brain.sets.set("animal")
-        self.assertTrue('BUFFALO' in set)
-        del set['BUFFALO']
-        self.assertFalse('BUFFALO' in set)
+        self.assertTrue("BUFFALO" in set)
+        del set["BUFFALO"]
+        self.assertFalse("BUFFALO" in set)
 
         result = extension.execute(client_context, "RELOAD SET")
         self.assertEqual("Missing Set name", result)
@@ -351,7 +517,9 @@ class HotReloadAdminExtensionTests(unittest.TestCase):
     def test_reload_set(self):
         extension = HotReloadAdminExtension()
 
-        ReloadTestClient.set_files = os.path.dirname(__file__) + os.sep + "test_config" + os.sep + "sets1"
+        ReloadTestClient.set_files = (
+            os.path.dirname(__file__) + os.sep + "test_config" + os.sep + "sets1"
+        )
 
         client = ReloadTestClient()
         client_context = client.create_client_context("testid")
@@ -359,9 +527,9 @@ class HotReloadAdminExtensionTests(unittest.TestCase):
         self.assertIsNotNone(client_context.brain.sets)
         self.assertTrue(client_context.brain.sets.contains("animal"))
         set = client_context.brain.sets.set("animal")
-        self.assertTrue('BUFFALO' in set)
-        del set['BUFFALO']
-        self.assertFalse('BUFFALO' in set)
+        self.assertTrue("BUFFALO" in set)
+        del set["BUFFALO"]
+        self.assertFalse("BUFFALO" in set)
 
         result = extension.execute(client_context, "RELOAD SET ANIMAL")
         self.assertEqual("HOTRELOAD OK", result)
@@ -369,12 +537,14 @@ class HotReloadAdminExtensionTests(unittest.TestCase):
         self.assertIsNotNone(client_context.brain.sets)
         self.assertTrue(client_context.brain.sets.contains("animal"))
         set = client_context.brain.sets.set("animal")
-        self.assertTrue('BUFFALO' in set)
+        self.assertTrue("BUFFALO" in set)
 
     def test_reload_map_missing(self):
         extension = HotReloadAdminExtension()
 
-        ReloadTestClient.map_files = os.path.dirname(__file__) + os.sep + "test_config" + os.sep + "maps1"
+        ReloadTestClient.map_files = (
+            os.path.dirname(__file__) + os.sep + "test_config" + os.sep + "maps1"
+        )
 
         client = ReloadTestClient()
         client_context = client.create_client_context("testid")
@@ -383,9 +553,9 @@ class HotReloadAdminExtensionTests(unittest.TestCase):
         self.assertTrue(client_context.brain.maps.contains("animallegs"))
         al_map = client_context.brain.maps.map("animallegs")
         self.assertIsNotNone(al_map)
-        self.assertEqual('4', al_map['BUFFALO'])
-        al_map['BUFFALO'] = '6'
-        self.assertEqual('6', al_map['BUFFALO'])
+        self.assertEqual("4", al_map["BUFFALO"])
+        al_map["BUFFALO"] = "6"
+        self.assertEqual("6", al_map["BUFFALO"])
 
         result = extension.execute(client_context, "RELOAD MAP")
         self.assertEqual("Missing Map name", result)
@@ -393,7 +563,9 @@ class HotReloadAdminExtensionTests(unittest.TestCase):
     def test_reload_map(self):
         extension = HotReloadAdminExtension()
 
-        ReloadTestClient.map_files = os.path.dirname(__file__) + os.sep + "test_config" + os.sep + "maps1"
+        ReloadTestClient.map_files = (
+            os.path.dirname(__file__) + os.sep + "test_config" + os.sep + "maps1"
+        )
 
         client = ReloadTestClient()
         client_context = client.create_client_context("testid")
@@ -402,9 +574,9 @@ class HotReloadAdminExtensionTests(unittest.TestCase):
         self.assertTrue(client_context.brain.maps.contains("animallegs"))
         al_map = client_context.brain.maps.map("animallegs")
         self.assertIsNotNone(al_map)
-        self.assertEqual('4', al_map['BUFFALO'])
-        al_map['BUFFALO'] = '6'
-        self.assertEqual('6', al_map['BUFFALO'])
+        self.assertEqual("4", al_map["BUFFALO"])
+        al_map["BUFFALO"] = "6"
+        self.assertEqual("6", al_map["BUFFALO"])
 
         result = extension.execute(client_context, "RELOAD MAP ANIMALLEGS")
         self.assertEqual("HOTRELOAD OK", result)
@@ -414,19 +586,21 @@ class HotReloadAdminExtensionTests(unittest.TestCase):
         self.assertTrue(client_context.brain.maps.contains("animallegs"))
         al_map = client_context.brain.maps.map("animallegs")
         self.assertIsNotNone(al_map)
-        self.assertEqual('4', al_map['BUFFALO'])
+        self.assertEqual("4", al_map["BUFFALO"])
 
     def test_reload_rdf_missing(self):
         extension = HotReloadAdminExtension()
 
-        ReloadTestClient.rdf_files = os.path.dirname(__file__) + os.sep + "test_config" + os.sep + "rdfs1"
+        ReloadTestClient.rdf_files = (
+            os.path.dirname(__file__) + os.sep + "test_config" + os.sep + "rdfs1"
+        )
 
         client = ReloadTestClient()
         client_context = client.create_client_context("testid")
 
-        self.assertTrue(client_context.brain.rdf.has_subject('ANTEATER'))
-        client_context.brain.rdf.delete_entity('ANTEATER')
-        self.assertFalse(client_context.brain.rdf.has_subject('ANTEATER'))
+        self.assertTrue(client_context.brain.rdf.has_subject("ANTEATER"))
+        client_context.brain.rdf.delete_entity("ANTEATER")
+        self.assertFalse(client_context.brain.rdf.has_subject("ANTEATER"))
 
         result = extension.execute(client_context, "RELOAD RDF")
         self.assertEqual("Missing RDF name", result)
@@ -434,19 +608,21 @@ class HotReloadAdminExtensionTests(unittest.TestCase):
     def test_reload_rdf(self):
         extension = HotReloadAdminExtension()
 
-        ReloadTestClient.rdf_files = os.path.dirname(__file__) + os.sep + "test_config" + os.sep + "rdfs1"
+        ReloadTestClient.rdf_files = (
+            os.path.dirname(__file__) + os.sep + "test_config" + os.sep + "rdfs1"
+        )
 
         client = ReloadTestClient()
         client_context = client.create_client_context("testid")
 
-        self.assertTrue(client_context.brain.rdf.has_subject('ANTEATER'))
-        client_context.brain.rdf.delete_entity('ANTEATER')
-        self.assertFalse(client_context.brain.rdf.has_subject('ANTEATER'))
+        self.assertTrue(client_context.brain.rdf.has_subject("ANTEATER"))
+        client_context.brain.rdf.delete_entity("ANTEATER")
+        self.assertFalse(client_context.brain.rdf.has_subject("ANTEATER"))
 
         result = extension.execute(client_context, "RELOAD RDF ANIMAL")
         self.assertEqual("HOTRELOAD OK", result)
 
-        self.assertTrue(client_context.brain.rdf.has_subject('ANTEATER'))
+        self.assertTrue(client_context.brain.rdf.has_subject("ANTEATER"))
 
     def test_reload_all(self):
         extension = HotReloadAdminExtension()
@@ -469,7 +645,9 @@ class HotReloadAdminExtensionTests(unittest.TestCase):
     def test_reload_sets(self):
         extension = HotReloadAdminExtension()
 
-        ReloadTestClient.set_files = os.path.dirname(__file__) + os.sep + "test_config" + os.sep + "sets1"
+        ReloadTestClient.set_files = (
+            os.path.dirname(__file__) + os.sep + "test_config" + os.sep + "sets1"
+        )
 
         client = ReloadTestClient()
         client_context = client.create_client_context("testid")
@@ -480,9 +658,13 @@ class HotReloadAdminExtensionTests(unittest.TestCase):
         self.assertFalse(client_context.brain.sets.contains("fastfood"))
         self.assertFalse(client_context.brain.sets.contains("food"))
 
-        lookups_engine = client.storage_factory.entity_storage_engine(StorageFactory.SETS)
+        lookups_engine = client.storage_factory.entity_storage_engine(
+            StorageFactory.SETS
+        )
         lookups_store = lookups_engine.sets_store()
-        lookups_store.get_storage()._dirs = [os.path.dirname(__file__) + os.sep + "test_config" + os.sep + "sets2"]
+        lookups_store.get_storage()._dirs = [
+            os.path.dirname(__file__) + os.sep + "test_config" + os.sep + "sets2"
+        ]
 
         result = extension.execute(client_context, "RELOAD ALL SETS")
         self.assertEqual("HOTRELOAD OK", result)
@@ -496,7 +678,9 @@ class HotReloadAdminExtensionTests(unittest.TestCase):
     def test_reload_maps(self):
         extension = HotReloadAdminExtension()
 
-        ReloadTestClient.map_files = os.path.dirname(__file__) + os.sep + "test_config" + os.sep + "maps1"
+        ReloadTestClient.map_files = (
+            os.path.dirname(__file__) + os.sep + "test_config" + os.sep + "maps1"
+        )
 
         client = ReloadTestClient()
         client_context = client.create_client_context("testid")
@@ -507,9 +691,13 @@ class HotReloadAdminExtensionTests(unittest.TestCase):
         self.assertFalse(client_context.brain.maps.contains("state2captial"))
         self.assertFalse(client_context.brain.maps.contains("state2largestcity"))
 
-        lookups_engine = client.storage_factory.entity_storage_engine(StorageFactory.MAPS)
+        lookups_engine = client.storage_factory.entity_storage_engine(
+            StorageFactory.MAPS
+        )
         lookups_store = lookups_engine.maps_store()
-        lookups_store.get_storage()._dirs = [os.path.dirname(__file__) + os.sep + "test_config" + os.sep + "maps2"]
+        lookups_store.get_storage()._dirs = [
+            os.path.dirname(__file__) + os.sep + "test_config" + os.sep + "maps2"
+        ]
 
         result = extension.execute(client_context, "RELOAD ALL MAPS")
         self.assertEqual("HOTRELOAD OK", result)
@@ -523,7 +711,9 @@ class HotReloadAdminExtensionTests(unittest.TestCase):
     def test_reload_rdfs(self):
         extension = HotReloadAdminExtension()
 
-        ReloadTestClient.rdf_files = os.path.dirname(__file__) + os.sep + "test_config" + os.sep + "rdfs1"
+        ReloadTestClient.rdf_files = (
+            os.path.dirname(__file__) + os.sep + "test_config" + os.sep + "rdfs1"
+        )
 
         client = ReloadTestClient()
         client_context = client.create_client_context("testid")
@@ -534,9 +724,13 @@ class HotReloadAdminExtensionTests(unittest.TestCase):
         self.assertFalse(client_context.brain.rdf.has_subject("SOUTH"))
         self.assertFalse(client_context.brain.rdf.has_subject("IBM"))
 
-        lookups_engine = client.storage_factory.entity_storage_engine(StorageFactory.RDF)
+        lookups_engine = client.storage_factory.entity_storage_engine(
+            StorageFactory.RDF
+        )
         lookups_store = lookups_engine.rdf_store()
-        lookups_store.get_storage()._dirs = [os.path.dirname(__file__) + os.sep + "test_config" + os.sep + "rdfs2"]
+        lookups_store.get_storage()._dirs = [
+            os.path.dirname(__file__) + os.sep + "test_config" + os.sep + "rdfs2"
+        ]
 
         result = extension.execute(client_context, "RELOAD ALL RDFS")
         self.assertEqual("HOTRELOAD OK", result)
@@ -559,9 +753,14 @@ class HotReloadAdminExtensionTests(unittest.TestCase):
     def patch_command(self):
         raise Exception("Mock Exception")
 
-    @patch ("programy.extensions.admin.hotreload.HotReloadAdminExtension._command", patch_command)
+    @patch(
+        "programy.extensions.admin.hotreload.HotReloadAdminExtension._command",
+        patch_command,
+    )
     def test_reload_exception(self):
         extension = HotReloadAdminExtension()
         client = ReloadTestClient()
         client_context = client.create_client_context("testid")
-        self.assertEqual("Hot Reload Admin Error", extension.execute(client_context, "COMMANDS"))
+        self.assertEqual(
+            "Hot Reload Admin Error", extension.execute(client_context, "COMMANDS")
+        )

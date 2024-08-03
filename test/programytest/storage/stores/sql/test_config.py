@@ -9,9 +9,9 @@ class SQLStorageConfigurationTests(unittest.TestCase):
 
     def test_initial_creation(self):
         config = SQLStorageConfiguration()
-        self.assertEqual(config.url, 'sqlite:///:memory:')
+        self.assertEqual(config.url, "sqlite:///:memory:")
         self.assertEqual(config.echo, False)
-        self.assertEqual(config.encoding, 'utf-8')
+        self.assertEqual(config.encoding, "utf-8")
         self.assertEqual(config.create_db, True)
         self.assertEqual(config.drop_all_first, True)
 
@@ -29,7 +29,8 @@ class SQLStorageConfigurationTests(unittest.TestCase):
 
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
                 sql:
                     type:   sql
                     config:
@@ -38,16 +39,19 @@ class SQLStorageConfigurationTests(unittest.TestCase):
                         encoding: utf-8
                         create_db: true
                         drop_all_first: True
-                """, ConsoleConfiguration(), ".")
+                """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         mongo_config = yaml.get_section("sql")
 
         config = SQLStorageConfiguration()
         config.load_config_section(yaml, mongo_config, ".")
 
-        self.assertEqual(config.url, 'sqlite:///:memory:')
+        self.assertEqual(config.url, "sqlite:///:memory:")
         self.assertEqual(config.echo, False)
-        self.assertEqual(config.encoding, 'utf-8')
+        self.assertEqual(config.encoding, "utf-8")
         self.assertEqual(config.create_db, True)
         self.assertEqual(config.drop_all_first, True)
 
@@ -55,20 +59,24 @@ class SQLStorageConfigurationTests(unittest.TestCase):
 
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
                 sql:
                     type:   sql
                     config:
-                """, ConsoleConfiguration(), ".")
+                """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         mongo_config = yaml.get_section("sql")
 
         config = SQLStorageConfiguration()
         config.load_config_section(yaml, mongo_config, ".")
 
-        self.assertEqual(config.url, 'sqlite:///:memory:')
+        self.assertEqual(config.url, "sqlite:///:memory:")
         self.assertEqual(config.echo, False)
-        self.assertEqual(config.encoding, 'utf-8')
+        self.assertEqual(config.encoding, "utf-8")
         self.assertEqual(config.create_db, True)
         self.assertEqual(config.drop_all_first, True)
 
@@ -76,19 +84,23 @@ class SQLStorageConfigurationTests(unittest.TestCase):
 
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
                 sql:
                     type:   sql
-                """, ConsoleConfiguration(), ".")
+                """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         mongo_config = yaml.get_section("sql")
 
         config = SQLStorageConfiguration()
         config.load_config_section(yaml, mongo_config, ".")
 
-        self.assertEqual(config.url, 'sqlite:///:memory:')
+        self.assertEqual(config.url, "sqlite:///:memory:")
         self.assertEqual(config.echo, False)
-        self.assertEqual(config.encoding, 'utf-8')
+        self.assertEqual(config.encoding, "utf-8")
         self.assertEqual(config.create_db, True)
         self.assertEqual(config.drop_all_first, True)
 
@@ -96,7 +108,8 @@ class SQLStorageConfigurationTests(unittest.TestCase):
 
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
                 sql:
                     type:   sql
                     config:
@@ -105,20 +118,33 @@ class SQLStorageConfigurationTests(unittest.TestCase):
                         encoding: utf-8
                         create_db: true
                         drop_all_first: True
-                """, ConsoleConfiguration(), ".")
+                """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         mongo_config = yaml.get_section("sql")
 
         config = SQLStorageConfiguration()
         config.load_config_section(yaml, mongo_config, ".")
 
-        self.assertEqual({'create_db': True, 'drop_all_first': True, 'echo': False, 'encoding': 'utf-8', 'url': 'sqlite:///:memory:'}, config.create_sqlstorage_config())
+        self.assertEqual(
+            {
+                "create_db": True,
+                "drop_all_first": True,
+                "echo": False,
+                "encoding": "utf-8",
+                "url": "sqlite:///:memory:",
+            },
+            config.create_sqlstorage_config(),
+        )
 
     def test_create_sqlstorage_config_not_memory(self):
 
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
                 sql:
                     type:   sql
                     config:
@@ -127,26 +153,48 @@ class SQLStorageConfigurationTests(unittest.TestCase):
                         encoding: utf-8
                         create_db: true
                         drop_all_first: True
-                """, ConsoleConfiguration(), ".")
+                """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         mongo_config = yaml.get_section("sql")
 
         config = SQLStorageConfiguration()
         config.load_config_section(yaml, mongo_config, ".")
 
-        self.assertEqual({'create_db': True, 'drop_all_first': True, 'echo': False, 'encoding': 'utf-8', 'url': 'sql:///:other'}, config.create_sqlstorage_config())
+        self.assertEqual(
+            {
+                "create_db": True,
+                "drop_all_first": True,
+                "echo": False,
+                "encoding": "utf-8",
+                "url": "sql:///:other",
+            },
+            config.create_sqlstorage_config(),
+        )
 
     def test_to_yaml_with_defaults(self):
         config = SQLStorageConfiguration()
 
         data = {}
         config.to_yaml(data, defaults=True)
-        self.assertEqual({'create_db': True, 'drop_all_first': True, 'echo': False, 'encoding': 'utf-8', 'url': 'sqlite:///:memory:'}, data)
+        self.assertEqual(
+            {
+                "create_db": True,
+                "drop_all_first": True,
+                "echo": False,
+                "encoding": "utf-8",
+                "url": "sqlite:///:memory:",
+            },
+            data,
+        )
 
     def test_to_yaml_no_defaults(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
                 sql:
                     type:   sql
                     config:
@@ -155,7 +203,10 @@ class SQLStorageConfigurationTests(unittest.TestCase):
                         encoding: ascii-8
                         create_db: false
                         drop_all_first: false
-                """, ConsoleConfiguration(), ".")
+                """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         mongo_config = yaml.get_section("sql")
 
@@ -164,4 +215,13 @@ class SQLStorageConfigurationTests(unittest.TestCase):
 
         data = {}
         config.to_yaml(data, defaults=False)
-        self.assertEqual({'create_db': False, 'drop_all_first': False, 'echo': True, 'encoding': 'ascii-8', 'url': 'sqlite:///:memory:'}, data)
+        self.assertEqual(
+            {
+                "create_db": False,
+                "drop_all_first": False,
+                "echo": True,
+                "encoding": "ascii-8",
+                "url": "sqlite:///:memory:",
+            },
+            data,
+        )

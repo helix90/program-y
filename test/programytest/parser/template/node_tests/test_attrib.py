@@ -1,7 +1,8 @@
 import xml.etree.ElementTree as ET
 
-from programy.parser.template.nodes.attrib import TemplateAttribNode
 from programytest.parser.base import ParserTestsBaseClass
+
+from programy.parser.template.nodes.attrib import TemplateAttribNode
 
 
 class TestTemplateAttribNode(TemplateAttribNode):
@@ -38,7 +39,7 @@ class TemplateAttribNodeTests(ParserTestsBaseClass):
         attrib = TestTemplateAttribNode()
 
         graph = self._client_context.brain.aiml_parser.template_parser
-        expression = ET.fromstring('<node><name>test</name> Test</node>')
+        expression = ET.fromstring("<node><name>test</name> Test</node>")
         attrib_name = "name"
 
         attrib._parse_node_with_attrib(graph, expression, attrib_name)
@@ -50,7 +51,7 @@ class TemplateAttribNodeTests(ParserTestsBaseClass):
         attrib = TestTemplateAttribNode()
 
         graph = self._client_context.brain.aiml_parser.template_parser
-        expression = ET.fromstring('<node>Test</node>')
+        expression = ET.fromstring("<node>Test</node>")
         attrib_name = "name"
 
         attrib._parse_node_with_attrib(graph, expression, attrib_name)
@@ -61,10 +62,12 @@ class TemplateAttribNodeTests(ParserTestsBaseClass):
         attrib = TestTemplateAttribNode()
 
         graph = self._client_context.brain.aiml_parser.template_parser
-        expression = ET.fromstring('<node>Test</node>')
+        expression = ET.fromstring("<node>Test</node>")
         attrib_name = "name"
 
-        attrib._parse_node_with_attrib(graph, expression, attrib_name, default_value="test")
+        attrib._parse_node_with_attrib(
+            graph, expression, attrib_name, default_value="test"
+        )
 
         self.assertTrue(attrib_name in attrib.pairs)
 
@@ -83,7 +86,7 @@ class TemplateAttribNodeTests(ParserTestsBaseClass):
         attrib = TestTemplateAttribNode()
 
         graph = self._client_context.brain.aiml_parser.template_parser
-        expression = ET.fromstring('<node><nameX>test</nameX>Test</node>')
+        expression = ET.fromstring("<node><nameX>test</nameX>Test</node>")
         attrib_name = "name"
 
         attrib._parse_node_with_attrib(graph, expression, attrib_name)
@@ -94,10 +97,12 @@ class TemplateAttribNodeTests(ParserTestsBaseClass):
         attrib = TestTemplateAttribNode()
 
         graph = self._client_context.brain.aiml_parser.template_parser
-        expression = ET.fromstring('<node><nameX>test</nameX>Test</node>')
+        expression = ET.fromstring("<node><nameX>test</nameX>Test</node>")
         attrib_name = "name"
 
-        attrib._parse_node_with_attrib(graph, expression, attrib_name, default_value="test2")
+        attrib._parse_node_with_attrib(
+            graph, expression, attrib_name, default_value="test2"
+        )
 
         self.assertTrue(attrib_name in attrib.pairs)
         self.assertEquals("test2", attrib.pairs[attrib_name].word)
@@ -108,7 +113,9 @@ class TemplateAttribNodeTests(ParserTestsBaseClass):
         graph = self._client_context.brain.aiml_parser.template_parser
         expression = ET.fromstring('<node name1="test1" name2="test2">Test</node>')
 
-        attrib._parse_node_with_attribs(graph, expression, [["name1", None], ["name2", None]])
+        attrib._parse_node_with_attribs(
+            graph, expression, [["name1", None], ["name2", None]]
+        )
 
         self.assertTrue("name1" in attrib.pairs)
         self.assertEquals("test1", attrib.pairs["name1"].word)
@@ -119,9 +126,13 @@ class TemplateAttribNodeTests(ParserTestsBaseClass):
         attrib = TestTemplateAttribNode()
 
         graph = self._client_context.brain.aiml_parser.template_parser
-        expression = ET.fromstring('<node> <name1>test1</name1> <name2>test2</name2> Test</node>')
+        expression = ET.fromstring(
+            "<node> <name1>test1</name1> <name2>test2</name2> Test</node>"
+        )
 
-        attrib._parse_node_with_attribs(graph, expression, [["name1", None], ["name2", None]])
+        attrib._parse_node_with_attribs(
+            graph, expression, [["name1", None], ["name2", None]]
+        )
 
         self.assertTrue("name1" in attrib.pairs)
         self.assertEquals("test1", attrib.pairs["name1"].children[0].word)
@@ -132,7 +143,7 @@ class TemplateAttribNodeTests(ParserTestsBaseClass):
         attrib = TestTemplateAttribNode()
 
         graph = self._client_context.brain.aiml_parser.template_parser
-        expression = ET.fromstring('<node>Test</node>')
+        expression = ET.fromstring("<node>Test</node>")
 
         attrib._parse_node_with_attribs(graph, expression, [])
 
@@ -143,9 +154,11 @@ class TemplateAttribNodeTests(ParserTestsBaseClass):
         attrib = TestTemplateAttribNode()
 
         graph = self._client_context.brain.aiml_parser.template_parser
-        expression = ET.fromstring('<node>Test</node>')
+        expression = ET.fromstring("<node>Test</node>")
 
-        attrib._parse_node_with_attribs(graph, expression, [["name1", "test1"], ["name2", "test2"]])
+        attrib._parse_node_with_attribs(
+            graph, expression, [["name1", "test1"], ["name2", "test2"]]
+        )
 
         self.assertTrue("name1" in attrib.pairs)
         self.assertEquals("test1", attrib.pairs["name1"].word)
@@ -156,9 +169,13 @@ class TemplateAttribNodeTests(ParserTestsBaseClass):
         attrib = TestTemplateAttribNode()
 
         graph = self._client_context.brain.aiml_parser.template_parser
-        expression = ET.fromstring('<node> <name1X>test1</name1X> <name2Y>test2</name2Y> Test</node>')
+        expression = ET.fromstring(
+            "<node> <name1X>test1</name1X> <name2Y>test2</name2Y> Test</node>"
+        )
 
-        attrib._parse_node_with_attribs(graph, expression, [["name1", "test1"], ["name2", "test2"]])
+        attrib._parse_node_with_attribs(
+            graph, expression, [["name1", "test1"], ["name2", "test2"]]
+        )
 
         self.assertTrue("name1" in attrib.pairs)
         self.assertEquals("test1", attrib.pairs["name1"].word)

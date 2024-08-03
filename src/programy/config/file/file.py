@@ -14,22 +14,27 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from abc import ABC
-from abc import abstractmethod
+
+from abc import ABC, abstractmethod
+
 from programy.utils.substitutions.substitues import Substitutions
 
 
 class BaseConfigurationFile(ABC):
 
     @abstractmethod
-    def load_from_text(self, text, client_configuration, bot_root, subs: Substitutions = None):
+    def load_from_text(
+        self, text, client_configuration, bot_root, subs: Substitutions = None
+    ):
         """
         Never Implemented
         """
         raise NotImplementedError()  # pragma: no cover
 
     @abstractmethod
-    def load_from_file(self, filename, client_configuration, bot_root, subs: Substitutions = None):
+    def load_from_file(
+        self, filename, client_configuration, bot_root, subs: Substitutions = None
+    ):
         """
         Never Implemented
         """
@@ -63,44 +68,59 @@ class BaseConfigurationFile(ABC):
         return value
 
     @abstractmethod
-    def get_option(self, section, option_name, missing_value=None, subs: Substitutions = None):
+    def get_option(
+        self, section, option_name, missing_value=None, subs: Substitutions = None
+    ):
         """
         Never Implemented
         """
         raise NotImplementedError()  # pragma: no cover
 
     @abstractmethod
-    def get_bool_option(self, section, option_name, missing_value=False, subs: Substitutions = None):
+    def get_bool_option(
+        self, section, option_name, missing_value=False, subs: Substitutions = None
+    ):
         """
         Never Implemented
         """
         raise NotImplementedError()  # pragma: no cover
 
     @abstractmethod
-    def get_int_option(self, section, option_name, missing_value=0, subs: Substitutions = None):
+    def get_int_option(
+        self, section, option_name, missing_value=0, subs: Substitutions = None
+    ):
         """
         Never Implemented
         """
         raise NotImplementedError()  # pragma: no cover
 
     @abstractmethod
-    def get_multi_option(self, section, option_name, missing_value=None, subs: Substitutions = None):
+    def get_multi_option(
+        self, section, option_name, missing_value=None, subs: Substitutions = None
+    ):
         """
         Never Implemented
         """
         raise NotImplementedError()  # pragma: no cover
 
     @abstractmethod
-    def get_multi_file_option(self, section, option_name, bot_root, missing_value=None, subs: Substitutions = None):
+    def get_multi_file_option(
+        self,
+        section,
+        option_name,
+        bot_root,
+        missing_value=None,
+        subs: Substitutions = None,
+    ):
         """
         Never Implemented
         """
         raise NotImplementedError()  # pragma: no cover
 
     def convert_to_bool(self, value):
-        if value.upper() == 'TRUE':
+        if value.upper() == "TRUE":
             return True
-        elif value.upper() == 'FALSE':
+        elif value.upper() == "FALSE":
             return False
         else:
             raise Exception("Invalid boolean config value [%s]" % value)

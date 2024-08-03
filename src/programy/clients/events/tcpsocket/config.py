@@ -14,6 +14,7 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 from programy.clients.config import ClientConfigurationData
 from programy.utils.substitutions.substitues import Substitutions
 
@@ -48,28 +49,39 @@ class SocketConfiguration(ClientConfigurationData):
     def max_buffer(self):
         return self._max_buffer
 
-    def load_configuration_section(self, configuration_file, section, bot_root, subs: Substitutions = None):
+    def load_configuration_section(
+        self, configuration_file, section, bot_root, subs: Substitutions = None
+    ):
         assert section is not None
 
-        self._host = configuration_file.get_option(section, "host", missing_value="0.0.0.0", subs=subs)
-        self._port = configuration_file.get_option(section, "port", missing_value=80, subs=subs)
-        self._debug = configuration_file.get_bool_option(section, "debug", missing_value=False, subs=subs)
-        self._max_buffer = configuration_file.get_option(section, "max_buffer", missing_value=1024, subs=subs)
-        super(SocketConfiguration, self).load_configuration_section(configuration_file, section, bot_root,
-                                                                    subs=subs)
+        self._host = configuration_file.get_option(
+            section, "host", missing_value="0.0.0.0", subs=subs
+        )
+        self._port = configuration_file.get_option(
+            section, "port", missing_value=80, subs=subs
+        )
+        self._debug = configuration_file.get_bool_option(
+            section, "debug", missing_value=False, subs=subs
+        )
+        self._max_buffer = configuration_file.get_option(
+            section, "max_buffer", missing_value=1024, subs=subs
+        )
+        super(SocketConfiguration, self).load_configuration_section(
+            configuration_file, section, bot_root, subs=subs
+        )
 
     def to_yaml(self, data, defaults=True):
         if defaults is True:
-            data['host'] = "0.0.0.0"
-            data['port'] = 80
-            data['debug'] = False
-            data['queue'] = 5
-            data['max_buffer'] = 1024
+            data["host"] = "0.0.0.0"
+            data["port"] = 80
+            data["debug"] = False
+            data["queue"] = 5
+            data["max_buffer"] = 1024
         else:
-            data['host'] = self._host
-            data['port'] = self._port
-            data['debug'] = self._debug
-            data['queue'] = self._queue
-            data['max_buffer'] = self._max_buffer
+            data["host"] = self._host
+            data["port"] = self._port
+            data["debug"] = self._debug
+            data["queue"] = self._queue
+            data["max_buffer"] = self._max_buffer
 
         super(SocketConfiguration, self).to_yaml(data, defaults)

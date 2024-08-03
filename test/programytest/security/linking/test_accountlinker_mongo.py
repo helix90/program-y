@@ -1,11 +1,13 @@
 import unittest
 from unittest.mock import patch
+
 import programytest.storage.engines as Engines
+from programytest.security.linking.accounlinker_asserts import AccountLinkerAsserts
+
 from programy.security.linking.accountlinker import BasicAccountLinkerService
 from programy.storage.stores.nosql.mongo.config import MongoStorageConfiguration
-from programy.storage.stores.nosql.mongo.engine import MongoStorageEngine
 from programy.storage.stores.nosql.mongo.dao.link import Link
-from programytest.security.linking.accounlinker_asserts import AccountLinkerAsserts
+from programy.storage.stores.nosql.mongo.engine import MongoStorageEngine
 
 
 class MongoAccountLinkerServiceTests(AccountLinkerAsserts):
@@ -39,7 +41,10 @@ class MongoAccountLinkerServiceTests(AccountLinkerAsserts):
     def patch_add_user(self, userid, clientid):
         return None
 
-    @patch('programy.storage.stores.nosql.mongo.store.users.MongoUserStore.add_user', patch_add_user)
+    @patch(
+        "programy.storage.stores.nosql.mongo.store.users.MongoUserStore.add_user",
+        patch_add_user,
+    )
     def test_link_user_to_client_add_user_fails(self):
         mgr = BasicAccountLinkerService(self.storage_engine)
         self.assert_link_user_to_client_add_user_fails(mgr)
@@ -78,7 +83,10 @@ class MongoAccountLinkerServiceTests(AccountLinkerAsserts):
         return False
 
     @unittest.skipIf(Engines.mongo is False, Engines.mongo_disabled)
-    @patch('programy.storage.stores.nosql.mongo.store.users.MongoUserStore.remove_user', patch_remove_user)
+    @patch(
+        "programy.storage.stores.nosql.mongo.store.users.MongoUserStore.remove_user",
+        patch_remove_user,
+    )
     def test_unlink_user_from_client_remove_user_fails1(self):
         mgr = BasicAccountLinkerService(self.storage_engine)
         self.assert_unlink_user_from_client_fails(mgr)
@@ -87,7 +95,10 @@ class MongoAccountLinkerServiceTests(AccountLinkerAsserts):
         return False
 
     @unittest.skipIf(Engines.mongo is False, Engines.mongo_disabled)
-    @patch('programy.storage.stores.nosql.mongo.store.links.MongoLinkStore.remove_link', patch_remove_link)
+    @patch(
+        "programy.storage.stores.nosql.mongo.store.links.MongoLinkStore.remove_link",
+        patch_remove_link,
+    )
     def test_unlink_user_from_client_remove_user_fails2(self):
         mgr = BasicAccountLinkerService(self.storage_engine)
         self.assert_unlink_user_from_client_fails(mgr)
@@ -96,7 +107,10 @@ class MongoAccountLinkerServiceTests(AccountLinkerAsserts):
         return False
 
     @unittest.skipIf(Engines.mongo is False, Engines.mongo_disabled)
-    @patch('programy.storage.stores.nosql.mongo.store.linkedaccounts.MongoLinkedAccountStore.unlink_accounts', patch_unlink_accounts)
+    @patch(
+        "programy.storage.stores.nosql.mongo.store.linkedaccounts.MongoLinkedAccountStore.unlink_accounts",
+        patch_unlink_accounts,
+    )
     def test_unlink_user_from_client_remove_user_fails3(self):
         mgr = BasicAccountLinkerService(self.storage_engine)
         self.assert_unlink_user_from_client_fails(mgr)
@@ -110,19 +124,28 @@ class MongoAccountLinkerServiceTests(AccountLinkerAsserts):
         return False
 
     @unittest.skipIf(Engines.mongo is False, Engines.mongo_disabled)
-    @patch('programy.storage.stores.nosql.mongo.store.users.MongoUserStore.remove_user_from_all_clients',patch_remove_user_from_all_clients)
+    @patch(
+        "programy.storage.stores.nosql.mongo.store.users.MongoUserStore.remove_user_from_all_clients",
+        patch_remove_user_from_all_clients,
+    )
     def test_unlink_user_from_all_clients_remove_user_from_all_clients_fails(self):
         mgr = BasicAccountLinkerService(self.storage_engine)
         self.assert_unlink_user_from_all_clients_fails(mgr)
 
     @unittest.skipIf(Engines.mongo is False, Engines.mongo_disabled)
-    @patch('programy.storage.stores.nosql.mongo.store.links.MongoLinkStore.remove_link', patch_remove_link)
+    @patch(
+        "programy.storage.stores.nosql.mongo.store.links.MongoLinkStore.remove_link",
+        patch_remove_link,
+    )
     def test_unlink_user_from_all_clients_remove_link_fails(self):
         mgr = BasicAccountLinkerService(self.storage_engine)
         self.assert_unlink_user_from_all_clients_fails(mgr)
 
     @unittest.skipIf(Engines.mongo is False, Engines.mongo_disabled)
-    @patch('programy.storage.stores.nosql.mongo.store.linkedaccounts.MongoLinkedAccountStore.unlink_accounts', patch_unlink_accounts)
+    @patch(
+        "programy.storage.stores.nosql.mongo.store.linkedaccounts.MongoLinkedAccountStore.unlink_accounts",
+        patch_unlink_accounts,
+    )
     def test_unlink_user_from_all_clients_unlink_accounts_fails(self):
         mgr = BasicAccountLinkerService(self.storage_engine)
         self.assert_unlink_user_from_all_clients_fails(mgr)
@@ -136,7 +159,10 @@ class MongoAccountLinkerServiceTests(AccountLinkerAsserts):
         return None
 
     @unittest.skipIf(Engines.mongo is False, Engines.mongo_disabled)
-    @patch('programy.storage.stores.nosql.mongo.store.links.MongoLinkStore.create_link', patch_create_link)
+    @patch(
+        "programy.storage.stores.nosql.mongo.store.links.MongoLinkStore.create_link",
+        patch_create_link,
+    )
     def test_generate_link_create_link_fails(self):
         mgr = BasicAccountLinkerService(self.storage_engine)
         self.assert_generate_link_create_link_fails(mgr)
@@ -145,7 +171,10 @@ class MongoAccountLinkerServiceTests(AccountLinkerAsserts):
         return None
 
     @unittest.skipIf(Engines.mongo is False, Engines.mongo_disabled)
-    @patch('programy.storage.stores.nosql.mongo.store.links.MongoLinkStore.get_link', patch_get_link)
+    @patch(
+        "programy.storage.stores.nosql.mongo.store.links.MongoLinkStore.get_link",
+        patch_get_link,
+    )
     def test_reset_link_get_link_fails(self):
         mgr = BasicAccountLinkerService(self.storage_engine)
         self.assert_reset_link_get_link_fails(mgr)
@@ -156,18 +185,31 @@ class MongoAccountLinkerServiceTests(AccountLinkerAsserts):
         self.assert_link_accounts_success(mgr)
 
     def patch_get_link(self, userid):
-        link = Link("userid1", "abcdefg", "xxxxxxxxxx", expires=None, expired=True, retry_count=0)
+        link = Link(
+            "userid1",
+            "abcdefg",
+            "xxxxxxxxxx",
+            expires=None,
+            expired=True,
+            retry_count=0,
+        )
         link.expired = True
         return link
 
     @unittest.skipIf(Engines.mongo is False, Engines.mongo_disabled)
-    @patch('programy.storage.stores.nosql.mongo.store.links.MongoLinkStore.get_link', patch_get_link)
+    @patch(
+        "programy.storage.stores.nosql.mongo.store.links.MongoLinkStore.get_link",
+        patch_get_link,
+    )
     def test_link_accounts_link_expired(self):
         mgr = BasicAccountLinkerService(self.storage_engine)
         self.assert_link_accounts_failure(mgr)
 
     @unittest.skipIf(Engines.mongo is False, Engines.mongo_disabled)
-    @patch('programy.storage.stores.nosql.mongo.store.users.MongoUserStore.add_user', patch_add_user)
+    @patch(
+        "programy.storage.stores.nosql.mongo.store.users.MongoUserStore.add_user",
+        patch_add_user,
+    )
     def test_link_accounts_add_user_fails(self):
         mgr = BasicAccountLinkerService(self.storage_engine)
         self.assert_link_accounts_failure(mgr)
@@ -176,7 +218,10 @@ class MongoAccountLinkerServiceTests(AccountLinkerAsserts):
         return None
 
     @unittest.skipIf(Engines.mongo is False, Engines.mongo_disabled)
-    @patch('programy.storage.stores.nosql.mongo.store.linkedaccounts.MongoLinkedAccountStore.link_accounts', patch_link_accounts)
+    @patch(
+        "programy.storage.stores.nosql.mongo.store.linkedaccounts.MongoLinkedAccountStore.link_accounts",
+        patch_link_accounts,
+    )
     def test_link_accounts_link_accounts_fails(self):
         mgr = BasicAccountLinkerService(self.storage_engine)
         self.assert_link_accounts_failure(mgr)

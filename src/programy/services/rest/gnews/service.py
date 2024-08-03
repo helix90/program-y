@@ -14,12 +14,13 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-import urllib.parse
+
 import os
-from programy.utils.logging.ylogger import YLogger
+import urllib.parse
+
 from programy.services.base import ServiceQuery
-from programy.services.rest.base import RESTService
-from programy.services.rest.base import RESTServiceException
+from programy.services.rest.base import RESTService, RESTServiceException
+from programy.utils.logging.ylogger import YLogger
 
 
 class GNewsTopics:
@@ -53,7 +54,14 @@ class GNewsSearchQuery(ServiceQuery):
         return self._service.search(self._query)
 
     def aiml_response(self, response):
-        result = "SEARCH <ul>" + "".join("<li>"+x['title']+"</li>" for x in response['response']['payload']['articles']) + "</ul>"
+        result = (
+            "SEARCH <ul>"
+            + "".join(
+                "<li>" + x["title"] + "</li>"
+                for x in response["response"]["payload"]["articles"]
+            )
+            + "</ul>"
+        )
         YLogger.debug(self, result)
         return result
 
@@ -66,7 +74,9 @@ class GNewsTopNewsQuery(ServiceQuery):
 
     def parse_matched(self, matched):
         self._lang = ServiceQuery._get_matched_var(matched, 0, "lang", optional=True)
-        self._country = ServiceQuery._get_matched_var(matched, 1, "country", optional=True)
+        self._country = ServiceQuery._get_matched_var(
+            matched, 1, "country", optional=True
+        )
 
     def __init__(self, service):
         ServiceQuery.__init__(self, service)
@@ -77,7 +87,14 @@ class GNewsTopNewsQuery(ServiceQuery):
         return self._service.top_news(lang=self._lang, country=self._country)
 
     def aiml_response(self, response):
-        result = "TOPNEWS <ul>" + "".join("<li>"+x['title']+"</li>" for x in response['response']['payload']['articles']) + "</ul>"
+        result = (
+            "TOPNEWS <ul>"
+            + "".join(
+                "<li>" + x["title"] + "</li>"
+                for x in response["response"]["payload"]["articles"]
+            )
+            + "</ul>"
+        )
         YLogger.debug(self, result)
         return result
 
@@ -95,10 +112,18 @@ class GNewsTopicsListQuery(ServiceQuery):
         ServiceQuery.__init__(self, service)
 
     def execute(self):
-        return {'response': {'status': 'success', 'payload': {'topics': GNewsTopics.TOPICS}}}
+        return {
+            "response": {"status": "success", "payload": {"topics": GNewsTopics.TOPICS}}
+        }
 
     def aiml_response(self, response):
-        result = "TOPICS <ul>" + "".join("<li>"+x+"</li>" for x in response['response']['payload']['topics']) + "</ul>"
+        result = (
+            "TOPICS <ul>"
+            + "".join(
+                "<li>" + x + "</li>" for x in response["response"]["payload"]["topics"]
+            )
+            + "</ul>"
+        )
         YLogger.debug(self, result)
         return result
 
@@ -120,10 +145,12 @@ class GNewsTopicQuery(ServiceQuery):
         return self._service.topics(self._topic)
 
     def aiml_response(self, response):
-        payload = response['response']['payload']
-        articles = payload['articles']
+        payload = response["response"]["payload"]
+        articles = payload["articles"]
         result = "<ul>"
-        result += "\n".join(["<li>{0}</li>".format(article['title']) for article in articles])
+        result += "\n".join(
+            ["<li>{0}</li>".format(article["title"]) for article in articles]
+        )
         result += "</ul>"
         result = "TOPIC {0}".format(result)
         YLogger.debug(self, result)
@@ -140,17 +167,18 @@ class GNewsService(RESTService):
     """
     https://gnews.io/docs/v3#introduction
     """
+
     PATTERNS = [
         [r"SEARCH\s(.+)", GNewsSearchQuery],
         [r"TOPNEWS\s(.+)\s(.+)", GNewsTopNewsQuery],
         [r"TOPNEWS", GNewsTopNewsQuery],
         [r"TOPICS", GNewsTopicsListQuery],
-        [r"TOPIC\s(\w+)", GNewsTopicQuery]
+        [r"TOPIC\s(\w+)", GNewsTopicQuery],
     ]
 
-    SEARCH_BASE_URL=" https://gnews.io/api/v3/search"
-    TOPNEWS_BASE_URL=" https://gnews.io/api/v3/top-news"
-    TOPICS_BASE_URL="https://gnews.io/api/v3/topics"
+    SEARCH_BASE_URL = " https://gnews.io/api/v3/search"
+    TOPNEWS_BASE_URL = " https://gnews.io/api/v3/top-news"
+    TOPICS_BASE_URL = "https://gnews.io/api/v3/topics"
 
     def __init__(self, configuration):
         RESTService.__init__(self, configuration)
@@ -162,7 +190,10 @@ class GNewsService(RESTService):
     def initialise(self, client):
         self._token = client.license_keys.get_key("GNEWS_TOKEN")
         if self._token is None:
-            YLogger.error(self, "GNEWS_TOKEN missing from license.keys, service will not function correctly!")
+            YLogger.error(
+                self,
+                "GNEWS_TOKEN missing from license.keys, service will not function correctly!",
+            )
 
     def get_default_aiml_file(self):
         return os.path.dirname(__file__) + os.sep + "gnews.aiml"
@@ -171,7 +202,17 @@ class GNewsService(RESTService):
     def get_default_conf_file():
         return os.path.dirname(__file__) + os.sep + "gnews.conf"
 
-    def _build_search_url(self, query, lang=None, country=None, max=None, image=None, mindate=None, maxdate=None, specific=None):
+    def _build_search_url(
+        self,
+        query,
+        lang=None,
+        country=None,
+        max=None,
+        image=None,
+        mindate=None,
+        maxdate=None,
+        specific=None,
+    ):
         url = GNewsService.SEARCH_BASE_URL
         url += "?token={0}".format(self._token)
 
@@ -240,9 +281,21 @@ class GNewsService(RESTService):
 
         return url
 
-    def search(self, query, lang=None, country=None, max=None, image=None, mindate=None, maxdate=None, specific=None):
-        url = self._build_search_url(query, lang, country, max, image, mindate, maxdate, specific)
-        response = self.query('search', url)
+    def search(
+        self,
+        query,
+        lang=None,
+        country=None,
+        max=None,
+        image=None,
+        mindate=None,
+        maxdate=None,
+        specific=None,
+    ):
+        url = self._build_search_url(
+            query, lang, country, max, image, mindate, maxdate, specific
+        )
+        response = self.query("search", url)
         return response
 
     def top_news(self, lang=None, country=None, max=None, image=None):
@@ -251,7 +304,7 @@ class GNewsService(RESTService):
         if country is not None:
             country = country.lower()
         url = self._build_top_news_url(lang, country, max, image)
-        response = self.query('top_news', url)
+        response = self.query("top_news", url)
         return response
 
     def _validate_topic(self, topic):
@@ -262,9 +315,8 @@ class GNewsService(RESTService):
         topic = topic.lower()
         self._validate_topic(topic)
         url = self._build_topics_url(topic, lang, country, max, image)
-        response = self.query('topics', url)
+        response = self.query("topics", url)
         return response
 
     def _response_to_json(self, api, response):
         return response.json()
-

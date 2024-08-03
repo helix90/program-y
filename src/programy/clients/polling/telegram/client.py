@@ -14,13 +14,13 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from telegram.ext import Updater
-from telegram.ext import CommandHandler
-from telegram.ext import MessageHandler, Filters
-from programy.utils.logging.ylogger import YLogger
+
+from telegram.ext import CommandHandler, Filters, MessageHandler, Updater
+
 from programy.clients.polling.client import PollingBotClient
 from programy.clients.polling.telegram.config import TelegramConfiguration
 from programy.utils.console.console import outputLog
+from programy.utils.logging.ylogger import YLogger
 
 
 def start(telegram_bot, update):
@@ -60,7 +60,7 @@ class TelegramBotClient(PollingBotClient):
         self._updater = Updater(token=telegram_token)
 
     def register_handlers(self):
-        start_handler = CommandHandler('start', start)
+        start_handler = CommandHandler("start", start)
         message_handler = MessageHandler(Filters.text, message)
         unknown_handler = MessageHandler(Filters.command, unknown)
 
@@ -72,22 +72,26 @@ class TelegramBotClient(PollingBotClient):
     def get_initial_question(self, update):
         client_context = self.create_client_context(update.message.chat_id)
         initial_question = client_context.bot.get_initial_question(client_context)
-        processed_question = client_context.bot.post_process_response(client_context,
-                                                                      initial_question,
-                                                                      srai=False)
+        processed_question = client_context.bot.post_process_response(
+            client_context, initial_question, srai=False
+        )
         return processed_question
 
     def ask_question(self, userid, question):
         self._questions += 1
         client_context = self.create_client_context(userid)
-        response = client_context.bot.ask_question(client_context, question, responselogger=self)
+        response = client_context.bot.ask_question(
+            client_context, question, responselogger=self
+        )
         return self.renderer.render(client_context, response)
 
     def start(self, telegram_bot, update):
         try:
             initial_question = self.get_initial_question(update)
             if initial_question:
-                telegram_bot.send_message(chat_id=update.message.chat_id, text=initial_question)
+                telegram_bot.send_message(
+                    chat_id=update.message.chat_id, text=initial_question
+                )
             else:
                 YLogger.error(self, "Not initial question to return in start()")
 
@@ -106,7 +110,9 @@ class TelegramBotClient(PollingBotClient):
             YLogger.exception(self, "Failed to handle message", e)
 
     def get_unknown_response(self, userid):
-        return self.ask_question(userid, self.configuration.client_configuration.unknown_command_srai)
+        return self.ask_question(
+            userid, self.configuration.client_configuration.unknown_command_srai
+        )
 
     def get_unknown_command(self, userid):
         if self.configuration.client_configuration.unknown_command_srai is None:
@@ -114,14 +120,18 @@ class TelegramBotClient(PollingBotClient):
         else:
             unknown_response = self.get_unknown_response(userid)
             if unknown_response is None or unknown_response == "":
-                unknown_response = self.configuration.client_configuration.unknown_command
+                unknown_response = (
+                    self.configuration.client_configuration.unknown_command
+                )
         return unknown_response
 
     def unknown(self, telegram_bot, update):
         try:
             unknown_response = self.get_unknown_command(update.message.chat_id)
             if unknown_response:
-                telegram_bot.send_message(chat_id=update.message.chat_id, text=unknown_response)
+                telegram_bot.send_message(
+                    chat_id=update.message.chat_id, text=unknown_response
+                )
                 YLogger.error(self, "No response to return in unknown()")
 
         except Exception as e:
@@ -158,7 +168,7 @@ class TelegramBotClient(PollingBotClient):
         return running
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     outputLog(None, "Initiating Telegram Client...")
 

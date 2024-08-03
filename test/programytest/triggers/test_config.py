@@ -10,67 +10,93 @@ class TriggersConfigurationTests(unittest.TestCase):
     def test_with_data(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         console:
             triggers:
                 manager: programy.triggers.rest.RestTriggerManager
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         console_config = yaml.get_section("console")
 
         triggers_config = TriggerConfiguration()
         triggers_config.load_config_section(yaml, console_config, ".")
 
-        self.assertEqual("programy.triggers.rest.RestTriggerManager", triggers_config.manager)
+        self.assertEqual(
+            "programy.triggers.rest.RestTriggerManager", triggers_config.manager
+        )
 
     def test_without_data(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         bot:
             triggers:
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         console_config = yaml.get_section("console")
 
         triggers_config = TriggerConfiguration()
         triggers_config.load_config_section(yaml, console_config, ".")
 
-        self.assertEqual("programy.triggers.local.LocalTriggerManager", triggers_config.manager)
+        self.assertEqual(
+            "programy.triggers.local.LocalTriggerManager", triggers_config.manager
+        )
 
     def test_with_no_data(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         bot:
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         console_config = yaml.get_section("console")
 
         triggers_config = TriggerConfiguration()
         triggers_config.load_config_section(yaml, console_config, ".")
 
-        self.assertEqual("programy.triggers.local.LocalTriggerManager", triggers_config.manager)
+        self.assertEqual(
+            "programy.triggers.local.LocalTriggerManager", triggers_config.manager
+        )
 
     def test_with_additional_data(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         console:
             triggers:
                 manager: programy.triggers.rest.RestTriggerManager
                 url: http://localhost:8989/api/v1.0/trigger
                 method: POST
                 token: 123BC4F3D
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         console_config = yaml.get_section("console")
 
         triggers_config = TriggerConfiguration()
         triggers_config.load_config_section(yaml, console_config, ".")
 
-        self.assertEqual("programy.triggers.rest.RestTriggerManager", triggers_config.manager)
-        self.assertEqual(triggers_config.value("url"), "http://localhost:8989/api/v1.0/trigger")
+        self.assertEqual(
+            "programy.triggers.rest.RestTriggerManager", triggers_config.manager
+        )
+        self.assertEqual(
+            triggers_config.value("url"), "http://localhost:8989/api/v1.0/trigger"
+        )
         self.assertEqual(triggers_config.value("method"), "POST")
         self.assertEqual(triggers_config.value("token"), "123BC4F3D")
 
@@ -80,7 +106,9 @@ class TriggersConfigurationTests(unittest.TestCase):
 
         data = {}
         triggers_config.to_yaml(data, defaults=False)
-        self.assertEquals({'manager': 'programy.triggers.local.LocalTriggerManager2'}, data)
+        self.assertEquals(
+            {"manager": "programy.triggers.local.LocalTriggerManager2"}, data
+        )
 
     def test_to_yaml_with_defaults(self):
         triggers_config = TriggerConfiguration()
@@ -88,7 +116,9 @@ class TriggersConfigurationTests(unittest.TestCase):
 
         data = {}
         triggers_config.to_yaml(data, defaults=True)
-        self.assertEquals({'manager': 'programy.triggers.local.LocalTriggerManager'}, data)
+        self.assertEquals(
+            {"manager": "programy.triggers.local.LocalTriggerManager"}, data
+        )
 
     def test_defaults(self):
         triggers_config = TriggerConfiguration()
@@ -99,4 +129,4 @@ class TriggersConfigurationTests(unittest.TestCase):
 
     @staticmethod
     def assert_defaults(test, data):
-        test.assertEqual(data['manager'], TriggerConfiguration.LOCAL_MANAGER)
+        test.assertEqual(data["manager"], TriggerConfiguration.LOCAL_MANAGER)

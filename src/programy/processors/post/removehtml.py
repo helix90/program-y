@@ -14,10 +14,12 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-import re
+
 import os
-from programy.utils.logging.ylogger import YLogger
+import re
+
 from programy.processors.processing import PostProcessor
+from programy.utils.logging.ylogger import YLogger
 
 
 class RemoveHTMLPostProcessor(PostProcessor):
@@ -26,6 +28,6 @@ class RemoveHTMLPostProcessor(PostProcessor):
 
     def process(self, context, word_string):
         YLogger.debug(context, "Removing html from sentence...")
-        word_string = re.sub(r'\s*<\s*br\s*/>\s*', os.linesep, word_string)
-        word_string = re.sub(r'\s*<br></br>\s*', os.linesep, word_string)
+        word_string = re.sub(r"\s*<\s*br\s*/>\s*", os.linesep, word_string)
+        word_string = re.sub(r"\s*<br></br>\s*", os.linesep, word_string)
         return word_string

@@ -14,6 +14,7 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 from programy.clients.config import ClientConfigurationData
 from programy.utils.substitutions.substitues import Substitutions
 
@@ -48,35 +49,44 @@ class SlackConfiguration(ClientConfigurationData):
     def reply_to_all(self):
         return self._reply_to_all
 
-    def load_configuration_section(self, configuration_file, section, bot_root, subs: Substitutions = None):
+    def load_configuration_section(
+        self, configuration_file, section, bot_root, subs: Substitutions = None
+    ):
         assert section is not None
 
-        self._polling_interval = configuration_file.get_int_option(section, "polling_interval", missing_value=1,
-                                                                   subs=subs)
-        self._username = configuration_file.get_option(section, "username", missing_value="Chatilly",
-                                                                   subs=subs)
+        self._polling_interval = configuration_file.get_int_option(
+            section, "polling_interval", missing_value=1, subs=subs
+        )
+        self._username = configuration_file.get_option(
+            section, "username", missing_value="Chatilly", subs=subs
+        )
 
-        self._reply_to_direct = configuration_file.get_bool_option(section, "reply_to_direct", missing_value=True,
-                                                                   subs=subs)
-        self._reply_to_mention = configuration_file.get_bool_option(section, "reply_to_mention", missing_value=True,
-                                                                   subs=subs)
-        self._reply_to_all = configuration_file.get_bool_option(section, "reply_to_all", missing_value=False,
-                                                                   subs=subs)
+        self._reply_to_direct = configuration_file.get_bool_option(
+            section, "reply_to_direct", missing_value=True, subs=subs
+        )
+        self._reply_to_mention = configuration_file.get_bool_option(
+            section, "reply_to_mention", missing_value=True, subs=subs
+        )
+        self._reply_to_all = configuration_file.get_bool_option(
+            section, "reply_to_all", missing_value=False, subs=subs
+        )
 
-        super(SlackConfiguration, self).load_configuration_section(configuration_file, section, bot_root, subs=subs)
+        super(SlackConfiguration, self).load_configuration_section(
+            configuration_file, section, bot_root, subs=subs
+        )
 
     def to_yaml(self, data, defaults=True):
         if defaults is True:
-            data['polling_interval'] = 1
-            data['username'] = "Chatilly"
-            data['reply_to_direct'] = True
-            data['reply_to_mention'] = True
-            data['reply_to_all'] = True
+            data["polling_interval"] = 1
+            data["username"] = "Chatilly"
+            data["reply_to_direct"] = True
+            data["reply_to_mention"] = True
+            data["reply_to_all"] = True
         else:
-            data['polling_interval'] = self._polling_interval
-            data['username'] = self._username
-            data['reply_to_direct'] = self._reply_to_direct
-            data['reply_to_mention'] = self._reply_to_mention
-            data['reply_to_all'] = self._reply_to_all
+            data["polling_interval"] = self._polling_interval
+            data["username"] = self._username
+            data["reply_to_direct"] = self._reply_to_direct
+            data["reply_to_mention"] = self._reply_to_mention
+            data["reply_to_all"] = self._reply_to_all
 
         super(SlackConfiguration, self).to_yaml(data, defaults)

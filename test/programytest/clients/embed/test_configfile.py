@@ -1,8 +1,9 @@
 import unittest
 
+from programytest.clients.arguments import MockArgumentParser
+
 from programy.clients.config import ClientConfigurationData
 from programy.clients.embed.configfile import EmbeddedConfigFileBot
-from programytest.clients.arguments import MockArgumentParser
 from programy.clients.render.text import TextRenderer
 
 
@@ -13,8 +14,10 @@ class EmbeddedBotClientTests(unittest.TestCase):
         client = EmbeddedConfigFileBot(arguments)
         self.assertIsNotNone(client)
 
-        self.assertEqual('ProgramY AIML2.0 Client', client.get_description())
-        self.assertIsInstance(client.get_client_configuration(), ClientConfigurationData)
+        self.assertEqual("ProgramY AIML2.0 Client", client.get_description())
+        self.assertIsInstance(
+            client.get_client_configuration(), ClientConfigurationData
+        )
 
         self.assertFalse(client._render_callback())
         self.assertIsInstance(client.renderer, TextRenderer)

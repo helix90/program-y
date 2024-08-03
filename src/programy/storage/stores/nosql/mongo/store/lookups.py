@@ -14,11 +14,12 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
-from programy.storage.stores.nosql.mongo.store.mongostore import MongoStore
+
+from programy.mappings.base import DoubleStringPatternSplitCollection
 from programy.storage.entities.lookups import LookupsStore
 from programy.storage.stores.nosql.mongo.dao.lookup import Lookup
-from programy.mappings.base import DoubleStringPatternSplitCollection
+from programy.storage.stores.nosql.mongo.store.mongostore import MongoStore
+from programy.utils.logging.ylogger import YLogger
 
 
 class MongoLookupStore(MongoStore, LookupsStore):
@@ -32,16 +33,18 @@ class MongoLookupStore(MongoStore, LookupsStore):
 
     def add_to_lookup(self, key, value, overwrite_existing=False):
         collection = self.collection()
-        lookup = collection.find_one({'key': key})
+        lookup = collection.find_one({"key": key})
         if lookup is not None:
             if overwrite_existing is True:
                 YLogger.info(self, "Updating lookup in Mongo [%s] [%s]", key, value)
-                lookup['value'] = value
-                result = collection.replace_one({'key': key}, lookup)
+                lookup["value"] = value
+                result = collection.replace_one({"key": key}, lookup)
                 return bool(result.modified_count > 0)
 
             else:
-                YLogger.error(self, "Existing value in Mongo lookup [%s] = [%s]", key, value)
+                YLogger.error(
+                    self, "Existing value in Mongo lookup [%s] = [%s]", key, value
+                )
 
         else:
             YLogger.debug(self, "Adding lookup to Mongo [%s] = [%s]", key, value)
@@ -56,16 +59,21 @@ class MongoLookupStore(MongoStore, LookupsStore):
         collection.delete_many({})
 
     def remove_lookup_key(self, key):
-        YLogger.debug(self, "Removing lookup key [%s] from [%s] in Mongo", key, self.collection_name())
+        YLogger.debug(
+            self,
+            "Removing lookup key [%s] from [%s] in Mongo",
+            key,
+            self.collection_name(),
+        )
         collection = self.collection()
-        collection.delete_one({'key': key})
+        collection.delete_one({"key": key})
 
     def get_lookup(self):
         collection = self.collection()
         lookups = collection.find()
         data = {}
         for lookup in lookups:
-            data[lookup['key']] = lookup['value']
+            data[lookup["key"]] = lookup["value"]
 
         return data
 
@@ -77,7 +85,9 @@ class MongoLookupStore(MongoStore, LookupsStore):
         collection = self.collection()
         lookups = collection.find()
         for lookup in lookups:
-            key, value = DoubleStringPatternSplitCollection.process_key_value(lookup['key'], lookup['value'])
+            key, value = DoubleStringPatternSplitCollection.process_key_value(
+                lookup["key"], lookup["value"]
+            )
             collector.add_to_lookup(key, value)
 
         return True

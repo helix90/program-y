@@ -14,6 +14,7 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 from programy.clients.config import ClientConfigurationData
 from programy.utils.substitutions.substitues import Substitutions
 
@@ -25,8 +26,8 @@ class DiscordConfiguration(ClientConfigurationData):
 
     def to_yaml(self, data, defaults=True):
         if defaults is True:
-            pass    # pragma: no cover
+            pass  # pragma: no cover
         else:
-            pass    # pragma: no cover
+            pass  # pragma: no cover
 
         super(DiscordConfiguration, self).to_yaml(data, defaults)

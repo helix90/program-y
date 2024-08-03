@@ -9,7 +9,9 @@ class MockBaseSectionConfigurationData(BaseSectionConfigurationData):
     def __init__(self, name):
         BaseSectionConfigurationData.__init__(self, name)
 
-    def load_config_section(self, configuration_file, configuration, bot_root, subs: Substitutions = None):
+    def load_config_section(
+        self, configuration_file, configuration, bot_root, subs: Substitutions = None
+    ):
         raise NotImplementedError()
 
 

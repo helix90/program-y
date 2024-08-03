@@ -14,10 +14,12 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-import logging
+
 import json
-from programy.storage.stores.logger.store.loggerstore import LoggerStore
+import logging
+
 from programy.storage.entities.conversation import ConversationStore
+from programy.storage.stores.logger.store.loggerstore import LoggerStore
 
 
 class LoggerConversationStore(LoggerStore, ConversationStore):
@@ -33,12 +35,14 @@ class LoggerConversationStore(LoggerStore, ConversationStore):
         json_data = conversation.to_json()
         json_str = json.dumps(json_data)
 
-        convo_logger.info("[%s] [%s] [%s] [%s] [%s]", client_context.client.id,
-                          client_context.userid,
-                          client_context.bot.id,
-                          client_context.brain,
-                          json_str
-                          )
+        convo_logger.info(
+            "[%s] [%s] [%s] [%s] [%s]",
+            client_context.client.id,
+            client_context.userid,
+            client_context.bot.id,
+            client_context.brain,
+            json_str,
+        )
 
     def store_conversation(self, client_context, conversation, commit=True):
         convo_logger = self._get_logger()
@@ -46,4 +50,6 @@ class LoggerConversationStore(LoggerStore, ConversationStore):
             self._log_conversation(convo_logger, client_context, conversation)
 
     def load_conversation(self, client_context, conversation):
-        raise NotImplementedError("load_conversation not supported in Logger storage")  # pragma: no cover
+        raise NotImplementedError(
+            "load_conversation not supported in Logger storage"
+        )  # pragma: no cover

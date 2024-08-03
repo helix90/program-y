@@ -14,10 +14,12 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 import json
-from programy.utils.logging.ylogger import YLogger
-from programy.parser.template.nodes.base import TemplateNode
+
 from programy.parser.exceptions import ParserException
+from programy.parser.template.nodes.base import TemplateNode
+from programy.utils.logging.ylogger import YLogger
 from programy.utils.text.text import TextUtils
 
 
@@ -57,11 +59,16 @@ class TemplateGetNode(TemplateNode):
     def get_default_value(client_context):
         value = client_context.bot.brain.properties.property("default_get")
         if value is None:
-            YLogger.error(None, "No property defined for default_get, checking defaults")
+            YLogger.error(
+                None, "No property defined for default_get, checking defaults"
+            )
 
             value = client_context.bot.brain.configuration.defaults.default_get
             if value is None:
-                YLogger.error(None, "No value defined for default default_get, returning 'unknown'")
+                YLogger.error(
+                    None,
+                    "No value defined for default default_get, returning 'unknown'",
+                )
                 value = "unknown"
 
         return value
@@ -79,7 +86,10 @@ class TemplateGetNode(TemplateNode):
 
         else:
 
-            if name is not None and client_context.brain.dynamics.is_dynamic_var(name) is True:
+            if (
+                name is not None
+                and client_context.brain.dynamics.is_dynamic_var(name) is True
+            ):
                 value = client_context.brain.dynamics.dynamic_var(client_context, name)
             else:
                 value = conversation.property(name)
@@ -94,9 +104,21 @@ class TemplateGetNode(TemplateNode):
         name = self.name.resolve(client_context)
         value = TemplateGetNode.get_property_value(client_context, self.local, name)
         if self.local:
-            YLogger.debug(client_context, "[%s] resolved to local: [%s] <= [%s]", self.to_string(), name, value)
+            YLogger.debug(
+                client_context,
+                "[%s] resolved to local: [%s] <= [%s]",
+                self.to_string(),
+                name,
+                value,
+            )
         else:
-            YLogger.debug(client_context, "[%s] resolved to global: [%s] <= [%s]", self.to_string(), name, value)
+            YLogger.debug(
+                client_context,
+                "[%s] resolved to global: [%s] <= [%s]",
+                self.to_string(),
+                name,
+                value,
+            )
         return value
 
     @staticmethod
@@ -112,7 +134,9 @@ class TemplateGetNode(TemplateNode):
             return TemplateGetNode.decode_tuples(raw_tuples)
 
         except Exception as excep:
-            YLogger.exception_nostack(self, "Failed to decode tuples, returning []", excep)
+            YLogger.exception_nostack(
+                self, "Failed to decode tuples, returning []", excep
+            )
             return []
 
     def resolve_tuple(self, client_context):
@@ -147,7 +171,9 @@ class TemplateGetNode(TemplateNode):
                 resolved += atuple[2][1]
                 resolved += " "
 
-        YLogger.debug(client_context, "[%s] resolved to [%s]", self.to_string(), resolved)
+        YLogger.debug(
+            client_context, "[%s] resolved to [%s]", self.to_string(), resolved
+        )
         value = resolved.strip()
 
         if value is None or value == "":
@@ -204,25 +230,25 @@ class TemplateGetNode(TemplateNode):
         name_found = False
         var_found = False
 
-        if 'name' in expression.attrib:
-            self.name = self.parse_attrib_value_as_word_node(graph, expression, 'name')
+        if "name" in expression.attrib:
+            self.name = self.parse_attrib_value_as_word_node(graph, expression, "name")
             self.local = False
             name_found = True
 
-        if 'var' in expression.attrib:
-            self.name = self.parse_attrib_value_as_word_node(graph, expression, 'var')
+        if "var" in expression.attrib:
+            self.name = self.parse_attrib_value_as_word_node(graph, expression, "var")
             self.local = True
             var_found = True
 
         for child in expression:
             tag_name = TextUtils.tag_from_text(child.tag)
 
-            if tag_name == 'name':
+            if tag_name == "name":
                 self.name = self.parse_children_as_word_node(graph, child)
                 self.local = False
                 name_found = True
 
-            elif tag_name == 'var':
+            elif tag_name == "var":
                 self.name = self.parse_children_as_word_node(graph, child)
                 self.local = True
                 var_found = True
@@ -231,7 +257,11 @@ class TemplateGetNode(TemplateNode):
                 self._tuples = self.parse_children_as_word_node(graph, child)
 
         if name_found is False and var_found is False:
-            raise ParserException("Invalid get, missing either name or var", xml_element=expression)
+            raise ParserException(
+                "Invalid get, missing either name or var", xml_element=expression
+            )
 
         if name_found is True and var_found is True:
-            raise ParserException("Get node has both name AND var values", xml_element=expression)
+            raise ParserException(
+                "Get node has both name AND var values", xml_element=expression
+            )

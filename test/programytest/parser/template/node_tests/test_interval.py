@@ -1,9 +1,10 @@
 import xml.etree.ElementTree as ET
 
+from programytest.parser.base import ParserTestsBaseClass
+
 from programy.parser.template.nodes.base import TemplateNode
 from programy.parser.template.nodes.interval import TemplateIntervalNode
 from programy.parser.template.nodes.word import TemplateWordNode
-from programytest.parser.base import ParserTestsBaseClass
 
 
 class MockTemplateIntervalNode(TemplateIntervalNode):
@@ -267,7 +268,9 @@ class TemplateIntervalNodeTests(ParserTestsBaseClass):
 
         response = root.resolve(self._client_context)
         self.assertIsNotNone(response)
-        self.assertEqual(response, "2 years, 2 months, 23 days, 0 hours, 2 minutes, 2 seconds")
+        self.assertEqual(
+            response, "2 years, 2 months, 23 days, 0 hours, 2 minutes, 2 seconds"
+        )
 
     def test_to_xml(self):
         root = TemplateNode()
@@ -281,7 +284,10 @@ class TemplateIntervalNodeTests(ParserTestsBaseClass):
         xml = root.xml_tree(self._client_context)
         self.assertIsNotNone(xml)
         xml_str = ET.tostring(xml, "utf-8").decode("utf-8")
-        self.assertEqual('<template><interval format="%c" style="years"><from>Thu Oct 6 16:35:11 2014</from><to>Fri Oct 7 16:35:11 2016</to></interval></template>', xml_str)
+        self.assertEqual(
+            '<template><interval format="%c" style="years"><from>Thu Oct 6 16:35:11 2014</from><to>Fri Oct 7 16:35:11 2016</to></interval></template>',
+            xml_str,
+        )
 
     def test_to_xml_attrib_as_strings(self):
         root = TemplateNode()
@@ -297,7 +303,8 @@ class TemplateIntervalNodeTests(ParserTestsBaseClass):
         xml_str = ET.tostring(xml, "utf-8").decode("utf-8")
         self.assertEqual(
             '<template><interval format="%c" style="years"><from>Thu Oct 6 16:35:11 2014</from><to>Fri Oct 7 16:35:11 2016</to></interval></template>',
-            xml_str)
+            xml_str,
+        )
 
     def test_to_xml_no_format(self):
         root = TemplateNode()
@@ -310,7 +317,10 @@ class TemplateIntervalNodeTests(ParserTestsBaseClass):
         xml = root.xml_tree(self._client_context)
         self.assertIsNotNone(xml)
         xml_str = ET.tostring(xml, "utf-8").decode("utf-8")
-        self.assertEqual('<template><interval style="years"><from>Thu Oct 6 16:35:11 2014</from><to>Fri Oct 7 16:35:11 2016</to></interval></template>', xml_str)
+        self.assertEqual(
+            '<template><interval style="years"><from>Thu Oct 6 16:35:11 2014</from><to>Fri Oct 7 16:35:11 2016</to></interval></template>',
+            xml_str,
+        )
 
     def test_to_xml_no_style(self):
         root = TemplateNode()
@@ -323,7 +333,10 @@ class TemplateIntervalNodeTests(ParserTestsBaseClass):
         xml = root.xml_tree(self._client_context)
         self.assertIsNotNone(xml)
         xml_str = ET.tostring(xml, "utf-8").decode("utf-8")
-        self.assertEqual('<template><interval format="%c"><from>Thu Oct 6 16:35:11 2014</from><to>Fri Oct 7 16:35:11 2016</to></interval></template>', xml_str)
+        self.assertEqual(
+            '<template><interval format="%c"><from>Thu Oct 6 16:35:11 2014</from><to>Fri Oct 7 16:35:11 2016</to></interval></template>',
+            xml_str,
+        )
 
     def test_to_xml_no_from(self):
         root = TemplateNode()
@@ -336,7 +349,10 @@ class TemplateIntervalNodeTests(ParserTestsBaseClass):
         xml = root.xml_tree(self._client_context)
         self.assertIsNotNone(xml)
         xml_str = ET.tostring(xml, "utf-8").decode("utf-8")
-        self.assertEqual('<template><interval format="%c" style="years"><to>Fri Oct 7 16:35:11 2016</to></interval></template>', xml_str)
+        self.assertEqual(
+            '<template><interval format="%c" style="years"><to>Fri Oct 7 16:35:11 2016</to></interval></template>',
+            xml_str,
+        )
 
     def test_to_xml_no_to(self):
         root = TemplateNode()
@@ -349,7 +365,10 @@ class TemplateIntervalNodeTests(ParserTestsBaseClass):
         xml = root.xml_tree(self._client_context)
         self.assertIsNotNone(xml)
         xml_str = ET.tostring(xml, "utf-8").decode("utf-8")
-        self.assertEqual('<template><interval format="%c" style="years"><from>Thu Oct 6 16:35:11 2014</from></interval></template>', xml_str)
+        self.assertEqual(
+            '<template><interval format="%c" style="years"><from>Thu Oct 6 16:35:11 2014</from></interval></template>',
+            xml_str,
+        )
 
     def test_node_exception_handling(self):
         root = TemplateNode()

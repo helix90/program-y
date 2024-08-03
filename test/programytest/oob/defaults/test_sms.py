@@ -2,8 +2,9 @@ import unittest
 import unittest.mock
 import xml.etree.ElementTree as ET
 
-from programy.oob.callmom.sms import SMSOutOfBandProcessor
 from programytest.client import TestClient
+
+from programy.oob.callmom.sms import SMSOutOfBandProcessor
 
 
 class SMSOutOfBandProcessorTests(unittest.TestCase):
@@ -35,8 +36,13 @@ class SMSOutOfBandProcessorTests(unittest.TestCase):
         oob_processor = SMSOutOfBandProcessor()
         self.assertIsNotNone(oob_processor)
 
-        oob_content = ET.fromstring("<sms><recipient>077777777</recipient><message>Hello!</message></sms>")
-        self.assertEqual("SMS", oob_processor.process_out_of_bounds(self._client_context, oob_content))
+        oob_content = ET.fromstring(
+            "<sms><recipient>077777777</recipient><message>Hello!</message></sms>"
+        )
+        self.assertEqual(
+            "SMS",
+            oob_processor.process_out_of_bounds(self._client_context, oob_content),
+        )
 
     def test_processor_none(self):
         oob_processor = SMSOutOfBandProcessor()
@@ -54,16 +60,28 @@ class SMSOutOfBandProcessorTests(unittest.TestCase):
         oob_processor = SMSOutOfBandProcessor()
         self.assertIsNotNone(oob_processor)
 
-        self.assertFalse(oob_processor.parse_oob_xml(ET.fromstring("<oob><message>Hello</message></oob>")))
+        self.assertFalse(
+            oob_processor.parse_oob_xml(
+                ET.fromstring("<oob><message>Hello</message></oob>")
+            )
+        )
 
     def test_processor_missing_message(self):
         oob_processor = SMSOutOfBandProcessor()
         self.assertIsNotNone(oob_processor)
 
-        self.assertFalse(oob_processor.parse_oob_xml(ET.fromstring("<oob><recipient>07771597630</recipient></oob>")))
+        self.assertFalse(
+            oob_processor.parse_oob_xml(
+                ET.fromstring("<oob><recipient>07771597630</recipient></oob>")
+            )
+        )
 
     def test_processor_missing_recipient_and_message(self):
         oob_processor = SMSOutOfBandProcessor()
         self.assertIsNotNone(oob_processor)
 
-        self.assertFalse(oob_processor.parse_oob_xml(ET.fromstring("<oob><other>Something</other></oob>")))
+        self.assertFalse(
+            oob_processor.parse_oob_xml(
+                ET.fromstring("<oob><other>Something</other></oob>")
+            )
+        )

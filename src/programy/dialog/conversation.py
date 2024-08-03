@@ -14,19 +14,25 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 import re
+
+from programy.dialog.question import Question
 from programy.utils.logging.ylogger import YLogger
 from programy.utils.text.text import TextUtils
-from programy.dialog.question import Question
 
 
-class Conversation():
+class Conversation:
 
     def __init__(self, client_context):
         self._client_context = client_context
         self._questions = []
-        self._max_histories = client_context.bot.configuration.conversations.max_histories
-        self._properties = {'topic': client_context.bot.configuration.conversations.initial_topic}
+        self._max_histories = (
+            client_context.bot.configuration.conversations.max_histories
+        )
+        self._properties = {
+            "topic": client_context.bot.configuration.conversations.initial_topic
+        }
 
     @property
     def questions(self):
@@ -59,9 +65,9 @@ class Conversation():
         return self._questions[previous]
 
     def set_property(self, name: str, value: str):
-        if name == 'topic':
+        if name == "topic":
             if value == "":
-                value = '*'
+                value = "*"
         self._properties[name] = value
 
     def property(self, name: str):
@@ -71,7 +77,11 @@ class Conversation():
 
     def record_dialog(self, question: Question):
         if len(self._questions) == self._max_histories:
-            YLogger.info(self, "Conversation history at max [%d], removing oldest", self._max_histories)
+            YLogger.info(
+                self,
+                "Conversation history at max [%d], removing oldest",
+                self._max_histories,
+            )
             self._questions.remove(self._questions[0])
         self._questions.append(question)
 
@@ -98,8 +108,8 @@ class Conversation():
     def parse_last_sentences_from_response(self, response):
 
         # If the response contains punctuation such as "Hello. There" then THAT is none
-        response = re.sub(r'<\s*br\s*/>\s*', ".", response)
-        response = re.sub(r'<br></br>*', ".", response)
+        response = re.sub(r"<\s*br\s*/>\s*", ".", response)
+        response = re.sub(r"<br></br>*", ".", response)
         sentences = response.split(".")
         sentences = [x for x in sentences if x]
         if sentences:
@@ -130,15 +140,25 @@ class Conversation():
 
             # If the last response was valid, i.e not none and not empty string, then use
             # that as the that_pattern, otherwise we default to '*' as pattern
-            if that_sentence is not None and that_sentence.response is not None and that_sentence.response != '':
-                that_pattern = self.parse_last_sentences_from_response(that_sentence.response)
+            if (
+                that_sentence is not None
+                and that_sentence.response is not None
+                and that_sentence.response != ""
+            ):
+                that_pattern = self.parse_last_sentences_from_response(
+                    that_sentence.response
+                )
                 YLogger.info(client_context, "That pattern = [%s]", that_pattern)
             else:
-                YLogger.info(client_context, "That pattern, no response, default to [*]")
+                YLogger.info(
+                    client_context, "That pattern, no response, default to [*]"
+                )
                 that_pattern = "*"
 
         except Exception as excep:
-            YLogger.exception_nostack(client_context, "No That pattern default to [*]", excep)
+            YLogger.exception_nostack(
+                client_context, "No That pattern default to [*]", excep
+            )
             that_pattern = "*"
 
         return that_pattern
@@ -171,15 +191,15 @@ class Conversation():
 
     def save_sentiment(self):
         positivity, subjectivity = self.calculate_sentiment_score()
-        self._properties['positivity'] = str(positivity)
-        self._properties['subjectivity'] = str(subjectivity)
+        self._properties["positivity"] = str(positivity)
+        self._properties["subjectivity"] = str(subjectivity)
 
     def to_json(self):
         json_data = {
-            'client_context': self._client_context.to_json(),
-            'questions': [],
-            'max_histories': self._max_histories,
-            'properties': self._properties
+            "client_context": self._client_context.to_json(),
+            "questions": [],
+            "max_histories": self._max_histories,
+            "properties": self._properties,
         }
 
         for question in self.questions:
@@ -195,10 +215,12 @@ class Conversation():
 
     def create_from_json(self, json_data):
 
-        for key, value in json_data['properties'].items():
+        for key, value in json_data["properties"].items():
             self._properties[key] = value
 
-        for json_question in json_data['questions']:
-            self._questions.append(Question.from_json(self._client_context, json_question))
+        for json_question in json_data["questions"]:
+            self._questions.append(
+                Question.from_json(self._client_context, json_question)
+            )
 
         self.recalculate_sentiment_score(self._client_context)

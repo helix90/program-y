@@ -14,9 +14,10 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
-from programy.utils.geo.google import GoogleMaps
+
 from programy.extensions.base import Extension
+from programy.utils.geo.google import GoogleMaps
+from programy.utils.logging.ylogger import YLogger
 
 
 class GeoCodeExtension(Extension):
@@ -30,19 +31,19 @@ class GeoCodeExtension(Extension):
 
         try:
             words = data.split(" ")
-            if words[0] == 'POSTCODE1':
+            if words[0] == "POSTCODE1":
                 if len(words) == 2:
                     location = words[1]
                 else:
                     raise Exception("Invalid POSTCODE1 command")
 
-            elif words[0] == 'POSTCODE2':
+            elif words[0] == "POSTCODE2":
                 if len(words) == 3:
                     location = words[1] + words[2]
                 else:
                     raise Exception("Invalid POSTCODE2 command")
 
-            elif words[0] == 'LOCATION':
+            elif words[0] == "LOCATION":
                 if len(words) > 1:
                     location = " ".join(words[1:])
                 else:
@@ -62,8 +63,10 @@ class GeoCodeExtension(Extension):
                 lngs = str_lng.split(".")
 
                 return "LATITUDE DEC %s FRAC %s LONGITUDE DEC %s FRAC %s" % (
-                    lats[0], lats[1],
-                    lngs[0], lngs[1]
+                    lats[0],
+                    lats[1],
+                    lngs[0],
+                    lngs[1],
                 )
 
         except Exception as e:

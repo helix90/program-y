@@ -1,18 +1,23 @@
 import xml.etree.ElementTree as ET
 
+from programytest.parser.template.graph_tests.graph_test_client import (
+    TemplateGraphTestClient,
+)
+
 from programy.parser.template.nodes.base import TemplateNode
 from programy.parser.template.nodes.that import TemplateThatNode
-from programytest.parser.template.graph_tests.graph_test_client import TemplateGraphTestClient
 
 
 class TemplateGraphThatTests(TemplateGraphTestClient):
 
     def test_that_index_default(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
             <template>
                 <that/>
             </template>
-            """)
+            """
+        )
         ast = self._graph.parse_template_expression(template)
         self.assertIsNotNone(ast)
         self.assertIsInstance(ast, TemplateNode)
@@ -30,11 +35,13 @@ class TemplateGraphThatTests(TemplateGraphTestClient):
         self.assertIsNotNone(result)
 
     def test_that_index_as_attrib(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
             <template>
                 <that index="1"></that>
             </template>
-            """)
+            """
+        )
         ast = self._graph.parse_template_expression(template)
         self.assertIsNotNone(ast)
         self.assertIsInstance(ast, TemplateNode)
@@ -52,11 +59,13 @@ class TemplateGraphThatTests(TemplateGraphTestClient):
         self.assertIsNotNone(result)
 
     def test_that_question_sentnce_as_attrib(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
             <template>
                 <that index="1, 1"></that>
             </template>
-            """)
+            """
+        )
         ast = self._graph.parse_template_expression(template)
         self.assertIsNotNone(ast)
         self.assertIsInstance(ast, TemplateNode)
@@ -74,13 +83,15 @@ class TemplateGraphThatTests(TemplateGraphTestClient):
         self.assertIsNotNone(result)
 
     def test_that_index_as_child(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
             <template>
                 <that>
                     <index>1</index>
                 </that>
             </template>
-            """)
+            """
+        )
         ast = self._graph.parse_template_expression(template)
         self.assertIsNotNone(ast)
         self.assertIsInstance(ast, TemplateNode)
@@ -98,13 +109,15 @@ class TemplateGraphThatTests(TemplateGraphTestClient):
         self.assertIsNotNone(result)
 
     def test_that_question_sentence_as_child(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
             <template>
                 <that>
                     <index>1, 1</index>
                 </that>
             </template>
-            """)
+            """
+        )
         ast = self._graph.parse_template_expression(template)
         self.assertIsNotNone(ast)
         self.assertIsInstance(ast, TemplateNode)

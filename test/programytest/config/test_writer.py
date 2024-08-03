@@ -1,8 +1,8 @@
+import os
+import os.path
 import unittest
 import unittest.mock
 from unittest.mock import patch
-import os
-import os.path
 
 from programy.config.writer import ConfigurationWriter
 
@@ -21,7 +21,7 @@ class ConfigurationWriterTests(unittest.TestCase):
     def test_execute_all_with_defaults(self):
 
         args = unittest.mock.Mock()
-        args.clients = ['all']
+        args.clients = ["all"]
         args.defaults = True
 
         writer = MockConfigurationWriter()
@@ -32,7 +32,7 @@ class ConfigurationWriterTests(unittest.TestCase):
     def test_execute_all_without_defaults(self):
 
         args = unittest.mock.Mock()
-        args.clients = ['all']
+        args.clients = ["all"]
         args.defaults = False
 
         writer = MockConfigurationWriter()
@@ -54,7 +54,7 @@ class ConfigurationWriterTests(unittest.TestCase):
 
     def test_execute_console(self):
         args = unittest.mock.Mock()
-        args.clients = ['console']
+        args.clients = ["console"]
         args.defaults = False
 
         writer = MockConfigurationWriter()
@@ -64,7 +64,7 @@ class ConfigurationWriterTests(unittest.TestCase):
 
     def test_execute_slack(self):
         args = unittest.mock.Mock()
-        args.clients = ['slack']
+        args.clients = ["slack"]
         args.defaults = False
 
         writer = MockConfigurationWriter()
@@ -74,7 +74,7 @@ class ConfigurationWriterTests(unittest.TestCase):
 
     def test_execute_socket(self):
         args = unittest.mock.Mock()
-        args.clients = ['socket']
+        args.clients = ["socket"]
         args.defaults = False
 
         writer = MockConfigurationWriter()
@@ -84,7 +84,7 @@ class ConfigurationWriterTests(unittest.TestCase):
 
     def test_execute_telegram(self):
         args = unittest.mock.Mock()
-        args.clients = ['telegram']
+        args.clients = ["telegram"]
         args.defaults = False
 
         writer = MockConfigurationWriter()
@@ -94,7 +94,7 @@ class ConfigurationWriterTests(unittest.TestCase):
 
     def test_execute_twitter(self):
         args = unittest.mock.Mock()
-        args.clients = ['twitter']
+        args.clients = ["twitter"]
         args.defaults = False
 
         writer = MockConfigurationWriter()
@@ -104,7 +104,7 @@ class ConfigurationWriterTests(unittest.TestCase):
 
     def test_execute_xmpp(self):
         args = unittest.mock.Mock()
-        args.clients = ['xmpp']
+        args.clients = ["xmpp"]
         args.defaults = False
 
         writer = MockConfigurationWriter()
@@ -114,7 +114,7 @@ class ConfigurationWriterTests(unittest.TestCase):
 
     def test_execute_rest(self):
         args = unittest.mock.Mock()
-        args.clients = ['rest']
+        args.clients = ["rest"]
         args.defaults = False
 
         writer = MockConfigurationWriter()
@@ -124,7 +124,7 @@ class ConfigurationWriterTests(unittest.TestCase):
 
     def test_execute_facebook(self):
         args = unittest.mock.Mock()
-        args.clients = ['facebook']
+        args.clients = ["facebook"]
         args.defaults = False
 
         writer = MockConfigurationWriter()
@@ -134,7 +134,7 @@ class ConfigurationWriterTests(unittest.TestCase):
 
     def test_execute_kik(self):
         args = unittest.mock.Mock()
-        args.clients = ['kik']
+        args.clients = ["kik"]
         args.defaults = False
 
         writer = MockConfigurationWriter()
@@ -144,7 +144,7 @@ class ConfigurationWriterTests(unittest.TestCase):
 
     def test_execute_line(self):
         args = unittest.mock.Mock()
-        args.clients = ['line']
+        args.clients = ["line"]
         args.defaults = False
 
         writer = MockConfigurationWriter()
@@ -154,7 +154,7 @@ class ConfigurationWriterTests(unittest.TestCase):
 
     def test_execute_twilio(self):
         args = unittest.mock.Mock()
-        args.clients = ['twilio']
+        args.clients = ["twilio"]
         args.defaults = False
 
         writer = MockConfigurationWriter()
@@ -164,7 +164,7 @@ class ConfigurationWriterTests(unittest.TestCase):
 
     def test_execute_viber(self):
         args = unittest.mock.Mock()
-        args.clients = ['viber']
+        args.clients = ["viber"]
         args.defaults = False
 
         writer = MockConfigurationWriter()
@@ -174,7 +174,7 @@ class ConfigurationWriterTests(unittest.TestCase):
 
     def test_execute_sanic(self):
         args = unittest.mock.Mock()
-        args.clients = ['sanic']
+        args.clients = ["sanic"]
         args.defaults = False
 
         writer = MockConfigurationWriter()
@@ -183,17 +183,18 @@ class ConfigurationWriterTests(unittest.TestCase):
         self.assertIsNotNone(writer.written_data)
 
     def get_temp_dir(self):
-        if os.name == 'posix':
-            return '/tmp'
-        elif os.name == 'nt':
+        if os.name == "posix":
+            return "/tmp"
+        elif os.name == "nt":
             import tempfile
+
             return tempfile.gettempdir()
         else:
             raise Exception("Unknown operating system [%s]" % os.name)
 
     def test_write_yaml(self):
 
-        tmp_dir  = self.get_temp_dir()
+        tmp_dir = self.get_temp_dir()
         fullpath = tmp_dir + os.sep + "test.yaml"
 
         if os.path.exists(fullpath):
@@ -218,7 +219,7 @@ class ConfigurationWriterTests(unittest.TestCase):
 
     def test_run_with_args(self):
         args = unittest.mock.Mock()
-        args.clients = ['sanic']
+        args.clients = ["sanic"]
         args.defaults = False
 
         writer = ConfigurationWriter()
@@ -230,7 +231,7 @@ class ConfigurationWriterTests(unittest.TestCase):
     @patch("programy.config.writer.ConfigurationWriter.execute", patch_execute)
     def test_run_exception_with_args(self):
         args = unittest.mock.Mock()
-        args.clients = ['sanic']
+        args.clients = ["sanic"]
         args.defaults = False
 
         writer = ConfigurationWriter()

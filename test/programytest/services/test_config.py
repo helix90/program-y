@@ -1,17 +1,21 @@
 import unittest
 from unittest.mock import Mock
+
 import yaml
-from programy.services.config import ServiceConfiguration
-from programy.services.config import ServiceLibraryConfiguration
-from programy.services.config import ServiceRESTConfiguration
+
+from programy.services.config import (
+    ServiceConfiguration,
+    ServiceLibraryConfiguration,
+    ServiceRESTConfiguration,
+)
 
 
 class ServiceConfigurationTests(unittest.TestCase):
 
     def test_init(self):
-        config = ServiceConfiguration(service_type='generic')
+        config = ServiceConfiguration(service_type="generic")
         self.assertIsNotNone(config)
-        self.assertEqual(config.service_type, 'generic')
+        self.assertEqual(config.service_type, "generic")
         self.assertIsNone(config.name)
         self.assertIsNone(config.category)
         self.assertIsNone(config.service_class)
@@ -21,7 +25,8 @@ class ServiceConfigurationTests(unittest.TestCase):
         self.assertIsNone(config.default_srai)
 
     def test_from_yaml(self):
-        yaml_data = yaml.load("""
+        yaml_data = yaml.load(
+            """
         service:
             name: test
             category: test_category
@@ -29,13 +34,15 @@ class ServiceConfigurationTests(unittest.TestCase):
             default_response: Default Response
             default_srai: DEFAULT_SRAI
             default_aiml: test.aiml
-        """, Loader=yaml.FullLoader)
+        """,
+            Loader=yaml.FullLoader,
+        )
 
         config = ServiceConfiguration.new_from_yaml(yaml_data, "test.yaml")
         self.assertIsNotNone(config)
         self.assertIsInstance(config, ServiceConfiguration)
 
-        self.assertEqual(config.service_type, 'generic')
+        self.assertEqual(config.service_type, "generic")
 
         self.assertEqual("test", config.name)
         self.assertEqual("test_category", config.category)
@@ -49,7 +56,8 @@ class ServiceConfigurationTests(unittest.TestCase):
         self.assertEqual(config.default_aiml, "test.aiml")
 
     def test_from_yaml_with_rest(self):
-        yaml_data = yaml.load("""
+        yaml_data = yaml.load(
+            """
         service:
             type: rest
             name: test
@@ -61,7 +69,9 @@ class ServiceConfigurationTests(unittest.TestCase):
             rest:
                 retries: [10, 50, 100]
                 timeout: 900
-        """, Loader=yaml.FullLoader)
+        """,
+            Loader=yaml.FullLoader,
+        )
 
         config = ServiceConfiguration.new_from_yaml(yaml_data, "test.yaml")
         self.assertIsNotNone(config)
@@ -84,7 +94,7 @@ class ServiceConfigurationTests(unittest.TestCase):
     def test_from_sql(self):
         mock_dao = Mock()
         mock_dao.name = "test"
-        mock_dao.type = 'generic'
+        mock_dao.type = "generic"
         mock_dao.category = "test_category"
         mock_dao.service_class = "service.TestService"
         mock_dao.default_response = "Default Response"
@@ -110,7 +120,7 @@ class ServiceConfigurationTests(unittest.TestCase):
 
     def test_from_sql_with_rest(self):
         mock_dao = Mock()
-        mock_dao.type = 'rest'
+        mock_dao.type = "rest"
         mock_dao.name = "test"
         mock_dao.category = "test_category"
         mock_dao.service_class = "service.TestService"
@@ -137,13 +147,13 @@ class ServiceConfigurationTests(unittest.TestCase):
 
     def test_from_mongo(self):
         service = {
-            "type": 'library',
+            "type": "library",
             "name": "test",
             "category": "test_category",
             "service_class": "service.TestService",
             "default_response": "Default Response",
             "default_srai": "DEFAULT_SRAI",
-            "default_aiml": "test.aiml"
+            "default_aiml": "test.aiml",
         }
 
         config = ServiceConfiguration.from_mongo(service)
@@ -163,17 +173,14 @@ class ServiceConfigurationTests(unittest.TestCase):
 
     def test_from_mongo_with_rest(self):
         service = {
-            "type": 'rest',
+            "type": "rest",
             "name": "test",
             "category": "test_category",
             "service_class": "service.TestService",
             "default_response": "Default Response",
             "default_srai": "DEFAULT_SRAI",
             "default_aiml": "test.aiml",
-            "rest": {
-                "timeout": 900,
-                "retries": [10, 50, 100]
-            }
+            "rest": {"timeout": 900, "retries": [10, 50, 100]},
         }
 
         config = ServiceConfiguration.from_mongo(service)

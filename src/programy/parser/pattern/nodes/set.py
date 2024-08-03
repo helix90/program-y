@@ -14,22 +14,23 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
-from programy.parser.pattern.nodes.base import PatternNode
-from programy.parser.pattern.equalsmatch import EqualsMatch
+
 from programy.parser.exceptions import ParserException
+from programy.parser.pattern.equalsmatch import EqualsMatch
+from programy.parser.pattern.nodes.base import PatternNode
+from programy.utils.logging.ylogger import YLogger
 
 
 class PatternSetNode(PatternNode):
 
-    def __init__(self, attribs, text, userid='*'):
+    def __init__(self, attribs, text, userid="*"):
         self._set_name = None
         self._additional = {}
 
         PatternNode.__init__(self, userid)
         for attrib in attribs:
-            if attrib == 'name':
-                self._set_name = attribs['name'].upper()
+            if attrib == "name":
+                self._set_name = attribs["name"].upper()
             else:
                 self._additional[attrib] = attribs[attrib].upper()
 
@@ -37,7 +38,9 @@ class PatternSetNode(PatternNode):
             self._set_name = text.upper()
 
         if self._set_name is None:
-            raise ParserException("Invalid set node, no name specified as attribute or text")
+            raise ParserException(
+                "Invalid set node, no name specified as attribute or text"
+            )
 
     @property
     def set_name(self):
@@ -68,17 +71,21 @@ class PatternSetNode(PatternNode):
 
     def to_string(self, verbose=True):
         if verbose is True:
-            string = "SET [%s] [%s] name=[%s]" % (self.userid, self._child_count(verbose), self.set_name)
+            string = "SET [%s] [%s] name=[%s]" % (
+                self.userid,
+                self._child_count(verbose),
+                self.set_name,
+            )
         else:
             string = "SET name=[%s]" % (self.set_name)
 
         for name, value in self._additional.items():
-            string += ' %s=[%s]' % (name, value)
+            string += " %s=[%s]" % (name, value)
 
         return string
 
     def set_is_numeric(self):
-        return bool(self.set_name.upper() == 'NUMBER')
+        return bool(self.set_name.upper() == "NUMBER")
 
     def set_is_known(self, client_context):
         return bool(client_context.brain.sets.contains(self.set_name))
@@ -96,7 +103,9 @@ class PatternSetNode(PatternNode):
             for phrase in phrases:
                 phrase_word_no = 0
                 words_word_no = word_no
-                while phrase_word_no < len(phrase) and words_word_no < words.num_words():
+                while (
+                    phrase_word_no < len(phrase) and words_word_no < words.num_words()
+                ):
                     phrase_word = phrase[phrase_word_no].upper()
                     word = words.word(words_word_no).upper()
                     if phrase_word == word:
@@ -117,25 +126,41 @@ class PatternSetNode(PatternNode):
     def equals(self, client_context, words, word_no):
         word = words.word(word_no)
 
-        if self.userid != '*':
+        if self.userid != "*":
             if self.userid != client_context.userid:
                 return EqualsMatch(False, word_no)
 
         if client_context.brain.dynamics.is_dynamic_set(self._set_name) is True:
-            result = client_context.brain.dynamics.dynamic_set(client_context, self._set_name, word, self._additional)
+            result = client_context.brain.dynamics.dynamic_set(
+                client_context, self._set_name, word, self._additional
+            )
             return EqualsMatch(result, word_no, word)
 
         else:
             if self.set_is_known(client_context):
                 match = self.words_in_set(client_context, words, word_no)
                 if match.matched is True:
-                    YLogger.debug(client_context, "Found word [%s] in set [%s]", word, self.set_name)
+                    YLogger.debug(
+                        client_context,
+                        "Found word [%s] in set [%s]",
+                        word,
+                        self.set_name,
+                    )
                     return match
 
                 else:
-                    YLogger.debug(client_context, "No word [%s] found in set [%s]", word, self.set_name)
+                    YLogger.debug(
+                        client_context,
+                        "No word [%s] found in set [%s]",
+                        word,
+                        self.set_name,
+                    )
                     return EqualsMatch(False, word_no)
 
             else:
-                YLogger.error(client_context, "No set named [%s] in sets collection", self.set_name)
+                YLogger.error(
+                    client_context,
+                    "No set named [%s] in sets collection",
+                    self.set_name,
+                )
                 return EqualsMatch(False, word_no)

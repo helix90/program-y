@@ -1,7 +1,8 @@
-import unittest
-from unittest.mock import patch
 import os
 import shutil
+import unittest
+from unittest.mock import patch
+
 from programy.admin.tool import AdminTool
 
 
@@ -18,10 +19,11 @@ class MockAdminTool(AdminTool):
 class AdminToolTests(unittest.TestCase):
 
     def get_temp_dir(self):
-        if os.name == 'posix':
-            return '/tmp'
-        elif os.name == 'nt':
+        if os.name == "posix":
+            return "/tmp"
+        elif os.name == "nt":
             import tempfile
+
             return tempfile.gettempdir()
         else:
             raise Exception("Unknown operating system [%s]" % os.name)
@@ -33,14 +35,14 @@ class AdminToolTests(unittest.TestCase):
             file.close()
 
     def test_recursive_copy(self):
-        tmp_dir = self.get_temp_dir() + os.sep +"programy"
+        tmp_dir = self.get_temp_dir() + os.sep + "programy"
 
         if os.path.exists(tmp_dir):
             shutil.rmtree(tmp_dir)
 
         os.mkdir(tmp_dir)
 
-        src_dir =  tmp_dir + os.sep + "src"
+        src_dir = tmp_dir + os.sep + "src"
         os.mkdir(src_dir)
         src_sub_dir = tmp_dir + os.sep + "src" + os.sep + "sub"
         os.mkdir(src_sub_dir)
@@ -66,14 +68,14 @@ class AdminToolTests(unittest.TestCase):
             shutil.rmtree(tmp_dir)
 
     def test_delete_folder_contents(self):
-        tmp_dir = self.get_temp_dir() + os.sep +"programy"
+        tmp_dir = self.get_temp_dir() + os.sep + "programy"
 
         if os.path.exists(tmp_dir):
             shutil.rmtree(tmp_dir)
 
         os.mkdir(tmp_dir)
 
-        src_dir =  tmp_dir + os.sep + "src"
+        src_dir = tmp_dir + os.sep + "src"
         os.mkdir(src_dir)
         src_sub_dir = tmp_dir + os.sep + "src" + os.sep + "sub"
         os.mkdir(src_sub_dir)
@@ -95,13 +97,15 @@ class AdminToolTests(unittest.TestCase):
         self.assertFalse(os.path.exists(src_dir + os.sep + "file1.txt"))
         self.assertFalse(os.path.exists(src_dir + os.sep + "file2.txt"))
         self.assertFalse(os.path.exists(src_dir + os.sep + "file3.txt"))
-        self.assertFalse(os.path.exists(src_dir + os.sep + "sub" + os.sep + "file4.txt"))
+        self.assertFalse(
+            os.path.exists(src_dir + os.sep + "sub" + os.sep + "file4.txt")
+        )
 
         if os.path.exists(tmp_dir):
             shutil.rmtree(tmp_dir)
 
     def test_make_executable(self):
-        tmp_dir = self.get_temp_dir() + os.sep +"programy"
+        tmp_dir = self.get_temp_dir() + os.sep + "programy"
 
         if os.path.exists(tmp_dir):
             shutil.rmtree(tmp_dir)
@@ -119,14 +123,14 @@ class AdminToolTests(unittest.TestCase):
             shutil.rmtree(tmp_dir)
 
     def test_make_all_executable(self):
-        tmp_dir = self.get_temp_dir() + os.sep +"programy"
+        tmp_dir = self.get_temp_dir() + os.sep + "programy"
 
         if os.path.exists(tmp_dir):
             shutil.rmtree(tmp_dir)
 
         os.mkdir(tmp_dir)
 
-        src_dir =  tmp_dir + os.sep + "src"
+        src_dir = tmp_dir + os.sep + "src"
         os.mkdir(src_dir)
         src_sub_dir = tmp_dir + os.sep + "src" + os.sep + "sub"
         os.mkdir(src_sub_dir)
@@ -149,12 +153,15 @@ class AdminToolTests(unittest.TestCase):
 
         tool.list_bots()
 
-        self.assertEquals("""Available bots are:
+        self.assertEquals(
+            """Available bots are:
 	alice2-y	professor-y	rosie-y	talk-y	y-bot	servusai-y	template-y	traintimes-y
 	To download use 'python3 -m programy.admin.tool download <bot-name>'
 Additional components are:
 	textblob
-	To install use 'python3 -m programy.admin.tool install <component>'""", tool.text)
+	To install use 'python3 -m programy.admin.tool install <component>'""",
+            tool.text,
+        )
 
     def patch_wget_download(self, url):
         return "mock.bot"
@@ -167,22 +174,29 @@ Additional components are:
         filename = tool.download_bot("y-bot")
         self.assertEqual("mock.bot", filename)
 
-        self.assertEqual("""Downloading [y-bot] from [https://github.com/keiffster/y-bot/archive/master.zip]
-Download complete""", tool.text)
+        self.assertEqual(
+            """Downloading [y-bot] from [https://github.com/keiffster/y-bot/archive/master.zip]
+Download complete""",
+            tool.text,
+        )
 
     def test_zip_dir_name_from_filename(self):
-        self.assertEqual("filename", AdminTool.zip_dir_name_from_filename('filename.zip'))
-        self.assertEqual("filename", AdminTool.zip_dir_name_from_filename('filename'))
+        self.assertEqual(
+            "filename", AdminTool.zip_dir_name_from_filename("filename.zip")
+        )
+        self.assertEqual("filename", AdminTool.zip_dir_name_from_filename("filename"))
 
     def test_extract_bot_no_remove(self):
         tool = AdminTool()
 
-        tmp_dir = self.get_temp_dir() + os.sep +"programy"
+        tmp_dir = self.get_temp_dir() + os.sep + "programy"
 
         if os.path.exists(tmp_dir):
             shutil.rmtree(tmp_dir)
         os.mkdir(tmp_dir)
-        shutil.copyfile(os.path.dirname(__file__) + os.sep + "bot.zip", tmp_dir + os.sep + "bot.zip")
+        shutil.copyfile(
+            os.path.dirname(__file__) + os.sep + "bot.zip", tmp_dir + os.sep + "bot.zip"
+        )
 
         tool.extract_bot(tmp_dir + os.sep + "bot.zip", path=tmp_dir, remove_after=False)
 
@@ -195,12 +209,14 @@ Download complete""", tool.text)
     def test_extract_bot_with_remove(self):
         tool = AdminTool()
 
-        tmp_dir = self.get_temp_dir() + os.sep +"programy"
+        tmp_dir = self.get_temp_dir() + os.sep + "programy"
 
         if os.path.exists(tmp_dir):
             shutil.rmtree(tmp_dir)
         os.mkdir(tmp_dir)
-        shutil.copyfile(os.path.dirname(__file__) + os.sep + "bot.zip", tmp_dir + os.sep + "bot.zip")
+        shutil.copyfile(
+            os.path.dirname(__file__) + os.sep + "bot.zip", tmp_dir + os.sep + "bot.zip"
+        )
 
         tool.extract_bot(tmp_dir + os.sep + "bot.zip", path=tmp_dir, remove_after=True)
 
@@ -211,17 +227,23 @@ Download complete""", tool.text)
         shutil.rmtree(tmp_dir)
 
     def patch_download_and_make_active(self, bot_name):
-        pass # Do nothing
+        pass  # Do nothing
 
-    @patch("programy.admin.tool.AdminTool.download_and_make_active", patch_download_and_make_active)
+    @patch(
+        "programy.admin.tool.AdminTool.download_and_make_active",
+        patch_download_and_make_active,
+    )
     def test_install_bot(self):
         tool = MockAdminTool()
         self.assertEquals("", tool.text)
 
         tool.install_bot(["test", "y-bot"])
-        self.assertEqual("""
+        self.assertEqual(
+            """
 To run y-bot bot in console mode, use the following commands
-\tcd scripts/xnix\t./y-bot.sh""", tool.text)
+\tcd scripts/xnix\t./y-bot.sh""",
+            tool.text,
+        )
 
     def test_install_bot_unknown(self):
         tool = MockAdminTool()
@@ -231,7 +253,7 @@ To run y-bot bot in console mode, use the following commands
             tool.install_bot(["test", "unknown"])
 
     def patch_install_textblob(self):
-        pass # Do nothing
+        pass  # Do nothing
 
     @patch("programy.admin.tool.AdminTool.install_textblob", patch_install_textblob)
     def test_install_additional(self):
@@ -254,9 +276,12 @@ To run y-bot bot in console mode, use the following commands
 
         tool.show_execute_help("y-bot")
 
-        self.assertEqual("""
+        self.assertEqual(
+            """
 To run y-bot bot in console mode, use the following commands
-\tcd scripts/xnix\t./y-bot.sh""", tool.text)
+\tcd scripts/xnix\t./y-bot.sh""",
+            tool.text,
+        )
 
     def test_show_help(self):
         tool = MockAdminTool()
@@ -264,8 +289,11 @@ To run y-bot bot in console mode, use the following commands
 
         tool.show_help()
 
-        self.assertEqual("""Available commands are:
-\thelp	list	download <bot-name>	install <component>""", tool.text)
+        self.assertEqual(
+            """Available commands are:
+\thelp	list	download <bot-name>	install <component>""",
+            tool.text,
+        )
 
     def test_run_no_words(self):
         tool = MockAdminTool()
@@ -275,32 +303,32 @@ To run y-bot bot in console mode, use the following commands
 
     def test_run_unknown_primary_command(self):
         tool = MockAdminTool()
-        tool.run(['unknown'])
+        tool.run(["unknown"])
         self.assertIsNotNone(tool.text)
         self.assertTrue(tool.text.startswith("Unknown primary command [unknown]"))
 
     def test_run_missing_bot_name(self):
         tool = MockAdminTool()
-        tool.run(['download'])
+        tool.run(["download"])
         self.assertIsNotNone(tool.text)
         self.assertTrue(tool.text.startswith("Missing bot name from download command"))
 
     def test_run_list(self):
         tool = MockAdminTool()
-        tool.run(['list'])
+        tool.run(["list"])
         self.assertIsNotNone(tool.text)
 
     def test_run_download(self):
         tool = MockAdminTool()
-        tool.run(['download'])
+        tool.run(["download"])
         self.assertIsNotNone(tool.text)
 
     def test_run_install(self):
         tool = MockAdminTool()
-        tool.run(['install'])
+        tool.run(["install"])
         self.assertIsNotNone(tool.text)
 
     def test_run_help(self):
         tool = MockAdminTool()
-        tool.run(['help'])
+        tool.run(["help"])
         self.assertIsNotNone(tool.text)

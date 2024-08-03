@@ -14,10 +14,11 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from abc import ABC
-from abc import abstractmethod
-from programy.utils.logging.ylogger import YLogger
+
+from abc import ABC, abstractmethod
+
 from programy.storage.factory import StorageFactory
+from programy.utils.logging.ylogger import YLogger
 
 
 class ProcessorCollection:
@@ -55,10 +56,14 @@ class ProcessorCollection:
         return False
 
     def _get_storage_name(self):
-        raise NotImplementedError("Override this in derived class, return StorageFactory.XXX name")  # pragma: no cover
+        raise NotImplementedError(
+            "Override this in derived class, return StorageFactory.XXX name"
+        )  # pragma: no cover
 
     def _get_store(self, storage_engine):
-        raise NotImplementedError("Override this in derived class, return Store from StorageEngine")  # pragma: no cover
+        raise NotImplementedError(
+            "Override this in derived class, return Store from StorageEngine"
+        )  # pragma: no cover
 
 
 class PreProcessorCollection(ProcessorCollection):
@@ -106,7 +111,7 @@ class Processor(ABC):
 
     @abstractmethod
     def process(self, context, word_string):
-        raise NotImplementedError()     # pragma: no cover
+        raise NotImplementedError()  # pragma: no cover
 
 
 ##################################################################
@@ -118,7 +123,7 @@ class PreProcessor(Processor):
 
     @abstractmethod
     def process(self, context, word_string):
-        raise NotImplementedError()     # pragma: no cover
+        raise NotImplementedError()  # pragma: no cover
 
 
 ##################################################################
@@ -129,7 +134,7 @@ class PostProcessor(Processor):
 
     @abstractmethod
     def process(self, context, word_string):
-        raise NotImplementedError()     # pragma: no cover
+        raise NotImplementedError()  # pragma: no cover
 
 
 ##################################################################
@@ -140,4 +145,4 @@ class PostQuestionProcessor(Processor):
 
     @abstractmethod
     def process(self, context, word_string):
-        raise NotImplementedError()     # pragma: no cover
+        raise NotImplementedError()  # pragma: no cover

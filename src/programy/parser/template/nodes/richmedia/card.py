@@ -14,9 +14,10 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
+from programy.parser.exceptions import ParserException
 from programy.parser.template.nodes.base import TemplateNode
 from programy.utils.text.text import TextUtils
-from programy.parser.exceptions import ParserException
 
 
 class TemplateCardNode(TemplateNode):
@@ -33,7 +34,9 @@ class TemplateCardNode(TemplateNode):
         resolved += "<title>%s</title>" % self._title.resolve(client_context)
 
         if self._subtitle is not None:
-            resolved += "<subtitle>%s</subtitle>" % self._subtitle.resolve(client_context)
+            resolved += "<subtitle>%s</subtitle>" % self._subtitle.resolve(
+                client_context
+            )
 
         if self._image is not None:
             resolved += "<image>%s</image>" % self._image.resolve(client_context)
@@ -54,14 +57,14 @@ class TemplateCardNode(TemplateNode):
     #
 
     def parse_expression(self, graph, expression):
-        if 'image' in expression.attrib:
-            self._image = graph.get_word_node(expression.attrib['image'])
+        if "image" in expression.attrib:
+            self._image = graph.get_word_node(expression.attrib["image"])
 
-        if 'title' in expression.attrib:
-            self._title = graph.get_word_node(expression.attrib['title'])
+        if "title" in expression.attrib:
+            self._title = graph.get_word_node(expression.attrib["title"])
 
-        if 'subtitle' in expression.attrib:
-            self._subtitle = graph.get_word_node(expression.attrib['subtitle'])
+        if "subtitle" in expression.attrib:
+            self._subtitle = graph.get_word_node(expression.attrib["subtitle"])
 
         head_text = self.get_text_from_element(expression)
         self.parse_text(graph, head_text)
@@ -69,13 +72,13 @@ class TemplateCardNode(TemplateNode):
         for child in expression:
             tag_name = TextUtils.tag_from_text(child.tag)
 
-            if tag_name == 'image':
+            if tag_name == "image":
                 self._image = self.parse_children_as_word_node(graph, child)
-            elif tag_name == 'title':
+            elif tag_name == "title":
                 self._title = self.parse_children_as_word_node(graph, child)
-            elif tag_name == 'subtitle':
+            elif tag_name == "subtitle":
                 self._subtitle = self.parse_children_as_word_node(graph, child)
-            elif tag_name == 'button':
+            elif tag_name == "button":
                 button_class = graph.get_node_class_by_name("button")
                 button = button_class()
                 button.parse_expression(graph, child)

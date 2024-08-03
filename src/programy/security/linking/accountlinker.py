@@ -55,9 +55,10 @@ Workflow is
 
 7. PY Links accounts
 """
-import string
-import random
+
 import datetime
+import random
+import string
 
 
 class BasicAccountLinkerService:
@@ -69,7 +70,7 @@ class BasicAccountLinkerService:
         self._storage_engine = storage_engine
 
     def initialise(self, client):
-        pass    # pragma: no cover
+        pass  # pragma: no cover
 
     def link_user_to_client(self, userid, clientid):
 
@@ -97,7 +98,10 @@ class BasicAccountLinkerService:
 
         if self._storage_engine.user_store().remove_user(userid, clientid) is True:
             if self._storage_engine.link_store().remove_link(userid) is True:
-                if self._storage_engine.linked_account_store().unlink_accounts(userid) is True:
+                if (
+                    self._storage_engine.linked_account_store().unlink_accounts(userid)
+                    is True
+                ):
                     return True
 
         return False
@@ -106,15 +110,23 @@ class BasicAccountLinkerService:
 
         assert userid is not None
 
-        if self._storage_engine.user_store().remove_user_from_all_clients(userid) is True:
+        if (
+            self._storage_engine.user_store().remove_user_from_all_clients(userid)
+            is True
+        ):
             if self._storage_engine.link_store().remove_link(userid) is True:
-                if self._storage_engine.linked_account_store().unlink_accounts(userid) is True:
+                if (
+                    self._storage_engine.linked_account_store().unlink_accounts(userid)
+                    is True
+                ):
                     return True
 
         return False
 
     def _generate_key(self, size=8):
-        return ''.join(random.choice(BasicAccountLinkerService.KEY_CHARS) for _ in range(size))
+        return "".join(
+            random.choice(BasicAccountLinkerService.KEY_CHARS) for _ in range(size)
+        )
 
     def _generate_expirary(self, lifetime):
         return datetime.datetime.now() + datetime.timedelta(seconds=lifetime)
@@ -127,7 +139,12 @@ class BasicAccountLinkerService:
         generated_key = self._generate_key()
         expires = self._generate_expirary(lifetime)
 
-        if self._storage_engine.link_store().create_link(userid, provided_key, generated_key, expires) is not None:
+        if (
+            self._storage_engine.link_store().create_link(
+                userid, provided_key, generated_key, expires
+            )
+            is not None
+        ):
             return generated_key
 
         return None
@@ -167,7 +184,9 @@ class BasicAccountLinkerService:
         link.retry_count += 1
         self._storage_engine.link_store().update_link(link)
 
-    def link_accounts(self, userid, provided_key, generated_key, linked_userid, linked_client):
+    def link_accounts(
+        self, userid, provided_key, generated_key, linked_userid, linked_client
+    ):
 
         assert userid is not None
         assert provided_key is not None
@@ -183,13 +202,30 @@ class BasicAccountLinkerService:
                 if self._has_link_expired(link) is True:
                     self._expire_link(link)
 
-                elif self._valid_link_keys(link, provided_key, generated_key,
-                                           BasicAccountLinkerService.MAX_RETRIES) is False:
+                elif (
+                    self._valid_link_keys(
+                        link,
+                        provided_key,
+                        generated_key,
+                        BasicAccountLinkerService.MAX_RETRIES,
+                    )
+                    is False
+                ):
                     self._inc_retry_count(link)
 
-                elif self._storage_engine.user_store().add_user(linked_userid, linked_client) is not None:
+                elif (
+                    self._storage_engine.user_store().add_user(
+                        linked_userid, linked_client
+                    )
+                    is not None
+                ):
 
-                    if self._storage_engine.linked_account_store().link_accounts(userid, linked_userid) is not None:
+                    if (
+                        self._storage_engine.linked_account_store().link_accounts(
+                            userid, linked_userid
+                        )
+                        is not None
+                    ):
                         return True
 
         return False
@@ -211,4 +247,6 @@ class BasicAccountLinkerService:
 
         assert secondary_userid is not None
 
-        return self._storage_engine.linked_account_store().primary_account(secondary_userid)
+        return self._storage_engine.linked_account_store().primary_account(
+            secondary_userid
+        )

@@ -14,6 +14,7 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 from programy.storage.entities.store import Store
 
 
@@ -32,7 +33,9 @@ class MapsReadOnlyStore(Store):
         return [key, value]
 
     def load_all(self, collector):
-        raise NotImplementedError("load_all missing from Maps Store")  # pragma: no cover
+        raise NotImplementedError(
+            "load_all missing from Maps Store"
+        )  # pragma: no cover
 
     def load(self, collector, name=None):
         raise NotImplementedError("load missing from Maps Store")  # pragma: no cover
@@ -44,7 +47,9 @@ class MapsReadWriteStore(MapsReadOnlyStore):
         MapsReadOnlyStore.__init__(self)
 
     def load_all(self, collector):
-        raise NotImplementedError("load_all missing from Maps Store")  # pragma: no cover
+        raise NotImplementedError(
+            "load_all missing from Maps Store"
+        )  # pragma: no cover
 
     def load(self, collector, name=None):
         raise NotImplementedError("load missing from Maps Store")  # pragma: no cover
@@ -55,10 +60,14 @@ class MapsReadWriteStore(MapsReadOnlyStore):
         return False
 
     def add_to_map(self, name, key, value, overwrite_existing=False):
-        raise NotImplementedError("add_to_map missing from Maps Store")  # pragma: no cover
+        raise NotImplementedError(
+            "add_to_map missing from Maps Store"
+        )  # pragma: no cover
 
     def remove_from_map(self, name, key):
-        raise NotImplementedError("remove_from_map missing from Maps Store")  # pragma: no cover
+        raise NotImplementedError(
+            "remove_from_map missing from Maps Store"
+        )  # pragma: no cover
 
     def split_into_fields(self, line):
         splits = line.split(":")

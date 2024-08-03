@@ -14,6 +14,7 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 import random
 import time
 
@@ -26,9 +27,9 @@ class ServiceCoordinatorConfiguration:
         self._services = []
 
     def from_yaml(self, yaml_data):
-        self._category = yaml_data.get('category')
-        self._coordinator = yaml_data.get('coordinator')
-        self._services = yaml_data.get('services')
+        self._category = yaml_data.get("category")
+        self._coordinator = yaml_data.get("coordinator")
+        self._services = yaml_data.get("services")
 
 
 class ServiceCoordinator:
@@ -51,7 +52,9 @@ class SelectableServiceCoordinator(ServiceCoordinator):
     def _get_servicen(self):
         raise NotImplementedError()
 
-    def execute_query(self, question, srai=False, skip_failures=True, try_next_on_failure=False):
+    def execute_query(
+        self, question, srai=False, skip_failures=True, try_next_on_failure=False
+    ):
         if self._services:
             running = True
             tried = []
@@ -60,7 +63,7 @@ class SelectableServiceCoordinator(ServiceCoordinator):
                 if service.name not in tried:
                     result = service.execite_query(question, srai)
                     if result:
-                        if result['status'] == 'success':
+                        if result["status"] == "success":
                             return result
                         elif skip_failures is False:
                             return result
@@ -80,7 +83,7 @@ class RandomResultServiceCoordinator(SelectableServiceCoordinator):
 
     def _get_servicen(self):
         random.seed(time.time())
-        servicen = random.randint(0, len(self._services)-1)
+        servicen = random.randint(0, len(self._services) - 1)
         return self._services[servicen]
 
 
@@ -110,7 +113,7 @@ class AllResultsServiceCoordinator(ServiceCoordinator):
             for service in self._services:
                 result = service.execite_query(question, srai)
                 if result:
-                    if result['status'] == 'success':
+                    if result["status"] == "success":
                         results.append(result)
                     elif skip_failures is False:
                         results.append(result)

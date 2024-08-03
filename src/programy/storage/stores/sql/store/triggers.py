@@ -14,13 +14,14 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
-from programy.utils.classes.loader import ClassLoader
-from programy.storage.stores.sql.store.sqlstore import SQLStore
+
+from programy.storage.entities.store import Store
 from programy.storage.entities.triggers import TriggersStore
 from programy.storage.stores.sql.dao.trigger import Trigger
-from programy.storage.entities.store import Store
+from programy.storage.stores.sql.store.sqlstore import SQLStore
+from programy.utils.classes.loader import ClassLoader
 from programy.utils.console.console import outputLog
+from programy.utils.logging.ylogger import YLogger
 
 
 class SQLTriggersStore(SQLStore, TriggersStore):
@@ -45,10 +46,16 @@ class SQLTriggersStore(SQLStore, TriggersStore):
         triggers = self.get_all_triggers()
         for trigger in triggers:
             try:
-                manager.add_trigger(trigger.name, ClassLoader.instantiate_class(trigger.trigger_class))
+                manager.add_trigger(
+                    trigger.name, ClassLoader.instantiate_class(trigger.trigger_class)
+                )
             except Exception as e:
-                YLogger.exception(self, "Failed pre-instantiating Trigger [%s]",
-                                  e, trigger.trigger_class)
+                YLogger.exception(
+                    self,
+                    "Failed pre-instantiating Trigger [%s]",
+                    e,
+                    trigger.trigger_class,
+                )
 
     def _load_triggers_from_file(self, filename, verbose):
         count = 0
@@ -61,7 +68,9 @@ class SQLTriggersStore(SQLStore, TriggersStore):
 
         return count, success
 
-    def upload_from_file(self, filename, fileformat=Store.TEXT_FORMAT, commit=True, verbose=False):
+    def upload_from_file(
+        self, filename, fileformat=Store.TEXT_FORMAT, commit=True, verbose=False
+    ):
         try:
             count, success = self._load_triggers_from_file(filename, verbose)
 
@@ -70,13 +79,15 @@ class SQLTriggersStore(SQLStore, TriggersStore):
             return count, success
 
         except Exception as error:
-            YLogger.exception(self, "Failed to load triggers from [%s]", error, filename)
+            YLogger.exception(
+                self, "Failed to load triggers from [%s]", error, filename
+            )
 
         return 0, 0
 
     def _process_config_line(self, line, verbose=False):
         line = line.strip()
-        if line.startswith('#') is False:
+        if line.startswith("#") is False:
             splits = line.split("=")
             if len(splits) > 1:
                 trigger_name = splits[0].strip()
@@ -89,4 +100,3 @@ class SQLTriggersStore(SQLStore, TriggersStore):
                 return True
 
         return False
-

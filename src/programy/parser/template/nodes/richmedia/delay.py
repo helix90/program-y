@@ -14,9 +14,10 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
+from programy.parser.exceptions import ParserException
 from programy.parser.template.nodes.base import TemplateNode
 from programy.utils.text.text import TextUtils
-from programy.parser.exceptions import ParserException
 
 
 class TemplateDelayNode(TemplateNode):
@@ -26,7 +27,11 @@ class TemplateDelayNode(TemplateNode):
         self._seconds = None
 
     def resolve_to_string(self, client_context):
-        return "<delay>" + "<seconds>%s</seconds>" % self._seconds.resolve(client_context) + "</delay>"
+        return (
+            "<delay>"
+            + "<seconds>%s</seconds>" % self._seconds.resolve(client_context)
+            + "</delay>"
+        )
 
     def to_string(self):
         return "[DELAY %d]" % (len(self._children))
@@ -38,8 +43,8 @@ class TemplateDelayNode(TemplateNode):
     #
 
     def parse_expression(self, graph, expression):
-        if 'seconds' in expression.attrib:
-            self._seconds = graph.get_word_node(expression.attrib['seconds'])
+        if "seconds" in expression.attrib:
+            self._seconds = graph.get_word_node(expression.attrib["seconds"])
 
         head_text = self.get_text_from_element(expression)
         self.parse_text(graph, head_text)
@@ -47,7 +52,7 @@ class TemplateDelayNode(TemplateNode):
         for child in expression:
             tag_name = TextUtils.tag_from_text(child.tag)
 
-            if tag_name == 'seconds':
+            if tag_name == "seconds":
                 self._seconds = self.parse_children_as_word_node(graph, child)
 
             else:

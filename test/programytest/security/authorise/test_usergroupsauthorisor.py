@@ -1,10 +1,13 @@
 import os
 import unittest
 
+from programytest.client import TestClient
+
 from programy.config.brain.security import BrainSecurityAuthorisationConfiguration
 from programy.security.authorise.authorisor import AuthorisationException
-from programy.security.authorise.usergroupsauthorisor import BasicUserGroupAuthorisationService
-from programytest.client import TestClient
+from programy.security.authorise.usergroupsauthorisor import (
+    BasicUserGroupAuthorisationService,
+)
 
 
 class BasicUserGroupAuthorisationServiceTests(unittest.TestCase):
@@ -15,7 +18,9 @@ class BasicUserGroupAuthorisationServiceTests(unittest.TestCase):
         client.add_usergroups_store()
 
         service_config = BrainSecurityAuthorisationConfiguration("authorisation")
-        service_config._usergroups = os.path.dirname(__file__) + os.sep + "test_usergroups.yaml"
+        service_config._usergroups = (
+            os.path.dirname(__file__) + os.sep + "test_usergroups.yaml"
+        )
 
         service = BasicUserGroupAuthorisationService(service_config)
         self.assertIsNotNone(service)

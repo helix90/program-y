@@ -1,16 +1,25 @@
 import unittest
 
-from programy.config.brain.securities import BrainSecuritiesConfiguration
-from programy.config.brain.security import BrainSecurityAccountLinkerConfiguration
-from programy.config.brain.security import BrainSecurityAuthenticationConfiguration
-from programy.config.brain.security import BrainSecurityAuthorisationConfiguration
-from programy.security.manager import SecurityManager
 from programytest.client import TestClient
+
+from programy.config.brain.securities import BrainSecuritiesConfiguration
+from programy.config.brain.security import (
+    BrainSecurityAccountLinkerConfiguration,
+    BrainSecurityAuthenticationConfiguration,
+    BrainSecurityAuthorisationConfiguration,
+)
+from programy.security.manager import SecurityManager
 
 
 class MockSecurityManager(SecurityManager):
 
-    def __init__(self, security_configuration, fail_authenticate=False, fail_authorise=False, fail_on_linked=False):
+    def __init__(
+        self,
+        security_configuration,
+        fail_authenticate=False,
+        fail_authorise=False,
+        fail_on_linked=False,
+    ):
         SecurityManager.__init__(self, security_configuration)
         self._fail_authenticate = fail_authenticate
         self._fail_authorise = fail_authorise

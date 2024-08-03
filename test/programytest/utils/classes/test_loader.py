@@ -2,9 +2,9 @@ import unittest
 
 from programy.utils.classes.loader import ClassLoader
 
-
 #############################################################################
 #
+
 
 class ClassLoaderTests(unittest.TestCase):
 
@@ -12,7 +12,9 @@ class ClassLoaderTests(unittest.TestCase):
         loader = ClassLoader()
         self.assertIsNotNone(loader)
 
-        meta_class = loader.instantiate_class("programytest.utils.classes.testclass.TestClass")
+        meta_class = loader.instantiate_class(
+            "programytest.utils.classes.testclass.TestClass"
+        )
         self.assertIsNotNone(meta_class)
         new_class = meta_class()
         self.assertIsNotNone(new_class)

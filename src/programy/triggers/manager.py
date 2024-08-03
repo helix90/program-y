@@ -14,13 +14,14 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
+from abc import ABC, abstractmethod
 from typing import Dict
-from abc import ABC
-from abc import abstractmethod
-from programy.utils.logging.ylogger import YLogger
-from programy.triggers.config import TriggerConfiguration
+
 from programy.context import ClientContext
+from programy.triggers.config import TriggerConfiguration
 from programy.utils.classes.loader import ClassLoader
+from programy.utils.logging.ylogger import YLogger
 
 
 class TriggerManager(ABC):
@@ -32,7 +33,12 @@ class TriggerManager(ABC):
         self._config = config
 
     @abstractmethod
-    def trigger(self, event: str, client_context: ClientContext = None, additional: Dict[str, str] = None) -> bool:
+    def trigger(
+        self,
+        event: str,
+        client_context: ClientContext = None,
+        additional: Dict[str, str] = None,
+    ) -> bool:
         raise NotImplementedError()  # pragma: no cover
 
     @staticmethod
@@ -42,7 +48,9 @@ class TriggerManager(ABC):
                 return ClassLoader.instantiate_class(config.manager)(config)
 
             except Exception as e:
-                YLogger.exception(None, "Failed to load trigger manager [%s]", e, config.manager)
+                YLogger.exception(
+                    None, "Failed to load trigger manager [%s]", e, config.manager
+                )
 
         else:
             YLogger.error(None, "No Trigger Manager defined in configuration")

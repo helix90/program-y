@@ -1,14 +1,15 @@
-#http://norvig.com/spell-correct.html
+# http://norvig.com/spell-correct.html
 
 import re
 from collections import Counter
+
 from programy.spelling.base import SpellingChecker
 from programy.storage.factory import StorageFactory
 
 
 class NorvigSpellingChecker(SpellingChecker):
 
-    DefaultLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    DefaultLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
     def __init__(self, spelling_config=None):
         SpellingChecker.__init__(self, spelling_config)
@@ -20,8 +21,15 @@ class NorvigSpellingChecker(SpellingChecker):
         self.load_corpus(storage_factory)
 
     def load_corpus(self, storage_factory):
-        if storage_factory.entity_storage_engine_available(StorageFactory.SPELLING_CORPUS) is True:
-            spelling_engine = storage_factory.entity_storage_engine(StorageFactory.SPELLING_CORPUS)
+        if (
+            storage_factory.entity_storage_engine_available(
+                StorageFactory.SPELLING_CORPUS
+            )
+            is True
+        ):
+            spelling_engine = storage_factory.entity_storage_engine(
+                StorageFactory.SPELLING_CORPUS
+            )
             store = spelling_engine.spelling_store()
             store.load_spelling(self)
 
@@ -30,7 +38,7 @@ class NorvigSpellingChecker(SpellingChecker):
         self.sum_of_words = sum(self.words.values())
 
     def _all_words(self, text):
-        return re.findall(r'\w+', text.upper())
+        return re.findall(r"\w+", text.upper())
 
     def _probability(self, word):
         # Probability of `word`.dont handle null well ...
@@ -44,7 +52,12 @@ class NorvigSpellingChecker(SpellingChecker):
 
     def _candidates(self, word):
         # Generate possible spelling _corrections for word.
-        return self._known([word]) or self._known(self._edits1(word)) or self._known(self._edits2(word)) or [word]
+        return (
+            self._known([word])
+            or self._known(self._edits1(word))
+            or self._known(self._edits2(word))
+            or [word]
+        )
 
     def _known(self, words):
         # The subset of `words` that appear in the dictionary of WORDS.
@@ -55,8 +68,15 @@ class NorvigSpellingChecker(SpellingChecker):
         splits = [(word[:i], word[i:]) for i in range(len(word) + 1)]
         deletes = [L + R[1:] for L, R in splits if R]
         transposes = [L + R[1] + R[0] + R[2:] for L, R in splits if len(R) > 1]
-        replaces = [L + c + R[1:] for L, R in splits if R for c in NorvigSpellingChecker.DefaultLetters]
-        inserts = [L + c + R for L, R in splits for c in NorvigSpellingChecker.DefaultLetters]
+        replaces = [
+            L + c + R[1:]
+            for L, R in splits
+            if R
+            for c in NorvigSpellingChecker.DefaultLetters
+        ]
+        inserts = [
+            L + c + R for L, R in splits for c in NorvigSpellingChecker.DefaultLetters
+        ]
         return set(deletes + transposes + replaces + inserts)
 
     def _edits2(self, word):
@@ -65,7 +85,7 @@ class NorvigSpellingChecker(SpellingChecker):
 
     def correct(self, phrase):
         # split sentence in into word to be check by _correction
-        phras = ''
+        phras = ""
         for wrd in phrase.split():
-            phras = phras+self._correction(wrd.upper())+' '
+            phras = phras + self._correction(wrd.upper()) + " "
         return phras.strip()

@@ -1,5 +1,7 @@
 import unittest
+
 import programytest.externals as Externals
+
 from programy.nlp.stemming import Stemmer
 
 
@@ -41,7 +43,7 @@ class StemmerTests(unittest.TestCase):
         self.assertEqual("troubl", stemmer.stem("troubling"))
 
     def test_stem_regex(self):
-        stemmer = Stemmer( stemmer="regex", regexp="ing$|s$|e$|able$|ed$|es$", min=0)
+        stemmer = Stemmer(stemmer="regex", regexp="ing$|s$|e$|able$|ed$|es$", min=0)
         self.assertIsNotNone(stemmer)
         self.assertIsNotNone(stemmer._impl)
 
@@ -51,7 +53,7 @@ class StemmerTests(unittest.TestCase):
         self.assertEqual("troubl", stemmer.stem("troubling"))
 
     def test_stem_regex_no_min(self):
-        stemmer = Stemmer( stemmer="regex", regexp="ing$|s$|e$|able$|ed$|es$")
+        stemmer = Stemmer(stemmer="regex", regexp="ing$|s$|e$|able$|ed$|es$")
         self.assertIsNotNone(stemmer)
         self.assertIsNotNone(stemmer._impl)
 
@@ -90,7 +92,10 @@ class StemmerTests(unittest.TestCase):
         self.assertEqual("troubl", stemmer.stem("troubles"))
         self.assertEqual("troubl", stemmer.stem("troubling"))
 
-    @unittest.skipIf(Externals.rslp_stemming is False or Externals.all_externals is False, Externals.rslp_stemming_disabled)
+    @unittest.skipIf(
+        Externals.rslp_stemming is False or Externals.all_externals is False,
+        Externals.rslp_stemming_disabled,
+    )
     def test_stem_rslp(self):
         stemmer = Stemmer(stemmer="rslp")
         self.assertIsNotNone(stemmer)

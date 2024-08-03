@@ -1,7 +1,8 @@
 import unittest
 
-from programy.processors.pre.stopwords import StopWordsPreProcessor
 from programytest.client import TestClient
+
+from programy.processors.pre.stopwords import StopWordsPreProcessor
 
 
 class StopWordsTests(unittest.TestCase):

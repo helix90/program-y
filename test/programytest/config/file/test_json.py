@@ -1,21 +1,25 @@
 import os
 
+from programytest.config.file.base_file_tests import ConfigurationBaseFileTests
+
 from programy.clients.events.console.config import ConsoleConfiguration
 from programy.config.file.json_file import JSONConfigurationFile
 from programy.utils.substitutions.substitues import Substitutions
-from programytest.config.file.base_file_tests import ConfigurationBaseFileTests
 
 
 class JSONConfigurationFileTests(ConfigurationBaseFileTests):
 
     def test_invalid_file(self):
         config = JSONConfigurationFile()
-        self.assertIsNotNone(config.load_from_file("unknown.json", ConsoleConfiguration(), "."))
+        self.assertIsNotNone(
+            config.load_from_file("unknown.json", ConsoleConfiguration(), ".")
+        )
 
     def test_get_methods(self):
         config_data = JSONConfigurationFile()
         self.assertIsNotNone(config_data)
-        configuration = config_data.load_from_text("""
+        configuration = config_data.load_from_text(
+            """
         {"brain": {
             "overrides": {
                   "allow_system_aiml": true,
@@ -24,7 +28,10 @@ class JSONConfigurationFileTests(ConfigurationBaseFileTests):
                   }
               }
         }
-          """, ConsoleConfiguration(), ".")
+          """,
+            ConsoleConfiguration(),
+            ".",
+        )
         self.assertIsNotNone(configuration)
 
         section = config_data.get_section("brainx")
@@ -43,16 +50,25 @@ class JSONConfigurationFileTests(ConfigurationBaseFileTests):
         self.assertTrue("allow_learn_aiml" in keys)
         self.assertTrue("allow_learnf_aiml" in keys)
         self.assertIsNone(config_data.get_child_section_keys("missing", section))
-        self.assertEqual(True, config_data.get_option(child_section, "allow_system_aiml"))
-        self.assertEqual(True, config_data.get_option(child_section, "missing", missing_value=True))
-        self.assertEqual(True, config_data.get_bool_option(child_section, "allow_system_aiml"))
-        self.assertEqual(False, config_data.get_bool_option(child_section, "other_value"))
+        self.assertEqual(
+            True, config_data.get_option(child_section, "allow_system_aiml")
+        )
+        self.assertEqual(
+            True, config_data.get_option(child_section, "missing", missing_value=True)
+        )
+        self.assertEqual(
+            True, config_data.get_bool_option(child_section, "allow_system_aiml")
+        )
+        self.assertEqual(
+            False, config_data.get_bool_option(child_section, "other_value")
+        )
         self.assertEqual(0, config_data.get_int_option(child_section, "other_value"))
 
     def test_get_invalid_values(self):
         config_data = JSONConfigurationFile()
         self.assertIsNotNone(config_data)
-        configuration = config_data.load_from_text("""
+        configuration = config_data.load_from_text(
+            """
         {"section1": {
             "section2": {
                   "boolvalue": true,
@@ -62,7 +78,10 @@ class JSONConfigurationFileTests(ConfigurationBaseFileTests):
                   }
               }
         }
-                  """, ConsoleConfiguration(), ".")
+                  """,
+            ConsoleConfiguration(),
+            ".",
+        )
         self.assertIsNotNone(configuration)
 
         section = config_data.get_section("section1")
@@ -79,18 +98,41 @@ class JSONConfigurationFileTests(ConfigurationBaseFileTests):
         self.assertTrue(config_data.get_bool_option(child_section, "intvalue"))
         self.assertTrue(config_data.get_bool_option(child_section, "strvalue"))
 
-        self.assertEquals(['one', 'two', 'three'], config_data.get_multi_option(child_section, "multivalue"))
-        self.assertEquals([True], config_data.get_multi_option(child_section, "boolvalue"))
+        self.assertEquals(
+            ["one", "two", "three"],
+            config_data.get_multi_option(child_section, "multivalue"),
+        )
+        self.assertEquals(
+            [True], config_data.get_multi_option(child_section, "boolvalue")
+        )
         self.assertEquals([23], config_data.get_multi_option(child_section, "intvalue"))
-        self.assertEquals(["hello"], config_data.get_multi_option(child_section, "strvalue"))
+        self.assertEquals(
+            ["hello"], config_data.get_multi_option(child_section, "strvalue")
+        )
 
-        self.assertEquals(['one', 'two', 'three'], config_data.get_multi_file_option(child_section, "multivalue", "."))
-        self.assertEquals([], config_data.get_multi_file_option(child_section, "boolvalue", "."))
-        self.assertEquals([], config_data.get_multi_file_option(child_section, "intvalue", "."))
-        self.assertEquals(["hello"], config_data.get_multi_file_option(child_section, "strvalue", "."))
+        self.assertEquals(
+            ["one", "two", "three"],
+            config_data.get_multi_file_option(child_section, "multivalue", "."),
+        )
+        self.assertEquals(
+            [], config_data.get_multi_file_option(child_section, "boolvalue", ".")
+        )
+        self.assertEquals(
+            [], config_data.get_multi_file_option(child_section, "intvalue", ".")
+        )
+        self.assertEquals(
+            ["hello"], config_data.get_multi_file_option(child_section, "strvalue", ".")
+        )
 
-        self.assertEquals([], config_data.get_multi_file_option(child_section, "unknown1", "."))
-        self.assertEquals(["missing1", "missing2"], config_data.get_multi_file_option(child_section, "unknown1", ".", missing_value=["missing1", "missing2"]))
+        self.assertEquals(
+            [], config_data.get_multi_file_option(child_section, "unknown1", ".")
+        )
+        self.assertEquals(
+            ["missing1", "missing2"],
+            config_data.get_multi_file_option(
+                child_section, "unknown1", ".", missing_value=["missing1", "missing2"]
+            ),
+        )
 
     def test_load_from_file(self):
         json = JSONConfigurationFile()
@@ -121,21 +163,28 @@ class JSONConfigurationFileTests(ConfigurationBaseFileTests):
     def test_load_from_text_multis_one_value(self):
         json = JSONConfigurationFile()
         self.assertIsNotNone(json)
-        configuration = json.load_from_text("""
+        configuration = json.load_from_text(
+            """
 {
     "bot": {
         "brain":  "bot1"
         }
 }
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
         self.assertIsNotNone(configuration)
 
-        self.assertEqual(1, len(configuration.client_configuration.configurations[0].configurations))
+        self.assertEqual(
+            1, len(configuration.client_configuration.configurations[0].configurations)
+        )
 
     def test_load_from_text_multis_multiple_values(self):
         json = JSONConfigurationFile()
         self.assertIsNotNone(json)
-        configuration = json.load_from_text("""
+        configuration = json.load_from_text(
+            """
         {
           "console": {
             "bots": {
@@ -152,10 +201,15 @@ class JSONConfigurationFileTests(ConfigurationBaseFileTests):
               }
             }
           }
-        }""", ConsoleConfiguration(), ".")
+        }""",
+            ConsoleConfiguration(),
+            ".",
+        )
         self.assertIsNotNone(configuration)
 
-        self.assertEqual(2, len(configuration.client_configuration.configurations[0].configurations))
+        self.assertEqual(
+            2, len(configuration.client_configuration.configurations[0].configurations)
+        )
 
     def test_load_with_subs(self):
         subs = Substitutions()
@@ -163,7 +217,8 @@ class JSONConfigurationFileTests(ConfigurationBaseFileTests):
 
         config_data = JSONConfigurationFile()
         self.assertIsNotNone(config_data)
-        configuration = config_data.load_from_text("""
+        configuration = config_data.load_from_text(
+            """
 {"brain": {
     "overrides": {
           "allow_system_aiml": true,
@@ -172,7 +227,10 @@ class JSONConfigurationFileTests(ConfigurationBaseFileTests):
           }
       }
 }
-          """, ConsoleConfiguration(), ".")
+          """,
+            ConsoleConfiguration(),
+            ".",
+        )
         self.assertIsNotNone(configuration)
 
         section = config_data.get_section("brainx")
@@ -184,6 +242,12 @@ class JSONConfigurationFileTests(ConfigurationBaseFileTests):
         child_section = config_data.get_section("overrides", section)
         self.assertIsNotNone(child_section)
 
-        self.assertEqual(True, config_data.get_option(child_section, "allow_system_aiml"))
-        self.assertEqual(True, config_data.get_bool_option(child_section, "allow_system_aiml"))
-        self.assertEqual(False, config_data.get_bool_option(child_section, "other_value"))
+        self.assertEqual(
+            True, config_data.get_option(child_section, "allow_system_aiml")
+        )
+        self.assertEqual(
+            True, config_data.get_bool_option(child_section, "allow_system_aiml")
+        )
+        self.assertEqual(
+            False, config_data.get_bool_option(child_section, "other_value")
+        )

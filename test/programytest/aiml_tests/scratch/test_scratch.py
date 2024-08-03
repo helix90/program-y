@@ -9,6 +9,7 @@ Nothing in here should ever be taken as meaningful aiml_tests, they come and go 
 ( or my novel deadlines..... lol )
 """
 
+
 class ScratchTestsClient(TestClient):
 
     def __init__(self):
@@ -27,15 +28,20 @@ class ScratchAIMLTests(unittest.TestCase):
         self._client_context = client.create_client_context("testid")
 
     def test_response(self):
-        response = self._client_context.bot.ask_question(self._client_context, "ARE YOU FRED")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "ARE YOU FRED"
+        )
         self.assertIsNotNone(response)
-        self.assertEqual(response, 'RESULT 1.')
+        self.assertEqual(response, "RESULT 1.")
 
-        response = self._client_context.bot.ask_question(self._client_context, "ARE YOU FRED WEST")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "ARE YOU FRED WEST"
+        )
         self.assertIsNotNone(response)
-        self.assertEqual(response, 'RESULT 2.')
+        self.assertEqual(response, "RESULT 2.")
 
-        response = self._client_context.bot.ask_question(self._client_context, "ARE YOU WRITTEN IN C#")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "ARE YOU WRITTEN IN C#"
+        )
         self.assertIsNotNone(response)
-        self.assertEqual(response, 'RESULT 3.')
-
+        self.assertEqual(response, "RESULT 3.")

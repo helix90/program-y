@@ -1,10 +1,11 @@
 import unittest
 
+from programytest.client import TestClient
+
 from programy.bot import Bot
 from programy.config.bot.bot import BotConfiguration
 from programy.spelling.autocorrection import AutoCorrectSpellingChecker
 from programy.spelling.extension import SpellingExtension
-from programytest.client import TestClient
 
 
 class AutocorrectSpellingExtensionTests(unittest.TestCase):

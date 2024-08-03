@@ -1,10 +1,13 @@
 import unittest
 
 import programytest.storage.engines as Engines
+from programytest.storage.asserts.store.assert_linkedaccount import (
+    LinkedAccountStoreAsserts,
+)
+
 from programy.storage.stores.sql.config import SQLStorageConfiguration
 from programy.storage.stores.sql.engine import SQLStorageEngine
 from programy.storage.stores.sql.store.linkedaccounts import SQLLinkedAccountStore
-from programytest.storage.asserts.store.assert_linkedaccount import LinkedAccountStoreAsserts
 
 
 class SQLLinkedAccountStoreTests(LinkedAccountStoreAsserts):

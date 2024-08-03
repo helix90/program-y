@@ -1,10 +1,12 @@
 import unittest
 from unittest.mock import patch
+
 import programytest.storage.engines as Engines
+from programytest.storage.asserts.store.assert_regex import RegexStoreAsserts
+
 from programy.storage.stores.sql.config import SQLStorageConfiguration
 from programy.storage.stores.sql.engine import SQLStorageEngine
 from programy.storage.stores.sql.store.properties import SQLRegexStore
-from programytest.storage.asserts.store.assert_regex import RegexStoreAsserts
 
 
 class SQLRegexStoreTests(RegexStoreAsserts):
@@ -66,7 +68,10 @@ class SQLRegexStoreTests(RegexStoreAsserts):
         raise Exception("Mock Exception")
 
     @unittest.skipIf(Engines.sql is False, Engines.sql_disabled)
-    @patch("programy.mappings.properties.RegexTemplatesCollection.add_regex", patch_add_regex)
+    @patch(
+        "programy.mappings.properties.RegexTemplatesCollection.add_regex",
+        patch_add_regex,
+    )
     def test_add_to_collection_exception(self):
         config = SQLStorageConfiguration()
         engine = SQLStorageEngine(config)

@@ -14,11 +14,13 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 from discord import Client as DiscordClient
-from programy.utils.logging.ylogger import YLogger
+
 from programy.clients.events.client import EventBotClient
 from programy.clients.events.discord.config import DiscordConfiguration
 from programy.utils.console.console import outputLog
+from programy.utils.logging.ylogger import YLogger
 
 
 class DiscordBotClient(EventBotClient):
@@ -42,7 +44,9 @@ class DiscordBotClient(EventBotClient):
         return True
 
     def ask_question(self, client_context, question):
-        response = client_context.bot.ask_question(client_context, question, responselogger=self)
+        response = client_context.bot.ask_question(
+            client_context, question, responselogger=self
+        )
         return self.renderer.render(client_context, response)
 
     def get_discord_user(self):
@@ -63,7 +67,7 @@ class DiscordBotClient(EventBotClient):
         return None
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     outputLog(None, "Initiating Discord Client...")
 
@@ -81,6 +85,5 @@ if __name__ == '__main__':
             channel = message.channel
             if channel:
                 await channel.send(response)
-
 
     discord.run()

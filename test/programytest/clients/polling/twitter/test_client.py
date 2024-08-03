@@ -2,15 +2,16 @@ import os
 import unittest
 import unittest.mock
 
+from programytest.clients.arguments import MockArgumentParser
+
 from programy.bot import Bot
 from programy.clients.polling.twitter.client import TwitterBotClient
 from programy.clients.polling.twitter.config import TwitterConfiguration
+from programy.clients.render.text import TextRenderer
 from programy.storage.config import FileStorageConfiguration
 from programy.storage.factory import StorageFactory
 from programy.storage.stores.file.config import FileStoreConfiguration
 from programy.storage.stores.file.engine import FileStorageEngine
-from programy.clients.render.text import TextRenderer
-from programytest.clients.arguments import MockArgumentParser
 
 
 class MockMessage(object):
@@ -74,7 +75,9 @@ class MockTwitterBotClient(TwitterBotClient):
         self._response = None
         TwitterBotClient.__init__(self, argument_parser)
 
-    def _create_api(self, consumer_key, consumer_secret, access_token, access_token_secret):
+    def _create_api(
+        self, consumer_key, consumer_secret, access_token, access_token_secret
+    ):
         return MockTwitterApi()
 
     def load_license_keys(self):
@@ -108,5 +111,3 @@ class TwitterBotClientTests(unittest.TestCase):
 
         self.assertFalse(client._render_callback())
         self.assertIsInstance(client.renderer, TextRenderer)
-
-

@@ -22,6 +22,8 @@ class SraiAIMLTests(unittest.TestCase):
         self._client_context = client.create_client_context("testid")
 
     def test_srai__set_response(self):
-        response = self._client_context.bot.ask_question(self._client_context, "TEST SRAI SET")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "TEST SRAI SET"
+        )
         self.assertIsNotNone(response)
-        self.assertEqual(response, 'BLANK RESPONSE.')
+        self.assertEqual(response, "BLANK RESPONSE.")

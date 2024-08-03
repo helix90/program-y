@@ -14,16 +14,19 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
+import json
 import os
 import sys
-import json
+
 import yaml
+
+from programy.clients.args import CommandLineClientArguments
 from programy.clients.events.console.client import ConsoleBotClient
+from programy.clients.events.console.config import ConsoleConfiguration
 from programy.config.file.yaml_file import YamlConfigurationFile
 from programy.config.programy import ProgramyConfiguration
-from programy.clients.args import CommandLineClientArguments
 from programy.utils.substitutions.substitues import Substitutions
-from programy.clients.events.console.config import ConsoleConfiguration
 
 
 class EmbeddedConfigFileBot(ConsoleBotClient):
@@ -35,7 +38,7 @@ class EmbeddedConfigFileBot(ConsoleBotClient):
         if logging_filename is not None:
             self._logging_filename = logging_filename
         else:
-            self._logging_filename = filepath + 'basicbot/logging.yaml'
+            self._logging_filename = filepath + "basicbot/logging.yaml"
 
         ConsoleBotClient.__init__(self, "Console")
 
@@ -60,18 +63,19 @@ class EmbeddedConfigFileBot(ConsoleBotClient):
         config = ConsoleConfiguration()
         data = {config.section_name: {}}
         config.to_yaml(data[config.section_name], True)
-        if format == 'json':
+        if format == "json":
             print(json.dumps(data, indent=4))
 
-        elif format == 'yaml':
+        elif format == "yaml":
             print(yaml.dump(data, sort_keys=False))
 
         else:
-            print ("Invalid data format 'json' or 'yaml' only!")
+            print("Invalid data format 'json' or 'yaml' only!")
 
-if __name__ == '__main__':
 
-    if sys.argv[1] == 'run':
+if __name__ == "__main__":
+
+    if sys.argv[1] == "run":
         config_file = sys.argv[2]
         logging_file = None
         if len(sys.argv) == 4:
@@ -84,6 +88,5 @@ if __name__ == '__main__':
         response = my_bot.process_question(client_context, "Hello")
         print("Asked 'Hello', Response '%s'" % response)
 
-    elif sys.argv[1] == 'config':
+    elif sys.argv[1] == "config":
         EmbeddedConfigFileBot.generate_default_config_file(sys.argv[2])
-

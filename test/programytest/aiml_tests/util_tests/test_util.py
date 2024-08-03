@@ -22,6 +22,8 @@ class UtiltyAIMLTests(unittest.TestCase):
         self._client_context = client.create_client_context("testid")
 
     def test_util_function(self):
-        response = self._client_context.bot.ask_question(self._client_context, "KEITH IS A PROGRAMMER")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "KEITH IS A PROGRAMMER"
+        )
         self.assertIsNotNone(response)
-        self.assertEqual(response, 'Ok, I will remember KEITH is a PROGRAMMER .')
+        self.assertEqual(response, "Ok, I will remember KEITH is a PROGRAMMER .")

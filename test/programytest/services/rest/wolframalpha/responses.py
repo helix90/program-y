@@ -1,4 +1,3 @@
-
 simple_success_response = """{
     "queryresult": {
         "success": true,

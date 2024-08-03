@@ -14,9 +14,10 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from abc import ABC
-from abc import abstractmethod
+
+from abc import ABC, abstractmethod
 from datetime import datetime
+
 from programy.utils.console.console import outputLog
 
 
@@ -27,7 +28,7 @@ class APIHandler(ABC):
         self._bot_client = bot_client
 
     @abstractmethod
-    def process_request(self, request, method='GET'):
+    def process_request(self, request, method="GET"):
         raise NotImplementedError()  # pragma: no cover
 
     @abstractmethod
@@ -40,19 +41,23 @@ class APIHandler(ABC):
 
 
 class APIHandler_V1_0(APIHandler):
-    QUESTION = 'question'
-    USERID = 'userid'
+    QUESTION = "question"
+    USERID = "userid"
 
     def __init__(self, bot_client):
         APIHandler.__init__(self, bot_client)
 
-    def process_request(self, client, request, method='GET'):
+    def process_request(self, client, request, method="GET"):
         question = APIHandler.UNKNOWN
         userid = APIHandler.UNKNOWN
 
         try:
-            question = self._bot_client.get_variable(request, APIHandler_V1_0.QUESTION, method)
-            userid = self._bot_client.get_variable(request, APIHandler_V1_0.USERID, method)
+            question = self._bot_client.get_variable(
+                request, APIHandler_V1_0.QUESTION, method
+            )
+            userid = self._bot_client.get_variable(
+                request, APIHandler_V1_0.USERID, method
+            )
             client_context = client.create_client_context(userid)
             answer = self._bot_client.ask_question(userid, question)
             rendered = client.renderer.render(client_context, answer)
@@ -62,28 +67,30 @@ class APIHandler_V1_0(APIHandler):
             return self.format_error_response(userid, question, str(excep)), 500
 
     def format_success_response(self, userid, question, answer, metadata=None):
-        return {'response': {"question": question,
-                             "answer": answer,
-                             "userid": userid}}
+        return {"response": {"question": question, "answer": answer, "userid": userid}}
 
     def format_error_response(self, userid, question, error, metadata=None):
         client_context = self._bot_client.create_client_context(userid)
-        return {"response": {"question": question,
-                             "answer": client_context.bot.default_response,
-                             "userid": userid,
-                             "error": error}}
+        return {
+            "response": {
+                "question": question,
+                "answer": client_context.bot.default_response,
+                "userid": userid,
+                "error": error,
+            }
+        }
 
 
 class APIHandler_V2_0(APIHandler):
     QUERY = "query"
-    USERID = 'userId'
+    USERID = "userId"
     LANG = "lang"
     location = "location"
 
     def __init__(self, bot_client):
         APIHandler.__init__(self, bot_client)
 
-    def process_request(self, client, request, method='GET'):
+    def process_request(self, client, request, method="GET"):
         query = APIHandler_V2_0.UNKNOWN
         userid = APIHandler_V2_0.UNKNOWN
         # lang =  APIHandler_V2_0.UNKNOWN
@@ -91,8 +98,12 @@ class APIHandler_V2_0(APIHandler):
 
         try:
             outputLog(self, request)
-            query = self._bot_client.get_variable(request, APIHandler_V2_0.QUERY, method)
-            userid = self._bot_client.get_variable(request, APIHandler_V2_0.USERID, method)
+            query = self._bot_client.get_variable(
+                request, APIHandler_V2_0.QUERY, method
+            )
+            userid = self._bot_client.get_variable(
+                request, APIHandler_V2_0.USERID, method
+            )
             # lang = self._bot_client.get_variable(request, APIHandler_V2_0.LANG, method)
             # location = self._bot_client.get_variable(request, APIHandler_V2_0.LOCATION, method)
 
@@ -109,45 +120,45 @@ class APIHandler_V2_0(APIHandler):
         return datetime.timestamp(datetime.now())
 
     def format_success_response(self, userid, question, answer, metadata=None):
-        payload = {'response': {"query": question,
-                                "userId": userid,
-                                "timestamp": self._get_timestamp(),
-                                "text": answer,
-                                },
-                   'status': {
-                       'code': 200,
-                       'message': 'success'
-                   }}
+        payload = {
+            "response": {
+                "query": question,
+                "userId": userid,
+                "timestamp": self._get_timestamp(),
+                "text": answer,
+            },
+            "status": {"code": 200, "message": "success"},
+        }
 
         if metadata is not None:
             payload["meta"] = {}
-            if 'botName' in metadata:
-                payload["meta"]['botName'] = metadata['botName']
-            if 'version' in metadata:
-                payload["meta"]['version'] = metadata['version']
-            if 'copyright' in metadata:
-                payload["meta"]['copyright'] = metadata['copyright']
-            if 'authors' in metadata:
-                payload["meta"]['authors'] = metadata['authors']
+            if "botName" in metadata:
+                payload["meta"]["botName"] = metadata["botName"]
+            if "version" in metadata:
+                payload["meta"]["version"] = metadata["version"]
+            if "copyright" in metadata:
+                payload["meta"]["copyright"] = metadata["copyright"]
+            if "authors" in metadata:
+                payload["meta"]["authors"] = metadata["authors"]
 
         return payload
 
     def format_error_response(self, userid, question, error, metadata=None):
-        payload = {'response': {"query": question,
-                                "userId": userid,
-                                "timestamp": self._get_timestamp(),
-                                },
-                   'status': {
-                       'code': 500,
-                       'message': error
-                   }}
+        payload = {
+            "response": {
+                "query": question,
+                "userId": userid,
+                "timestamp": self._get_timestamp(),
+            },
+            "status": {"code": 500, "message": error},
+        }
 
         if metadata is not None:
             payload["meta"] = {
-                "botName": metadata['botName'],
-                "version": metadata['version'],
-                "copyright": metadata['copyright'],
-                "authors": metadata['authors']
+                "botName": metadata["botName"],
+                "version": metadata["version"],
+                "copyright": metadata["copyright"],
+                "authors": metadata["authors"],
             }
 
         return payload

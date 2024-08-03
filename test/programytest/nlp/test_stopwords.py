@@ -1,4 +1,5 @@
 import unittest
+
 from programy.nlp.stopwords import StopWords
 
 
@@ -11,7 +12,9 @@ class StopWordsTests(unittest.TestCase):
 
         self.assertEqual([""], stopwords.remove([""]))
         self.assertEqual([], stopwords.remove([]))
-        self.assertEqual(['This', 'sentence'], stopwords.remove(["This", "is", "a", "sentence"]))
+        self.assertEqual(
+            ["This", "sentence"], stopwords.remove(["This", "is", "a", "sentence"])
+        )
 
     def test_is_stopword(self):
         stopwords = StopWords(language="english")

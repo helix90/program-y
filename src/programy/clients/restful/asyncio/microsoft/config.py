@@ -14,6 +14,7 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 from programy.clients.restful.config import RestConfiguration
 from programy.utils.substitutions.substitues import Substitutions
 
@@ -34,16 +35,24 @@ class MicrosoftConfiguration(RestConfiguration):
     def new_user_srai(self):
         return self._new_user_srai
 
-    def load_configuration_section(self, configuration_file, section, bot_root, subs: Substitutions = None):
+    def load_configuration_section(
+        self, configuration_file, section, bot_root, subs: Substitutions = None
+    ):
 
         assert section is not None
 
-        self._new_user_text = configuration_file.get_option(section, "new_user_text",
-                                                            missing_value=MicrosoftConfiguration.NEW_USER_TEXT,
-                                                            subs=subs)
-        self._new_user_srai = configuration_file.get_option(section, "new_user_srai", missing_value=None, subs=subs)
-        super(MicrosoftConfiguration, self).load_configuration_section(configuration_file, section, bot_root,
-                                                                       subs=subs)
+        self._new_user_text = configuration_file.get_option(
+            section,
+            "new_user_text",
+            missing_value=MicrosoftConfiguration.NEW_USER_TEXT,
+            subs=subs,
+        )
+        self._new_user_srai = configuration_file.get_option(
+            section, "new_user_srai", missing_value=None, subs=subs
+        )
+        super(MicrosoftConfiguration, self).load_configuration_section(
+            configuration_file, section, bot_root, subs=subs
+        )
 
     def to_yaml(self, data, defaults=True):
         if defaults is True:

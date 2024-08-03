@@ -14,22 +14,26 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 import os
+
 import yaml
-from programy.utils.logging.ylogger import YLogger
-from programy.storage.stores.sql.store.sqlstore import SQLStore
-from programy.storage.entities.usergroups import UserGroupsStore
-from programy.storage.stores.sql.dao.usergroup import AuthoriseUser
-from programy.storage.stores.sql.dao.usergroup import UserRole
-from programy.storage.stores.sql.dao.usergroup import UserGroup
-from programy.storage.stores.sql.dao.usergroup import AuthoriseGroup
-from programy.storage.stores.sql.dao.usergroup import GroupUser
-from programy.storage.stores.sql.dao.usergroup import GroupGroup
-from programy.storage.stores.sql.dao.usergroup import GroupRole
-from programy.security.authorise.usergroups import User
-from programy.security.authorise.usergroups import Group
+
+from programy.security.authorise.usergroups import Group, User
 from programy.storage.entities.store import Store
+from programy.storage.entities.usergroups import UserGroupsStore
+from programy.storage.stores.sql.dao.usergroup import (
+    AuthoriseGroup,
+    AuthoriseUser,
+    GroupGroup,
+    GroupRole,
+    GroupUser,
+    UserGroup,
+    UserRole,
+)
+from programy.storage.stores.sql.store.sqlstore import SQLStore
 from programy.utils.console.console import outputLog
+from programy.utils.logging.ylogger import YLogger
 
 
 class SQLUserGroupStore(SQLStore, UserGroupsStore):
@@ -39,7 +43,9 @@ class SQLUserGroupStore(SQLStore, UserGroupsStore):
         UserGroupsStore.__init__(self)
 
     def _get_all(self):
-        raise Exception("SQL User groups uses complex multi table data structure, do not call _get_all()")
+        raise Exception(
+            "SQL User groups uses complex multi table data structure, do not call _get_all()"
+        )
 
     def empty(self):
         self._storage_engine.session.query(AuthoriseUser).delete()
@@ -54,11 +60,13 @@ class SQLUserGroupStore(SQLStore, UserGroupsStore):
         self._upload_groups(yaml_data, verbose)
 
     def _read_yaml_from_file(self, filename):
-        with open(filename, 'r+') as yml_data_file:
+        with open(filename, "r+") as yml_data_file:
             yaml_data = yaml.load(yml_data_file, Loader=yaml.FullLoader)
             self.load_from_yaml(yaml_data)
 
-    def upload_from_file(self, filename, fileformat=Store.TEXT_FORMAT, commit=True, verbose=False):
+    def upload_from_file(
+        self, filename, fileformat=Store.TEXT_FORMAT, commit=True, verbose=False
+    ):
 
         try:
             self._read_yaml_from_file(filename)
@@ -66,20 +74,22 @@ class SQLUserGroupStore(SQLStore, UserGroupsStore):
             return 1, 1
 
         except Exception as error:
-            YLogger.exception(self, "Failed to load yaml file from [%s]", error, filename)
+            YLogger.exception(
+                self, "Failed to load yaml file from [%s]", error, filename
+            )
 
         return 0, 0
 
     def _upload_users(self, yaml_data, verbose=False):
-        if 'users' in yaml_data:
-            for user_name in yaml_data['users'].keys():
+        if "users" in yaml_data:
+            for user_name in yaml_data["users"].keys():
 
                 auth_user = AuthoriseUser(name=user_name)
                 result = self.storage_engine.session.add(auth_user)
 
-                yaml_obj = yaml_data['users'][user_name]
-                if 'roles' in yaml_obj:
-                    roles_list = yaml_obj['roles']
+                yaml_obj = yaml_data["users"][user_name]
+                if "roles" in yaml_obj:
+                    roles_list = yaml_obj["roles"]
                     splits = roles_list.split(",")
                     for role_name in splits:
                         role_name = role_name.strip()
@@ -88,8 +98,8 @@ class SQLUserGroupStore(SQLStore, UserGroupsStore):
                             outputLog(self, user_role)
                         self.storage_engine.session.add(user_role)
 
-                if 'groups' in yaml_obj:
-                    groups_list = yaml_obj['groups']
+                if "groups" in yaml_obj:
+                    groups_list = yaml_obj["groups"]
                     splits = groups_list.split(",")
                     for group_name in splits:
                         group_name = group_name.strip()
@@ -99,15 +109,15 @@ class SQLUserGroupStore(SQLStore, UserGroupsStore):
                         self.storage_engine.session.add(user_group)
 
     def _upload_groups(self, yaml_data, verbose=False):
-        if 'groups' in yaml_data:
-            for group_name in yaml_data['groups'].keys():
+        if "groups" in yaml_data:
+            for group_name in yaml_data["groups"].keys():
 
                 auth_group = AuthoriseGroup(name=group_name, parent=None)
                 result = self.storage_engine.session.add(auth_group)
 
-                yaml_obj = yaml_data['groups'][group_name]
-                if 'roles' in yaml_obj:
-                    roles_list = yaml_obj['roles']
+                yaml_obj = yaml_data["groups"][group_name]
+                if "roles" in yaml_obj:
+                    roles_list = yaml_obj["roles"]
                     splits = roles_list.split(",")
                     for role_name in splits:
                         role_name = role_name.strip()
@@ -116,18 +126,20 @@ class SQLUserGroupStore(SQLStore, UserGroupsStore):
                             outputLog(self, group_role)
                         self.storage_engine.session.add(group_role)
 
-                if 'groups' in yaml_obj:
-                    groups_list = yaml_obj['groups']
+                if "groups" in yaml_obj:
+                    groups_list = yaml_obj["groups"]
                     splits = groups_list.split(",")
                     for element in splits:
                         inner_group_name = element.strip()
-                        group_group = GroupGroup(group=group_name, subgroup=inner_group_name)
+                        group_group = GroupGroup(
+                            group=group_name, subgroup=inner_group_name
+                        )
                         if verbose is True:
                             outputLog(self, group_group)
                         self.storage_engine.session.add(group_group)
 
-                if 'users' in yaml_obj:
-                    users_list = yaml_obj['users']
+                if "users" in yaml_obj:
+                    users_list = yaml_obj["users"]
                     splits = users_list.split(",")
                     for user_name in splits:
                         user_name = user_name.strip()
@@ -141,10 +153,14 @@ class SQLUserGroupStore(SQLStore, UserGroupsStore):
         dbusers = self._storage_engine.session.query(AuthoriseUser)
         for dbuser in dbusers:
             user = User(dbuser.name)
-            dbuserroles = self._storage_engine.session.query(UserRole).filter(UserRole.user == dbuser.name)
+            dbuserroles = self._storage_engine.session.query(UserRole).filter(
+                UserRole.user == dbuser.name
+            )
             for dbuserrole in dbuserroles:
                 user.add_role(dbuserrole.role)
-            dbusergroups = self._storage_engine.session.query(UserGroup).filter(UserGroup.user == dbuser.name)
+            dbusergroups = self._storage_engine.session.query(UserGroup).filter(
+                UserGroup.user == dbuser.name
+            )
             for dbusergroup in dbusergroups:
                 user.add_group(dbusergroup.group)
             usersgroupsauthorisor.users[user.userid] = user
@@ -152,13 +168,19 @@ class SQLUserGroupStore(SQLStore, UserGroupsStore):
         groups = self._storage_engine.session.query(AuthoriseGroup)
         for dbgroup in groups:
             group = Group(dbgroup.name)
-            groupusers = self._storage_engine.session.query(GroupUser).filter(GroupUser.group == dbgroup.name)
+            groupusers = self._storage_engine.session.query(GroupUser).filter(
+                GroupUser.group == dbgroup.name
+            )
             for dbgroupuser in groupusers:
                 group.add_user(dbgroupuser.user)
-            groupgroups = self._storage_engine.session.query(GroupGroup).filter(GroupGroup.group == dbgroup.name)
+            groupgroups = self._storage_engine.session.query(GroupGroup).filter(
+                GroupGroup.group == dbgroup.name
+            )
             for dbgroupgroup in groupgroups:
                 group.add_group(dbgroupgroup.subgroup)
-            grouproles = self._storage_engine.session.query(GroupRole).filter(GroupRole.group == dbgroup.name)
+            grouproles = self._storage_engine.session.query(GroupRole).filter(
+                GroupRole.group == dbgroup.name
+            )
             for dbgrouprole in grouproles:
                 group.add_role(dbgrouprole.role)
             usersgroupsauthorisor.groups[group.groupid] = group

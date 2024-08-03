@@ -15,8 +15,9 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 """
-from programy.utils.logging.ylogger import YLogger
+
 from programy.extensions.base import Extension
+from programy.utils.logging.ylogger import YLogger
 
 
 class ClientAdminExtension(Extension):
@@ -27,11 +28,11 @@ class ClientAdminExtension(Extension):
     def _list(self, commands, client_context):
         if len(commands) > 1:
 
-            if commands[1] == 'BOTS':
+            if commands[1] == "BOTS":
                 ids = client_context.client.bot_factory.botids()
                 return ", ".join(ids)
 
-            elif commands[1] == 'BRAINS':
+            elif commands[1] == "BRAINS":
 
                 if len(commands) > 2:
                     botid = commands[2]
@@ -46,7 +47,7 @@ class ClientAdminExtension(Extension):
         return "Invalid LIST command, BOTS or BRAINS only"
 
     def _dump(self, commands, client_context):
-        if commands[1] == 'BRAIN':
+        if commands[1] == "BRAIN":
 
             if len(commands) == 4:
                 botid = commands[2]
@@ -77,19 +78,21 @@ class ClientAdminExtension(Extension):
         try:
             commands = data.split()
 
-            if commands[0] == 'COMMANDS':
+            if commands[0] == "COMMANDS":
                 return self._commands()
 
-            elif commands[0] == 'LIST':
+            elif commands[0] == "LIST":
                 return self._list(commands, client_context)
 
-            elif commands[0] == 'DUMP':
+            elif commands[0] == "DUMP":
                 return self._dump(commands, client_context)
 
             else:
                 return "Invalid Admin Command, LIST or DUMP only"
 
         except Exception as e:
-            YLogger.exception(client_context, "Failed to execute client admin extension", e)
+            YLogger.exception(
+                client_context, "Failed to execute client admin extension", e
+            )
 
         return "Client Admin Error"

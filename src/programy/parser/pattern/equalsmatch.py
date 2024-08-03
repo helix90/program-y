@@ -36,6 +36,8 @@ class EqualsMatch:
         return self._matched_phrase
 
     def to_string(self):
-        return "%s, %d, %s" % (self._matched,
-                               self._word_no,
-                               self.matched_phrase if self.matched_phrase is not None else "''")
+        return "%s, %d, %s" % (
+            self._matched,
+            self._word_no,
+            self.matched_phrase if self.matched_phrase is not None else "''",
+        )

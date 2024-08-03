@@ -2,10 +2,13 @@ import os
 import os.path
 import unittest
 from unittest.mock import patch
+
 from programy.rdf.collection import RDFCollection
 from programy.storage.factory import StorageFactory
-from programy.storage.stores.file.config import FileStorageConfiguration
-from programy.storage.stores.file.config import FileStoreConfiguration
+from programy.storage.stores.file.config import (
+    FileStorageConfiguration,
+    FileStoreConfiguration,
+)
 from programy.storage.stores.file.engine import FileStorageEngine
 
 
@@ -13,7 +16,9 @@ class RDFCollectionLoadingTests(unittest.TestCase):
 
     def test_load_from_file(self):
         config = FileStorageConfiguration()
-        config._rdf_storage = FileStoreConfiguration(dirs=[os.path.dirname(__file__) + os.sep + "test_files" + os.sep + "rdfs"])
+        config._rdf_storage = FileStoreConfiguration(
+            dirs=[os.path.dirname(__file__) + os.sep + "test_files" + os.sep + "rdfs"]
+        )
 
         factory = StorageFactory()
 
@@ -35,7 +40,9 @@ class RDFCollectionLoadingTests(unittest.TestCase):
 
     def test_load_no_engine(self):
         config = FileStorageConfiguration()
-        config._rdf_storage = FileStoreConfiguration(dirs=[os.path.dirname(__file__) + os.sep + "test_files" + os.sep + "rdfs"])
+        config._rdf_storage = FileStoreConfiguration(
+            dirs=[os.path.dirname(__file__) + os.sep + "test_files" + os.sep + "rdfs"]
+        )
 
         factory = StorageFactory()
 
@@ -50,7 +57,9 @@ class RDFCollectionLoadingTests(unittest.TestCase):
 
     def test_reload_from_file(self):
         config = FileStorageConfiguration()
-        config._rdf_storage = FileStoreConfiguration(dirs=[os.path.dirname(__file__) + os.sep + "test_files" + os.sep + "rdfs"])
+        config._rdf_storage = FileStoreConfiguration(
+            dirs=[os.path.dirname(__file__) + os.sep + "test_files" + os.sep + "rdfs"]
+        )
 
         factory = StorageFactory()
 
@@ -81,7 +90,9 @@ class RDFCollectionLoadingTests(unittest.TestCase):
 
     def test_reload_no_engine(self):
         config = FileStorageConfiguration()
-        config._rdf_storage = FileStoreConfiguration(dirs=[os.path.dirname(__file__) + os.sep + "test_files" + os.sep + "rdfs"])
+        config._rdf_storage = FileStoreConfiguration(
+            dirs=[os.path.dirname(__file__) + os.sep + "test_files" + os.sep + "rdfs"]
+        )
 
         factory = StorageFactory()
 
@@ -95,12 +106,16 @@ class RDFCollectionLoadingTests(unittest.TestCase):
         self.assertFalse(collection.reload(factory, "TESTDATA"))
 
     def patch_load_all(self, collector):
-        raise Exception ("Mock Exception")
+        raise Exception("Mock Exception")
 
-    @patch("programy.storage.stores.file.store.rdfs.FileRDFStore.load_all", patch_load_all)
+    @patch(
+        "programy.storage.stores.file.store.rdfs.FileRDFStore.load_all", patch_load_all
+    )
     def test_load_exception(self):
         config = FileStorageConfiguration()
-        config._rdf_storage = FileStoreConfiguration(dirs=[os.path.dirname(__file__) + os.sep + "test_files" + os.sep + "rdfs"])
+        config._rdf_storage = FileStoreConfiguration(
+            dirs=[os.path.dirname(__file__) + os.sep + "test_files" + os.sep + "rdfs"]
+        )
 
         factory = StorageFactory()
 
@@ -116,14 +131,15 @@ class RDFCollectionLoadingTests(unittest.TestCase):
 
         self.assertFalse(collection.load(factory))
 
-
     def patch_reload(self, collector, rdf_name):
         raise Exception("Mock Exception")
 
     @patch("programy.storage.stores.file.store.rdfs.FileRDFStore.reload", patch_reload)
     def test_reload_from_file_exception(self):
         config = FileStorageConfiguration()
-        config._rdf_storage = FileStoreConfiguration(dirs=[os.path.dirname(__file__) + os.sep + "test_files" + os.sep + "rdfs"])
+        config._rdf_storage = FileStoreConfiguration(
+            dirs=[os.path.dirname(__file__) + os.sep + "test_files" + os.sep + "rdfs"]
+        )
 
         factory = StorageFactory()
 

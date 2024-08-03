@@ -1,6 +1,7 @@
+from programytest.parser.base import ParserTestsBaseClass
+
 from programy.parser.template.nodes.condition import TemplateConditionVariable
 from programy.parser.template.nodes.word import TemplateWordNode
-from programytest.parser.base import ParserTestsBaseClass
 
 
 class TemplateConditionVariableTests(ParserTestsBaseClass):
@@ -42,7 +43,11 @@ class TemplateConditionVariableTests(ParserTestsBaseClass):
         self.assertEquals("[NODE]", var.to_string())
 
     def test_init_global(self):
-        var = TemplateConditionVariable(name="var1", value=TemplateWordNode("value1"), var_type=TemplateConditionVariable.GLOBAL)
+        var = TemplateConditionVariable(
+            name="var1",
+            value=TemplateWordNode("value1"),
+            var_type=TemplateConditionVariable.GLOBAL,
+        )
         self.assertIsNotNone(var)
         self.assertEqual(var.name, "var1")
         self.assertEqual(var.value.word, "value1")
@@ -50,7 +55,12 @@ class TemplateConditionVariableTests(ParserTestsBaseClass):
         self.assertFalse(var.loop)
 
     def test_init_global_with_loop(self):
-        var = TemplateConditionVariable(name="var1", value=TemplateWordNode("value1"), var_type=TemplateConditionVariable.GLOBAL,loop=True)
+        var = TemplateConditionVariable(
+            name="var1",
+            value=TemplateWordNode("value1"),
+            var_type=TemplateConditionVariable.GLOBAL,
+            loop=True,
+        )
         self.assertIsNotNone(var)
         self.assertEqual(var.name, "var1")
         self.assertEqual(var.value.word, "value1")
@@ -58,7 +68,11 @@ class TemplateConditionVariableTests(ParserTestsBaseClass):
         self.assertTrue(var.loop)
 
     def test_init_local(self):
-        var = TemplateConditionVariable(name="var1", value=TemplateWordNode("value1"), var_type=TemplateConditionVariable.LOCAL)
+        var = TemplateConditionVariable(
+            name="var1",
+            value=TemplateWordNode("value1"),
+            var_type=TemplateConditionVariable.LOCAL,
+        )
         self.assertIsNotNone(var)
         self.assertEqual(var.name, "var1")
         self.assertEqual(var.value.word, "value1")
@@ -66,7 +80,12 @@ class TemplateConditionVariableTests(ParserTestsBaseClass):
         self.assertFalse(var.loop)
 
     def test_init_local_with_loop(self):
-        var = TemplateConditionVariable(name="var1", value=TemplateWordNode("value1"), var_type=TemplateConditionVariable.LOCAL, loop=True)
+        var = TemplateConditionVariable(
+            name="var1",
+            value=TemplateWordNode("value1"),
+            var_type=TemplateConditionVariable.LOCAL,
+            loop=True,
+        )
         self.assertIsNotNone(var)
         self.assertEqual(var.name, "var1")
         self.assertEqual(var.value.word, "value1")
@@ -74,7 +93,11 @@ class TemplateConditionVariableTests(ParserTestsBaseClass):
         self.assertTrue(var.loop)
 
     def test_init_bot(self):
-        var = TemplateConditionVariable(name="var1", value=TemplateWordNode("value1"), var_type=TemplateConditionVariable.BOT)
+        var = TemplateConditionVariable(
+            name="var1",
+            value=TemplateWordNode("value1"),
+            var_type=TemplateConditionVariable.BOT,
+        )
         self.assertIsNotNone(var)
         self.assertEqual(var.name, "var1")
         self.assertEqual(var.value.word, "value1")
@@ -82,7 +105,12 @@ class TemplateConditionVariableTests(ParserTestsBaseClass):
         self.assertFalse(var.loop)
 
     def test_init_bot_with_loop(self):
-        var = TemplateConditionVariable(name="var1", value=TemplateWordNode("value1"), var_type=TemplateConditionVariable.BOT, loop=True)
+        var = TemplateConditionVariable(
+            name="var1",
+            value=TemplateWordNode("value1"),
+            var_type=TemplateConditionVariable.BOT,
+            loop=True,
+        )
         self.assertIsNotNone(var)
         self.assertEqual(var.name, "var1")
         self.assertEqual(var.value.word, "value1")

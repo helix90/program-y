@@ -11,4 +11,3 @@ class NodesStoreTest(unittest.TestCase):
         with self.assertRaises(NotImplementedError):
             collector = unittest.mock.Mock()
             store.load(collector)
-

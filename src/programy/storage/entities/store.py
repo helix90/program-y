@@ -14,10 +14,11 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 import os
 import os.path
-from programy.storage.utils.processors import TextFile
-from programy.storage.utils.processors import CSVFileReader
+
+from programy.storage.utils.processors import CSVFileReader, TextFile
 from programy.utils.logging.ylogger import YLogger
 
 
@@ -29,20 +30,20 @@ class Store:
     YAML_FORMAT = "yaml"
 
     def __init__(self):
-        pass                # pragma: no cover
+        pass  # pragma: no cover
 
     def empty(self):
-        return              # pragma: no cover
+        return  # pragma: no cover
 
     def empty_named(self, name):
-        del name            # pragma: no cover
-        return              # pragma: no cover
+        del name  # pragma: no cover
+        return  # pragma: no cover
 
     def commit(self, commit=True):
-        return              # pragma: no cover
+        return  # pragma: no cover
 
     def rollback(self, commit=True):
-        return              # pragma: no cover
+        return  # pragma: no cover
 
     def get_split_char(self):
         return ","
@@ -51,17 +52,17 @@ class Store:
         return line.split(",")
 
     def process_line(self, name, fields, verbose=False):
-        del name            # pragma: no cover
-        del fields          # pragma: no cover
-        del verbose         # pragma: no cover
+        del name  # pragma: no cover
+        del fields  # pragma: no cover
+        del verbose  # pragma: no cover
         return False
 
     def upload_from_text(self, name, text, commit=True):
         try:
-            lines = text.split('\n')
+            lines = text.split("\n")
             for line in lines:
                 line = line.strip()
-                if line and len(line)>0:
+                if line and len(line) > 0:
                     fields = self.split_into_fields(line)
                     self.process_line(name, fields)
 
@@ -97,8 +98,15 @@ class Store:
 
         return filename.upper()
 
-    def upload_from_directory(self, directory, fileformat=TEXT_FORMAT, extension=None, subdir=True, commit=True,
-                              verbose=False):
+    def upload_from_directory(
+        self,
+        directory,
+        fileformat=TEXT_FORMAT,
+        extension=None,
+        subdir=True,
+        commit=True,
+        verbose=False,
+    ):
 
         final_count = 0
         final_success = 0
@@ -111,13 +119,21 @@ class Store:
                     if os.path.isdir(fullpath) is False:
                         if extension is not None:
                             if filename.endswith(extension):
-                                count, success = self.upload_from_file(fullpath, fileformat=fileformat, commit=commit,
-                                                                       verbose=verbose)
+                                count, success = self.upload_from_file(
+                                    fullpath,
+                                    fileformat=fileformat,
+                                    commit=commit,
+                                    verbose=verbose,
+                                )
                                 final_count += count
                                 final_success += success
                         else:
-                            count, success = self.upload_from_file(fullpath, fileformat=fileformat, commit=commit,
-                                                                   verbose=verbose)
+                            count, success = self.upload_from_file(
+                                fullpath,
+                                fileformat=fileformat,
+                                commit=commit,
+                                verbose=verbose,
+                            )
                             final_count += count
                             final_success += success
             else:
@@ -125,15 +141,21 @@ class Store:
                     for filename in filenames:
                         if extension is not None:
                             if filename.endswith(extension):
-                                count, success = self.upload_from_file(os.path.join(dirpath, filename),
-                                                                       fileformat=fileformat, commit=commit,
-                                                                       verbose=verbose)
+                                count, success = self.upload_from_file(
+                                    os.path.join(dirpath, filename),
+                                    fileformat=fileformat,
+                                    commit=commit,
+                                    verbose=verbose,
+                                )
                                 final_count += count
                                 final_success += success
                         else:
-                            count, success = self.upload_from_file(os.path.join(dirpath, filename),
-                                                                   fileformat=fileformat, commit=commit,
-                                                                   verbose=verbose)
+                            count, success = self.upload_from_file(
+                                os.path.join(dirpath, filename),
+                                fileformat=fileformat,
+                                commit=commit,
+                                verbose=verbose,
+                            )
                             final_count += count
                             final_success += success
 
@@ -145,7 +167,9 @@ class Store:
 
         return final_count, final_success
 
-    def upload_from_file(self, filename, fileformat=TEXT_FORMAT, commit=True, verbose=False):
+    def upload_from_file(
+        self, filename, fileformat=TEXT_FORMAT, commit=True, verbose=False
+    ):
 
         file_processor = None
         final_count = 0

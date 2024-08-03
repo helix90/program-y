@@ -14,9 +14,10 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
+from programy.parser.template.nodes.base import TemplateNode
 from programy.utils.logging.ylogger import YLogger
 from programy.utils.text.text import TextUtils
-from programy.parser.template.nodes.base import TemplateNode
 
 
 class TemplateImplodeNode(TemplateNode):
@@ -27,7 +28,9 @@ class TemplateImplodeNode(TemplateNode):
     def resolve_to_string(self, client_context):
         result = self.resolve_children_to_string(client_context)
         resolved = TextUtils.strip_all_whitespace(result)
-        YLogger.debug(client_context, "[%s] resolved to [%s]", self.to_string(), resolved)
+        YLogger.debug(
+            client_context, "[%s] resolved to [%s]", self.to_string(), resolved
+        )
         return resolved
 
     def to_string(self):

@@ -14,8 +14,9 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.storage.entities.store import Store
+
 from programy.mappings.base import DoubleStringPatternSplitCollection
+from programy.storage.entities.store import Store
 
 
 class LookupsStore(Store):
@@ -33,5 +34,6 @@ class LookupsStore(Store):
         return DoubleStringPatternSplitCollection.process_key_value(key, value, userid)
 
     def split_into_fields(self, line):
-        return DoubleStringPatternSplitCollection.\
-            split_line_by_pattern(line, DoubleStringPatternSplitCollection.RE_OF_SPLIT_PATTERN)
+        return DoubleStringPatternSplitCollection.split_line_by_pattern(
+            line, DoubleStringPatternSplitCollection.RE_OF_SPLIT_PATTERN
+        )

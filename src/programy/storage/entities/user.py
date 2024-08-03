@@ -14,6 +14,7 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 from programy.storage.entities.store import Store
 
 
@@ -23,16 +24,24 @@ class UserStore(Store):
         Store.__init__(self)
 
     def add_user(self, userid, clientid):
-        raise NotImplementedError("add_user missing from User Store")  # pragma: no cover
+        raise NotImplementedError(
+            "add_user missing from User Store"
+        )  # pragma: no cover
 
     def exists(self, userid, clientid):
         raise NotImplementedError("exists missing from User Store")  # pragma: no cover
 
     def get_links(self, userid):
-        raise NotImplementedError("get_links missing from User Store")  # pragma: no cover
+        raise NotImplementedError(
+            "get_links missing from User Store"
+        )  # pragma: no cover
 
     def remove_user(self, userid, clientid):
-        raise NotImplementedError("remove_user missing from User Store")  # pragma: no cover
+        raise NotImplementedError(
+            "remove_user missing from User Store"
+        )  # pragma: no cover
 
     def remove_user_from_all_clients(self, userid):
-        raise NotImplementedError("remove_user_from_all_clients missing from User Store")  # pragma: no cover
+        raise NotImplementedError(
+            "remove_user_from_all_clients missing from User Store"
+        )  # pragma: no cover

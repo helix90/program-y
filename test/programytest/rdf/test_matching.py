@@ -1,4 +1,5 @@
 import unittest
+
 from programy.rdf.collection import RDFCollection
 
 
@@ -70,7 +71,9 @@ class RDFCollectionMatchingTests(unittest.TestCase):
 
         self.add_data(collection)
 
-        matched = collection.matched_as_tuples(subject="MONKEY", predicate="LEGS", obj="2")
+        matched = collection.matched_as_tuples(
+            subject="MONKEY", predicate="LEGS", obj="2"
+        )
         self.assertIsNotNone(matched)
         self.assertEqual(1, len(matched))
         self.assertTrue(["MONKEY", "LEGS", "2"] in matched)
@@ -110,7 +113,6 @@ class RDFCollectionMatchingTests(unittest.TestCase):
         self.assertIsNotNone(matched)
         self.assertEqual(1, len(matched))
         self.assertTrue(["MONKEY", "LEGS", "2"] in matched)
-
 
     def test_not_matched_as_tuples(self):
         collection = RDFCollection()

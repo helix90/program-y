@@ -16,6 +16,3 @@ class BinariesStoreTests(unittest.TestCase):
         store = BinariesStore()
         with self.assertRaises(NotImplementedError):
             store.load_binary()
-
-
-

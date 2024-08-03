@@ -14,10 +14,11 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
-from programy.utils.classes.loader import ClassLoader
-from programy.storage.stores.file.store.filestore import FileStore
+
 from programy.storage.entities.processors import ProcessorStore
+from programy.storage.stores.file.store.filestore import FileStore
+from programy.utils.classes.loader import ClassLoader
+from programy.utils.logging.ylogger import YLogger
 
 
 class FileProcessorsStore(FileStore, ProcessorStore):
@@ -35,14 +36,16 @@ class FileProcessorsStore(FileStore, ProcessorStore):
     def _process_line(self, line, collection, count):
         line = line.strip()
         if len(line) > 0:
-            if line[0] != '#':
+            if line[0] != "#":
                 try:
                     new_class = ClassLoader.instantiate_class(line)
                     collection.add_processor(new_class())
                     count += 1
 
                 except Exception as error:
-                    YLogger.exception(self, "Failed to load processor from file [%s]", error, line)
+                    YLogger.exception(
+                        self, "Failed to load processor from file [%s]", error, line
+                    )
 
         return count
 

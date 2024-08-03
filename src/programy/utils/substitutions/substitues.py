@@ -14,7 +14,9 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 import re
+
 from programy.utils.logging.ylogger import YLogger
 
 
@@ -52,7 +54,9 @@ class Substitutions:
                             self.add_substitute(namevalue[0], ":".join(namevalue[1:]))
 
             except Exception as excep:
-                YLogger.warning(None, "No substitutions file, but one specified [%s]", excep)
+                YLogger.warning(
+                    None, "No substitutions file, but one specified [%s]", excep
+                )
 
     def replace(self, string: str) -> str:
         splits = Substitutions.PATTERN.split(string)

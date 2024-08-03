@@ -2,8 +2,9 @@ import unittest
 import unittest.mock
 import xml.etree.ElementTree as ET
 
-from programy.oob.callmom.search import SearchOutOfBandProcessor
 from programytest.client import TestClient
+
+from programy.oob.callmom.search import SearchOutOfBandProcessor
 
 
 class SearchOutOfBandProcessorTests(unittest.TestCase):
@@ -31,4 +32,7 @@ class SearchOutOfBandProcessorTests(unittest.TestCase):
         self.assertIsNotNone(oob_processor)
 
         oob_content = ET.fromstring("<search>process</search>")
-        self.assertEqual("SEARCH", oob_processor.process_out_of_bounds(self._client_context, oob_content))
+        self.assertEqual(
+            "SEARCH",
+            oob_processor.process_out_of_bounds(self._client_context, oob_content),
+        )

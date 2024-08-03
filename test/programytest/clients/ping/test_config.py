@@ -10,7 +10,8 @@ class PingResponderConfigurationTests(unittest.TestCase):
     def test_with_data(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         console:
             responder:
                 name: Responder
@@ -22,7 +23,10 @@ class PingResponderConfigurationTests(unittest.TestCase):
                 shutdown: /api/v1.0/shutdown
                 register: http://127.0.0.1:5000/api/healthcheck/v1.0/register
                 unregister: http://127.0.0.1:5000/api/healthcheck/v1.0/unregister
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         console_config = yaml.get_section("console")
 
@@ -36,16 +40,26 @@ class PingResponderConfigurationTests(unittest.TestCase):
         self.assertEqual(responder_config.ssl_key_file, "/cert/keys.file")
         self.assertEqual(responder_config.url, "/api/v1.0/ping")
         self.assertEqual(responder_config.shutdown, "/api/v1.0/shutdown")
-        self.assertEqual(responder_config.register, "http://127.0.0.1:5000/api/healthcheck/v1.0/register")
-        self.assertEqual(responder_config.unregister, "http://127.0.0.1:5000/api/healthcheck/v1.0/unregister")
+        self.assertEqual(
+            responder_config.register,
+            "http://127.0.0.1:5000/api/healthcheck/v1.0/register",
+        )
+        self.assertEqual(
+            responder_config.unregister,
+            "http://127.0.0.1:5000/api/healthcheck/v1.0/unregister",
+        )
 
     def test_without_data(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         bot:
             responder:
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         console_config = yaml.get_section("console")
 
@@ -65,9 +79,13 @@ class PingResponderConfigurationTests(unittest.TestCase):
     def test_with_no_data(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         bot:
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         console_config = yaml.get_section("console")
 
@@ -93,13 +111,13 @@ class PingResponderConfigurationTests(unittest.TestCase):
 
     @staticmethod
     def assert_defaults(test, data):
-        test.assertEqual(data['name'], "Client Ping Responder")
-        test.assertIsNone(data['host'])
-        test.assertIsNone(data['port'])
-        test.assertIsNone(data['ssl_cert_file'])
-        test.assertIsNone(data['ssl_key_file'])
-        test.assertIsNone(data['url'])
-        test.assertIsNone(data['shutdown'])
-        test.assertIsNone(data['register'])
-        test.assertIsNone(data['unregister'])
-        test.assertFalse(data['debug'])
+        test.assertEqual(data["name"], "Client Ping Responder")
+        test.assertIsNone(data["host"])
+        test.assertIsNone(data["port"])
+        test.assertIsNone(data["ssl_cert_file"])
+        test.assertIsNone(data["ssl_key_file"])
+        test.assertIsNone(data["url"])
+        test.assertIsNone(data["shutdown"])
+        test.assertIsNone(data["register"])
+        test.assertIsNone(data["unregister"])
+        test.assertFalse(data["debug"])

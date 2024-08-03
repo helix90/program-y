@@ -14,9 +14,10 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.storage.stores.sql.store.sqlstore import SQLStore
+
 from programy.storage.entities.rdf import RDFReadWriteStore
 from programy.storage.stores.sql.dao.rdf import RDF
+from programy.storage.stores.sql.store.sqlstore import SQLStore
 from programy.utils.console.console import outputLog
 
 
@@ -50,4 +51,3 @@ class SQLRDFsStore(RDFReadWriteStore, SQLStore):
         db_rdfs = self._storage_engine.session.query(RDF).filter(RDF.name == name)
         for rdf in db_rdfs:
             collector.add_entity(rdf.subject, rdf.predicate, rdf.object, name)
-

@@ -2,7 +2,7 @@ import unittest
 
 
 class AccountLinkerAsserts(unittest.TestCase):
-    
+
     def assert_generate_key(self, linkerservice):
         key = linkerservice._generate_key()
         self.assertIsNotNone(key)
@@ -27,7 +27,9 @@ class AccountLinkerAsserts(unittest.TestCase):
         generated_key = linkerservice.generate_link(primary_user, provided_key)
         self.assertIsNotNone(generated_key)
 
-        result = linkerservice.link_accounts(primary_user, provided_key, generated_key, "testuser2", "facebook")
+        result = linkerservice.link_accounts(
+            primary_user, provided_key, generated_key, "testuser2", "facebook"
+        )
         self.assertTrue(result)
 
         primary = linkerservice.primary_account("testuser2")
@@ -72,7 +74,9 @@ class AccountLinkerAsserts(unittest.TestCase):
         generated_key = linkerservice.generate_link(primary_user, provided_key)
         self.assertIsNotNone(generated_key)
 
-        result = linkerservice.link_accounts(primary_user, "PASSWORD2", generated_key, secondary_user, secondary_client)
+        result = linkerservice.link_accounts(
+            primary_user, "PASSWORD2", generated_key, secondary_user, secondary_client
+        )
         self.assertFalse(result)
 
     def assert_generated_key_not_matched(self, linkerservice):
@@ -88,7 +92,13 @@ class AccountLinkerAsserts(unittest.TestCase):
         generated_key = linkerservice.generate_link(primary_user, provided_key)
         self.assertIsNotNone(generated_key)
 
-        result = linkerservice.link_accounts(primary_user, provided_key, generated_key+"X", secondary_user, secondary_client)
+        result = linkerservice.link_accounts(
+            primary_user,
+            provided_key,
+            generated_key + "X",
+            secondary_user,
+            secondary_client,
+        )
         self.assertFalse(result)
 
     def assert_generated_key_expired(self, linkerservice):
@@ -99,10 +109,14 @@ class AccountLinkerAsserts(unittest.TestCase):
         result = linkerservice.link_user_to_client(primary_user, primary_client)
         self.assertTrue(result)
 
-        generated_key = linkerservice.generate_link(primary_user, provided_key, lifetime=0)
+        generated_key = linkerservice.generate_link(
+            primary_user, provided_key, lifetime=0
+        )
         self.assertIsNotNone(generated_key)
 
-        result = linkerservice.link_accounts(primary_user, provided_key, generated_key, "testuser2", "facebook")
+        result = linkerservice.link_accounts(
+            primary_user, provided_key, generated_key, "testuser2", "facebook"
+        )
         self.assertFalse(result)
 
     def assert_lockout_after_max_retries(self, linkerservice):
@@ -118,22 +132,44 @@ class AccountLinkerAsserts(unittest.TestCase):
         generated_key = linkerservice.generate_link(primary_user, provided_key)
         self.assertIsNotNone(generated_key)
 
-        result = linkerservice.link_accounts(primary_user, provided_key, generated_key+"X", secondary_user, secondary_client)
+        result = linkerservice.link_accounts(
+            primary_user,
+            provided_key,
+            generated_key + "X",
+            secondary_user,
+            secondary_client,
+        )
         self.assertFalse(result)
 
-        result = linkerservice.link_accounts(primary_user, provided_key, generated_key+"X", secondary_user, secondary_client)
+        result = linkerservice.link_accounts(
+            primary_user,
+            provided_key,
+            generated_key + "X",
+            secondary_user,
+            secondary_client,
+        )
         self.assertFalse(result)
 
-        result = linkerservice.link_accounts(primary_user, provided_key, generated_key+"X", secondary_user, secondary_client)
+        result = linkerservice.link_accounts(
+            primary_user,
+            provided_key,
+            generated_key + "X",
+            secondary_user,
+            secondary_client,
+        )
         self.assertFalse(result)
 
-        result = linkerservice.link_accounts(primary_user, provided_key, generated_key, secondary_user, secondary_client)
+        result = linkerservice.link_accounts(
+            primary_user, provided_key, generated_key, secondary_user, secondary_client
+        )
         self.assertFalse(result)
 
         reset = linkerservice.reset_link(primary_user)
         self.assertTrue(reset)
 
-        result = linkerservice.link_accounts(primary_user, provided_key, generated_key, secondary_user, secondary_client)
+        result = linkerservice.link_accounts(
+            primary_user, provided_key, generated_key, secondary_user, secondary_client
+        )
         self.assertTrue(result)
 
     def assert_unlink_user_from_client(self, linkerservice):
@@ -149,13 +185,17 @@ class AccountLinkerAsserts(unittest.TestCase):
         generated_key = linkerservice.generate_link(primary_user, provided_key)
         self.assertIsNotNone(generated_key)
 
-        result = linkerservice.link_accounts(primary_user, provided_key, generated_key, secondary_user, secondary_client)
+        result = linkerservice.link_accounts(
+            primary_user, provided_key, generated_key, secondary_user, secondary_client
+        )
         self.assertTrue(result)
 
         result = linkerservice.unlink_user_from_client(primary_user, primary_client)
         self.assertTrue(result)
 
-        result = linkerservice.link_accounts(primary_user, provided_key, generated_key, secondary_user, secondary_client)
+        result = linkerservice.link_accounts(
+            primary_user, provided_key, generated_key, secondary_user, secondary_client
+        )
         self.assertFalse(result)
 
     def assert_unlink_user_from_client_fails(self, linkerservice):
@@ -171,7 +211,9 @@ class AccountLinkerAsserts(unittest.TestCase):
         generated_key = linkerservice.generate_link(primary_user, provided_key)
         self.assertIsNotNone(generated_key)
 
-        result = linkerservice.link_accounts(primary_user, provided_key, generated_key, secondary_user, secondary_client)
+        result = linkerservice.link_accounts(
+            primary_user, provided_key, generated_key, secondary_user, secondary_client
+        )
         self.assertTrue(result)
 
         result = linkerservice.unlink_user_from_client(primary_user, primary_client)
@@ -192,10 +234,22 @@ class AccountLinkerAsserts(unittest.TestCase):
         generated_key = linkerservice.generate_link(primary_user, provided_key)
         self.assertIsNotNone(generated_key)
 
-        result = linkerservice.link_accounts(primary_user, provided_key, generated_key, secondary_user1, secondary_client1)
+        result = linkerservice.link_accounts(
+            primary_user,
+            provided_key,
+            generated_key,
+            secondary_user1,
+            secondary_client1,
+        )
         self.assertTrue(result)
 
-        result = linkerservice.link_accounts(primary_user, provided_key, generated_key, secondary_user2, secondary_client2)
+        result = linkerservice.link_accounts(
+            primary_user,
+            provided_key,
+            generated_key,
+            secondary_user2,
+            secondary_client2,
+        )
         self.assertTrue(result)
 
         result = linkerservice.unlink_user_from_all_clients(primary_user)
@@ -216,10 +270,22 @@ class AccountLinkerAsserts(unittest.TestCase):
         generated_key = linkerservice.generate_link(primary_user, provided_key)
         self.assertIsNotNone(generated_key)
 
-        result = linkerservice.link_accounts(primary_user, provided_key, generated_key, secondary_user1, secondary_client1)
+        result = linkerservice.link_accounts(
+            primary_user,
+            provided_key,
+            generated_key,
+            secondary_user1,
+            secondary_client1,
+        )
         self.assertTrue(result)
 
-        result = linkerservice.link_accounts(primary_user, provided_key, generated_key, secondary_user2, secondary_client2)
+        result = linkerservice.link_accounts(
+            primary_user,
+            provided_key,
+            generated_key,
+            secondary_user2,
+            secondary_client2,
+        )
         self.assertTrue(result)
 
         result = linkerservice.unlink_user_from_all_clients(primary_user)
@@ -251,7 +317,13 @@ class AccountLinkerAsserts(unittest.TestCase):
         generated_key = mgr.generate_link(primary_user, provided_key)
         self.assertIsNotNone(generated_key)
 
-        result = mgr.link_accounts(primary_user, provided_key, generated_key, secondary_user1, secondary_client1)
+        result = mgr.link_accounts(
+            primary_user,
+            provided_key,
+            generated_key,
+            secondary_user1,
+            secondary_client1,
+        )
         self.assertTrue(result)
 
     def assert_link_accounts_failure(self, mgr):
@@ -263,7 +335,11 @@ class AccountLinkerAsserts(unittest.TestCase):
         generated_key = mgr.generate_link(primary_user, provided_key)
         self.assertIsNotNone(generated_key)
 
-        result = mgr.link_accounts(primary_user, provided_key, generated_key, secondary_user1, secondary_client1)
+        result = mgr.link_accounts(
+            primary_user,
+            provided_key,
+            generated_key,
+            secondary_user1,
+            secondary_client1,
+        )
         self.assertFalse(result)
-
-

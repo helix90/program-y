@@ -1,10 +1,11 @@
 import unittest
 
+from programytest.client import TestClient
+
+from programy.config.bot.splitter import BotSentenceSplitterConfiguration
 from programy.dialog.question import Question
 from programy.dialog.sentence import Sentence
-from programytest.client import TestClient
 from programy.dialog.splitter.regex import RegexSentenceSplitter
-from programy.config.bot.splitter import BotSentenceSplitterConfiguration
 
 
 class QuestionTests(unittest.TestCase):
@@ -18,9 +19,15 @@ class QuestionTests(unittest.TestCase):
         self.assertIsNotNone(question)
         self.assertEqual(0, len(question.sentences))
 
-        question.sentences = [Sentence(self._client_context, "Sentence One"), Sentence(self._client_context, "Sentence Two")]
+        question.sentences = [
+            Sentence(self._client_context, "Sentence One"),
+            Sentence(self._client_context, "Sentence Two"),
+        ]
         self.assertEqual(2, len(question.sentences))
-        self.assertEqual("Sentence One = N/A, Sentence Two = N/A", question.debug_info(self._client_context))
+        self.assertEqual(
+            "Sentence One = N/A, Sentence Two = N/A",
+            question.debug_info(self._client_context),
+        )
 
         self.assertEquals(-1, question.current_sentence_no)
         question.current_sentence_no = 1
@@ -42,7 +49,9 @@ class QuestionTests(unittest.TestCase):
         self.assertEqual(1, len(question.sentences))
 
     def test_question_multi_sentence(self):
-        question = Question.create_from_text(self._client_context, "Hello There. How Are you")
+        question = Question.create_from_text(
+            self._client_context, "Hello There. How Are you"
+        )
         self.assertIsNotNone(question)
         self.assertEqual(2, len(question.sentences))
         self.assertEqual("Hello There", question.sentence(0).text(self._client_context))
@@ -55,7 +64,10 @@ class QuestionTests(unittest.TestCase):
         question = Question.create_from_sentence(sentence)
         self.assertIsNotNone(question)
         self.assertEqual(1, len(question.sentences))
-        self.assertEqual(sentence.text(self._client_context), question.sentence(0).text(self._client_context))
+        self.assertEqual(
+            sentence.text(self._client_context),
+            question.sentence(0).text(self._client_context),
+        )
         with self.assertRaises(Exception):
             question.sentence(1)
 
@@ -88,23 +100,41 @@ class QuestionTests(unittest.TestCase):
         self.assertIsNotNone(combined)
         self.assertEqual(combined, "Hello. World")
 
-        self.assertEquals("Hi = Hello, Hi Again = World", question.debug_info(self._client_context))
+        self.assertEquals(
+            "Hi = Hello, Hi Again = World", question.debug_info(self._client_context)
+        )
 
     def test_next_previous_sentences(self):
-        question = Question.create_from_text(self._client_context, "Hello There. How Are you")
-        self.assertEqual("How Are you", question.current_sentence().text(self._client_context))
-        self.assertEqual("Hello There", question.previous_nth_sentence(1).text(self._client_context))
+        question = Question.create_from_text(
+            self._client_context, "Hello There. How Are you"
+        )
+        self.assertEqual(
+            "How Are you", question.current_sentence().text(self._client_context)
+        )
+        self.assertEqual(
+            "Hello There", question.previous_nth_sentence(1).text(self._client_context)
+        )
 
     def test_next_previous_sentences_exception(self):
-        question = Question.create_from_text(self._client_context, "Hello There. How Are you")
+        question = Question.create_from_text(
+            self._client_context, "Hello There. How Are you"
+        )
         with self.assertRaises(Exception):
             question.previous_nth_sentence(2)
 
     def test_next_previous_nth_sentences(self):
-        question = Question.create_from_text(self._client_context, "Hello There. How Are you")
-        self.assertEqual("How Are you", question.current_sentence().text(self._client_context))
-        self.assertEqual("How Are you", question.previous_nth_sentence(0).text(self._client_context))
-        self.assertEqual("Hello There", question.previous_nth_sentence(1).text(self._client_context))
+        question = Question.create_from_text(
+            self._client_context, "Hello There. How Are you"
+        )
+        self.assertEqual(
+            "How Are you", question.current_sentence().text(self._client_context)
+        )
+        self.assertEqual(
+            "How Are you", question.previous_nth_sentence(0).text(self._client_context)
+        )
+        self.assertEqual(
+            "Hello There", question.previous_nth_sentence(1).text(self._client_context)
+        )
 
     def test_to_json(self):
         question = Question()
@@ -125,13 +155,25 @@ class QuestionTests(unittest.TestCase):
 
     def test_from_json(self):
 
-        json_data = {'srai': False,
-                     'sentences': [
-                         {'words': ['Hi'], 'response': 'Hello', 'positivity': 0.0, 'subjectivity': 0.5},
-                         {'words': ['Hi', 'Again'], 'response': 'World', 'positivity': 0.0, 'subjectivity': 0.5}],
-                     'current_sentence_no': -1,
-                     'properties': {}
-                     }
+        json_data = {
+            "srai": False,
+            "sentences": [
+                {
+                    "words": ["Hi"],
+                    "response": "Hello",
+                    "positivity": 0.0,
+                    "subjectivity": 0.5,
+                },
+                {
+                    "words": ["Hi", "Again"],
+                    "response": "World",
+                    "positivity": 0.0,
+                    "subjectivity": 0.5,
+                },
+            ],
+            "current_sentence_no": -1,
+            "properties": {},
+        }
 
         question = Question.from_json(self._client_context, json_data)
         self.assertIsNotNone(question)
@@ -143,4 +185,6 @@ class QuestionTests(unittest.TestCase):
         splitter = RegexSentenceSplitter(BotSentenceSplitterConfiguration())
         self.assertIsNotNone(splitter)
 
-        self.assertEqual(["This is a basic sentence"], splitter.split("This is a basic sentence"))
+        self.assertEqual(
+            ["This is a basic sentence"], splitter.split("This is a basic sentence")
+        )

@@ -14,8 +14,9 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
+
 from programy.storage.entities.store import Store
+from programy.utils.logging.ylogger import YLogger
 
 
 class MongoStore(Store):
@@ -57,7 +58,9 @@ class MongoStore(Store):
         return result.inserted_id
 
     def add_document(self, document):
-        YLogger.debug(self, "Adding document to collection [%s]", self.collection_name())
+        YLogger.debug(
+            self, "Adding document to collection [%s]", self.collection_name()
+        )
         collection = self.collection()
         document.id = self._add_to_collection(collection, document)
         return bool(document.id is not None)

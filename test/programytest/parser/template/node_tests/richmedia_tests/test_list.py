@@ -1,8 +1,9 @@
+from programytest.parser.base import ParserTestsBaseClass
+
 from programy.parser.template.nodes.base import TemplateNode
 from programy.parser.template.nodes.richmedia.list import TemplateListNode
 from programy.parser.template.nodes.word import TemplateWordNode
 
-from programytest.parser.base import ParserTestsBaseClass
 
 class TemplateListNodeTests(ParserTestsBaseClass):
 
@@ -24,5 +25,7 @@ class TemplateListNodeTests(ParserTestsBaseClass):
         self.assertIsNotNone(resolved)
         self.assertEqual("<list><item>Item1</item><item>Item2</item></list>", resolved)
 
-        self.assertEqual("<list><item>Item1</item><item>Item2</item></list>", root.to_xml(self._client_context))
-
+        self.assertEqual(
+            "<list><item>Item1</item><item>Item2</item></list>",
+            root.to_xml(self._client_context),
+        )

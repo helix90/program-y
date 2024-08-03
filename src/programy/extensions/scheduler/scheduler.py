@@ -15,8 +15,9 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 """
-from programy.utils.logging.ylogger import YLogger
+
 from programy.extensions.base import Extension
+from programy.utils.logging.ylogger import YLogger
 
 
 class SchedulerExtension(Extension):
@@ -29,21 +30,21 @@ class SchedulerExtension(Extension):
 
         try:
             words = data.split()
-            if words[0].upper() == 'SCHEDULE':
+            if words[0].upper() == "SCHEDULE":
                 action = words[1].upper()
-                if action in ['IN', 'EVERY']:
+                if action in ["IN", "EVERY"]:
                     return self.execute_schedule(client_context, words)
 
-                elif action == 'PAUSE':
+                elif action == "PAUSE":
                     return self.execute_pause(client_context, words)
 
-                elif action == 'RESUME':
+                elif action == "RESUME":
                     return self.execute_resume(client_context, words)
 
-                elif action == 'STOP':
+                elif action == "STOP":
                     return self.execute_stop(client_context, words)
 
-                elif action == 'LIST':
+                elif action == "LIST":
                     return self.execute_list(client_context, words)
 
                 else:
@@ -52,66 +53,80 @@ class SchedulerExtension(Extension):
                 raise Exception("Scheduler invalid command, must start with SCHEDULE")
 
         except Exception as excep:
-            YLogger.exception(client_context, "Failed to parse Scheduler command", excep)
+            YLogger.exception(
+                client_context, "Failed to parse Scheduler command", excep
+            )
 
-        return 'ERR'
+        return "ERR"
 
     def execute_schedule(self, client_context, words):
         action = words[1].upper()
         quantity = int(words[2])
         period = words[3].upper()
-        if period in ['SECONDS', 'MINUTES', 'HOURS', 'DAYS', 'WEEKS']:
+        if period in ["SECONDS", "MINUTES", "HOURS", "DAYS", "WEEKS"]:
             texttype = words[4]
-            if texttype in ['TEXT', 'SRAI']:
+            if texttype in ["TEXT", "SRAI"]:
                 if len(words) > 5:
                     text = " ".join(words[5:])
-                    self.schedule(client_context, action, quantity, period, texttype, text)
-                    return 'OK'
+                    self.schedule(
+                        client_context, action, quantity, period, texttype, text
+                    )
+                    return "OK"
 
                 else:
-                    raise Exception('Scheduler action missing text')
+                    raise Exception("Scheduler action missing text")
 
             else:
-                raise Exception('Scheduler action missing')
+                raise Exception("Scheduler action missing")
 
         else:
             raise Exception("Scheduler invalid period %s" % period)
 
     def schedule(self, client_context, when, quantity, period, texttype, text):
 
-        if when == 'IN':
-            if period == 'SECONDS':
-                client_context.client.scheduler.schedule_in_n_seconds(client_context.userid, client_context.id,
-                                                                      texttype, text, quantity)
-            elif period == 'MINUTES':
-                client_context.client.scheduler.schedule_in_n_minutes(client_context.userid, client_context.id,
-                                                                      texttype, text, quantity)
-            elif period == 'HOURS':
-                client_context.client.scheduler.schedule_in_n_hours(client_context.userid, client_context.id, texttype,
-                                                                    text, quantity)
-            elif period == 'DAYS':
-                client_context.client.scheduler.schedule_in_n_days(client_context.userid, client_context.id, texttype,
-                                                                   text, quantity)
-            else: # elif period == 'WEEKS':
-                client_context.client.scheduler.schedule_in_n_weeks(client_context.userid, client_context.id, texttype,
-                                                                    text, quantity)
+        if when == "IN":
+            if period == "SECONDS":
+                client_context.client.scheduler.schedule_in_n_seconds(
+                    client_context.userid, client_context.id, texttype, text, quantity
+                )
+            elif period == "MINUTES":
+                client_context.client.scheduler.schedule_in_n_minutes(
+                    client_context.userid, client_context.id, texttype, text, quantity
+                )
+            elif period == "HOURS":
+                client_context.client.scheduler.schedule_in_n_hours(
+                    client_context.userid, client_context.id, texttype, text, quantity
+                )
+            elif period == "DAYS":
+                client_context.client.scheduler.schedule_in_n_days(
+                    client_context.userid, client_context.id, texttype, text, quantity
+                )
+            else:  # elif period == 'WEEKS':
+                client_context.client.scheduler.schedule_in_n_weeks(
+                    client_context.userid, client_context.id, texttype, text, quantity
+                )
 
-        else: # elif when == 'EVERY':
-            if period == 'SECONDS':
-                client_context.client.scheduler.schedule_every_n_seconds(client_context.userid, client_context.id,
-                                                                         texttype, text, quantity)
-            elif period == 'MINUTES':
-                client_context.client.scheduler.schedule_every_n_minutes(client_context.userid, client_context.id,
-                                                                         texttype, text, quantity)
-            elif period == 'HOURS':
-                client_context.client.scheduler.schedule_every_n_hours(client_context.userid, client_context.id,
-                                                                       texttype, text, quantity)
-            elif period == 'DAYS':
-                client_context.client.scheduler.schedule_every_n_days(client_context.userid, client_context.id,
-                                                                      texttype, text, quantity)
-            else: # period == 'WEEKS':
-                client_context.client.scheduler.schedule_every_n_weeks(client_context.userid, client_context.id,
-                                                                       texttype, text, quantity)
+        else:  # elif when == 'EVERY':
+            if period == "SECONDS":
+                client_context.client.scheduler.schedule_every_n_seconds(
+                    client_context.userid, client_context.id, texttype, text, quantity
+                )
+            elif period == "MINUTES":
+                client_context.client.scheduler.schedule_every_n_minutes(
+                    client_context.userid, client_context.id, texttype, text, quantity
+                )
+            elif period == "HOURS":
+                client_context.client.scheduler.schedule_every_n_hours(
+                    client_context.userid, client_context.id, texttype, text, quantity
+                )
+            elif period == "DAYS":
+                client_context.client.scheduler.schedule_every_n_days(
+                    client_context.userid, client_context.id, texttype, text, quantity
+                )
+            else:  # period == 'WEEKS':
+                client_context.client.scheduler.schedule_every_n_weeks(
+                    client_context.userid, client_context.id, texttype, text, quantity
+                )
 
     def get_users_jobs(self, client_context):
         user_jobs = []
@@ -125,55 +140,55 @@ class SchedulerExtension(Extension):
         which = words[2].upper()
         jobs = self.get_users_jobs(client_context)
         if jobs:
-            if which == 'ALL':
+            if which == "ALL":
                 for job in jobs:
                     client_context.client.scheduler.pause_job(job.id)
-                return 'OK'
+                return "OK"
 
             else:
                 jobid = int(which)
                 for job in jobs:
                     if jobid == job.id:
                         client_context.client.scheduler.pause_job(job.id)
-                        return 'OK'
+                        return "OK"
 
-        return 'ERR'
+        return "ERR"
 
     def execute_resume(self, client_context, words):
         which = words[2].upper()
         jobs = self.get_users_jobs(client_context)
         if jobs:
-            if which == 'ALL':
+            if which == "ALL":
                 for job in jobs:
                     client_context.client.scheduler.resume_job(job.id)
-                return 'OK'
+                return "OK"
 
             else:
                 jobid = int(which)
                 for job in jobs:
                     if jobid == job.id:
                         client_context.client.scheduler.resume_job(job.id)
-                        return 'OK'
+                        return "OK"
 
-        return 'ERR'
+        return "ERR"
 
     def execute_stop(self, client_context, words):
         which = words[2].upper()
         jobs = self.get_users_jobs(client_context)
         if jobs:
-            if which == 'ALL':
+            if which == "ALL":
                 for job in jobs:
                     client_context.client.scheduler.stop_job(job.id)
-                return 'OK'
+                return "OK"
 
             else:
                 jobid = int(which)
                 for job in jobs:
                     if jobid == job.id:
                         client_context.client.scheduler.stop_job(job.id)
-                        return 'OK'
+                        return "OK"
 
-        return 'ERR'
+        return "ERR"
 
     def execute_list(self, client_context, words):
         jobs = self.get_users_jobs(client_context)
@@ -184,5 +199,4 @@ class SchedulerExtension(Extension):
             response += "</olist>"
             return response
 
-        return 'ERR'
-
+        return "ERR"

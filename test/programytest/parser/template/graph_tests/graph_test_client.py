@@ -1,10 +1,11 @@
 import unittest
 
+from programytest.client import TestClient
+
 from programy.dialog.question import Question, Sentence
 from programy.parser.pattern.match import Match
 from programy.parser.pattern.matchcontext import MatchContext
 from programy.parser.pattern.nodes.oneormore import PatternOneOrMoreWildCardNode
-from programytest.client import TestClient
 
 
 class TemplateGraphClient(TestClient):
@@ -36,15 +37,19 @@ class TemplateGraphTestClient(unittest.TestCase):
 
         test_node = PatternOneOrMoreWildCardNode("*")
 
-        self.test_sentence._matched_context = MatchContext(max_search_depth=100, max_search_timeout=-1)
-        self.test_sentence._matched_context._matched_nodes = [Match(Match.WORD, test_node, 'one'),
-                                                              Match(Match.WORD, test_node, 'two'),
-                                                              Match(Match.WORD, test_node, 'three'),
-                                                              Match(Match.WORD, test_node, 'four'),
-                                                              Match(Match.WORD, test_node, 'five'),
-                                                              Match(Match.WORD, test_node, 'six'),
-                                                              Match(Match.TOPIC, test_node, '*'),
-                                                              Match(Match.THAT, test_node, '*')]
+        self.test_sentence._matched_context = MatchContext(
+            max_search_depth=100, max_search_timeout=-1
+        )
+        self.test_sentence._matched_context._matched_nodes = [
+            Match(Match.WORD, test_node, "one"),
+            Match(Match.WORD, test_node, "two"),
+            Match(Match.WORD, test_node, "three"),
+            Match(Match.WORD, test_node, "four"),
+            Match(Match.WORD, test_node, "five"),
+            Match(Match.WORD, test_node, "six"),
+            Match(Match.TOPIC, test_node, "*"),
+            Match(Match.THAT, test_node, "*"),
+        ]
 
         conversation = self._client_context.bot.get_conversation(self._client_context)
         question = Question.create_from_sentence(self.test_sentence)

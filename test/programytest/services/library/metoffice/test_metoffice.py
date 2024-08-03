@@ -1,10 +1,18 @@
 import unittest
+
 import metoffer
-from programy.services.library.metoffice.metoffice import MetOffice
 from programytest.client import TestClient
-from programytest.services.library.metoffice.payloads.forecast_3hourly import forecast_3hourly_payload
-from programytest.services.library.metoffice.payloads.observation import observation_payload
-from programytest.services.library.metoffice.payloads.forecast_daily import forecast_daily_payload
+from programytest.services.library.metoffice.payloads.forecast_3hourly import (
+    forecast_3hourly_payload,
+)
+from programytest.services.library.metoffice.payloads.forecast_daily import (
+    forecast_daily_payload,
+)
+from programytest.services.library.metoffice.payloads.observation import (
+    observation_payload,
+)
+
+from programy.services.library.metoffice.metoffice import MetOffice
 
 
 class MockMetOffice(MetOffice):
@@ -32,7 +40,9 @@ class MetOfficeTests(unittest.TestCase):
     def test_get_forecast_data_3hourly(self):
         met_office = MockMetOffice("ABCDEFGHIJKL", forecast=forecast_3hourly_payload)
         self.assertIsNotNone(met_office)
-        forecast = met_office.get_forecast_data(self.lat, self.lng, metoffer.THREE_HOURLY)
+        forecast = met_office.get_forecast_data(
+            self.lat, self.lng, metoffer.THREE_HOURLY
+        )
         self.assertIsNotNone(forecast)
 
     def test_get_forecast_data_daily(self):
@@ -42,7 +52,7 @@ class MetOfficeTests(unittest.TestCase):
         self.assertIsNotNone(forecast)
 
     def test_get_observation_data(self):
-        met_office = MockMetOffice("ABCDEFGHIJKL",  observation=observation_payload)
+        met_office = MockMetOffice("ABCDEFGHIJKL", observation=observation_payload)
         self.assertIsNotNone(met_office)
         forecast = met_office.get_observation_data(self.lat, self.lng)
         self.assertIsNotNone(forecast)
@@ -50,13 +60,17 @@ class MetOfficeTests(unittest.TestCase):
     def test_nearest_location_forecast_3hourly(self):
         met_office = MockMetOffice("ABCDEFGHIJKL", forecast=forecast_3hourly_payload)
         self.assertIsNotNone(met_office)
-        forecast = met_office.nearest_location_forecast(self.lat, self.lng, metoffer.THREE_HOURLY)
+        forecast = met_office.nearest_location_forecast(
+            self.lat, self.lng, metoffer.THREE_HOURLY
+        )
         self.assertIsNotNone(forecast)
 
     def test_nearest_location_forecast_daily(self):
         met_office = MockMetOffice("ABCDEFGHIJKL", forecast=forecast_daily_payload)
         self.assertIsNotNone(met_office)
-        forecast = met_office.nearest_location_forecast(self.lat, self.lng, metoffer.DAILY)
+        forecast = met_office.nearest_location_forecast(
+            self.lat, self.lng, metoffer.DAILY
+        )
         self.assertIsNotNone(forecast)
 
     def test_observation(self):
@@ -79,5 +93,3 @@ class MetOfficeTests(unittest.TestCase):
 
         forecast = met_office.twentyfour_hour_forecast(self.lat, self.lng)
         self.assertIsNotNone(forecast)
-
-

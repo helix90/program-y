@@ -14,12 +14,14 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 import re
-from programy.utils.parsing.linenumxml import LineNumberingParser
 import xml.etree.ElementTree as ET  # pylint: disable=wrong-import-order
-from programy.utils.logging.ylogger import YLogger
-from programy.storage.factory import StorageFactory
+
 from programy.oob.default import DefaultOutOfBandProcessor
+from programy.storage.factory import StorageFactory
+from programy.utils.logging.ylogger import YLogger
+from programy.utils.parsing.linenumxml import LineNumberingParser
 
 
 class OOBHandler:
@@ -29,7 +31,7 @@ class OOBHandler:
 
     @property
     def default_oob(self):
-        return self._oobs.get('default', None)
+        return self._oobs.get("default", None)
 
     @property
     def oobs(self):
@@ -49,8 +51,8 @@ class OOBHandler:
         else:
             YLogger.error(None, "No storage engine available for oobs!")
 
-        if self._oobs.get('default', None) is None:
-            self._oobs['default'] = DefaultOutOfBandProcessor()
+        if self._oobs.get("default", None) is None:
+            self._oobs["default"] = DefaultOutOfBandProcessor()
 
     def oob_in_response(self, response):
         if response is not None:
@@ -83,8 +85,8 @@ class OOBHandler:
     def process_oob(self, client_context, oob_command):
         oob_content = ET.fromstring(oob_command)
 
-        if oob_content.tag == 'oob':
-            for child in oob_content.findall('./'):
+        if oob_content.tag == "oob":
+            for child in oob_content.findall("./"):
                 if child.tag in self._oobs:
                     oob_class = self._oobs[child.tag]
                     return oob_class.process_out_of_bounds(client_context, child)
@@ -93,6 +95,6 @@ class OOBHandler:
                 if def_oob is not None:
                     def_oob.process_out_of_bounds(client_context, child)
                 else:
-                    YLogger.error (client_context, "No default oob defined")
+                    YLogger.error(client_context, "No default oob defined")
 
         return ""

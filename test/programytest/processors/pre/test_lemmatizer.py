@@ -1,7 +1,8 @@
 import unittest
 
-from programy.processors.pre.lemmatize import LemmatizePreProcessor
 from programytest.client import TestClient
+
+from programy.processors.pre.lemmatize import LemmatizePreProcessor
 
 
 class LemmatizerTests(unittest.TestCase):

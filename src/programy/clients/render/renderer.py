@@ -14,9 +14,12 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 from typing import Any
+
 from bs4 import BeautifulSoup as Soup
-from bs4.element import Tag, NavigableString
+from bs4.element import NavigableString, Tag
+
 from programy.context import ClientContext
 from programy.utils.console.console import outputLog
 
@@ -36,7 +39,7 @@ class RichMediaRenderer:
 
     def render(self, client_context, message):
         if message:
-            message = "<content>%s</content>"%message
+            message = "<content>%s</content>" % message
             soup = Soup(message, "lxml-xml")
             if soup.children:
                 output = self._default_output()
@@ -62,43 +65,43 @@ class RichMediaRenderer:
 
     def parse_tag(self, client_context: ClientContext, tag) -> Any:
 
-        if tag.name == 'button':
+        if tag.name == "button":
             return self.parse_button(client_context, tag)
 
-        elif tag.name == 'link':
+        elif tag.name == "link":
             return self.parse_link(client_context, tag)
 
-        elif tag.name == 'image':
+        elif tag.name == "image":
             return self.parse_image(client_context, tag)
 
-        elif tag.name == 'video':
+        elif tag.name == "video":
             return self.parse_video(client_context, tag)
 
-        elif tag.name == 'card':
+        elif tag.name == "card":
             return self.parse_card(client_context, tag)
 
-        elif tag.name == 'carousel':
+        elif tag.name == "carousel":
             return self.parse_carousel(client_context, tag)
 
-        elif tag.name == 'reply':
+        elif tag.name == "reply":
             return self.parse_reply(client_context, tag)
 
-        elif tag.name == 'delay':
+        elif tag.name == "delay":
             return self.parse_delay(client_context, tag)
 
-        elif tag.name == 'split':
+        elif tag.name == "split":
             return self.parse_split(client_context, tag)
 
-        elif tag.name == 'list':
+        elif tag.name == "list":
             return self.parse_list(client_context, tag)
 
-        elif tag.name == 'olist':
+        elif tag.name == "olist":
             return self.parse_olist(client_context, tag)
 
-        elif tag.name == 'location':
+        elif tag.name == "location":
             return self.parse_location(client_context, tag)
 
-        elif tag.name == 'tts':
+        elif tag.name == "tts":
             return self.parse_tts(client_context, tag)
 
         return self.parse_xml(client_context, tag)
@@ -119,13 +122,13 @@ class RichMediaRenderer:
             if child.name is None:
                 pass
 
-            elif child.name == 'text':
+            elif child.name == "text":
                 text = child.text
 
-            elif child.name == 'url':
+            elif child.name == "url":
                 url = child.text
 
-            elif child.name == 'postback':
+            elif child.name == "postback":
                 postback = child.text
 
             else:
@@ -137,16 +140,16 @@ class RichMediaRenderer:
         return data
 
     def extract_class_attr(self, tag, data):
-        if 'class' in tag.attrs:
-            data['class'] = tag.attrs['class']
+        if "class" in tag.attrs:
+            data["class"] = tag.attrs["class"]
 
     def extract_id_attr(self, tag, data):
-        if 'id' in tag.attrs:
-            data['id'] = tag.attrs['id']
+        if "id" in tag.attrs:
+            data["id"] = tag.attrs["id"]
 
     def parse_button(self, client_context, tag):
         button = self.extract_button_info(tag)
-        if button['url'] is not None:
+        if button["url"] is not None:
             return self.handle_url_button(client_context, button)
         else:
             return self.handle_postback_button(client_context, button)
@@ -159,10 +162,10 @@ class RichMediaRenderer:
             if child.name is None:
                 pass
 
-            elif child.name == 'text':
+            elif child.name == "text":
                 text = child.text
 
-            elif child.name == 'url':
+            elif child.name == "url":
                 url = child.text
 
             else:
@@ -208,23 +211,29 @@ class RichMediaRenderer:
             if child.name is None:
                 pass
 
-            elif child.name == 'image':
+            elif child.name == "image":
                 image = child.text
 
-            elif child.name == 'title':
+            elif child.name == "title":
                 title = child.text
 
-            elif child.name == 'subtitle':
+            elif child.name == "subtitle":
                 subtitle = child.text
 
-            elif child.name == 'button':
+            elif child.name == "button":
                 button = self.extract_button_info(child)
                 buttons.append(button)
 
             else:
                 outputLog(self, "Unknown card tag [%s]" % child.name)
 
-        data = {"type": "card", "image": image, "title": title, "subtitle": subtitle, "buttons": buttons}
+        data = {
+            "type": "card",
+            "image": image,
+            "title": title,
+            "subtitle": subtitle,
+            "buttons": buttons,
+        }
         self.extract_class_attr(tag, data)
         self.extract_id_attr(tag, data)
         return data
@@ -240,7 +249,7 @@ class RichMediaRenderer:
             if child.name is None:
                 pass
 
-            elif child.name == 'card':
+            elif child.name == "card":
                 card = self.extract_card_info(child)
                 cards.append(card)
 
@@ -264,10 +273,10 @@ class RichMediaRenderer:
             if child.name is None:
                 pass
 
-            elif child.name == 'text':
+            elif child.name == "text":
                 text = child.text.strip()
 
-            elif child.name == 'postback':
+            elif child.name == "postback":
                 postback = child.text.strip()
 
             else:
@@ -289,7 +298,7 @@ class RichMediaRenderer:
             if child.name is None:
                 pass
 
-            elif child.name == 'seconds':
+            elif child.name == "seconds":
                 seconds = child.text.strip()
 
         data = {"type": "delay", "seconds": seconds}
@@ -309,47 +318,47 @@ class RichMediaRenderer:
 
     def extract_item_info(self, tag):
 
-        if tag.name == 'button':
+        if tag.name == "button":
             return self.extract_reply_info(tag)
 
-        elif tag.name == 'link':
+        elif tag.name == "link":
             return self.extract_link_info(tag)
 
-        elif tag.name == 'image':
+        elif tag.name == "image":
             data = {"type": "image", "url": tag.text}
             self.extract_class_attr(tag, data)
             self.extract_id_attr(tag, data)
             return data
 
-        elif tag.name == 'video':
-            data =  {"type": "video", "url": tag.text}
+        elif tag.name == "video":
+            data = {"type": "video", "url": tag.text}
             self.extract_class_attr(tag, data)
             self.extract_id_attr(tag, data)
             return data
 
-        elif tag.name == 'card':
+        elif tag.name == "card":
             return self.extract_card_info(tag)
 
-        elif tag.name == 'carousel':
+        elif tag.name == "carousel":
             return self.extract_carousel_info(tag)
 
-        elif tag.name == 'reply':
+        elif tag.name == "reply":
             return self.extract_reply_info(tag)
 
-        elif tag.name == 'delay':
+        elif tag.name == "delay":
             return self.extract_delay_info(tag)
 
-        elif tag.name == 'split':
+        elif tag.name == "split":
             # Not allowed
             pass
 
-        elif tag.name == 'list':
+        elif tag.name == "list":
             return self.extract_list_info(tag)
 
-        elif tag.name == 'olist':
+        elif tag.name == "olist":
             return self.extract_list_info(tag)
 
-        elif tag.name == 'location':
+        elif tag.name == "location":
             # Not allowed
             pass
 
@@ -373,7 +382,7 @@ class RichMediaRenderer:
             if child.name is None:
                 pass
 
-            elif child.name == 'item':
+            elif child.name == "item":
 
                 for childs_child in child.children:
 
@@ -383,12 +392,12 @@ class RichMediaRenderer:
                     elif isinstance(childs_child, NavigableString):
                         childs_child_text = childs_child.strip()
                         if childs_child_text:
-                            items.append({'type': 'text', 'text': childs_child_text})
+                            items.append({"type": "text", "text": childs_child_text})
 
             else:
                 outputLog(self, "Unknown list tag %s" % child.name)
 
-        data = {'type': 'list', 'items': items}
+        data = {"type": "list", "items": items}
         self.extract_class_attr(tag, data)
         self.extract_id_attr(tag, data)
         return data
@@ -410,7 +419,7 @@ class RichMediaRenderer:
 
     ######################################################################################################
     # You need to implement all of these and decide how to display the various rich media elements
-    # 
+    #
     def handle_text(self, client_context, text):
         del client_context
         del text

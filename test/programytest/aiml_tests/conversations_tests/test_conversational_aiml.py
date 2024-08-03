@@ -22,9 +22,10 @@ class ConversationalAIMLTests(unittest.TestCase):
         self._client_context = client.create_client_context("testid")
 
     def test_basic_conversational(self):
-        response = self._client_context.bot.ask_question(self._client_context,  "HELLO")
-        self.assertEqual(response, 'HELLO, WORLD.')
+        response = self._client_context.bot.ask_question(self._client_context, "HELLO")
+        self.assertEqual(response, "HELLO, WORLD.")
 
-        response = self._client_context.bot.ask_question(self._client_context, "GOODBYE")
-        self.assertEqual(response, 'SEE YA.')
-
+        response = self._client_context.bot.ask_question(
+            self._client_context, "GOODBYE"
+        )
+        self.assertEqual(response, "SEE YA.")

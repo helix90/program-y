@@ -14,19 +14,21 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 import yaml
-from programy.utils.logging.ylogger import YLogger
-from programy.utils.classes.loader import ClassLoader
-from programy.storage.entities.store import Store
-from programy.storage.stores.nosql.mongo.store.mongostore import MongoStore
-from programy.storage.entities.services import ServicesStore
-from programy.storage.stores.nosql.mongo.dao.service import Service
+
 from programy.services.config import ServiceConfiguration
+from programy.storage.entities.services import ServicesStore
+from programy.storage.entities.store import Store
+from programy.storage.stores.nosql.mongo.dao.service import Service
+from programy.storage.stores.nosql.mongo.store.mongostore import MongoStore
+from programy.utils.classes.loader import ClassLoader
 from programy.utils.console.console import outputLog
+from programy.utils.logging.ylogger import YLogger
 
 
 class MongoServiceStore(MongoStore, ServicesStore):
-    ServiceS = 'services'
+    ServiceS = "services"
 
     def __init__(self, storage_engine):
         MongoStore.__init__(self, storage_engine)
@@ -36,32 +38,40 @@ class MongoServiceStore(MongoStore, ServicesStore):
         return MongoServiceStore.ServiceS
 
     def _get_entity(self, service_data):
-        name = service_data.get('name')
-        category = service_data.get('category')
-        service_class = service_data.get('service_class')
+        name = service_data.get("name")
+        category = service_data.get("category")
+        service_class = service_data.get("service_class")
 
-        default_response = service_data.get('default_response')
-        default_srai = service_data.get('default_srai')
-        default_aiml = service_data.get('default_aiml')
-        load_default_aiml = service_data.get('load_default_aiml', True)
+        default_response = service_data.get("default_response")
+        default_srai = service_data.get("default_srai")
+        default_aiml = service_data.get("default_aiml")
+        load_default_aiml = service_data.get("load_default_aiml", True)
 
-        type = 'generic'
+        type = "generic"
         rest_timeout = None
         rest_retries = None
         rest_api = None
         rest_apikey = None
-        if 'rest' in service_data:
-            type = 'rest'
-            rest_data = service_data.get('rest', None)
+        if "rest" in service_data:
+            type = "rest"
+            rest_data = service_data.get("rest", None)
             if rest_data is not None:
-                rest_timeout = rest_data.get('timeout')
-                rest_retries = rest_data.get('retries')
-                rest_api = rest_data.get('api')
-                rest_apikey = rest_data.get('apikey')
+                rest_timeout = rest_data.get("timeout")
+                rest_retries = rest_data.get("retries")
+                rest_api = rest_data.get("api")
+                rest_apikey = rest_data.get("apikey")
 
-        return Service(type=type, name=name, category=category, service_class=service_class,
-                 default_response=default_response, default_srai=default_srai, default_aiml=default_aiml,
-                 rest_timeout=rest_timeout, rest_retries=rest_retries)
+        return Service(
+            type=type,
+            name=name,
+            category=category,
+            service_class=service_class,
+            default_response=default_response,
+            default_srai=default_srai,
+            default_aiml=default_aiml,
+            rest_timeout=rest_timeout,
+            rest_retries=rest_retries,
+        )
 
     def load(self, collector, name=None):
         YLogger.info(self, "Loading %s services from Mongo", self.collection_name())
@@ -69,18 +79,35 @@ class MongoServiceStore(MongoStore, ServicesStore):
         for service in services:
             try:
                 configuration = ServiceConfiguration.from_mongo(service)
-                collector.add_service(service['name'], ClassLoader.instantiate_class(service['service_class'])(configuration))
+                collector.add_service(
+                    service["name"],
+                    ClassLoader.instantiate_class(service["service_class"])(
+                        configuration
+                    ),
+                )
 
             except Exception as excep:
-                YLogger.exception(self, "Failed pre-instantiating Service [%s]", excep, service['service_class'])
+                YLogger.exception(
+                    self,
+                    "Failed pre-instantiating Service [%s]",
+                    excep,
+                    service["service_class"],
+                )
 
     def get_all_services(self):
         collection = self.collection()
         return collection.find()
 
-    def upload_from_file(self, filename, fileformat=Store.TEXT_FORMAT, commit=True, verbose=False):
+    def upload_from_file(
+        self, filename, fileformat=Store.TEXT_FORMAT, commit=True, verbose=False
+    ):
 
-        YLogger.info(self, "Uploading %s to Mongo from file [%s]", self.collection_name(), filename)
+        YLogger.info(
+            self,
+            "Uploading %s to Mongo from file [%s]",
+            self.collection_name(),
+            filename,
+        )
         try:
             if self._load_services_from_file(filename, verbose) is True:
                 return 1, 1
@@ -96,11 +123,15 @@ class MongoServiceStore(MongoStore, ServicesStore):
         with open(filename, "r+") as file:
             yaml_data = yaml.load(file, Loader=yaml.FullLoader)
 
-            service_data = yaml_data['service']
+            service_data = yaml_data["service"]
             service = self._get_entity(service_data)
             result = self.add_document(service)
             if result is True:
                 if verbose is True:
-                    outputLog(self, "[%s] = [%s]" % (service_data['name'], service_data['service_class']))
+                    outputLog(
+                        self,
+                        "[%s] = [%s]"
+                        % (service_data["name"], service_data["service_class"]),
+                    )
 
         return result

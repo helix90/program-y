@@ -14,14 +14,15 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.parsing.linenumxml import LineNumberingParser
+
 import xml.etree.ElementTree as ET  # pylint: disable=wrong-import-order
-from programy.parser.template.nodes.attrib import TemplateAttribNode
-from programy.parser.template.nodes.word import TemplateWordNode
-from programy.parser.template.nodes.word import TemplateNode
-from programy.utils.text.text import TextUtils
-from programy.utils.logging.ylogger import YLogger
+
 from programy.parser.exceptions import ParserException
+from programy.parser.template.nodes.attrib import TemplateAttribNode
+from programy.parser.template.nodes.word import TemplateNode, TemplateWordNode
+from programy.utils.logging.ylogger import YLogger
+from programy.utils.parsing.linenumxml import LineNumberingParser
+from programy.utils.text.text import TextUtils
 
 
 class TemplateXMLNode(TemplateAttribNode):
@@ -90,8 +91,8 @@ class TemplateXMLNode(TemplateAttribNode):
             end = attrib_value.rfind(">")
 
             front = attrib_value[:start]
-            middle = attrib_value[start:end + 1]
-            back = attrib_value[end + 1:]
+            middle = attrib_value[start : end + 1]
+            back = attrib_value[end + 1 :]
 
             root = TemplateNode()
             root.append(TemplateWordNode(front))
@@ -123,5 +124,7 @@ class TemplateXMLNode(TemplateAttribNode):
                 self.parse_text(graph, self.get_tail_from_element(child))
 
         except Exception as excep:
-            YLogger.exception_nostack(self, "Failed to parse node with attributes", excep)
+            YLogger.exception_nostack(
+                self, "Failed to parse node with attributes", excep
+            )
             raise ParserException("Failed to parse node with attributes")

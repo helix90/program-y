@@ -15,22 +15,22 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
-import re
 import os
+import re
 
 
 class TextUtils:
     DEFAULT_TAB_SPACE = "  "
 
-    RE_STRIP_ALL_WHITESPACE = re.compile(r'[\s+]')
-    RE_STRIP_WHITESPACE = re.compile(r'[\n\t\r+]')
-    RE_TERMIANTORS = re.compile(r'[:;,.?!]')
+    RE_STRIP_ALL_WHITESPACE = re.compile(r"[\s+]")
+    RE_STRIP_WHITESPACE = re.compile(r"[\n\t\r+]")
+    RE_TERMIANTORS = re.compile(r"[:;,.?!]")
     RE_STRIP_NONE_TERMINATING = re.compile(r'[\'"\(\)\-"]')
     RE_STRIP_ALL_PUNCTUATION1 = re.compile(r'[:\'";,.?!\(\)\-"]')
-    RE_STRIP_ALL_PUNCTUATION2 = re.compile(r'\s+')
-    RE_STRIP_HTML = re.compile(r'<.*?>')
-    RE_PATTERN_OF_TAG_AND_NAMESPACE_FROM_TEXT = re.compile(r'^{.+}.+$')
-    RE_MATCH_OF_TAG_AND_NAMESPACE_FROM_TEXT = re.compile(r'^({.+})(.+)$')
+    RE_STRIP_ALL_PUNCTUATION2 = re.compile(r"\s+")
+    RE_STRIP_HTML = re.compile(r"<.*?>")
+    RE_PATTERN_OF_TAG_AND_NAMESPACE_FROM_TEXT = re.compile(r"^{.+}.+$")
+    RE_MATCH_OF_TAG_AND_NAMESPACE_FROM_TEXT = re.compile(r"^({.+})(.+)$")
 
     HTML_ESCAPE_TABLE = {
         "&": "&amp;",
@@ -46,24 +46,24 @@ class TextUtils:
 
     @staticmethod
     def strip_whitespace(string):
-        first_pass = TextUtils.RE_STRIP_WHITESPACE.sub(' ', string)
-        return ' '.join(first_pass.split())
+        first_pass = TextUtils.RE_STRIP_WHITESPACE.sub(" ", string)
+        return " ".join(first_pass.split())
 
     @staticmethod
     def strip_all_whitespace(string):
-        first_pass = TextUtils.RE_STRIP_ALL_WHITESPACE.sub('', string)
-        return ' '.join(first_pass.split())
+        first_pass = TextUtils.RE_STRIP_ALL_WHITESPACE.sub("", string)
+        return " ".join(first_pass.split())
 
     @staticmethod
     def strip_none_terminating_punctuation(string):
-        first_pass = TextUtils.RE_STRIP_NONE_TERMINATING.sub(' ', string)
-        second_pass = TextUtils.RE_STRIP_NONE_TERMINATING.sub(' ', first_pass)
+        first_pass = TextUtils.RE_STRIP_NONE_TERMINATING.sub(" ", string)
+        second_pass = TextUtils.RE_STRIP_NONE_TERMINATING.sub(" ", first_pass)
         return second_pass.strip()
 
     @staticmethod
     def strip_all_punctuation(string):
-        first_pass = TextUtils.RE_STRIP_ALL_PUNCTUATION1.sub(' ', string)
-        second_pass = TextUtils.RE_STRIP_ALL_PUNCTUATION2.sub(' ', first_pass)
+        first_pass = TextUtils.RE_STRIP_ALL_PUNCTUATION1.sub(" ", string)
+        second_pass = TextUtils.RE_STRIP_ALL_PUNCTUATION2.sub(" ", first_pass)
         return second_pass.strip()
 
     @staticmethod
@@ -71,7 +71,7 @@ class TextUtils:
         return string.replace(" ", "%20")
 
     @staticmethod
-    def strip_html(data, replace_with=''):
+    def strip_html(data, replace_with=""):
         return TextUtils.RE_STRIP_HTML.sub(replace_with, data)
 
     @staticmethod
@@ -84,7 +84,9 @@ class TextUtils:
     def _is_not_tag(text):
         # If there is a namespace, then it looks something like
         # {http://alicebot.org/2001/AIML}aiml
-        return bool(TextUtils.RE_PATTERN_OF_TAG_AND_NAMESPACE_FROM_TEXT.match(text) is None)
+        return bool(
+            TextUtils.RE_PATTERN_OF_TAG_AND_NAMESPACE_FROM_TEXT.match(text) is None
+        )
 
     @staticmethod
     def _extract_namespace_and_tag(text):

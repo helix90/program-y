@@ -14,15 +14,17 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-import os
+
 import json
+import os
 from urllib.parse import quote
-from xmljson import abdera
 from xml.etree.ElementTree import fromstring
-from programy.utils.logging.ylogger import YLogger
+
+from xmljson import abdera
+
 from programy.services.base import ServiceQuery
-from programy.services.rest.base import RESTService
-from programy.services.rest.base import RESTServiceException
+from programy.services.rest.base import RESTService, RESTServiceException
+from programy.utils.logging.ylogger import YLogger
 
 
 class GoodReadsSearchAuthorServiceQuery(ServiceQuery):
@@ -42,12 +44,12 @@ class GoodReadsSearchAuthorServiceQuery(ServiceQuery):
         return self._service.search_for_author(self._name)
 
     def aiml_response(self, response):
-        payload = response['response']['payload']
-        goodreads = payload['GoodreadsResponse']
-        children = goodreads['children'][1]
-        author = children['author']
-        attributes = author['attributes']
-        id = attributes['id']
+        payload = response["response"]["payload"]
+        goodreads = payload["GoodreadsResponse"]
+        children = goodreads["children"][1]
+        author = children["author"]
+        attributes = author["attributes"]
+        id = attributes["id"]
         result = "AUTHOR SEARCH {0}".foramt(str(id))
         YLogger.debug(self, result)
         return result
@@ -70,20 +72,22 @@ class GoodReadsListBooksServiceQuery(ServiceQuery):
         return self._service.list_books(self._authorid)
 
     def aiml_response(self, response):
-        payload = response['response']['payload']
-        goodReadsResponse = payload['GoodreadsResponse']
-        children = goodReadsResponse['children']
-        author = children[1]['author']
-        books = author['children'][3]['books']
+        payload = response["response"]["payload"]
+        goodReadsResponse = payload["GoodreadsResponse"]
+        children = goodReadsResponse["children"]
+        author = children[1]["author"]
+        books = author["children"][3]["books"]
         titles = []
-        for child in books['children']:
-            book = child['book']
-            for item in book['children']:
-                if 'title_without_series' in item:
-                    titles.append(item['title_without_series'])
+        for child in books["children"]:
+            book = child["book"]
+            for item in book["children"]:
+                if "title_without_series" in item:
+                    titles.append(item["title_without_series"])
                     break
 
-        result = "BOOK LIST <ul>{0}</ul>".format("".join("<li>{0}</li>".format(x) for x in titles))
+        result = "BOOK LIST <ul>{0}</ul>".format(
+            "".join("<li>{0}</li>".format(x) for x in titles)
+        )
         YLogger.debug(self, result)
         return result
 
@@ -95,15 +99,15 @@ class GoodReadsServiceException(RESTServiceException):
 
 
 class GoodReadsService(RESTService):
-    """
-    """
+    """ """
+
     PATTERNS = [
         [r"SEARCH\sAUTHOR\s(.+)", GoodReadsSearchAuthorServiceQuery],
-        [r"LIST\sBOOKS\s(.+)", GoodReadsListBooksServiceQuery]
+        [r"LIST\sBOOKS\s(.+)", GoodReadsListBooksServiceQuery],
     ]
 
-    SEARCH_AUTHOR_URL="https://www.goodreads.com/api/author_url/{0}?key={1}"
-    BOOKS_LIST_URL="https://www.goodreads.com/author/list/{0}?format=xml&key={1}"
+    SEARCH_AUTHOR_URL = "https://www.goodreads.com/api/author_url/{0}?key={1}"
+    BOOKS_LIST_URL = "https://www.goodreads.com/author/list/{0}?format=xml&key={1}"
 
     def __init__(self, configuration):
         RESTService.__init__(self, configuration)
@@ -114,13 +118,19 @@ class GoodReadsService(RESTService):
         return GoodReadsService.PATTERNS
 
     def initialise(self, client):
-        self._api_key = client.license_keys.get_key('GOODREADS_KEY')
+        self._api_key = client.license_keys.get_key("GOODREADS_KEY")
         if self._api_key is None:
-            YLogger.error(self, "GOODREADS_KEY missing from license.keys, service will not function correctly!")
+            YLogger.error(
+                self,
+                "GOODREADS_KEY missing from license.keys, service will not function correctly!",
+            )
 
-        self._api_secret = client.license_keys.get_key('GOODREAD_SECRET')
+        self._api_secret = client.license_keys.get_key("GOODREAD_SECRET")
         if self._api_secret is None:
-            YLogger.error(self, "GOODREAD_SECRET missing from license.keys, service will not function correctly!")
+            YLogger.error(
+                self,
+                "GOODREAD_SECRET missing from license.keys, service will not function correctly!",
+            )
 
     def get_default_aiml_file(self):
         return os.path.dirname(__file__) + os.sep + "goodreads.aiml"
@@ -135,7 +145,7 @@ class GoodReadsService(RESTService):
 
     def search_for_author(self, name):
         url = self._build_author_search_url(name)
-        response = self.query('search_for_author', url)
+        response = self.query("search_for_author", url)
         return response
 
     def _build_list_books_url(self, authorid):
@@ -144,11 +154,11 @@ class GoodReadsService(RESTService):
 
     def list_books(self, authorid):
         url = self._build_list_books_url(authorid)
-        response = self.query('list_books', url)
+        response = self.query("list_books", url)
         return response
 
     def _response_to_json(self, api, response):
-        jsondata = abdera.data(fromstring(response.content.decode('UTF-8')))
+        jsondata = abdera.data(fromstring(response.content.decode("UTF-8")))
         return json.loads(json.dumps(jsondata))
 
     @staticmethod
@@ -159,12 +169,12 @@ class GoodReadsService(RESTService):
             if payload is not None:
                 goodreadsResponse = payload.get("GoodreadsResponse", None)
                 if goodreadsResponse is not None:
-                    children = goodreadsResponse.get('children', [])
+                    children = goodreadsResponse.get("children", [])
                     for child in children:
-                        if child.get('author', None) is not None:
-                            author = child['author']
+                        if child.get("author", None) is not None:
+                            author = child["author"]
                             attributes = author.get("attributes", {})
-                            return attributes.get('id', None)
+                            return attributes.get("id", None)
         return None
 
     @staticmethod
@@ -176,32 +186,35 @@ class GoodReadsService(RESTService):
             if payload is not None:
                 goodreadsResponse = payload.get("GoodreadsResponse", None)
                 if goodreadsResponse is not None:
-                    children = goodreadsResponse.get('children', [])
+                    children = goodreadsResponse.get("children", [])
                     for child in children:
-                        if child.get('author', None) is not None:
-                            author = child['author']
-                            author_children = author.get('children', [])
+                        if child.get("author", None) is not None:
+                            author = child["author"]
+                            author_children = author.get("children", [])
                             for author_child in author_children:
-                                books = author_child.get('books', {})
-                                book_children = books.get('children', [])
+                                books = author_child.get("books", {})
+                                book_children = books.get("children", [])
                                 for book_child in book_children:
-                                    book = book_child.get('book', {})
-                                    book_subchildren = book.get('children', [])
+                                    book = book_child.get("book", {})
+                                    book_subchildren = book.get("children", [])
                                     book_id = book_title = None
                                     for book_subchild in book_subchildren:
-                                        if 'id' in book_subchild:
-                                            id_dict = book_subchild.get('id', {})
+                                        if "id" in book_subchild:
+                                            id_dict = book_subchild.get("id", {})
                                             if id_dict:
-                                                id_dict_childs = id_dict.get('children', [])
+                                                id_dict_childs = id_dict.get(
+                                                    "children", []
+                                                )
                                                 if id_dict_childs:
                                                     book_id = id_dict_childs[0]
 
-                                        if 'title' in book_subchild:
-                                            book_title = book_subchild.get('title', None)
+                                        if "title" in book_subchild:
+                                            book_title = book_subchild.get(
+                                                "title", None
+                                            )
 
                                         if book_id and book_title:
                                             book_list.append((book_id, book_title))
                                             break
 
         return tuple(book_list)
-

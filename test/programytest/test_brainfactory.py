@@ -1,10 +1,10 @@
 import unittest
 
-from programy.bot import Bot
-from programy.bot import BrainFactory
+from programytest.client import TestClient
+
+from programy.bot import Bot, BrainFactory
 from programy.brain import Brain
 from programy.config.bot.bot import BotConfiguration
-from programytest.client import TestClient
 
 
 class BrainFactoryTests(unittest.TestCase):
@@ -51,7 +51,9 @@ class BrainFactoryTests(unittest.TestCase):
 
     def test_invalid_config_init(self):
         configuration = BotConfiguration()
-        configuration._brain_selector = "programy.clients.client.DefaultBrainSelectorXXX"
+        configuration._brain_selector = (
+            "programy.clients.client.DefaultBrainSelectorXXX"
+        )
 
         client = TestClient()
         bot = Bot(configuration, client)
@@ -62,4 +64,3 @@ class BrainFactoryTests(unittest.TestCase):
         brain = factory.select_brain()
         self.assertIsNotNone(brain)
         self.assertIsInstance(brain, Brain)
-

@@ -1,13 +1,16 @@
 import unittest.mock
 
-from telegram.ext import CommandHandler
-from telegram.ext import MessageHandler
+from programytest.clients.arguments import MockArgumentParser
+from telegram.ext import CommandHandler, MessageHandler
 
-from programy.clients.polling.telegram.client import TelegramBotClient
-from programy.clients.polling.telegram.client import start, message, unknown
+from programy.clients.polling.telegram.client import (
+    TelegramBotClient,
+    message,
+    start,
+    unknown,
+)
 from programy.clients.polling.telegram.config import TelegramConfiguration
 from programy.clients.render.text import TextRenderer
-from programytest.clients.arguments import MockArgumentParser
 
 
 class MockBot(object):
@@ -87,7 +90,7 @@ class MockTelegramBotClient(TelegramBotClient):
         TelegramBotClient.__init__(self, argument_parser)
 
     def get_license_keys(self):
-         self._telegram_token = "TELEGRAM_TOKEN"
+        self._telegram_token = "TELEGRAM_TOKEN"
 
     def create_updater(self, telegram_token):
         self._updater = MockUpdater()
@@ -110,7 +113,7 @@ class TelegramBotClientTests(unittest.TestCase):
         self.assertIsNotNone(client)
         self.assertIsInstance(client.get_client_configuration(), TelegramConfiguration)
         self.assertEqual(client.id, "telegram")
-        self.assertEqual('ProgramY AIML2.0 Client', client.get_description())
+        self.assertEqual("ProgramY AIML2.0 Client", client.get_description())
         self.assertEqual("TELEGRAM_TOKEN", client._telegram_token)
 
         self.assertFalse(client._render_callback())

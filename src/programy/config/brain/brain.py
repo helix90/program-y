@@ -14,15 +14,16 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.config.container import BaseContainerConfigurationData
-from programy.config.brain.overrides import BrainOverridesConfiguration
-from programy.config.brain.defaults import BrainDefaultsConfiguration
+
 from programy.config.brain.binaries import BrainBinariesConfiguration
 from programy.config.brain.braintree import BrainBraintreeConfiguration
-from programy.config.brain.securities import BrainSecuritiesConfiguration
-from programy.config.brain.dynamic import BrainDynamicsConfiguration
-from programy.config.brain.tokenizer import BrainTokenizerConfiguration
 from programy.config.brain.debugfiles import BrainDebugFilesConfiguration
+from programy.config.brain.defaults import BrainDefaultsConfiguration
+from programy.config.brain.dynamic import BrainDynamicsConfiguration
+from programy.config.brain.overrides import BrainOverridesConfiguration
+from programy.config.brain.securities import BrainSecuritiesConfiguration
+from programy.config.brain.tokenizer import BrainTokenizerConfiguration
+from programy.config.container import BaseContainerConfigurationData
 from programy.utils.substitutions.substitues import Substitutions
 
 
@@ -82,23 +83,41 @@ class BrainConfiguration(BaseContainerConfigurationData):
         self._debugfiles.check_for_license_keys(license_keys)
         BaseContainerConfigurationData.check_for_license_keys(self, license_keys)
 
-    def load_configuration(self, configuration_file, brain_config, bot_root, subs: Substitutions = None):
+    def load_configuration(
+        self, configuration_file, brain_config, bot_root, subs: Substitutions = None
+    ):
         if brain_config is not None:
-            self._overrides.load_config_section(configuration_file, brain_config, bot_root, subs=subs)
-            self._defaults.load_config_section(configuration_file, brain_config, bot_root, subs=subs)
-            self._binaries.load_config_section(configuration_file, brain_config, bot_root, subs=subs)
-            self._braintree.load_config_section(configuration_file, brain_config, bot_root, subs=subs)
-            self._security.load_config_section(configuration_file, brain_config, bot_root, subs=subs)
-            self._dynamics.load_config_section(configuration_file, brain_config, bot_root, subs=subs)
-            self._tokenizer.load_config_section(configuration_file, brain_config, bot_root, subs=subs)
-            self._debugfiles.load_config_section(configuration_file, brain_config, bot_root, subs=subs)
+            self._overrides.load_config_section(
+                configuration_file, brain_config, bot_root, subs=subs
+            )
+            self._defaults.load_config_section(
+                configuration_file, brain_config, bot_root, subs=subs
+            )
+            self._binaries.load_config_section(
+                configuration_file, brain_config, bot_root, subs=subs
+            )
+            self._braintree.load_config_section(
+                configuration_file, brain_config, bot_root, subs=subs
+            )
+            self._security.load_config_section(
+                configuration_file, brain_config, bot_root, subs=subs
+            )
+            self._dynamics.load_config_section(
+                configuration_file, brain_config, bot_root, subs=subs
+            )
+            self._tokenizer.load_config_section(
+                configuration_file, brain_config, bot_root, subs=subs
+            )
+            self._debugfiles.load_config_section(
+                configuration_file, brain_config, bot_root, subs=subs
+            )
 
     def to_yaml(self, data, defaults=True):
-            self.config_to_yaml(data, BrainOverridesConfiguration(), defaults)
-            self.config_to_yaml(data, BrainDefaultsConfiguration(), defaults)
-            self.config_to_yaml(data, BrainBinariesConfiguration(), defaults)
-            self.config_to_yaml(data, BrainBraintreeConfiguration(), defaults)
-            self.config_to_yaml(data, BrainSecuritiesConfiguration(), defaults)
-            self.config_to_yaml(data, BrainDynamicsConfiguration(), defaults)
-            self.config_to_yaml(data, BrainTokenizerConfiguration(), defaults)
-            self.config_to_yaml(data, BrainDebugFilesConfiguration(), defaults)
+        self.config_to_yaml(data, BrainOverridesConfiguration(), defaults)
+        self.config_to_yaml(data, BrainDefaultsConfiguration(), defaults)
+        self.config_to_yaml(data, BrainBinariesConfiguration(), defaults)
+        self.config_to_yaml(data, BrainBraintreeConfiguration(), defaults)
+        self.config_to_yaml(data, BrainSecuritiesConfiguration(), defaults)
+        self.config_to_yaml(data, BrainDynamicsConfiguration(), defaults)
+        self.config_to_yaml(data, BrainTokenizerConfiguration(), defaults)
+        self.config_to_yaml(data, BrainDebugFilesConfiguration(), defaults)

@@ -14,10 +14,12 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 import re
-from programy.utils.logging.ylogger import YLogger
+
 from programy.processors.processing import PreProcessor
 from programy.utils.language.chinese import ChineseLanguage
+from programy.utils.logging.ylogger import YLogger
 
 
 class SplitChinesePreProcessor(PreProcessor):
@@ -34,4 +36,4 @@ class SplitChinesePreProcessor(PreProcessor):
             else:
                 chars.append(ch)
         text = "".join(chars).strip()
-        return re.sub(' +', ' ', text)
+        return re.sub(" +", " ", text)

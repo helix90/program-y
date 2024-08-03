@@ -14,8 +14,9 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
+
 from programy.oob.callmom.oob import OutOfBandProcessor
+from programy.utils.logging.ylogger import YLogger
 
 
 class AlarmOutOfBandProcessor(OutOfBandProcessor):
@@ -38,14 +39,16 @@ class AlarmOutOfBandProcessor(OutOfBandProcessor):
     def parse_oob_xml(self, oob):
         if oob is not None:
             for child in oob:
-                if child.tag == 'hour':
+                if child.tag == "hour":
                     self._hour = child.text
-                elif child.tag == 'minute':
+                elif child.tag == "minute":
                     self._min = child.text
-                elif child.tag == 'message':
+                elif child.tag == "message":
                     self._message = child.text
                 else:
-                    YLogger.error(self, "Unknown child element [%s] in alarm oob", child.tag)
+                    YLogger.error(
+                        self, "Unknown child element [%s] in alarm oob", child.tag
+                    )
 
             if self._hour is not None and self._min is not None:
                 return True
@@ -58,9 +61,18 @@ class AlarmOutOfBandProcessor(OutOfBandProcessor):
 
     def execute_oob_command(self, client_context):
         if self._message is not None:
-            YLogger.info(client_context, "AlarmOutOfBandProcessor: Showing alarm=%s", self._message)
+            YLogger.info(
+                client_context,
+                "AlarmOutOfBandProcessor: Showing alarm=%s",
+                self._message,
+            )
 
         elif self._hour is not None and self._min is not None:
-            YLogger.info(client_context, "AlarmOutOfBandProcessor: Setting alarm for %s:%s", self._hour, self._min)
+            YLogger.info(
+                client_context,
+                "AlarmOutOfBandProcessor: Setting alarm for %s:%s",
+                self._hour,
+                self._min,
+            )
 
         return "ALARM"

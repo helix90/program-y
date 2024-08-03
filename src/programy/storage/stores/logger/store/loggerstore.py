@@ -14,6 +14,7 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 from programy.storage.entities.store import Store
 
 
@@ -29,8 +30,8 @@ class LoggerStore(Store):
         return self._storage_engine
 
     def drop(self):
-        pass    # pragma: no cover
+        pass  # pragma: no cover
 
     def commit(self, commit=True):
         del commit
-        pass    # pragma: no cover
+        pass  # pragma: no cover

@@ -15,10 +15,9 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
-from programy.utils.logging.ylogger import YLogger
-
 from programy.dynamic.maps.map import DynamicMap
 from programy.nlp.stemming import Stemmer
+from programy.utils.logging.ylogger import YLogger
 
 
 class StemmerMap(DynamicMap):
@@ -33,5 +32,7 @@ class StemmerMap(DynamicMap):
         stemmer = Stemmer()
         stemmed_value = stemmer.stem(input_value)
 
-        YLogger.debug(client_context, "StemmerMap converted %s to %s", input_value, stemmed_value)
+        YLogger.debug(
+            client_context, "StemmerMap converted %s to %s", input_value, stemmed_value
+        )
         return stemmed_value

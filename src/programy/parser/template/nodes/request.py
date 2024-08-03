@@ -14,10 +14,10 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
-from programy.parser.template.nodes.indexed import TemplateIndexedNode
-from programy.parser.exceptions import ParserException
 
+from programy.parser.exceptions import ParserException
+from programy.parser.template.nodes.indexed import TemplateIndexedNode
+from programy.utils.logging.ylogger import YLogger
 
 ######################################################################################################################
 #
@@ -36,19 +36,21 @@ class TemplateRequestNode(TemplateIndexedNode):
         conversation = client_context.bot.get_conversation(client_context)
         question = conversation.previous_nth_question(int_index)
         resolved = question.combine_sentences(client_context)
-        YLogger.debug(client_context, "[%s] resolved to [%s]", self.to_string(), resolved)
+        YLogger.debug(
+            client_context, "[%s] resolved to [%s]", self.to_string(), resolved
+        )
         return resolved
 
     def to_string(self):
         string = "[REQUEST"
-        string += self.index.to_string() + ']'
+        string += self.index.to_string() + "]"
         return string
 
     def to_xml(self, client_context):
         xml = '<request index="'
         xml += self.index.to_xml(client_context)
         xml += '">'
-        xml += '</request>'
+        xml += "</request>"
         return xml
 
     #######################################################################################################
@@ -58,4 +60,5 @@ class TemplateRequestNode(TemplateIndexedNode):
         self._parse_node_with_attrib(graph, expression, "index", "1")
         if self.children:
             raise ParserException(
-                "<request> node should not contain child text, use <request /> or <request></request> only")
+                "<request> node should not contain child text, use <request /> or <request></request> only"
+            )

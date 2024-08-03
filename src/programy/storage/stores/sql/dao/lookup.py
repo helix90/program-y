@@ -14,14 +14,14 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from sqlalchemy import Column
-from sqlalchemy import Integer
-from sqlalchemy import String
+
+from sqlalchemy import Column, Integer, String
+
 from programy.storage.stores.sql.base import Base
 from programy.storage.stores.utils import DAOUtils
 
 
-class Lookup():
+class Lookup:
     id = Column(Integer, primary_key=True)
 
     key = Column(String(48))
@@ -29,35 +29,55 @@ class Lookup():
 
 
 class Denormal(Base, Lookup):
-    __tablename__ = 'denormals'
+    __tablename__ = "denormals"
 
     def __repr__(self):
-        return "<Denormal(id='%s', key='%s', value='%s')>" % (DAOUtils.valid_id(self.id), self.key, self.value)
+        return "<Denormal(id='%s', key='%s', value='%s')>" % (
+            DAOUtils.valid_id(self.id),
+            self.key,
+            self.value,
+        )
 
 
 class Normal(Base, Lookup):
-    __tablename__ = 'normals'
+    __tablename__ = "normals"
 
     def __repr__(self):
-        return "<Normal(id='%s', key='%s', value='%s')>" % (DAOUtils.valid_id(self.id), self.key, self.value)
+        return "<Normal(id='%s', key='%s', value='%s')>" % (
+            DAOUtils.valid_id(self.id),
+            self.key,
+            self.value,
+        )
 
 
 class Person(Base, Lookup):
-    __tablename__ = 'persons'
+    __tablename__ = "persons"
 
     def __repr__(self):
-        return "<Person(id='%s', key='%s', value='%s')>" % (DAOUtils.valid_id(self.id), self.key, self.value)
+        return "<Person(id='%s', key='%s', value='%s')>" % (
+            DAOUtils.valid_id(self.id),
+            self.key,
+            self.value,
+        )
 
 
 class Person2(Base, Lookup):
-    __tablename__ = 'person2s'
+    __tablename__ = "person2s"
 
     def __repr__(self):
-        return "<Person2(id='%s', key='%s', value='%s')>" % (DAOUtils.valid_id(self.id), self.key, self.value)
+        return "<Person2(id='%s', key='%s', value='%s')>" % (
+            DAOUtils.valid_id(self.id),
+            self.key,
+            self.value,
+        )
 
 
 class Gender(Base, Lookup):
-    __tablename__ = 'genders'
+    __tablename__ = "genders"
 
     def __repr__(self):
-        return "<Gender(id='%s', key='%s', value='%s')>" % (DAOUtils.valid_id(self.id), self.key, self.value)
+        return "<Gender(id='%s', key='%s', value='%s')>" % (
+            DAOUtils.valid_id(self.id),
+            self.key,
+            self.value,
+        )

@@ -14,10 +14,22 @@ class LinkTests(unittest.TestCase):
         self.assertEqual("ABCDEF123", link.generated_key)
         self.assertEqual("PASSWORD123", link.provided_key)
 
-        self.assertEqual({'expired': False, 'expires': None, 'generated_key': 'ABCDEF123', 'primary_user': 'keiffster', 'provided_key': 'PASSWORD123', 'retry_count': 0}, link.to_document())
+        self.assertEqual(
+            {
+                "expired": False,
+                "expires": None,
+                "generated_key": "ABCDEF123",
+                "primary_user": "keiffster",
+                "provided_key": "PASSWORD123",
+                "retry_count": 0,
+            },
+            link.to_document(),
+        )
 
     def test_init_no_id_no(self):
-        link = Link("keiffster", "PASSWORD123", "ABCDEF123", expired=False, expires="12/12/2012")
+        link = Link(
+            "keiffster", "PASSWORD123", "ABCDEF123", expired=False, expires="12/12/2012"
+        )
 
         self.assertIsNotNone(link)
         self.assertIsNone(link.id)
@@ -28,10 +40,22 @@ class LinkTests(unittest.TestCase):
         self.assertEqual("12/12/2012", link.expires)
         self.assertEqual(0, link.retry_count)
 
-        self.assertEqual({'expired': False, 'expires': "12/12/2012", 'generated_key': 'ABCDEF123', 'primary_user': 'keiffster', 'provided_key': 'PASSWORD123', 'retry_count': 0}, link.to_document())
+        self.assertEqual(
+            {
+                "expired": False,
+                "expires": "12/12/2012",
+                "generated_key": "ABCDEF123",
+                "primary_user": "keiffster",
+                "provided_key": "PASSWORD123",
+                "retry_count": 0,
+            },
+            link.to_document(),
+        )
 
     def test_init(self):
-        link = Link("keiffster", "PASSWORD123", "ABCDEF123", expired=False, expires="12/12/2012")
+        link = Link(
+            "keiffster", "PASSWORD123", "ABCDEF123", expired=False, expires="12/12/2012"
+        )
         link.id = "666"
 
         self.assertIsNotNone(link)
@@ -43,10 +67,28 @@ class LinkTests(unittest.TestCase):
         self.assertEqual("12/12/2012", link.expires)
         self.assertEqual(0, link.retry_count)
 
-        self.assertEqual({'_id': '666', 'expired': False, 'expires': "12/12/2012", 'generated_key': 'ABCDEF123', 'primary_user': 'keiffster', 'provided_key': 'PASSWORD123', 'retry_count': 0}, link.to_document())
+        self.assertEqual(
+            {
+                "_id": "666",
+                "expired": False,
+                "expires": "12/12/2012",
+                "generated_key": "ABCDEF123",
+                "primary_user": "keiffster",
+                "provided_key": "PASSWORD123",
+                "retry_count": 0,
+            },
+            link.to_document(),
+        )
 
     def test_from_document_no_id(self):
-        data1 = {"primary_user": "user1", "generated_key": "ABCDEFG", "provided_key": "1234567890", "expired": False, "expires": "12/12/2012", 'retry_count': 0}
+        data1 = {
+            "primary_user": "user1",
+            "generated_key": "ABCDEFG",
+            "provided_key": "1234567890",
+            "expired": False,
+            "expires": "12/12/2012",
+            "retry_count": 0,
+        }
         link1 = Link.from_document(data1)
         self.assertIsNotNone(link1)
         self.assertEqual("user1", link1.primary_user)
@@ -57,7 +99,15 @@ class LinkTests(unittest.TestCase):
         self.assertEqual(0, link1.retry_count)
 
     def test_from_document_with_id(self):
-        data2 = {"_id": "666", "primary_user": "user1", "generated_key": "ABCDEFG", "provided_key": "1234567890", "expired": False, "expires": "12/12/2012", 'retry_count': 0}
+        data2 = {
+            "_id": "666",
+            "primary_user": "user1",
+            "generated_key": "ABCDEFG",
+            "provided_key": "1234567890",
+            "expired": False,
+            "expires": "12/12/2012",
+            "retry_count": 0,
+        }
         link2 = Link.from_document(data2)
         self.assertIsNotNone(link2)
         self.assertEqual("user1", link2.primary_user)
@@ -79,11 +129,32 @@ class LinkTests(unittest.TestCase):
         self.assertEquals(0, link2.retry_count)
 
     def test_repr_no_id(self):
-        data1 = {"primary_user": "user1", "generated_key": "ABCDEFG", "provided_key": "1234567890", "expired": False, "expires": "12/12/2012", 'retry_count': 0}
+        data1 = {
+            "primary_user": "user1",
+            "generated_key": "ABCDEFG",
+            "provided_key": "1234567890",
+            "expired": False,
+            "expires": "12/12/2012",
+            "retry_count": 0,
+        }
         link1 = Link.from_document(data1)
-        self.assertEquals("<Linked(id='n/a', primary='user1', generated='ABCDEFG', provided='1234567890', expired='12/12/2012', expires='False')>", str(link1))
+        self.assertEquals(
+            "<Linked(id='n/a', primary='user1', generated='ABCDEFG', provided='1234567890', expired='12/12/2012', expires='False')>",
+            str(link1),
+        )
 
     def test_repr_wit_id(self):
-        data2 = {"_id": "666", "primary_user": "user1", "generated_key": "ABCDEFG", "provided_key": "1234567890", "expired": False, "expires": "12/12/2012", 'retry_count': 0}
+        data2 = {
+            "_id": "666",
+            "primary_user": "user1",
+            "generated_key": "ABCDEFG",
+            "provided_key": "1234567890",
+            "expired": False,
+            "expires": "12/12/2012",
+            "retry_count": 0,
+        }
         link2 = Link.from_document(data2)
-        self.assertEquals("<Linked(id='666', primary='user1', generated='ABCDEFG', provided='1234567890', expired='12/12/2012', expires='False')>", str(link2))
+        self.assertEquals(
+            "<Linked(id='666', primary='user1', generated='ABCDEFG', provided='1234567890', expired='12/12/2012', expires='False')>",
+            str(link2),
+        )

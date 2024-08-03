@@ -14,9 +14,9 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
 
 from programy.config.base import BaseConfigurationData
+from programy.utils.logging.ylogger import YLogger
 from programy.utils.substitutions.substitues import Substitutions
 
 
@@ -43,29 +43,42 @@ class BotSentenceJoinerConfiguration(BaseConfigurationData):
     def terminator(self):
         return self._terminator
 
-    def load_config_section(self, configuration_file, configuration, bot_root, subs: Substitutions = None):
+    def load_config_section(
+        self, configuration_file, configuration, bot_root, subs: Substitutions = None
+    ):
         del bot_root
         joiner = configuration_file.get_section(self._section_name, configuration)
         if joiner is not None:
-            self._classname = configuration_file.\
-                get_option(joiner, "classname", missing_value=BotSentenceJoinerConfiguration.DEFAULT_CLASSNAME,
-                           subs=subs)
-            self._join_chars = configuration_file.\
-                get_option(joiner, "join_chars", missing_value=BotSentenceJoinerConfiguration.DEFAULT_JOIN_CHARS,
-                           subs=subs)
-            self._terminator = configuration_file.\
-                get_option(joiner, "terminator", missing_value=BotSentenceJoinerConfiguration.DEFAULT_TERMINATOR,
-                           subs=subs)
+            self._classname = configuration_file.get_option(
+                joiner,
+                "classname",
+                missing_value=BotSentenceJoinerConfiguration.DEFAULT_CLASSNAME,
+                subs=subs,
+            )
+            self._join_chars = configuration_file.get_option(
+                joiner,
+                "join_chars",
+                missing_value=BotSentenceJoinerConfiguration.DEFAULT_JOIN_CHARS,
+                subs=subs,
+            )
+            self._terminator = configuration_file.get_option(
+                joiner,
+                "terminator",
+                missing_value=BotSentenceJoinerConfiguration.DEFAULT_TERMINATOR,
+                subs=subs,
+            )
         else:
-            YLogger.warning(self, "'joiner' section missing from bot config, using defaults")
+            YLogger.warning(
+                self, "'joiner' section missing from bot config, using defaults"
+            )
 
     def to_yaml(self, data, defaults=True):
         if defaults is True:
-            data['classname'] = BotSentenceJoinerConfiguration.DEFAULT_CLASSNAME
-            data['join_chars'] = BotSentenceJoinerConfiguration.DEFAULT_JOIN_CHARS
-            data['terminator'] = BotSentenceJoinerConfiguration.DEFAULT_TERMINATOR
+            data["classname"] = BotSentenceJoinerConfiguration.DEFAULT_CLASSNAME
+            data["join_chars"] = BotSentenceJoinerConfiguration.DEFAULT_JOIN_CHARS
+            data["terminator"] = BotSentenceJoinerConfiguration.DEFAULT_TERMINATOR
 
         else:
-            data['classname'] = self._classname
-            data['join_chars'] = self._join_chars
-            data['terminator'] = self._terminator
+            data["classname"] = self._classname
+            data["join_chars"] = self._join_chars
+            data["terminator"] = self._terminator

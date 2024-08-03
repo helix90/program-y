@@ -1,14 +1,18 @@
 import xml.etree.ElementTree as ET
 
+from programytest.parser.template.graph_tests.graph_test_client import (
+    TemplateGraphTestClient,
+)
+
 from programy.parser.template.nodes.base import TemplateNode
 from programy.parser.template.nodes.uniq import TemplateUniqNode
-from programytest.parser.template.graph_tests.graph_test_client import TemplateGraphTestClient
 
 
 class TemplateGraphUniqTests(TemplateGraphTestClient):
 
     def test_uniq_type1(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
      			<template>
      			    <uniq>
      			        <subj>X</subj>
@@ -16,7 +20,8 @@ class TemplateGraphUniqTests(TemplateGraphTestClient):
      			        <obj>Z</obj>
      			    </uniq>
      			</template>
-     			""")
+     			"""
+        )
 
         ast = self._graph.parse_template_expression(template)
         self.assertIsNotNone(ast)
@@ -32,9 +37,12 @@ class TemplateGraphUniqTests(TemplateGraphTestClient):
         self._client_context.brain.rdf.add_entity("MONKEY", "hasFur", "true", "ANIMALS")
         self._client_context.brain.rdf.add_entity("ZEBRA", "legs", "4", "ANIMALS")
         self._client_context.brain.rdf.add_entity("BIRD", "legs", "2", "ANIMALS")
-        self._client_context.brain.rdf.add_entity("ELEPHANT", "trunk", "true", "ANIMALS")
+        self._client_context.brain.rdf.add_entity(
+            "ELEPHANT", "trunk", "true", "ANIMALS"
+        )
 
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
      			<template>
      			    <uniq>
      			        <subj>MONKEY</subj>
@@ -42,7 +50,8 @@ class TemplateGraphUniqTests(TemplateGraphTestClient):
      			        <obj>?legs</obj>
      			    </uniq>
      			</template>
-     			""")
+     			"""
+        )
 
         ast = self._graph.parse_template_expression(template)
         self.assertIsNotNone(ast)
@@ -56,9 +65,12 @@ class TemplateGraphUniqTests(TemplateGraphTestClient):
         self._client_context.brain.rdf.add_entity("MONKEY", "hasFur", "true", "ANIMALS")
         self._client_context.brain.rdf.add_entity("ZEBRA", "legs", "4", "ANIMALS")
         self._client_context.brain.rdf.add_entity("BIRD", "legs", "2", "ANIMALS")
-        self._client_context.brain.rdf.add_entity("ELEPHANT", "trunk", "true", "ANIMALS")
+        self._client_context.brain.rdf.add_entity(
+            "ELEPHANT", "trunk", "true", "ANIMALS"
+        )
 
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
      			<template>
      			    <uniq>
      			        <subj>?animal</subj>
@@ -66,7 +78,8 @@ class TemplateGraphUniqTests(TemplateGraphTestClient):
      			        <obj>2</obj>
      			    </uniq>
      			</template>
-     			""")
+     			"""
+        )
 
         ast = self._graph.parse_template_expression(template)
         self.assertIsNotNone(ast)
@@ -80,9 +93,12 @@ class TemplateGraphUniqTests(TemplateGraphTestClient):
         self._client_context.brain.rdf.add_entity("MONKEY", "hasFur", "true", "ANIMALS")
         self._client_context.brain.rdf.add_entity("ZEBRA", "legs", "4", "ANIMALS")
         self._client_context.brain.rdf.add_entity("BIRD", "legs", "2", "ANIMALS")
-        self._client_context.brain.rdf.add_entity("ELEPHANT", "trunk", "true", "ANIMALS")
+        self._client_context.brain.rdf.add_entity(
+            "ELEPHANT", "trunk", "true", "ANIMALS"
+        )
 
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
      			<template>
      			    <uniq>
      			        <subj>MONKEY</subj>
@@ -90,7 +106,8 @@ class TemplateGraphUniqTests(TemplateGraphTestClient):
      			        <obj>2</obj>
      			    </uniq>
      			</template>
-     			""")
+     			"""
+        )
 
         ast = self._graph.parse_template_expression(template)
         self.assertIsNotNone(ast)

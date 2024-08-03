@@ -1,8 +1,9 @@
+from programytest.parser.base import ParserTestsBaseClass
+
 from programy.parser.template.nodes.base import TemplateNode
 from programy.parser.template.nodes.richmedia.delay import TemplateDelayNode
 from programy.parser.template.nodes.word import TemplateWordNode
 
-from programytest.parser.base import ParserTestsBaseClass
 
 class TemplateDelayNodeTests(ParserTestsBaseClass):
 
@@ -21,5 +22,6 @@ class TemplateDelayNodeTests(ParserTestsBaseClass):
         self.assertIsNotNone(resolved)
         self.assertEqual("<delay><seconds>10</seconds></delay>", resolved)
 
-        self.assertEqual("<delay><seconds>10</seconds></delay>", root.to_xml(self._client_context))
-
+        self.assertEqual(
+            "<delay><seconds>10</seconds></delay>", root.to_xml(self._client_context)
+        )

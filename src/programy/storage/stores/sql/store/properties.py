@@ -14,22 +14,22 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 import os
 import os.path
 import re
-from programy.utils.logging.ylogger import YLogger
-from programy.storage.stores.sql.store.sqlstore import SQLStore
-from programy.storage.entities.property import PropertyStore
-from programy.storage.stores.sql.dao.property import Property
-from programy.storage.stores.sql.dao.property import DefaultVariable
-from programy.storage.stores.sql.dao.property import Regex
+
 from programy.mappings.base import DoubleStringPatternSplitCollection
+from programy.storage.entities.property import PropertyStore
 from programy.storage.entities.store import Store
+from programy.storage.stores.sql.dao.property import DefaultVariable, Property, Regex
+from programy.storage.stores.sql.store.sqlstore import SQLStore
+from programy.utils.logging.ylogger import YLogger
 
 
 class SQLBasePropertyStore(SQLStore, PropertyStore):
-    SPLIT_CHAR = ':'
-    COMMENT = '#'
+    SPLIT_CHAR = ":"
+    COMMENT = "#"
 
     def __init__(self, storage_engine):
         SQLStore.__init__(self, storage_engine)
@@ -77,12 +77,13 @@ class SQLBasePropertyStore(SQLStore, PropertyStore):
         collection.add_property(name, value)
 
     def split_into_fields(self, line):
-        return DoubleStringPatternSplitCollection.\
-            split_line_by_pattern(line, DoubleStringPatternSplitCollection.RE_OF_SPLIT_PATTERN)
+        return DoubleStringPatternSplitCollection.split_line_by_pattern(
+            line, DoubleStringPatternSplitCollection.RE_OF_SPLIT_PATTERN
+        )
 
     def _read_lines_from_file(self, filename, verbose):
         count = 0
-        success= 0
+        success = 0
         with open(filename, "r") as vars_file:
             for line in vars_file:
                 line = line.strip()
@@ -97,7 +98,9 @@ class SQLBasePropertyStore(SQLStore, PropertyStore):
 
         return count, success
 
-    def upload_from_file(self, filename, fileformat=Store.TEXT_FORMAT, commit=True, verbose=False):
+    def upload_from_file(
+        self, filename, fileformat=Store.TEXT_FORMAT, commit=True, verbose=False
+    ):
         try:
             count, success = self._read_lines_from_file(filename, verbose)
 
@@ -106,7 +109,9 @@ class SQLBasePropertyStore(SQLStore, PropertyStore):
             return count, success
 
         except Exception as error:
-            YLogger.exception(self, "Failed to load properties from [%s]", error, filename)
+            YLogger.exception(
+                self, "Failed to load properties from [%s]", error, filename
+            )
 
         return 0, 0
 
@@ -169,4 +174,6 @@ class SQLRegexStore(SQLBasePropertyStore, PropertyStore):
             collection.add_regex(name, re.compile(value, re.IGNORECASE))
 
         except Exception as excep:
-            YLogger.exception_nostack(self, "Error adding regex to collection: [%s]" % value, excep)
+            YLogger.exception_nostack(
+                self, "Error adding regex to collection: [%s]" % value, excep
+            )

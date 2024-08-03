@@ -14,8 +14,9 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
+
 from programy.storage.factory import StorageFactory
+from programy.utils.logging.ylogger import YLogger
 
 
 class BinariesManager:
@@ -32,8 +33,13 @@ class BinariesManager:
 
     def load_binary(self, storage_factory):
         try:
-            if storage_factory.entity_storage_engine_available(StorageFactory.BINARIES) is True:
-                YLogger.info(self, "Loading binary brain from [%s]", StorageFactory.BINARIES)
+            if (
+                storage_factory.entity_storage_engine_available(StorageFactory.BINARIES)
+                is True
+            ):
+                YLogger.info(
+                    self, "Loading binary brain from [%s]", StorageFactory.BINARIES
+                )
 
                 return self._load_from_storage(storage_factory)
 
@@ -51,8 +57,13 @@ class BinariesManager:
 
     def save_binary(self, storage_factory, aiml_parser):
         try:
-            if storage_factory.entity_storage_engine_available(StorageFactory.BINARIES) is True:
-                YLogger.info(self, "Saving binary brain to [%s]", StorageFactory.BINARIES)
+            if (
+                storage_factory.entity_storage_engine_available(StorageFactory.BINARIES)
+                is True
+            ):
+                YLogger.info(
+                    self, "Saving binary brain to [%s]", StorageFactory.BINARIES
+                )
 
                 self._save_to_storage(storage_factory, aiml_parser)
                 return True

@@ -15,7 +15,11 @@ class PatternFactoryTests(unittest.TestCase):
 
     def test_default_config_file(self):
         factory = PatternNodeFactory()
-        self.assertTrue(factory.default_config_file().endswith("/programy/parser/pattern/pattern_nodes.conf"))
+        self.assertTrue(
+            factory.default_config_file().endswith(
+                "/programy/parser/pattern/pattern_nodes.conf"
+            )
+        )
 
     def assert_nodes(self, factory):
         self.assertEqual(12, len(factory._nodes_config))
@@ -29,4 +33,3 @@ class PatternFactoryTests(unittest.TestCase):
         instance = factory._nodes_config["word"]
         word = instance("test")
         self.assertIsInstance(word, PatternWordNode)
-

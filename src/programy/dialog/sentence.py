@@ -14,16 +14,22 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
+
 from programy.parser.pattern.matchcontext import MatchContext
+from programy.utils.logging.ylogger import YLogger
 
 
 class Sentence:
 
-    def __init__(self, client_context=None, text: str = None,
-                 response: str = None,
-                 matched_context: MatchContext = None,
-                 positivity=0.0, subjectivity=0.5):
+    def __init__(
+        self,
+        client_context=None,
+        text: str = None,
+        response: str = None,
+        matched_context: MatchContext = None,
+        positivity=0.0,
+        subjectivity=0.5,
+    ):
         if text is not None:
             self._words = client_context.brain.tokenizer.texts_to_words(text)
         else:
@@ -92,7 +98,9 @@ class Sentence:
         return None
 
     def words_from_current_pos(self, client_context, current_pos: int):
-        return client_context.brain.tokenizer.words_from_current_pos(self._words, current_pos)
+        return client_context.brain.tokenizer.words_from_current_pos(
+            self._words, current_pos
+        )
 
     def text(self, client_context):
         return client_context.brain.tokenizer.words_to_texts(self._words)
@@ -108,8 +116,17 @@ class Sentence:
         assert client_context is not None
 
         if client_context.bot.sentiment_analyser is not None:
-            positivity, subjectivity = client_context.bot.sentiment_analyser.analyse_all(self.text(client_context))
-            YLogger.debug(client_context, "Sentiment: positivity[%f], subjectivity [%f]", positivity, subjectivity)
+            positivity, subjectivity = (
+                client_context.bot.sentiment_analyser.analyse_all(
+                    self.text(client_context)
+                )
+            )
+            YLogger.debug(
+                client_context,
+                "Sentiment: positivity[%f], subjectivity [%f]",
+                positivity,
+                subjectivity,
+            )
             self._positivity = positivity
             self._subjectivity = subjectivity
 
@@ -118,7 +135,7 @@ class Sentence:
             "words": self._words,
             "response": self._response,
             "positivity": self._positivity,
-            "subjectivity": self._subjectivity
+            "subjectivity": self._subjectivity,
         }
 
         if self._matched_context is not None:
@@ -131,12 +148,14 @@ class Sentence:
 
         sentence = Sentence(client_context)
 
-        sentence.words = json_data['words']
-        sentence.response = json_data['response']
-        sentence.positivity = json_data['positivity']
-        sentence.subjectivity = json_data['subjectivity']
+        sentence.words = json_data["words"]
+        sentence.response = json_data["response"]
+        sentence.positivity = json_data["positivity"]
+        sentence.subjectivity = json_data["subjectivity"]
 
-        if 'matched_context' in json_data:
-            sentence.matched_context = MatchContext.from_json(json_data["matched_context"])
+        if "matched_context" in json_data:
+            sentence.matched_context = MatchContext.from_json(
+                json_data["matched_context"]
+            )
 
         return sentence

@@ -1,7 +1,8 @@
+from programytest.parser.base import ParserTestsBaseClass
+
 from programy.parser.template.nodes.base import TemplateNode
 from programy.parser.template.nodes.richmedia.split import TemplateSplitNode
 
-from programytest.parser.base import ParserTestsBaseClass
 
 class TemplateSplitNodeTests(ParserTestsBaseClass):
 
@@ -20,4 +21,3 @@ class TemplateSplitNodeTests(ParserTestsBaseClass):
         self.assertEqual("<split />", resolved)
 
         self.assertEqual("<split />", root.to_xml(self._client_context))
-

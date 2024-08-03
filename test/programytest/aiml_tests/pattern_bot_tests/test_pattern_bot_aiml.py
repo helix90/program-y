@@ -24,11 +24,15 @@ class PatternBotAIMLTests(unittest.TestCase):
         self._client_context.brain.properties.pairs.append(("favouritecolor", "RED"))
 
     def test_pattern_bot_match(self):
-        response = self._client_context.bot.ask_question(self._client_context,  "MY FAVORITE COLOR IS RED")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "MY FAVORITE COLOR IS RED"
+        )
         self.assertIsNotNone(response)
         self.assertEqual(response, "RED IS A NICE COLOR.")
 
     def test_pattern_bot_match_name_variant(self):
-        response = self._client_context.bot.ask_question(self._client_context,  "MY OTHER FAVORITE COLOR USED TO BE RED")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "MY OTHER FAVORITE COLOR USED TO BE RED"
+        )
         self.assertIsNotNone(response)
         self.assertEqual(response, "YES RED WAS A NICE COLOR.")

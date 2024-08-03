@@ -14,24 +14,27 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 import os
+import shutil
 import sys
 import zipfile
-import shutil
-import wget
+
 import nltk
 import textblob.download_corpora as download_corpora
+import wget
+
 from programy.utils.console.console import outputLog
 
 bots = {
-    'alice2-y': "https://github.com/keiffster/alice2-y/archive/master.zip",
-    'professor-y': "https://github.com/keiffster/professor-y/archive/master.zip",
-    'rosie-y': "https://github.com/keiffster/rosie-y/archive/master.zip",
-    'talk-y': "https://github.com/keiffster/talk-y/archive/master.zip",
-    'y-bot': "https://github.com/keiffster/y-bot/archive/master.zip",
-    'servusai-y': "https://github.com/keiffster/servusai-y/archive/master.zip",
-    'template-y': "https://github.com/keiffster/template-y/archive/master.zip",
-    'traintimes-y': "https://github.com/keiffster/traintimes-y/archive/master.zip"
+    "alice2-y": "https://github.com/keiffster/alice2-y/archive/master.zip",
+    "professor-y": "https://github.com/keiffster/professor-y/archive/master.zip",
+    "rosie-y": "https://github.com/keiffster/rosie-y/archive/master.zip",
+    "talk-y": "https://github.com/keiffster/talk-y/archive/master.zip",
+    "y-bot": "https://github.com/keiffster/y-bot/archive/master.zip",
+    "servusai-y": "https://github.com/keiffster/servusai-y/archive/master.zip",
+    "template-y": "https://github.com/keiffster/template-y/archive/master.zip",
+    "traintimes-y": "https://github.com/keiffster/traintimes-y/archive/master.zip",
 }
 
 
@@ -50,7 +53,7 @@ class AdminTool:
                 shutil.copy(file_path, dest)
 
             # else if item is a folder, recurse
-            else: # os.path.isdir(file_path):
+            else:  # os.path.isdir(file_path):
                 new_dest = os.path.join(dest, item)
                 os.mkdir(new_dest)
                 AdminTool.recursive_copy(file_path, new_dest)
@@ -75,21 +78,29 @@ class AdminTool:
         self.display("Available bots are:\n")
         for bot in bots:
             self.display("\t%s" % bot)
-        if os.name == 'posix':
-            self.display("\n\tTo download use 'python3 -m programy.admin.tool download <bot-name>'")
-        else:                                                                                           # pragma: no cover
-            self.display("\n\tTo download use 'python -m programy.admin.tool download <bot-name>'")     # pragma: no cover
+        if os.name == "posix":
+            self.display(
+                "\n\tTo download use 'python3 -m programy.admin.tool download <bot-name>'"
+            )
+        else:  # pragma: no cover
+            self.display(
+                "\n\tTo download use 'python -m programy.admin.tool download <bot-name>'"
+            )  # pragma: no cover
 
         self.display("\nAdditional components are:\n")
         self.display("\ttextblob")
-        if os.name == 'posix':
-            self.display("\n\tTo install use 'python3 -m programy.admin.tool install <component>'")
-        else:                                                                                           # pragma: no cover
-            self.display("\n\tTo install use 'python -m programy.admin.tool install <component>'")      # pragma: no cover
+        if os.name == "posix":
+            self.display(
+                "\n\tTo install use 'python3 -m programy.admin.tool install <component>'"
+            )
+        else:  # pragma: no cover
+            self.display(
+                "\n\tTo install use 'python -m programy.admin.tool install <component>'"
+            )  # pragma: no cover
         self.display("")
 
     def wget_download(self, url):
-        return wget.download(url, bar=wget.bar_thermometer)     # pragma: no cover
+        return wget.download(url, bar=wget.bar_thermometer)  # pragma: no cover
 
     def download_bot(self, bot_name):
         url = bots[bot_name]
@@ -100,7 +111,7 @@ class AdminTool:
 
     @staticmethod
     def extract_bot(filename, path=None, remove_after=True):
-        zip_ref = zipfile.ZipFile(filename, 'r')
+        zip_ref = zipfile.ZipFile(filename, "r")
         zip_ref.extractall(path=path)
         zip_ref.close()
         if remove_after is True:
@@ -111,13 +122,15 @@ class AdminTool:
         return filename.split(".")[0]
 
     def download_and_make_active(self, bot_name):
-        filename = self.download_bot(bot_name)                                              # pragma: no cover
-        AdminTool.extract_bot(filename)                                                     # pragma: no cover
-        master_dir = AdminTool.zip_dir_name_from_filename(filename)                         # pragma: no cover
-        AdminTool.recursive_copy(master_dir, ".")                                           # pragma: no cover
-        if os.name == 'posix':                                                              # pragma: no cover
-            AdminTool.make_all_executable("." + os.sep + "scripts" + os.sep + "xnix")       # pragma: no cover
-        shutil.rmtree(master_dir)                                                           # pragma: no cover
+        filename = self.download_bot(bot_name)  # pragma: no cover
+        AdminTool.extract_bot(filename)  # pragma: no cover
+        master_dir = AdminTool.zip_dir_name_from_filename(filename)  # pragma: no cover
+        AdminTool.recursive_copy(master_dir, ".")  # pragma: no cover
+        if os.name == "posix":  # pragma: no cover
+            AdminTool.make_all_executable(
+                "." + os.sep + "scripts" + os.sep + "xnix"
+            )  # pragma: no cover
+        shutil.rmtree(master_dir)  # pragma: no cover
 
     def install_bot(self, words):
 
@@ -133,9 +146,9 @@ class AdminTool:
         self.show_execute_help(bot_name)
 
     def install_textblob(self):
-        nltk.download('punkt')              # pragma: no cover
-        nltk.download('stopwords')          # pragma: no cover
-        download_corpora.download_all()     # pragma: no cover
+        nltk.download("punkt")  # pragma: no cover
+        nltk.download("stopwords")  # pragma: no cover
+        download_corpora.download_all()  # pragma: no cover
 
     def install_additional(self, words):
 
@@ -143,20 +156,24 @@ class AdminTool:
             raise Exception("Missing additional element from install command")
         additional = words[1]
 
-        if additional == 'textblob':
+        if additional == "textblob":
             self.display("Installing additional components for %s" % additional)
             self.install_textblob()
         else:
-            raise Exception("Missing additional component from install command ['textblob']")
+            raise Exception(
+                "Missing additional component from install command ['textblob']"
+            )
 
     def show_execute_help(self, bot_name):
-        self.display("\nTo run %s bot in console mode, use the following commands" % bot_name)
-        if os.name == 'posix':
+        self.display(
+            "\nTo run %s bot in console mode, use the following commands" % bot_name
+        )
+        if os.name == "posix":
             self.display("\n\tcd scripts/xnix")
             self.display("\t./%s.sh" % bot_name)
-        else:                                           # pragma: no cover
-            self.display("\n\tcd scripts\\windows")     # pragma: no cover
-            self.display("\t%s.cmd" % bot_name)         # pragma: no cover
+        else:  # pragma: no cover
+            self.display("\n\tcd scripts\\windows")  # pragma: no cover
+            self.display("\t%s.cmd" % bot_name)  # pragma: no cover
 
     def show_help(self):
         self.display("Available commands are:\n")
@@ -171,13 +188,13 @@ class AdminTool:
             num_words = len(words)
             if num_words > 0:
                 primary = words[0]
-                if primary == 'list':
+                if primary == "list":
                     self.list_bots()
-                elif primary == 'download':
+                elif primary == "download":
                     self.install_bot(words)
-                elif primary == 'install':
+                elif primary == "install":
                     self.install_additional(words)
-                elif primary == 'help':
+                elif primary == "help":
                     self.show_help()
                 else:
                     raise Exception("Unknown primary command [%s]" % words[0])
@@ -189,9 +206,9 @@ class AdminTool:
             self.show_help()
 
     def display(self, text):
-        outputLog(self, text)   # pragma: no cover
+        outputLog(self, text)  # pragma: no cover
 
 
-if __name__ == '__main__':      # pragma: no cover
-    tool = AdminTool()          # pragma: no cover
-    tool.run(sys.argv[1:])      # pragma: no cover
+if __name__ == "__main__":  # pragma: no cover
+    tool = AdminTool()  # pragma: no cover
+    tool.run(sys.argv[1:])  # pragma: no cover

@@ -1,12 +1,13 @@
 import unittest
 
+from programytest.client import TestClient
+
 from programy.bot import Bot
 from programy.brain import Brain
 from programy.brainfactory import DefaultBrainSelector
 from programy.clients.config import ClientConfigurationData
 from programy.config.bot.bot import BotConfiguration
 from programy.config.brain.brain import BrainConfiguration
-from programytest.client import TestClient
 
 
 class DefaultBrainSelectorTests(unittest.TestCase):

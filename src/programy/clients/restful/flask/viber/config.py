@@ -14,6 +14,7 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 from programy.clients.restful.config import RestConfiguration
 from programy.utils.substitutions.substitues import Substitutions
 
@@ -38,24 +39,35 @@ class ViberConfiguration(RestConfiguration):
     def webhook(self):
         return self._webhook
 
-    def load_configuration_section(self, configuration_file, section, bot_root, subs: Substitutions = None):
+    def load_configuration_section(
+        self, configuration_file, section, bot_root, subs: Substitutions = None
+    ):
         assert section is not None
 
-        self._name = configuration_file.get_option(section, "name", missing_value="Program-y", subs=subs)
-        self._avatar = configuration_file.get_option(section, "avatar", missing_value="http://viber.com/avatar.jpg",
-                                                 subs=subs)
-        self._webhook = configuration_file.get_option(section, "webhook",
-                                                  missing_value="https://localhost:5000/api/viber/v1.0/ask", subs=subs)
-        super(ViberConfiguration, self).load_configuration_section(configuration_file, section, bot_root, subs=subs)
+        self._name = configuration_file.get_option(
+            section, "name", missing_value="Program-y", subs=subs
+        )
+        self._avatar = configuration_file.get_option(
+            section, "avatar", missing_value="http://viber.com/avatar.jpg", subs=subs
+        )
+        self._webhook = configuration_file.get_option(
+            section,
+            "webhook",
+            missing_value="https://localhost:5000/api/viber/v1.0/ask",
+            subs=subs,
+        )
+        super(ViberConfiguration, self).load_configuration_section(
+            configuration_file, section, bot_root, subs=subs
+        )
 
     def to_yaml(self, data, defaults=True):
         if defaults is True:
-            data['name'] = "Program-Y"
-            data['avatar'] = 'http://127.0.0.1/programy.png'
-            data['webhook'] = 'https://127.0.0.1/api/viber/v1.0/ask'
+            data["name"] = "Program-Y"
+            data["avatar"] = "http://127.0.0.1/programy.png"
+            data["webhook"] = "https://127.0.0.1/api/viber/v1.0/ask"
         else:
-            data['name'] = self._name
-            data['avatar'] = self._avatar
-            data['webhook'] = self._webhook
+            data["name"] = self._name
+            data["avatar"] = self._avatar
+            data["webhook"] = self._webhook
 
         super(ViberConfiguration, self).to_yaml(data, defaults)

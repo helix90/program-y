@@ -1,10 +1,12 @@
 import unittest
 from unittest.mock import patch
+
 import programytest.storage.engines as Engines
+from programytest.storage.asserts.store.assert_links import LinkStoreAsserts
+
 from programy.storage.stores.sql.config import SQLStorageConfiguration
 from programy.storage.stores.sql.engine import SQLStorageEngine
 from programy.storage.stores.sql.store.links import SQLLinkStore
-from programytest.storage.asserts.store.assert_links import LinkStoreAsserts
 
 
 class SQLLinkStoreTests(LinkStoreAsserts):
@@ -30,7 +32,10 @@ class SQLLinkStoreTests(LinkStoreAsserts):
     def patch_delete_link(self, userid):
         raise Exception("Mock Exception")
 
-    @patch("programy.storage.stores.sql.store.links.SQLLinkStore._delete_link", patch_delete_link)
+    @patch(
+        "programy.storage.stores.sql.store.links.SQLLinkStore._delete_link",
+        patch_delete_link,
+    )
     @unittest.skipIf(Engines.sql is False, Engines.sql_disabled)
     def test_remove_link_with_exception(self):
         config = SQLStorageConfiguration()
@@ -44,7 +49,9 @@ class SQLLinkStoreTests(LinkStoreAsserts):
     def patch_get_link(self, userid):
         return None
 
-    @patch("programy.storage.stores.sql.store.links.SQLLinkStore._get_link", patch_get_link)
+    @patch(
+        "programy.storage.stores.sql.store.links.SQLLinkStore._get_link", patch_get_link
+    )
     @unittest.skipIf(Engines.sql is False, Engines.sql_disabled)
     def test_update_link_not_found(self):
         config = SQLStorageConfiguration()

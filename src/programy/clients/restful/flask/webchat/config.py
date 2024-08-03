@@ -14,6 +14,7 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 from programy.clients.restful.config import RestConfiguration
 from programy.utils.substitutions.substitues import Substitutions
 
@@ -36,23 +37,28 @@ class WebChatConfiguration(RestConfiguration):
     def cookie_expires(self):
         return self._cookie_expires
 
-    def load_configuration_section(self, configuration_file, section, bot_root, subs: Substitutions = None):
+    def load_configuration_section(
+        self, configuration_file, section, bot_root, subs: Substitutions = None
+    ):
 
         assert section is not None
 
-        self._cookie_id = configuration_file.get_option(section, "cookie_id", missing_value="ProgramYSession",
-                                                        subs=subs)
-        self._cookie_expires = configuration_file.get_int_option(section, "cookie_expires", missing_value=90,
-                                                                 subs=subs)
-        super(WebChatConfiguration, self).load_configuration_section(configuration_file, section, bot_root,
-                                                                     subs=subs)
+        self._cookie_id = configuration_file.get_option(
+            section, "cookie_id", missing_value="ProgramYSession", subs=subs
+        )
+        self._cookie_expires = configuration_file.get_int_option(
+            section, "cookie_expires", missing_value=90, subs=subs
+        )
+        super(WebChatConfiguration, self).load_configuration_section(
+            configuration_file, section, bot_root, subs=subs
+        )
 
     def to_yaml(self, data, defaults=True):
         if defaults is True:
-            data['cookie_id'] = "ProgramYSession"
-            data['cookie_expires'] = 90
+            data["cookie_id"] = "ProgramYSession"
+            data["cookie_expires"] = 90
         else:
-            data['cookie_id'] = self._cookie_id
-            data['cookie_expires'] = self._cookie_expires
+            data["cookie_id"] = self._cookie_id
+            data["cookie_expires"] = self._cookie_expires
 
         super(WebChatConfiguration, self).to_yaml(data, defaults)

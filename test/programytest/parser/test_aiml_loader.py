@@ -1,8 +1,10 @@
-import unittest
 import os
-from programy.parser.aiml_parser import AIMLLoader
-from programy.dialog.sentence import Sentence
+import unittest
+
 from programytest.client import TestClient
+
+from programy.dialog.sentence import Sentence
+from programy.parser.aiml_parser import AIMLLoader
 
 
 class AIMLLoaderTestClient(TestClient):
@@ -31,7 +33,9 @@ class AIMLLoaderTests(unittest.TestCase):
         filename = os.path.dirname(__file__) + os.sep + "./valid.aiml"
         loader.load_file_contents("TEST", filename)
 
-        context = self._client_context.brain.aiml_parser.match_sentence(self._client_context, Sentence(self._client_context, "HELLO"), "*", "*")
+        context = self._client_context.brain.aiml_parser.match_sentence(
+            self._client_context, Sentence(self._client_context, "HELLO"), "*", "*"
+        )
         self.assertIsNotNone(context)
         self.assertTrue(context.matched())
 
@@ -40,5 +44,7 @@ class AIMLLoaderTests(unittest.TestCase):
         filename = "XXXX.aiml"
         loader.load_file_contents("TEST", filename)
 
-        context = self._client_context.brain.aiml_parser.match_sentence(self._client_context, Sentence(self._client_context, "HELLO"), "*", "*")
+        context = self._client_context.brain.aiml_parser.match_sentence(
+            self._client_context, Sentence(self._client_context, "HELLO"), "*", "*"
+        )
         self.assertIsNone(context)

@@ -3,6 +3,7 @@ import os.path
 import shutil
 import unittest
 from unittest.mock import patch
+
 from programy.storage.stores.file.config import FileStorageConfiguration
 from programy.storage.stores.file.engine import FileStorageEngine
 from programy.storage.stores.file.store.filestore import FileStore
@@ -28,7 +29,9 @@ class FileStoreTests(unittest.TestCase):
 
     def test_file_path_operations(self):
         self.assertEqual("/temp", FileStore._get_dir_from_path("/temp/files.txt"))
-        self.assertEqual("/temp/files", FileStore._get_dir_from_path("/temp/files/files.txt"))
+        self.assertEqual(
+            "/temp/files", FileStore._get_dir_from_path("/temp/files/files.txt")
+        )
         self.assertEqual("./temp", FileStore._get_dir_from_path("./temp/files.txt"))
         self.assertEqual(".", FileStore._get_dir_from_path("./files.txt"))
         self.assertEqual("", FileStore._get_dir_from_path("files.txt"))
@@ -75,7 +78,10 @@ class FileStoreTests(unittest.TestCase):
     def patch_drop_folder(self, folder):
         raise Exception("Mock Exception")
 
-    @patch('programy.storage.stores.file.store.filestore.FileStore._drop_folder', patch_drop_folder)
+    @patch(
+        "programy.storage.stores.file.store.filestore.FileStore._drop_folder",
+        patch_drop_folder,
+    )
     def test_drop_exception(self):
         config = FileStorageConfiguration()
         engine = FileStorageEngine(config)

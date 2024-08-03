@@ -16,7 +16,7 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR TH
 """
 
 
-class ResponseLogger():
+class ResponseLogger:
 
     def log_unknown_response(self, question):
         del question

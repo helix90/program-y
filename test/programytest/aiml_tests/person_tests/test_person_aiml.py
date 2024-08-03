@@ -13,7 +13,7 @@ class PersonTestClient(TestClient):
         super(PersonTestClient, self).load_storage()
         self.add_default_stores()
         self.add_categories_store([os.path.dirname(__file__)])
-        self.add_person_store(os.path.dirname(__file__)+ os.sep + "person.txt")
+        self.add_person_store(os.path.dirname(__file__) + os.sep + "person.txt")
 
 
 class PersonAIMLTests(unittest.TestCase):
@@ -23,6 +23,8 @@ class PersonAIMLTests(unittest.TestCase):
         self._client_context = client.create_client_context("testid")
 
     def test_person(self):
-        response = self._client_context.bot.ask_question(self._client_context,  "TEST PERSON")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "TEST PERSON"
+        )
         self.assertIsNotNone(response)
         self.assertEqual(response, "This is your cat.")

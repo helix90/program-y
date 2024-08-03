@@ -1,13 +1,14 @@
-import smtplib
 import mimetypes
+import smtplib
 from email import encoders
 from email.mime.audio import MIMEAudio
 from email.mime.base import MIMEBase
 from email.mime.image import MIMEImage
-from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-from programy.utils.logging.ylogger import YLogger
+from email.mime.text import MIMEText
+
 from programy.utils.email.config import EmailConfiguration
+from programy.utils.logging.ylogger import YLogger
 
 
 class EmailSender:
@@ -27,7 +28,7 @@ class EmailSender:
         return mimetypes.guess_type(path)
 
     def _split_ctype(self, ctype):
-        return ctype.split('/', 1)
+        return ctype.split("/", 1)
 
     def _get_ctype_and_attachment(self, path, encoding):
 
@@ -36,7 +37,7 @@ class EmailSender:
         if ctype is None:
             # No guess could be made, or the file is encoded (compressed), so
             # use a generic bag-of-bits type.
-            ctype = 'application/octet-stream'
+            ctype = "application/octet-stream"
 
         if attachment_encoding is None:
             if encoding is not None:
@@ -55,18 +56,18 @@ class EmailSender:
             msg.attach(attach)
 
     def _attach_image(self, msg, path, subtype):
-        with open(path, 'rb') as fp:
+        with open(path, "rb") as fp:
             attach = MIMEImage(fp.read(), _subtype=subtype)
             msg.attach(attach)
 
     def _attach_audio(self, msg, path, subtype):
-        with open(path, 'rb') as fp:
+        with open(path, "rb") as fp:
             attach = MIMEAudio(fp.read(), _subtype=subtype)
             msg.attach(attach)
 
     def _attach_binary(self, msg, path, mimetype, subtype):
         # No specific mime type, so we shoot for a binary file
-        with open(path, 'rb') as fp:
+        with open(path, "rb") as fp:
             attach = MIMEBase(mimetype, subtype)
             attach.set_payload(fp.read())
             encoders.encode_base64(attach)
@@ -82,20 +83,20 @@ class EmailSender:
 
         mimetype, subtype = self._split_ctype(ctype)
 
-        if mimetype == 'text':
+        if mimetype == "text":
             self._attach_text(msg, path, encoding, subtype)
 
-        elif mimetype == 'image':
+        elif mimetype == "image":
             self._attach_image(msg, path, subtype)
 
-        elif mimetype == 'audio':
+        elif mimetype == "audio":
             self._attach_audio(msg, path, subtype)
 
         else:
             self._attach_binary(msg, path, mimetype, subtype)
 
     def _smtp_server(self, host, port):
-        return smtplib.SMTP(host, port)     # pragma: no cover
+        return smtplib.SMTP(host, port)  # pragma: no cover
 
     def _send_message(self, host, port, username, password, msg):
 
@@ -122,15 +123,17 @@ class EmailSender:
             else:
                 msg = MIMEText(message)
 
-            msg['Subject'] = subject
-            msg['From'] = self._config.from_addr
-            msg['To'] = to
+            msg["Subject"] = subject
+            msg["From"] = self._config.from_addr
+            msg["To"] = to
 
-            result = self._send_message(self._config.host,
-                                        self._config.port,
-                                        self._config.username,
-                                        self._config.password,
-                                        msg)
+            result = self._send_message(
+                self._config.host,
+                self._config.port,
+                self._config.username,
+                self._config.password,
+                msg,
+            )
 
             if result:
                 for email, error in result.items():

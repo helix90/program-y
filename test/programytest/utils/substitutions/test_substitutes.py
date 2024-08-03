@@ -60,8 +60,12 @@ class SubstitutionsTests(unittest.TestCase):
 
         self.assertEquals("Two words", sub.get_substitute("$MULTIPLE"))
 
-        self.assertEqual("My name is Fred West", sub.replace("My name is $FIRSTNAME $SURNAME"))
-        self.assertEqual("My name is FredWest", sub.replace("My name is $FIRSTNAME$SURNAME"))
+        self.assertEqual(
+            "My name is Fred West", sub.replace("My name is $FIRSTNAME $SURNAME")
+        )
+        self.assertEqual(
+            "My name is FredWest", sub.replace("My name is $FIRSTNAME$SURNAME")
+        )
 
     def test_substitutions_no_file(self):
 

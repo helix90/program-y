@@ -1,10 +1,11 @@
 import unittest
 
 import programytest.storage.engines as Engines
+from programytest.storage.asserts.store.assert_persons import PersonsStoreAsserts
+
 from programy.storage.stores.nosql.mongo.config import MongoStorageConfiguration
 from programy.storage.stores.nosql.mongo.engine import MongoStorageEngine
 from programy.storage.stores.nosql.mongo.store.lookups import MongoPersonStore
-from programytest.storage.asserts.store.assert_persons import PersonsStoreAsserts
 
 
 class MongoPersonStoreTests(PersonsStoreAsserts):

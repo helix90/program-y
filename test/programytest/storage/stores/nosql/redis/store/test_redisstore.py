@@ -2,7 +2,9 @@ import unittest
 
 from programy.storage.stores.nosql.redis.config import RedisStorageConfiguration
 from programy.storage.stores.nosql.redis.engine import RedisStorageEngine
-from programy.storage.stores.nosql.redis.store.conversations import RedisConversationStore
+from programy.storage.stores.nosql.redis.store.conversations import (
+    RedisConversationStore,
+)
 
 
 class RedisStoreTests(unittest.TestCase):
@@ -13,8 +15,7 @@ class RedisStoreTests(unittest.TestCase):
         engine.initialise()
         store = RedisConversationStore(engine)
 
-        store.save('TESTKEY', "Hello world")
-        self.assertEquals('Hello world', store.get('TESTKEY'))
-        store.delete('TESTKEY')
-        self.assertEquals(None, store.get('TESTKEY'))
-
+        store.save("TESTKEY", "Hello world")
+        self.assertEquals("Hello world", store.get("TESTKEY"))
+        store.delete("TESTKEY")
+        self.assertEquals(None, store.get("TESTKEY"))

@@ -14,9 +14,10 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
+from programy.extensions.base import Extension
 from programy.utils.logging.ylogger import YLogger
 from programy.utils.newsapi.newsapi import NewsAPI
-from programy.extensions.base import Extension
 
 
 class NewsAPIExtension(Extension):
@@ -57,21 +58,29 @@ class NewsAPIExtension(Extension):
                 max_num = int(splits[count])
             elif splits[count] == "SORT":
                 count += 1
-                if splits[count].upper() == 'TRUE':
+                if splits[count].upper() == "TRUE":
                     sort = True
-                elif splits[count].upper() == 'FALSE':
+                elif splits[count].upper() == "FALSE":
                     sort = False
                 else:
-                    YLogger.error(context, "Invalid value for NewAPI Data parameter sort [%s]", splits[count])
+                    YLogger.error(
+                        context,
+                        "Invalid value for NewAPI Data parameter sort [%s]",
+                        splits[count],
+                    )
                     sort = False
             elif splits[count] == "REVERSE":
                 count += 1
-                if splits[count].upper() == 'TRUE':
+                if splits[count].upper() == "TRUE":
                     reverse = True
-                elif splits[count].upper() == 'FALSE':
+                elif splits[count].upper() == "FALSE":
                     reverse = False
                 else:
-                    YLogger.error(context, "Invalid value for NewAPI Data parameter reverse [%s]", splits[count])
+                    YLogger.error(
+                        context,
+                        "Invalid value for NewAPI Data parameter reverse [%s]",
+                        splits[count],
+                    )
                     reverse = False
             else:
                 YLogger.error(context, "Unknown News API Command [%s]", splits[count])
@@ -86,7 +95,10 @@ class NewsAPIExtension(Extension):
         source, max_num, sort, reverse = self.parse_data(client_context, data)
 
         if source is None:
-            YLogger.error(client_context, "NewsAPIExtension no source passed in as data parameter!")
+            YLogger.error(
+                client_context,
+                "NewsAPIExtension no source passed in as data parameter!",
+            )
             return ""
 
         return self.get_news(client_context, source, max_num, sort, reverse)

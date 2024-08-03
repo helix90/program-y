@@ -1,5 +1,3 @@
-
-
 class CustomAssertions:
     def assertOneOf(self, value, options):
         for option in options:

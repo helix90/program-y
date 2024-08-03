@@ -14,13 +14,15 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from flask import Flask, request, Response
-from kik import KikApi, Configuration
-from kik.messages import messages_from_json, TextMessage
-from programy.utils.logging.ylogger import YLogger
+
+from flask import Flask, Response, request
+from kik import Configuration, KikApi
+from kik.messages import TextMessage, messages_from_json
+
 from programy.clients.restful.flask.client import FlaskRestBotClient
 from programy.clients.restful.flask.kik.config import KikConfiguration
 from programy.utils.console.console import outputLog
+from programy.utils.logging.ylogger import YLogger
 
 
 class KikBotClient(FlaskRestBotClient):
@@ -41,8 +43,12 @@ class KikBotClient(FlaskRestBotClient):
 
     def create_kik_bot(self):
         if self._bot_api_key is not None:
-            kik_bot = KikApi(self.configuration.client_configuration.bot_name, self._bot_api_key)
-            kik_bot.set_configuration(Configuration(webhook=self.configuration.client_configuration.webhook))
+            kik_bot = KikApi(
+                self.configuration.client_configuration.bot_name, self._bot_api_key
+            )
+            kik_bot.set_configuration(
+                Configuration(webhook=self.configuration.client_configuration.webhook)
+            )
             return kik_bot
 
         else:
@@ -58,21 +64,21 @@ class KikBotClient(FlaskRestBotClient):
         answer = self.ask_question(userid, question)
         rendered = self.renderer.render(client_context, answer)
 
-        self._kik_bot.send_messages([
-            TextMessage(
-                to=message.from_user,
-                chat_id=message.chat_id,
-                body=rendered
-            )
-        ])
+        self._kik_bot.send_messages(
+            [TextMessage(to=message.from_user, chat_id=message.chat_id, body=rendered)]
+        )
 
     def get_unknown_response(self, userid):
         if self.configuration.client_configuration.unknown_command_srai is None:
             unknown_response = self.configuration.client_configuration.unknown_command
         else:
-            unknown_response = self.ask_question(userid, self.configuration.client_configuration.unknown_command_srai)
+            unknown_response = self.ask_question(
+                userid, self.configuration.client_configuration.unknown_command_srai
+            )
             if unknown_response is None or unknown_response == "":
-                unknown_response = self.configuration.client_configuration.unknown_command
+                unknown_response = (
+                    self.configuration.client_configuration.unknown_command
+                )
 
         client_context = self.create_client_context(userid)
 
@@ -83,17 +89,17 @@ class KikBotClient(FlaskRestBotClient):
 
         unknown_response = self.get_unknown_response(userid)
 
-        self._kik_bot.send_messages([
-            TextMessage(
-                to=message.from_user,
-                chat_id=message.chat_id,
-                body=unknown_response
-            )
-        ])
+        self._kik_bot.send_messages(
+            [
+                TextMessage(
+                    to=message.from_user, chat_id=message.chat_id, body=unknown_response
+                )
+            ]
+        )
 
     def handle_message_request(self, request):
 
-        messages = messages_from_json(request.json['messages'])
+        messages = messages_from_json(request.json["messages"])
 
         for message in messages:
             if isinstance(message, TextMessage):
@@ -109,7 +115,9 @@ class KikBotClient(FlaskRestBotClient):
         if self._kik_bot is None:
             return Response(status=500)
 
-        if not self._kik_bot.verify_signature(request.headers.get('X-Kik-Signature'), request.get_data()):
+        if not self._kik_bot.verify_signature(
+            request.headers.get("X-Kik-Signature"), request.get_data()
+        ):
             return Response(status=403)
 
         self.handle_message_request(request)
@@ -124,7 +132,7 @@ if __name__ == "__main__":
 
     APP = Flask(__name__)
 
-    @APP.route(KIK_CLIENT.configuration.client_configuration.api, methods=['POST'])
+    @APP.route(KIK_CLIENT.configuration.client_configuration.api, methods=["POST"])
     def receive_message():
         try:
             return KIK_CLIENT.receive_message(request)

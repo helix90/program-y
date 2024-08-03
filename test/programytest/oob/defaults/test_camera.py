@@ -2,8 +2,9 @@ import unittest
 import unittest.mock
 import xml.etree.ElementTree as ET
 
-from programy.oob.callmom.camera import CameraOutOfBandProcessor
 from programytest.client import TestClient
+
+from programy.oob.callmom.camera import CameraOutOfBandProcessor
 
 
 class CameraOutOfBandProcessorTests(unittest.TestCase):
@@ -31,11 +32,17 @@ class CameraOutOfBandProcessorTests(unittest.TestCase):
         self.assertIsNotNone(oob_processor)
 
         oob_content = ET.fromstring("<camera>on</camera>")
-        self.assertEqual("CAMERA", oob_processor.process_out_of_bounds(self._client_context, oob_content))
+        self.assertEqual(
+            "CAMERA",
+            oob_processor.process_out_of_bounds(self._client_context, oob_content),
+        )
 
     def test_processor_off(self):
         oob_processor = CameraOutOfBandProcessor()
         self.assertIsNotNone(oob_processor)
 
         oob_content = ET.fromstring("<camera>off</camera>")
-        self.assertEqual("CAMERA", oob_processor.process_out_of_bounds(self._client_context, oob_content))
+        self.assertEqual(
+            "CAMERA",
+            oob_processor.process_out_of_bounds(self._client_context, oob_content),
+        )

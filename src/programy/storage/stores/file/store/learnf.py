@@ -14,13 +14,15 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 import os
 import os.path
-from programy.utils.parsing.linenumxml import LineNumberingParser
 import xml.etree.ElementTree as ET  # pylint: disable=wrong-import-order
-from programy.storage.stores.file.store.filestore import FileStore
+
 from programy.storage.entities.learnf import LearnfStore
+from programy.storage.stores.file.store.filestore import FileStore
 from programy.utils.logging.ylogger import YLogger
+from programy.utils.parsing.linenumxml import LineNumberingParser
 
 
 class FileLearnfStore(FileStore, LearnfStore):
@@ -39,8 +41,8 @@ class FileLearnfStore(FileStore, LearnfStore):
         FileStore._ensure_dir_exists(dirpath)
         with open(learnf_path, "w+", encoding="utf-8") as file:
             file.write('<?xml version="1.0" encoding="UTF-8"?>\n')
-            file.write('<aiml>\n')
-            file.write('</aiml>\n')
+            file.write("<aiml>\n")
+            file.write("</aiml>\n")
             file.close()
 
     @staticmethod
@@ -52,7 +54,9 @@ class FileLearnfStore(FileStore, LearnfStore):
                 return True
 
             except Exception as excep:
-                YLogger.exception_nostack(None, "Error Writing learnf to %s", excep, learnf_path)
+                YLogger.exception_nostack(
+                    None, "Error Writing learnf to %s", excep, learnf_path
+                )
         return False
 
     @staticmethod
@@ -79,14 +83,14 @@ class FileLearnfStore(FileStore, LearnfStore):
     @staticmethod
     def node_already_exists(root, node):
 
-        new_pattern = node.find('pattern')
+        new_pattern = node.find("pattern")
         if new_pattern is None:
             return False
 
         new_pattern_str = ET.tostring(new_pattern)
 
         for category in root:
-            current_pattern = category.find('pattern')
+            current_pattern = category.find("pattern")
             if current_pattern is not None:
                 current_pattern_str = ET.tostring(current_pattern)
                 if current_pattern_str == new_pattern_str:
@@ -96,7 +100,9 @@ class FileLearnfStore(FileStore, LearnfStore):
 
     def _get_storage_path(self):
         if len(self.storage_engine.configuration.learnf_storage.dirs) > 1:
-            YLogger.warning(self, "Learnf Storage has multiple folders specified, using first only")
+            YLogger.warning(
+                self, "Learnf Storage has multiple folders specified, using first only"
+            )
 
         return self.storage_engine.configuration.learnf_storage.dirs[0]
 

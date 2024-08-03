@@ -2,11 +2,12 @@ import unittest
 from unittest.mock import patch
 
 import programytest.storage.engines as Engines
+from programytest.security.linking.accounlinker_asserts import AccountLinkerAsserts
+
 from programy.security.linking.accountlinker import BasicAccountLinkerService
 from programy.storage.stores.sql.config import SQLStorageConfiguration
-from programy.storage.stores.sql.engine import SQLStorageEngine
 from programy.storage.stores.sql.dao.link import Link
-from programytest.security.linking.accounlinker_asserts import AccountLinkerAsserts
+from programy.storage.stores.sql.engine import SQLStorageEngine
 
 
 class SQLAccountLinkerServiceTests(AccountLinkerAsserts):
@@ -39,7 +40,9 @@ class SQLAccountLinkerServiceTests(AccountLinkerAsserts):
     def patch_add_user(self, userid, clientid):
         return None
 
-    @patch('programy.storage.stores.sql.store.users.SQLUserStore.add_user', patch_add_user)
+    @patch(
+        "programy.storage.stores.sql.store.users.SQLUserStore.add_user", patch_add_user
+    )
     def test_link_user_to_client_add_user_fails(self):
         mgr = BasicAccountLinkerService(self.storage_engine)
         self.assert_link_user_to_client_add_user_fails(mgr)
@@ -78,7 +81,10 @@ class SQLAccountLinkerServiceTests(AccountLinkerAsserts):
         return False
 
     @unittest.skipIf(Engines.sql is False, Engines.sql_disabled)
-    @patch('programy.storage.stores.sql.store.users.SQLUserStore.remove_user', patch_remove_user)
+    @patch(
+        "programy.storage.stores.sql.store.users.SQLUserStore.remove_user",
+        patch_remove_user,
+    )
     def test_unlink_user_from_client_remove_user_fails1(self):
         mgr = BasicAccountLinkerService(self.storage_engine)
         self.assert_unlink_user_from_client_fails(mgr)
@@ -87,7 +93,10 @@ class SQLAccountLinkerServiceTests(AccountLinkerAsserts):
         return False
 
     @unittest.skipIf(Engines.sql is False, Engines.sql_disabled)
-    @patch('programy.storage.stores.sql.store.links.SQLLinkStore.remove_link', patch_remove_link)
+    @patch(
+        "programy.storage.stores.sql.store.links.SQLLinkStore.remove_link",
+        patch_remove_link,
+    )
     def test_unlink_user_from_client_remove_user_fails2(self):
         mgr = BasicAccountLinkerService(self.storage_engine)
         self.assert_unlink_user_from_client_fails(mgr)
@@ -96,7 +105,10 @@ class SQLAccountLinkerServiceTests(AccountLinkerAsserts):
         return False
 
     @unittest.skipIf(Engines.sql is False, Engines.sql_disabled)
-    @patch('programy.storage.stores.sql.store.linkedaccounts.SQLLinkedAccountStore.unlink_accounts', patch_unlink_accounts)
+    @patch(
+        "programy.storage.stores.sql.store.linkedaccounts.SQLLinkedAccountStore.unlink_accounts",
+        patch_unlink_accounts,
+    )
     def test_unlink_user_from_client_remove_user_fails3(self):
         mgr = BasicAccountLinkerService(self.storage_engine)
         self.assert_unlink_user_from_client_fails(mgr)
@@ -110,19 +122,28 @@ class SQLAccountLinkerServiceTests(AccountLinkerAsserts):
         return False
 
     @unittest.skipIf(Engines.sql is False, Engines.sql_disabled)
-    @patch('programy.storage.stores.sql.store.users.SQLUserStore.remove_user_from_all_clients',patch_remove_user_from_all_clients)
+    @patch(
+        "programy.storage.stores.sql.store.users.SQLUserStore.remove_user_from_all_clients",
+        patch_remove_user_from_all_clients,
+    )
     def test_unlink_user_from_all_clients_remove_user_from_all_clients_fails(self):
         mgr = BasicAccountLinkerService(self.storage_engine)
         self.assert_unlink_user_from_all_clients_fails(mgr)
 
     @unittest.skipIf(Engines.sql is False, Engines.sql_disabled)
-    @patch('programy.storage.stores.sql.store.links.SQLLinkStore.remove_link', patch_remove_link)
+    @patch(
+        "programy.storage.stores.sql.store.links.SQLLinkStore.remove_link",
+        patch_remove_link,
+    )
     def test_unlink_user_from_all_clients_remove_link_fails(self):
         mgr = BasicAccountLinkerService(self.storage_engine)
         self.assert_unlink_user_from_all_clients_fails(mgr)
 
     @unittest.skipIf(Engines.sql is False, Engines.sql_disabled)
-    @patch('programy.storage.stores.sql.store.linkedaccounts.SQLLinkedAccountStore.unlink_accounts', patch_unlink_accounts)
+    @patch(
+        "programy.storage.stores.sql.store.linkedaccounts.SQLLinkedAccountStore.unlink_accounts",
+        patch_unlink_accounts,
+    )
     def test_unlink_user_from_all_clients_unlink_accounts_fails(self):
         mgr = BasicAccountLinkerService(self.storage_engine)
         self.assert_unlink_user_from_all_clients_fails(mgr)
@@ -136,7 +157,10 @@ class SQLAccountLinkerServiceTests(AccountLinkerAsserts):
         return None
 
     @unittest.skipIf(Engines.sql is False, Engines.sql_disabled)
-    @patch('programy.storage.stores.sql.store.links.SQLLinkStore.create_link', patch_create_link)
+    @patch(
+        "programy.storage.stores.sql.store.links.SQLLinkStore.create_link",
+        patch_create_link,
+    )
     def test_generate_link_create_link_fails(self):
         mgr = BasicAccountLinkerService(self.storage_engine)
         self.assert_generate_link_create_link_fails(mgr)
@@ -145,7 +169,9 @@ class SQLAccountLinkerServiceTests(AccountLinkerAsserts):
         return None
 
     @unittest.skipIf(Engines.sql is False, Engines.sql_disabled)
-    @patch('programy.storage.stores.sql.store.links.SQLLinkStore.get_link', patch_get_link)
+    @patch(
+        "programy.storage.stores.sql.store.links.SQLLinkStore.get_link", patch_get_link
+    )
     def test_reset_link_get_link_fails(self):
         mgr = BasicAccountLinkerService(self.storage_engine)
         self.assert_reset_link_get_link_fails(mgr)
@@ -161,13 +187,17 @@ class SQLAccountLinkerServiceTests(AccountLinkerAsserts):
         return link
 
     @unittest.skipIf(Engines.sql is False, Engines.sql_disabled)
-    @patch('programy.storage.stores.sql.store.links.SQLLinkStore.get_link', patch_get_link)
+    @patch(
+        "programy.storage.stores.sql.store.links.SQLLinkStore.get_link", patch_get_link
+    )
     def test_link_accounts_link_expired(self):
         mgr = BasicAccountLinkerService(self.storage_engine)
         self.assert_link_accounts_failure(mgr)
 
     @unittest.skipIf(Engines.sql is False, Engines.sql_disabled)
-    @patch('programy.storage.stores.sql.store.users.SQLUserStore.add_user', patch_add_user)
+    @patch(
+        "programy.storage.stores.sql.store.users.SQLUserStore.add_user", patch_add_user
+    )
     def test_link_accounts_add_user_fails(self):
         mgr = BasicAccountLinkerService(self.storage_engine)
         self.assert_link_accounts_failure(mgr)
@@ -176,7 +206,10 @@ class SQLAccountLinkerServiceTests(AccountLinkerAsserts):
         return None
 
     @unittest.skipIf(Engines.sql is False, Engines.sql_disabled)
-    @patch('programy.storage.stores.sql.store.linkedaccounts.SQLLinkedAccountStore.link_accounts', patch_link_accounts)
+    @patch(
+        "programy.storage.stores.sql.store.linkedaccounts.SQLLinkedAccountStore.link_accounts",
+        patch_link_accounts,
+    )
     def test_link_accounts_link_accounts_fails(self):
         mgr = BasicAccountLinkerService(self.storage_engine)
         self.assert_link_accounts_failure(mgr)

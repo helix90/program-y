@@ -1,9 +1,10 @@
 import xml.etree.ElementTree as ET
 
+from programytest.parser.base import ParserTestsBaseClass
+
 from programy.parser.template.nodes.base import TemplateNode
 from programy.parser.template.nodes.first import TemplateFirstNode
 from programy.parser.template.nodes.word import TemplateWordNode
-from programytest.parser.base import ParserTestsBaseClass
 
 
 class MockTemplateFirstNode(TemplateFirstNode):
@@ -111,11 +112,13 @@ class TemplateFirstNodeTests(ParserTestsBaseClass):
         self.assertEquals('{"test":', rest.resolve(self._client_context))
 
     def test_valid_json_empty_list(self):
-        rest = MockJSONTemplateFirstNode('[]')
-        self.assertEquals('NIL', rest.resolve(self._client_context))
+        rest = MockJSONTemplateFirstNode("[]")
+        self.assertEquals("NIL", rest.resolve(self._client_context))
 
     def test_valid_json_list(self):
-        rest = MockJSONTemplateFirstNode('[{"test1": "value1"}, {"test2": "value2"}, {"test3": "value3"}]')
+        rest = MockJSONTemplateFirstNode(
+            '[{"test1": "value1"}, {"test2": "value2"}, {"test3": "value3"}]'
+        )
         self.assertEquals('{"test1": "value1"}', rest.resolve(self._client_context))
 
     def test_valid_json_list_one_item(self):
@@ -123,21 +126,21 @@ class TemplateFirstNodeTests(ParserTestsBaseClass):
         self.assertEquals('{"test1": "value1"}', rest.resolve(self._client_context))
 
     def test_invalid_json_no_value(self):
-        rest = MockJSONTemplateFirstNode('test')
-        self.assertEquals('test', rest.resolve(self._client_context))
+        rest = MockJSONTemplateFirstNode("test")
+        self.assertEquals("test", rest.resolve(self._client_context))
 
     def test_invalid_json_empty(self):
-        rest = MockJSONTemplateFirstNode('  ')
-        self.assertEquals('NIL', rest.resolve(self._client_context))
+        rest = MockJSONTemplateFirstNode("  ")
+        self.assertEquals("NIL", rest.resolve(self._client_context))
 
     def test_invalid_json_one_item(self):
-        rest = MockJSONTemplateFirstNode('test')
-        self.assertEquals('test', rest.resolve(self._client_context))
+        rest = MockJSONTemplateFirstNode("test")
+        self.assertEquals("test", rest.resolve(self._client_context))
 
     def test_invalid_json(self):
-        rest = MockJSONTemplateFirstNode('test value')
-        self.assertEquals('test', rest.resolve(self._client_context))
+        rest = MockJSONTemplateFirstNode("test value")
+        self.assertEquals("test", rest.resolve(self._client_context))
 
     def test_invalid_json_multi(self):
-        rest = MockJSONTemplateFirstNode('test value value2')
-        self.assertEquals('test', rest.resolve(self._client_context))
+        rest = MockJSONTemplateFirstNode("test value value2")
+        self.assertEquals("test", rest.resolve(self._client_context))

@@ -1,3 +1,5 @@
+from programytest.parser.base import ParserTestsBaseClass
+
 from programy.dialog.sentence import Sentence
 from programy.parser.exceptions import ParserException
 from programy.parser.pattern.match import Match
@@ -9,7 +11,6 @@ from programy.parser.pattern.nodes.that import PatternThatNode
 from programy.parser.pattern.nodes.topic import PatternTopicNode
 from programy.parser.pattern.nodes.word import PatternWordNode
 from programy.parser.template.nodes.word import TemplateWordNode
-from programytest.parser.base import ParserTestsBaseClass
 
 
 class PatternOneOrMoreWildCardNodeTests(ParserTestsBaseClass):
@@ -44,8 +45,14 @@ class PatternOneOrMoreWildCardNodeTests(ParserTestsBaseClass):
         self.assertTrue(node.equivalent(PatternOneOrMoreWildCardNode("*")))
         result = node.equals(self._client_context, sentence, 0)
         self.assertFalse(result.matched)
-        self.assertEqual(node.to_string(), "ONEORMORE [*] [P(0)^(0)#(0)C(0)_(0)*(0)To(0)Th(0)Te(0)] wildcard=[*]")
-        self.assertEqual('<oneormore wildcard="*">\n</oneormore>\n', node.to_xml(self._client_context))
+        self.assertEqual(
+            node.to_string(),
+            "ONEORMORE [*] [P(0)^(0)#(0)C(0)_(0)*(0)To(0)Th(0)Te(0)] wildcard=[*]",
+        )
+        self.assertEqual(
+            '<oneormore wildcard="*">\n</oneormore>\n',
+            node.to_xml(self._client_context),
+        )
 
         self.assertFalse(node.equivalent(PatternWordNode("test")))
 
@@ -74,28 +81,52 @@ class PatternOneOrMoreWildCardNodeTests(ParserTestsBaseClass):
         self.assertTrue(node.equivalent(PatternOneOrMoreWildCardNode("_")))
         result = node.equals(self._client_context, sentence, 0)
         self.assertFalse(result.matched)
-        self.assertEqual(node.to_string(), "ONEORMORE [*] [P(0)^(0)#(0)C(0)_(0)*(0)To(0)Th(0)Te(0)] wildcard=[_]")
-        self.assertEqual('<oneormore wildcard="_">\n</oneormore>\n', node.to_xml(self._client_context))
+        self.assertEqual(
+            node.to_string(),
+            "ONEORMORE [*] [P(0)^(0)#(0)C(0)_(0)*(0)To(0)Th(0)Te(0)] wildcard=[_]",
+        )
+        self.assertEqual(
+            '<oneormore wildcard="_">\n</oneormore>\n',
+            node.to_xml(self._client_context),
+        )
 
         self.assertFalse(node.equivalent(PatternWordNode("test")))
 
     def test_to_xml(self):
         node1 = PatternOneOrMoreWildCardNode("*")
-        self.assertEqual('<oneormore wildcard="*">\n</oneormore>\n', node1.to_xml(self._client_context))
-        self.assertEqual('<oneormore userid="*" wildcard="*">\n</oneormore>\n', node1.to_xml(self._client_context, include_user=True))
+        self.assertEqual(
+            '<oneormore wildcard="*">\n</oneormore>\n',
+            node1.to_xml(self._client_context),
+        )
+        self.assertEqual(
+            '<oneormore userid="*" wildcard="*">\n</oneormore>\n',
+            node1.to_xml(self._client_context, include_user=True),
+        )
 
         node2 = PatternOneOrMoreWildCardNode("*", userid="testid")
-        self.assertEqual('<oneormore wildcard="*">\n</oneormore>\n', node2.to_xml(self._client_context))
-        self.assertEqual('<oneormore userid="testid" wildcard="*">\n</oneormore>\n', node2.to_xml(self._client_context, include_user=True))
+        self.assertEqual(
+            '<oneormore wildcard="*">\n</oneormore>\n',
+            node2.to_xml(self._client_context),
+        )
+        self.assertEqual(
+            '<oneormore userid="testid" wildcard="*">\n</oneormore>\n',
+            node2.to_xml(self._client_context, include_user=True),
+        )
 
     def test_to_string(self):
         node1 = PatternOneOrMoreWildCardNode("*")
         self.assertEqual("ONEORMORE [*]", node1.to_string(verbose=False))
-        self.assertEqual("ONEORMORE [*] [P(0)^(0)#(0)C(0)_(0)*(0)To(0)Th(0)Te(0)] wildcard=[*]", node1.to_string(verbose=True))
+        self.assertEqual(
+            "ONEORMORE [*] [P(0)^(0)#(0)C(0)_(0)*(0)To(0)Th(0)Te(0)] wildcard=[*]",
+            node1.to_string(verbose=True),
+        )
 
         node1 = PatternOneOrMoreWildCardNode("*", userid="testid")
         self.assertEqual("ONEORMORE [*]", node1.to_string(verbose=False))
-        self.assertEqual("ONEORMORE [testid] [P(0)^(0)#(0)C(0)_(0)*(0)To(0)Th(0)Te(0)] wildcard=[*]", node1.to_string(verbose=True))
+        self.assertEqual(
+            "ONEORMORE [testid] [P(0)^(0)#(0)C(0)_(0)*(0)To(0)Th(0)Te(0)] wildcard=[*]",
+            node1.to_string(verbose=True),
+        )
 
     def test_equivalent_userid(self):
         node1 = PatternOneOrMoreWildCardNode("*")
@@ -118,7 +149,9 @@ class PatternOneOrMoreWildCardNodeTests(ParserTestsBaseClass):
         match_context = MatchContext(max_search_depth=100, max_search_timeout=0)
         words = Sentence(self._client_context)
 
-        result = node.consume(self._client_context, match_context, words, 0, Match.WORD, 1, parent=False)
+        result = node.consume(
+            self._client_context, match_context, words, 0, Match.WORD, 1, parent=False
+        )
         self.assertIsNone(result)
 
     def test_consume_search_depth_exceeded(self):
@@ -128,7 +161,9 @@ class PatternOneOrMoreWildCardNodeTests(ParserTestsBaseClass):
         match_context = MatchContext(max_search_depth=0, max_search_timeout=100)
         words = Sentence(self._client_context)
 
-        result = node.consume(self._client_context, match_context, words, 0, Match.WORD, 1, parent=False)
+        result = node.consume(
+            self._client_context, match_context, words, 0, Match.WORD, 1, parent=False
+        )
         self.assertIsNone(result)
 
     def test_consume_topic(self):
@@ -139,7 +174,9 @@ class PatternOneOrMoreWildCardNodeTests(ParserTestsBaseClass):
         match_context = MatchContext(max_search_depth=100, max_search_timeout=100)
         words = Sentence(self._client_context, text="__TOPIC__")
 
-        result = node.consume(self._client_context, match_context, words, 0, Match.WORD, 1, parent=False)
+        result = node.consume(
+            self._client_context, match_context, words, 0, Match.WORD, 1, parent=False
+        )
         self.assertIsNone(result)
 
     def test_consume_that(self):
@@ -150,7 +187,9 @@ class PatternOneOrMoreWildCardNodeTests(ParserTestsBaseClass):
         match_context = MatchContext(max_search_depth=100, max_search_timeout=100)
         words = Sentence(self._client_context, text="__THAT__")
 
-        result = node.consume(self._client_context, match_context, words, 0, Match.WORD, 1, parent=False)
+        result = node.consume(
+            self._client_context, match_context, words, 0, Match.WORD, 1, parent=False
+        )
         self.assertIsNone(result)
 
     def test_consume_with_priority(self):
@@ -162,7 +201,9 @@ class PatternOneOrMoreWildCardNodeTests(ParserTestsBaseClass):
         match_context = MatchContext(max_search_depth=100, max_search_timeout=100)
         words = Sentence(self._client_context, text="THIS $TEST")
 
-        result = node.consume(self._client_context, match_context, words, 0, Match.WORD, 1, parent=False)
+        result = node.consume(
+            self._client_context, match_context, words, 0, Match.WORD, 1, parent=False
+        )
         self.assertIsNotNone(result)
 
     def test_consume_with_priority_mismatch(self):
@@ -174,5 +215,7 @@ class PatternOneOrMoreWildCardNodeTests(ParserTestsBaseClass):
         match_context = MatchContext(max_search_depth=100, max_search_timeout=100)
         words = Sentence(self._client_context, text="THIS $TEST2")
 
-        result = node.consume(self._client_context, match_context, words, 0, Match.WORD, 1, parent=False)
+        result = node.consume(
+            self._client_context, match_context, words, 0, Match.WORD, 1, parent=False
+        )
         self.assertIsNone(result)

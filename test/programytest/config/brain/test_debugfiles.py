@@ -1,8 +1,8 @@
 import unittest
 
+from programy.clients.events.console.config import ConsoleConfiguration
 from programy.config.brain.debugfiles import BrainDebugFilesConfiguration
 from programy.config.file.yaml_file import YamlConfigurationFile
-from programy.clients.events.console.config import ConsoleConfiguration
 
 
 class BrainDebugFilesConfigurationTests(unittest.TestCase):
@@ -10,12 +10,16 @@ class BrainDebugFilesConfigurationTests(unittest.TestCase):
     def test_with_data(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         brain:
             debugfiles:
                 save_errors: true
                 save_duplicates: true
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         brain_config = yaml.get_section("brain")
 
@@ -29,10 +33,14 @@ class BrainDebugFilesConfigurationTests(unittest.TestCase):
     def test_without_data(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         brain:
             debugfiles:
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         brain_config = yaml.get_section("brain")
 
@@ -46,9 +54,13 @@ class BrainDebugFilesConfigurationTests(unittest.TestCase):
     def test_with_no_data(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         brain:
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         brain_config = yaml.get_section("brain")
 
@@ -68,5 +80,5 @@ class BrainDebugFilesConfigurationTests(unittest.TestCase):
 
     @staticmethod
     def assert_defaults(test, data):
-        test.assertFalse(data['save_errors'])
-        test.assertFalse(data['save_duplicates'])
+        test.assertFalse(data["save_errors"])
+        test.assertFalse(data["save_duplicates"])

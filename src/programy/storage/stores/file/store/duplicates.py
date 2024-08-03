@@ -14,12 +14,14 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 import os
 import os.path
 import shutil
-from programy.utils.logging.ylogger import YLogger
-from programy.storage.stores.file.store.filestore import FileStore
+
 from programy.storage.entities.duplicates import DuplicatesStore
+from programy.storage.stores.file.store.filestore import FileStore
+from programy.utils.logging.ylogger import YLogger
 
 
 class FileDuplicatesStore(FileStore, DuplicatesStore):
@@ -43,7 +45,10 @@ class FileDuplicatesStore(FileStore, DuplicatesStore):
         with open(filename, "w+") as duplicates_file:
             duplicates_file.write("Duplicate\tFile\tStart Line\tEnd Line")
             for duplicate in duplicates:
-                duplicates_file.write("%s\t%s\t%s\t%s\n" % (duplicate[0], duplicate[1], duplicate[2], duplicate[3]))
+                duplicates_file.write(
+                    "%s\t%s\t%s\t%s\n"
+                    % (duplicate[0], duplicate[1], duplicate[2], duplicate[3])
+                )
             duplicates_file.flush()
 
     def save_duplicates(self, duplicates, commit=True):
@@ -56,4 +61,6 @@ class FileDuplicatesStore(FileStore, DuplicatesStore):
             self._write_duplicates_to_file(filename, duplicates)
 
         except Exception as excep:
-            YLogger.exception_nostack(self, "Failed to write duplicates file [%s]", excep, filename)
+            YLogger.exception_nostack(
+                self, "Failed to write duplicates file [%s]", excep, filename
+            )

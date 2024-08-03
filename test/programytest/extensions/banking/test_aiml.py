@@ -17,11 +17,13 @@ class BankBalanceTestsClient(TestClient):
 
 class BankBalanceAIMLTests(unittest.TestCase):
 
-    def setUp (self):
+    def setUp(self):
         client = BankBalanceTestsClient()
         self._client_context = client.create_client_context("testid")
 
     def test_balance(self):
-        response = self._client_context.bot.ask_question(self._client_context, "WHAT IS MY BANK BALANCE")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "WHAT IS MY BANK BALANCE"
+        )
         self.assertIsNotNone(response)
-        self.assertEqual(response, 'Your bank balance is currently £0.00.')
+        self.assertEqual(response, "Your bank balance is currently £0.00.")

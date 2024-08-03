@@ -1,8 +1,9 @@
 import xml.etree.ElementTree as ET
 
+from programytest.parser.base import ParserTestsBaseClass
+
 from programy.parser.template.nodes.base import TemplateNode
 from programy.parser.template.nodes.word import TemplateWordNode
-from programytest.parser.base import ParserTestsBaseClass
 
 
 class TemplateWordNodeTests(ParserTestsBaseClass):
@@ -15,7 +16,7 @@ class TemplateWordNodeTests(ParserTestsBaseClass):
 
         node1 = TemplateWordNode("Hello")
         root.append(node1)
-        node2 =TemplateWordNode("World!")
+        node2 = TemplateWordNode("World!")
         root.append(node2)
         self.assertEqual(len(root.children), 2)
 

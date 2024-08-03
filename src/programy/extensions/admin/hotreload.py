@@ -15,8 +15,9 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 """
-from programy.utils.logging.ylogger import YLogger
+
 from programy.extensions.base import Extension
+from programy.utils.logging.ylogger import YLogger
 
 
 class HotReloadAdminExtension(Extension):
@@ -25,103 +26,107 @@ class HotReloadAdminExtension(Extension):
     def reload_aimls(client_context):
         YLogger.debug(client_context, "Hot reloading all AIML files")
         client_context.brain.reload_aimls()
-        return 'HOTRELOAD OK'
+        return "HOTRELOAD OK"
 
     @staticmethod
     def reload_denormal(client_context):
         YLogger.debug(client_context, "Hot reloading Denormal")
         client_context.brain.load_denormals()
-        return 'HOTRELOAD OK'
+        return "HOTRELOAD OK"
 
     @staticmethod
     def reload_normal(client_context):
         YLogger.debug(client_context, "Hot reloading Normal")
         client_context.brain.load_normals()
-        return 'HOTRELOAD OK'
+        return "HOTRELOAD OK"
 
     @staticmethod
     def reload_gender(client_context):
         YLogger.debug(client_context, "Hot reloading Gender")
         client_context.brain.load_genders()
-        return 'HOTRELOAD OK'
+        return "HOTRELOAD OK"
 
     @staticmethod
     def reload_person(client_context):
         YLogger.debug(client_context, "Hot reloading Person")
         client_context.brain.load_persons()
-        return 'HOTRELOAD OK'
+        return "HOTRELOAD OK"
 
     @staticmethod
     def reload_person2(client_context):
         YLogger.debug(client_context, "Hot reloading Person2")
         client_context.brain.load_person2s()
-        return 'HOTRELOAD OK'
+        return "HOTRELOAD OK"
 
     @staticmethod
     def reload_properties(client_context):
         YLogger.debug(client_context, "Hot reloading Properties")
         client_context.brain.load_properties()
-        return 'HOTRELOAD OK'
+        return "HOTRELOAD OK"
 
     @staticmethod
     def reload_defaults(client_context):
         YLogger.debug(client_context, "Hot reloading Defaults")
         client_context.brain.load_default_variables()
-        return 'HOTRELOAD OK'
+        return "HOTRELOAD OK"
 
     @staticmethod
     def reload_regex(client_context):
         YLogger.debug(client_context, "Hot reloading Regex")
         client_context.brain.load_regex_templates()
-        return 'HOTRELOAD OK'
+        return "HOTRELOAD OK"
 
     @staticmethod
     def reload_patterns(client_context):
         YLogger.debug(client_context, "Hot reloading Pattern Nodes")
-        client_context.brain.aiml_parser.pattern_parser.pattern_factory.load(client_context.client.storage_factory)
-        return 'HOTRELOAD OK'
+        client_context.brain.aiml_parser.pattern_parser.pattern_factory.load(
+            client_context.client.storage_factory
+        )
+        return "HOTRELOAD OK"
 
     @staticmethod
     def reload_templates(client_context):
         YLogger.debug(client_context, "Hot reloading Template Nodes")
-        client_context.brain.aiml_parser.template_parser.template_factory.load(client_context.client.storage_factory)
-        return 'HOTRELOAD OK'
+        client_context.brain.aiml_parser.template_parser.template_factory.load(
+            client_context.client.storage_factory
+        )
+        return "HOTRELOAD OK"
 
     @staticmethod
     def reload_maps(client_context):
         YLogger.debug(client_context, "Hot reloading Maps")
         client_context.brain.load_maps()
-        return 'HOTRELOAD OK'
+        return "HOTRELOAD OK"
 
     @staticmethod
     def reload_map(client_context, mapname):
         YLogger.debug(client_context, "Hot reloading Map [%s]", mapname)
         client_context.brain.reload_map(mapname)
-        return 'HOTRELOAD OK'
+        return "HOTRELOAD OK"
 
     @staticmethod
     def reload_sets(client_context):
         YLogger.debug(client_context, "Hot reloading Sets")
         client_context.brain.load_sets()
-        return 'HOTRELOAD OK'
+        return "HOTRELOAD OK"
 
     @staticmethod
     def reload_set(client_context, setname):
         YLogger.debug(client_context, "Hot reloading Set [%s]", setname)
         client_context.brain.reload_set(setname)
-        return 'HOTRELOAD OK'
+        return "HOTRELOAD OK"
 
     @staticmethod
     def reload_rdfs(client_context):
         YLogger.debug(client_context, "Hot reloading Rdfs")
         client_context.brain.load_rdfs()
-        return 'HOTRELOAD OK'
+        return "HOTRELOAD OK"
 
     @staticmethod
     def reload_rdf(client_context, rdfname):
         YLogger.debug(client_context, "Hot reloading RDF [%s]", rdfname)
         client_context.brain.reload_rdf(rdfname)
-        return 'HOTRELOAD OK'
+        return "HOTRELOAD OK"
 
     @staticmethod
     def reload_all(client_context):
@@ -149,69 +154,84 @@ class HotReloadAdminExtension(Extension):
         try:
             commands = HotReloadAdminExtension.split_into_commands(data)
 
-            if commands[0] == 'RELOAD':
+            if commands[0] == "RELOAD":
                 entity = commands[1]
-                if entity in ['DENORMAL', 'NORMAL', 'GENDER', 'PERSON', 'PERSON2', 'PROPERTIES', 'DEFAULTS',
-                              'REGEX', 'PATTERNS', 'TEMPLATES', 'SET', 'MAP', 'RDF']:
+                if entity in [
+                    "DENORMAL",
+                    "NORMAL",
+                    "GENDER",
+                    "PERSON",
+                    "PERSON2",
+                    "PROPERTIES",
+                    "DEFAULTS",
+                    "REGEX",
+                    "PATTERNS",
+                    "TEMPLATES",
+                    "SET",
+                    "MAP",
+                    "RDF",
+                ]:
                     return self._reload_entity(entity, commands, client_context)
 
-                elif entity == 'ALL':
+                elif entity == "ALL":
                     return self._reload_all(commands, client_context)
 
                 else:
                     return "Unknown RELOAD entity [%s]" % entity
 
-            elif commands[0] == 'COMMANDS':
+            elif commands[0] == "COMMANDS":
                 return self._command()
 
             else:
                 return self._unknown_command(commands[0])
 
         except Exception as e:
-            YLogger.exception(client_context, "Failed to execute hot reload extension", e)
+            YLogger.exception(
+                client_context, "Failed to execute hot reload extension", e
+            )
 
         return "Hot Reload Admin Error"
 
     def _reload_entity(self, entity, commands, client_context):
 
-        if entity == 'DENORMAL':
+        if entity == "DENORMAL":
             return HotReloadAdminExtension.reload_denormal(client_context)
 
-        elif entity == 'NORMAL':
+        elif entity == "NORMAL":
             return HotReloadAdminExtension.reload_normal(client_context)
 
-        elif entity == 'GENDER':
+        elif entity == "GENDER":
             return HotReloadAdminExtension.reload_gender(client_context)
 
-        elif entity == 'PERSON':
+        elif entity == "PERSON":
             return HotReloadAdminExtension.reload_person(client_context)
 
-        elif entity == 'PERSON2':
+        elif entity == "PERSON2":
             return HotReloadAdminExtension.reload_person2(client_context)
 
-        elif entity == 'PROPERTIES':
+        elif entity == "PROPERTIES":
             return HotReloadAdminExtension.reload_properties(client_context)
 
-        elif entity == 'DEFAULTS':
+        elif entity == "DEFAULTS":
             return HotReloadAdminExtension.reload_defaults(client_context)
 
-        elif entity == 'REGEX':
+        elif entity == "REGEX":
             return HotReloadAdminExtension.reload_regex(client_context)
 
-        elif entity == 'PATTERNS':
+        elif entity == "PATTERNS":
             return HotReloadAdminExtension.reload_patterns(client_context)
 
-        elif entity == 'TEMPLATES':
+        elif entity == "TEMPLATES":
             return HotReloadAdminExtension.reload_templates(client_context)
 
-        elif entity == 'SET':
+        elif entity == "SET":
             if len(commands) == 3:
                 setname = commands[2]
                 return HotReloadAdminExtension.reload_set(client_context, setname)
             else:
                 return "Missing Set name"
 
-        elif entity == 'MAP':
+        elif entity == "MAP":
             if len(commands) == 3:
                 mapname = commands[2]
                 return HotReloadAdminExtension.reload_map(client_context, mapname)
@@ -228,16 +248,16 @@ class HotReloadAdminExtension(Extension):
     def _reload_all(self, commands, client_context):
         if len(commands) == 3:
             entities = commands[2]
-            if entities == 'AIML':
+            if entities == "AIML":
                 return HotReloadAdminExtension.reload_aimls(client_context)
 
-            elif entities == 'MAPS':
+            elif entities == "MAPS":
                 return HotReloadAdminExtension.reload_maps(client_context)
 
-            elif entities == 'SETS':
+            elif entities == "SETS":
                 return HotReloadAdminExtension.reload_sets(client_context)
 
-            elif entities == 'RDFS':
+            elif entities == "RDFS":
                 return HotReloadAdminExtension.reload_rdfs(client_context)
 
             else:
@@ -247,8 +267,10 @@ class HotReloadAdminExtension(Extension):
             return HotReloadAdminExtension.reload_all(client_context)
 
     def _command(self):
-        return "RELOAD [DENORMAL|NORMAL|GENDER|PERSON|PERSON2|PROPERTIES|DEFAULTS|REGEX|PATTERNS|TEMPLATES]" \
-               " | [SET|MAP|RDF] NAME | ALL [AIML|MAPS|SETS|RDFS]"
+        return (
+            "RELOAD [DENORMAL|NORMAL|GENDER|PERSON|PERSON2|PROPERTIES|DEFAULTS|REGEX|PATTERNS|TEMPLATES]"
+            " | [SET|MAP|RDF] NAME | ALL [AIML|MAPS|SETS|RDFS]"
+        )
 
     def _unknown_command(self, command):
         return "Unknown reload command [%s]" % command

@@ -14,15 +14,18 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
-from programy.storage.stores.sql.store.sqlstore import SQLStore
+
 from programy.storage.entities.processors import ProcessorStore
-from programy.storage.stores.sql.dao.processor import PreProcessor
-from programy.storage.stores.sql.dao.processor import PostProcessor
-from programy.storage.stores.sql.dao.processor import PostQuestionProcessor
 from programy.storage.entities.store import Store
+from programy.storage.stores.sql.dao.processor import (
+    PostProcessor,
+    PostQuestionProcessor,
+    PreProcessor,
+)
+from programy.storage.stores.sql.store.sqlstore import SQLStore
 from programy.utils.classes.loader import ClassLoader
 from programy.utils.console.console import outputLog
+from programy.utils.logging.ylogger import YLogger
 
 
 class SQLProcessorsStore(SQLStore, ProcessorStore):
@@ -32,15 +35,22 @@ class SQLProcessorsStore(SQLStore, ProcessorStore):
         ProcessorStore.__init__(self)
 
     def _get_storage_class(self):
-        pass    # pragma: no cover
+        pass  # pragma: no cover
 
     def load(self, collector, name=None):
         processors = self.get_all_processors()
         for processor in processors:
             try:
-                collector.add_processor(ClassLoader.instantiate_class(processor.classname)())
+                collector.add_processor(
+                    ClassLoader.instantiate_class(processor.classname)()
+                )
             except Exception as e:
-                YLogger.exception(self, "Failed pre-instantiating Processor [%s]", e, processor.classname)
+                YLogger.exception(
+                    self,
+                    "Failed pre-instantiating Processor [%s]",
+                    e,
+                    processor.classname,
+                )
 
     def _load_processors_from_file(self, filename, verbose):
         count = 0
@@ -53,7 +63,9 @@ class SQLProcessorsStore(SQLStore, ProcessorStore):
 
         return count, success
 
-    def upload_from_file(self, filename, fileformat=Store.TEXT_FORMAT, commit=True, verbose=False):
+    def upload_from_file(
+        self, filename, fileformat=Store.TEXT_FORMAT, commit=True, verbose=False
+    ):
 
         try:
             count, success = self._load_processors_from_file(filename, verbose)
@@ -63,13 +75,15 @@ class SQLProcessorsStore(SQLStore, ProcessorStore):
             return count, success
 
         except Exception as error:
-            YLogger.exception(self, "Failed to load processors from  [%s]", error, filename)
+            YLogger.exception(
+                self, "Failed to load processors from  [%s]", error, filename
+            )
 
         return 0, 0
 
     def _process_config_line(self, line, verbose):
         line = line.strip()
-        if line[0] != '#':
+        if line[0] != "#":
             processor = self._get_entity(line)
             self.storage_engine.session.add(processor)
             if verbose is True:
@@ -93,7 +107,7 @@ class SQLPreProcessorsStore(SQLProcessorsStore, ProcessorStore):
         return self._storage_engine.session.query(PreProcessor)
 
     def empty(self):
-       return self._get_all()
+        return self._get_all()
 
     def get_all_processors(self):
         return self._storage_engine.session.query(PreProcessor)

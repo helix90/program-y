@@ -14,10 +14,12 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.parsing.linenumxml import LineNumberingParser
+
 import xml.etree.ElementTree as ET  # pylint: disable=wrong-import-order
-from programy.utils.logging.ylogger import YLogger
+
 from programy.oob.callmom.oob import OutOfBandProcessor
+from programy.utils.logging.ylogger import YLogger
+from programy.utils.parsing.linenumxml import LineNumberingParser
 
 
 class SMSOutOfBandProcessor(OutOfBandProcessor):
@@ -29,6 +31,7 @@ class SMSOutOfBandProcessor(OutOfBandProcessor):
         </sms>
     </oob>
     """
+
     def __init__(self):
         OutOfBandProcessor.__init__(self)
         self._recipient = None
@@ -37,12 +40,14 @@ class SMSOutOfBandProcessor(OutOfBandProcessor):
     def parse_oob_xml(self, oob: ET.Element):
         if oob is not None:
             for child in oob:
-                if child.tag == 'recipient':
+                if child.tag == "recipient":
                     self._recipient = child.text
-                elif child.tag == 'message':
+                elif child.tag == "message":
                     self._message = child.text
                 else:
-                    YLogger.error(self, "Unknown child element [%s] in sms oob", child.tag)
+                    YLogger.error(
+                        self, "Unknown child element [%s] in sms oob", child.tag
+                    )
 
             if self._recipient is not None and self._message is not None:
                 return True
@@ -51,5 +56,7 @@ class SMSOutOfBandProcessor(OutOfBandProcessor):
         return False
 
     def execute_oob_command(self, client_context):
-        YLogger.info(client_context, "SMSOutOfBandProcessor: Messaging=%s", self._recipient)
+        YLogger.info(
+            client_context, "SMSOutOfBandProcessor: Messaging=%s", self._recipient
+        )
         return "SMS"

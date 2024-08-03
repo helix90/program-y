@@ -2,8 +2,9 @@ import unittest
 import unittest.mock
 import xml.etree.ElementTree as ET
 
-from programy.oob.callmom.email import EmailOutOfBandProcessor
 from programytest.client import TestClient
+
+from programy.oob.callmom.email import EmailOutOfBandProcessor
 
 
 class EmailOutOfBandProcessorTests(unittest.TestCase):
@@ -102,5 +103,10 @@ class EmailOutOfBandProcessorTests(unittest.TestCase):
         oob_processor = EmailOutOfBandProcessor()
         self.assertIsNotNone(oob_processor)
 
-        oob_content = ET.fromstring("<email><to>me@me.com</to><subject>test</subject><body>test body</body></email>")
-        self.assertEqual("EMAIL", oob_processor.process_out_of_bounds(self._client_context, oob_content))
+        oob_content = ET.fromstring(
+            "<email><to>me@me.com</to><subject>test</subject><body>test body</body></email>"
+        )
+        self.assertEqual(
+            "EMAIL",
+            oob_processor.process_out_of_bounds(self._client_context, oob_content),
+        )

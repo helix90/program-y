@@ -14,26 +14,28 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from typing import List
-from typing import NewType
 
 import datetime
-from programy.utils.logging.ylogger import YLogger
+from typing import List, NewType
+
 from programy.parser.pattern.match import Match
 from programy.parser.pattern.nodes.template import PatternTemplateNode
+from programy.utils.logging.ylogger import YLogger
 
-dt = NewType('dt', datetime.datetime)
+dt = NewType("dt", datetime.datetime)
 
 
 class MatchContext:
 
-    def __init__(self,
-                 max_search_depth: int,
-                 max_search_timeout: int,
-                 matched_nodes: List = None,
-                 template_node: PatternTemplateNode = None,
-                 sentence: str = None,
-                 response: str = None):
+    def __init__(
+        self,
+        max_search_depth: int,
+        max_search_timeout: int,
+        matched_nodes: List = None,
+        template_node: PatternTemplateNode = None,
+        sentence: str = None,
+        response: str = None,
+    ):
         self._max_search_depth = max_search_depth
         self._max_search_timeout = max_search_timeout
         self._total_search_start = datetime.datetime.now()
@@ -135,7 +137,10 @@ class MatchContext:
     def _get_indexed_match_by_type(self, client_context, index, match_type):
         count = 1
         for matched_node in self._matched_nodes:
-            if matched_node.matched_node_type == match_type and matched_node.matched_node_multi_word is True:
+            if (
+                matched_node.matched_node_type == match_type
+                and matched_node.matched_node_multi_word is True
+            ):
                 if count == index:
                     return matched_node.joined_words(client_context)
                 count += 1
@@ -150,19 +155,32 @@ class MatchContext:
     def thatstar(self, client_context, index):
         return self._get_indexed_match_by_type(client_context, index, Match.THAT)
 
-    def list_matches(self, client_context, output_func=YLogger.debug, tabs="\t", include_template=True):
+    def list_matches(
+        self,
+        client_context,
+        output_func=YLogger.debug,
+        tabs="\t",
+        include_template=True,
+    ):
         output_func(client_context, "%sMatches..." % tabs)
         count = 1
         if self._sentence is not None:
             output_func(client_context, "%sAsked: %s" % (tabs, self._sentence))
         for match in self._matched_nodes:
-            output_func(client_context, "%s\t%d: %s" % (tabs, count, match.to_string(client_context)))
+            output_func(
+                client_context,
+                "%s\t%d: %s" % (tabs, count, match.to_string(client_context)),
+            )
             count += 1
-        output_func(client_context, "%sMatch score %.2f" % (tabs, self.calculate_match_score()))
+        output_func(
+            client_context, "%sMatch score %.2f" % (tabs, self.calculate_match_score())
+        )
         if include_template is True:
             if self.matched() is True:
                 if self._response is not None:
-                    output_func(client_context, "%s\tResponse: %s" % (tabs, self._response))
+                    output_func(
+                        client_context, "%s\tResponse: %s" % (tabs, self._response)
+                    )
             else:
                 output_func(client_context, "%s\tResponse: None" % tabs)
 
@@ -181,13 +199,16 @@ class MatchContext:
         return 0.00
 
     def to_json(self):
-        context={ "max_search_depth":self._max_search_depth,
-                  "max_search_timeout": self._max_search_timeout,
-                  "total_search_start": self._total_search_start.strftime("%d/%m/%Y, %H:%M:%S"),
-                  "sentence": self._sentence,
-                  "response": self._response,
-                  "matched_nodes": []
-                }
+        context = {
+            "max_search_depth": self._max_search_depth,
+            "max_search_timeout": self._max_search_timeout,
+            "total_search_start": self._total_search_start.strftime(
+                "%d/%m/%Y, %H:%M:%S"
+            ),
+            "sentence": self._sentence,
+            "response": self._response,
+            "matched_nodes": [],
+        }
 
         for match in self._matched_nodes:
             context["matched_nodes"].append(match.to_json())
@@ -200,8 +221,9 @@ class MatchContext:
 
         match_context.max_search_depth = json_data["max_search_depth"]
         match_context.max_search_timeout = json_data["max_search_timeout"]
-        match_context.total_search_start = datetime.datetime.strptime(json_data["total_search_start"],
-                                                                      "%d/%m/%Y, %H:%M:%S")
+        match_context.total_search_start = datetime.datetime.strptime(
+            json_data["total_search_start"], "%d/%m/%Y, %H:%M:%S"
+        )
         match_context.sentence = json_data["sentence"]
         match_context.response = json_data["response"]
 

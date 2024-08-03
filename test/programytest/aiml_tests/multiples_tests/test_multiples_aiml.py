@@ -22,6 +22,8 @@ class MultiplesAIMLTests(unittest.TestCase):
         self._client_context = client.create_client_context("testid")
 
     def test_multiple_questionsn(self):
-        response = self._client_context.bot.ask_question(self._client_context, "HELLO. HOW ARE YOU")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "HELLO. HOW ARE YOU"
+        )
         self.assertIsNotNone(response)
         self.assertEqual("HI THERE. I AM WELL THANKS.", response)

@@ -1,10 +1,11 @@
 import unittest
 
 import programytest.storage.engines as Engines
+from programytest.storage.asserts.store.assert_learnf import LearnfStoreAsserts
+
 from programy.storage.stores.nosql.mongo.config import MongoStorageConfiguration
 from programy.storage.stores.nosql.mongo.engine import MongoStorageEngine
 from programy.storage.stores.nosql.mongo.store.learnf import MongoLearnfStore
-from programytest.storage.asserts.store.assert_learnf import LearnfStoreAsserts
 
 
 class MongoLearnfStoreTests(LearnfStoreAsserts):

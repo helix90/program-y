@@ -14,9 +14,11 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 import json
-from programy.utils.logging.ylogger import YLogger
+
 from programy.parser.template.nodes.base import TemplateNode
+from programy.utils.logging.ylogger import YLogger
 
 
 class TemplateFirstNode(TemplateNode):
@@ -43,7 +45,9 @@ class TemplateFirstNode(TemplateNode):
                 words = result.split(" ")
                 resolved = words[0]
 
-        YLogger.debug(client_context, "[%s] resolved to [%s]", self.to_string(), resolved)
+        YLogger.debug(
+            client_context, "[%s] resolved to [%s]", self.to_string(), resolved
+        )
 
         return resolved
 

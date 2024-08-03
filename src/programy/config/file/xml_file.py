@@ -14,13 +14,16 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
+import xml.etree.ElementTree as ET  # pylint: disable=wrong-import-order
+
+from programy.config.file.file import BaseConfigurationFile
+from programy.config.programy import ProgramyConfiguration
+from programy.utils.logging.ylogger import YLogger
+
 # Ignore pylint warning, this import from Programy must be before ElementTree
 # Which ensures that the class LineNumberingParser is injected into the code
 from programy.utils.parsing.linenumxml import LineNumberingParser
-import xml.etree.ElementTree as ET  # pylint: disable=wrong-import-order
-from programy.utils.logging.ylogger import YLogger
-from programy.config.file.file import BaseConfigurationFile
-from programy.config.programy import ProgramyConfiguration
 from programy.utils.substitutions.substitues import Substitutions
 
 
@@ -30,24 +33,30 @@ class XMLConfigurationFile(BaseConfigurationFile):
         BaseConfigurationFile.__init__(self)
         self.xml_data = None
 
-    def load_from_text(self, text, client_configuration, bot_root, subs: Substitutions = None):
+    def load_from_text(
+        self, text, client_configuration, bot_root, subs: Substitutions = None
+    ):
         tree = ET.fromstring(text)
         self.xml_data = tree
         configuration = ProgramyConfiguration(client_configuration)
         configuration.load_config_data(self, bot_root, subs)
         return configuration
 
-    def load_from_file(self, filename, client_configuration, bot_root, subs: Substitutions = None):
+    def load_from_file(
+        self, filename, client_configuration, bot_root, subs: Substitutions = None
+    ):
         configuration = ProgramyConfiguration(client_configuration)
 
         try:
-            with open(filename, 'r+', encoding="utf-8") as xml_data_file:
+            with open(filename, "r+", encoding="utf-8") as xml_data_file:
                 tree = ET.parse(xml_data_file, parser=LineNumberingParser())
                 self.xml_data = tree.getroot()
                 configuration.load_config_data(self, bot_root, subs)
 
         except Exception as excep:
-            YLogger.exception(self, "Failed to open xml config file [%s]", excep, filename)
+            YLogger.exception(
+                self, "Failed to open xml config file [%s]", excep, filename
+            )
 
         return configuration
 
@@ -86,19 +95,25 @@ class XMLConfigurationFile(BaseConfigurationFile):
             return child
 
         if missing_value is not None:
-            YLogger.warning(self, "Missing value for [%s] in config, return default value %s", option_name,
-                            missing_value)
+            YLogger.warning(
+                self,
+                "Missing value for [%s] in config, return default value %s",
+                option_name,
+                missing_value,
+            )
 
             return missing_value
 
     def _infer_type_from_string(self, text):
-        if text == 'True' or text == 'true':
+        if text == "True" or text == "true":
             return True
-        elif text == 'False' or text == 'false':
+        elif text == "False" or text == "false":
             return False
         return text
 
-    def get_bool_option(self, section, option_name, missing_value=False, subs: Substitutions = None):
+    def get_bool_option(
+        self, section, option_name, missing_value=False, subs: Substitutions = None
+    ):
         child = section.find(option_name)
         if child is not None:
             value = self._replace_subs(subs, child.text)
@@ -107,8 +122,12 @@ class XMLConfigurationFile(BaseConfigurationFile):
             except Exception:
                 pass
 
-        YLogger.warning(self, "Missing value for [%s] in config, return default value %s", option_name,
-                        missing_value)
+        YLogger.warning(
+            self,
+            "Missing value for [%s] in config, return default value %s",
+            option_name,
+            missing_value,
+        )
         return missing_value
 
     def get_int_option(self, section, option_name, missing_value=0, subs=None):
@@ -122,14 +141,24 @@ class XMLConfigurationFile(BaseConfigurationFile):
                 pass
 
         if missing_value is not None:
-            YLogger.warning(self, "Missing value for [%s] in config, return default value %d", option_name,
-                            missing_value)
+            YLogger.warning(
+                self,
+                "Missing value for [%s] in config, return default value %d",
+                option_name,
+                missing_value,
+            )
         else:
-            YLogger.warning(self, "Missing value for [%s] in config, return default value None", option_name)
+            YLogger.warning(
+                self,
+                "Missing value for [%s] in config, return default value None",
+                option_name,
+            )
 
         return missing_value
 
-    def get_multi_option(self, section, option_name, missing_value=[], subs: Substitutions = None):
+    def get_multi_option(
+        self, section, option_name, missing_value=[], subs: Substitutions = None
+    ):
 
         subsections = section.findall(option_name)
 
@@ -145,7 +174,14 @@ class XMLConfigurationFile(BaseConfigurationFile):
 
         return missing_value
 
-    def get_multi_file_option(self, section, option_name, bot_root, missing_value=[], subs: Substitutions = None):
+    def get_multi_file_option(
+        self,
+        section,
+        option_name,
+        bot_root,
+        missing_value=[],
+        subs: Substitutions = None,
+    ):
 
         value = self.get_option(section, option_name, missing_value, subs)
 
@@ -167,6 +203,6 @@ class XMLConfigurationFile(BaseConfigurationFile):
 
         multis = []
         for value in values:
-            multis.append(value.replace('$BOT_ROOT', bot_root))
+            multis.append(value.replace("$BOT_ROOT", bot_root))
 
         return multis

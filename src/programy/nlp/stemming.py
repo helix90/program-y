@@ -14,21 +14,22 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 import nltk
-from nltk.stem.regexp import RegexpStemmer
-from nltk.stem.lancaster import LancasterStemmer
-from nltk.stem.isri import ISRIStemmer
-from nltk.stem.porter import PorterStemmer
-from nltk.stem.snowball import SnowballStemmer
-from nltk.stem.rslp import RSLPStemmer
 from nltk.stem.cistem import Cistem
+from nltk.stem.isri import ISRIStemmer
+from nltk.stem.lancaster import LancasterStemmer
+from nltk.stem.porter import PorterStemmer
+from nltk.stem.regexp import RegexpStemmer
+from nltk.stem.rslp import RSLPStemmer
+from nltk.stem.snowball import SnowballStemmer
 
 
 class Stemmer:
 
     @staticmethod
     def download_additional():
-        nltk.download('rslp')   # pragma: no cover
+        nltk.download("rslp")  # pragma: no cover
 
     def __init__(self, stemmer="porter", **kwargs):
         self._impl = self._get_stemmer(stemmer, **kwargs)
@@ -69,9 +70,9 @@ class Stemmer:
             return self._get_lancaster_stemmer()
 
         elif stemmer == "regex":
-            regexp = kwargs['regexp']
-            if 'min' in kwargs:
-                minimum = kwargs['min']
+            regexp = kwargs["regexp"]
+            if "min" in kwargs:
+                minimum = kwargs["min"]
 
             else:
                 minimum = 0
@@ -82,11 +83,11 @@ class Stemmer:
             return self._get_iris_stemmer()
 
         elif stemmer == "snowball":
-            if 'language' in kwargs:
-                language = kwargs['language']
+            if "language" in kwargs:
+                language = kwargs["language"]
 
             else:
-                language = 'english'
+                language = "english"
 
             return self._get_snowball_stemmer(language=language)
 
@@ -94,8 +95,8 @@ class Stemmer:
             return self._get_rslp_stemmer()
 
         elif stemmer == "cistem":
-            if 'case_insensitive' in kwargs:
-                case_insensitive = kwargs['case_insensitive']
+            if "case_insensitive" in kwargs:
+                case_insensitive = kwargs["case_insensitive"]
 
             else:
                 case_insensitive = False
@@ -103,4 +104,4 @@ class Stemmer:
             return self._get_cis_stemmer(case_insensitive=case_insensitive)
 
         else:
-            raise ValueError("Unknown stemmer [%s]"%stemmer)
+            raise ValueError("Unknown stemmer [%s]" % stemmer)

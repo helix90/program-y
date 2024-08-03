@@ -14,6 +14,7 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 from programy.context import ClientContext
 from programy.triggers.trigger import Trigger
 
@@ -23,10 +24,9 @@ class Trigger1(Trigger):
     def __init__(self):
         Trigger.__init__(self)
 
-    def trigger(self, client_context: ClientContext = None, additional = None):
+    def trigger(self, client_context: ClientContext = None, additional=None):
         print(additional)
         if additional is None:
-            print("Trigger1 fired for, no action..." )
+            print("Trigger1 fired for, no action...")
         else:
-            print("Trigger1 fired for event %s, no action..."%additional["event"])
-
+            print("Trigger1 fired for event %s, no action..." % additional["event"])

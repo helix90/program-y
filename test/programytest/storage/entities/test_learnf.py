@@ -12,5 +12,3 @@ class LearnfStoreTests(unittest.TestCase):
             client_context = unittest.mock.Mock()
             category = unittest.mock.Mock()
             store.save_learnf(client_context, category)
-
-

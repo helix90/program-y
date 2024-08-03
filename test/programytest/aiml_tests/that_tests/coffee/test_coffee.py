@@ -22,19 +22,23 @@ class ThatAIMLTests(unittest.TestCase):
         self._client_context = client.create_client_context("testid")
 
     def test_coffee_yes_question(self):
-        response = self._client_context.bot.ask_question(self._client_context, "I LIKE COFFEE")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "I LIKE COFFEE"
+        )
         self.assertIsNotNone(response)
-        self.assertEqual(response, 'DO YOU TAKE CREAM OR SUGAR IN YOUR COFFEE?')
+        self.assertEqual(response, "DO YOU TAKE CREAM OR SUGAR IN YOUR COFFEE?")
 
         response = self._client_context.bot.ask_question(self._client_context, "YES")
         self.assertIsNotNone(response)
-        self.assertEqual(response, 'I DO TOO.')
+        self.assertEqual(response, "I DO TOO.")
 
     def test_coffee_no_question(self):
-        response = self._client_context.bot.ask_question(self._client_context, "I LIKE COFFEE")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "I LIKE COFFEE"
+        )
         self.assertIsNotNone(response)
-        self.assertEqual(response, 'DO YOU TAKE CREAM OR SUGAR IN YOUR COFFEE?')
+        self.assertEqual(response, "DO YOU TAKE CREAM OR SUGAR IN YOUR COFFEE?")
 
         response = self._client_context.bot.ask_question(self._client_context, "NO")
         self.assertIsNotNone(response)
-        self.assertEqual(response, 'REALLY? I HAVE A HARD TIME DRINKING BLACK COFFEE.')
+        self.assertEqual(response, "REALLY? I HAVE A HARD TIME DRINKING BLACK COFFEE.")

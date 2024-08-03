@@ -14,7 +14,9 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 from abc import ABC
+
 from programy.utils.logging.ylogger import YLogger
 from programy.utils.substitutions.substitues import Substitutions
 
@@ -63,12 +65,14 @@ class BaseConfigurationData(ABC):
         assert text is not None
         assert root is not None
 
-        return text.replace('$BOT_ROOT', root)
+        return text.replace("$BOT_ROOT", root)
 
     def additionals_to_add(self):
         return []
 
-    def load_additional_key_values(self, configuration, section, subs: Substitutions = None):
+    def load_additional_key_values(
+        self, configuration, section, subs: Substitutions = None
+    ):
         if section is not None:
             for key in configuration.get_keys(section):
                 if key in self.additionals_to_add():
@@ -100,4 +104,3 @@ class BaseConfigurationData(ABC):
     def to_yaml(self, data, defaults=True):
         for key, value in self._additionals.items():
             data[key] = value
-

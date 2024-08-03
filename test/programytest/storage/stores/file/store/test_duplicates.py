@@ -2,10 +2,11 @@ import os.path
 import shutil
 import unittest
 from unittest.mock import patch
+
 from programy.storage.stores.file.config import FileStorageConfiguration
 from programy.storage.stores.file.engine import FileStorageEngine
-from programy.storage.stores.file.store.duplicates import FileDuplicatesStore
 from programy.storage.stores.file.store.config import FileStoreConfiguration
+from programy.storage.stores.file.store.duplicates import FileDuplicatesStore
 
 
 class FileDuplicatesStoreTests(unittest.TestCase):
@@ -23,7 +24,7 @@ class FileDuplicatesStoreTests(unittest.TestCase):
         engine.initialise()
         store = FileDuplicatesStore(engine)
 
-        self.assertEquals('/tmp/debug/duplicates.txt', store._get_storage_path())
+        self.assertEquals("/tmp/debug/duplicates.txt", store._get_storage_path())
         self.assertIsInstance(store.get_storage(), FileStoreConfiguration)
 
     def test_save_duplicates(self):
@@ -52,7 +53,10 @@ class FileDuplicatesStoreTests(unittest.TestCase):
     def patch_write_duplicates_to_file(self, filename, duplicates):
         raise Exception("Mock Exception")
 
-    @patch ('programy.storage.stores.file.store.duplicates.FileDuplicatesStore._write_duplicates_to_file', patch_write_duplicates_to_file)
+    @patch(
+        "programy.storage.stores.file.store.duplicates.FileDuplicatesStore._write_duplicates_to_file",
+        patch_write_duplicates_to_file,
+    )
     def test_save_duplicates(self):
         config = FileStorageConfiguration()
         tmpdir = os.path.dirname(__file__) + os.sep + "duplicates"

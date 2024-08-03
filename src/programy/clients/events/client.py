@@ -14,9 +14,9 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
 
 from programy.clients.client import BotClient
+from programy.utils.logging.ylogger import YLogger
 
 
 class EventBotClient(BotClient):
@@ -26,7 +26,7 @@ class EventBotClient(BotClient):
         BotClient.__init__(self, botid, argument_parser=argument_parser)
 
     def prior_to_run_loop(self):
-        pass    # pragma: no cover
+        pass  # pragma: no cover
 
     def run_loop(self):
         self._running = True
@@ -34,11 +34,13 @@ class EventBotClient(BotClient):
             self._running = self.wait_and_answer()
 
     def wait_and_answer(self):
-        raise NotImplementedError("You must override this and implement the "
-                                  "logic wait for a question and send an answer back")  # pragma: no cover
+        raise NotImplementedError(
+            "You must override this and implement the "
+            "logic wait for a question and send an answer back"
+        )  # pragma: no cover
 
     def post_run_loop(self):
-        pass    # pragma: no cover
+        pass  # pragma: no cover
 
     def run(self, app=None):
         del app

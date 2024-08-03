@@ -1,16 +1,20 @@
 import unittest
-from programy.clients.events.console.config import ConsoleConfiguration
-from programy.config.brain.brain import BrainConfiguration
-from programy.config.file.yaml_file import YamlConfigurationFile
-from programy.utils.license.keys import LicenseKeys
-from programytest.config.brain.test_braintree import BrainBraintreeConfigurationTests
+
 from programytest.config.brain.test_binaries import BrainBinariesConfigurationTests
+from programytest.config.brain.test_braintree import BrainBraintreeConfigurationTests
 from programytest.config.brain.test_debugfiles import BrainDebugFilesConfigurationTests
-from programytest.config.brain.test_defaults import BrainDefaultsDefaultsConfigurationTests
+from programytest.config.brain.test_defaults import (
+    BrainDefaultsDefaultsConfigurationTests,
+)
 from programytest.config.brain.test_dynamic import BrainDynamicsConfigurationTests
 from programytest.config.brain.test_overrides import BrainOverridesConfigurationTests
 from programytest.config.brain.test_securities import BrainSecuritiesConfigurationTests
 from programytest.config.brain.test_tokenizer import BrainTokenizerConfigurationTests
+
+from programy.clients.events.console.config import ConsoleConfiguration
+from programy.config.brain.brain import BrainConfiguration
+from programy.config.file.yaml_file import YamlConfigurationFile
+from programy.utils.license.keys import LicenseKeys
 
 
 class BrainConfigurationTests(unittest.TestCase):
@@ -18,7 +22,8 @@ class BrainConfigurationTests(unittest.TestCase):
     def test_with_data(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
 brain:
 
     # Overrides
@@ -64,7 +69,10 @@ brain:
             romantodec: programy.dynamic.maps.roman.MapRomanToDecimal
             dectoroman: programy.dynamic.maps.roman.MapDecimalToRoman
 
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         brain_section = yaml.get_section("brain")
 
@@ -105,9 +113,13 @@ brain:
     def test_with_no_data(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         brain:
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         brain_config = yaml.get_section("brain")
 
@@ -144,9 +156,13 @@ brain:
     def test_check_for_license_keys(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         brain:
-               """, ConsoleConfiguration(), ".")
+               """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         brain_section = yaml.get_section("brain")
 
@@ -166,19 +182,19 @@ brain:
 
     @staticmethod
     def assert_defaults(test, data):
-        test.assertTrue('braintree' in data)
-        BrainBraintreeConfigurationTests.assert_defaults(test, data['braintree'])
-        test.assertTrue('binaries' in data)
-        BrainBinariesConfigurationTests.assert_defaults(test, data['binaries'])
-        test.assertTrue('debugfiles' in data)
-        BrainDebugFilesConfigurationTests.assert_defaults(test, data['debugfiles'])
-        test.assertTrue('defaults' in data)
-        BrainDefaultsDefaultsConfigurationTests.assert_defaults(test, data['defaults'])
-        test.assertTrue('dynamic' in data)
-        BrainDynamicsConfigurationTests.assert_defaults(test, data['dynamic'])
-        test.assertTrue('overrides' in data)
-        BrainOverridesConfigurationTests.assert_defaults(test, data['overrides'])
-        test.assertTrue('security' in data)
-        BrainSecuritiesConfigurationTests.assert_defaults(test, data['security'])
-        test.assertTrue('tokenizer' in data)
-        BrainTokenizerConfigurationTests.assert_defaults(test, data['tokenizer'])
+        test.assertTrue("braintree" in data)
+        BrainBraintreeConfigurationTests.assert_defaults(test, data["braintree"])
+        test.assertTrue("binaries" in data)
+        BrainBinariesConfigurationTests.assert_defaults(test, data["binaries"])
+        test.assertTrue("debugfiles" in data)
+        BrainDebugFilesConfigurationTests.assert_defaults(test, data["debugfiles"])
+        test.assertTrue("defaults" in data)
+        BrainDefaultsDefaultsConfigurationTests.assert_defaults(test, data["defaults"])
+        test.assertTrue("dynamic" in data)
+        BrainDynamicsConfigurationTests.assert_defaults(test, data["dynamic"])
+        test.assertTrue("overrides" in data)
+        BrainOverridesConfigurationTests.assert_defaults(test, data["overrides"])
+        test.assertTrue("security" in data)
+        BrainSecuritiesConfigurationTests.assert_defaults(test, data["security"])
+        test.assertTrue("tokenizer" in data)
+        BrainTokenizerConfigurationTests.assert_defaults(test, data["tokenizer"])

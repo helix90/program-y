@@ -14,9 +14,10 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
+
 from programy.mappings.base import DoubleStringPatternSplitCollection
 from programy.storage.factory import StorageFactory
+from programy.utils.logging.ylogger import YLogger
 
 
 class DenormalCollection(DoubleStringPatternSplitCollection):
@@ -37,8 +38,13 @@ class DenormalCollection(DoubleStringPatternSplitCollection):
         lookups_store.load_all(self)
 
     def load(self, storage_factory):
-        if storage_factory.entity_storage_engine_available(StorageFactory.DENORMAL) is True:
-            lookups_engine = storage_factory.entity_storage_engine(StorageFactory.DENORMAL)
+        if (
+            storage_factory.entity_storage_engine_available(StorageFactory.DENORMAL)
+            is True
+        ):
+            lookups_engine = storage_factory.entity_storage_engine(
+                StorageFactory.DENORMAL
+            )
             try:
                 self._load_collection(lookups_engine)
                 return True

@@ -16,7 +16,9 @@ class StarUDCTestClient(TestClient):
 
     def load_configuration(self, arguments):
         super(StarUDCTestClient, self).load_configuration(arguments)
-        self.configuration.client_configuration.configurations[0]._empty_string = "YEMPTY"
+        self.configuration.client_configuration.configurations[0]._empty_string = (
+            "YEMPTY"
+        )
 
 
 class StarUDCAIMLTests(unittest.TestCase):
@@ -26,22 +28,30 @@ class StarUDCAIMLTests(unittest.TestCase):
         self._client_context = client.create_client_context("testid")
 
     def test_star_this_question(self):
-        response = self._client_context.bot.ask_question(self._client_context, "Ask THIS")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "Ask THIS"
+        )
         self.assertIsNotNone(response)
         self.assertEqual(response, "UDC This Response.")
 
     def test_that_star_question(self):
-        response = self._client_context.bot.ask_question(self._client_context, "That ASK")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "That ASK"
+        )
         self.assertIsNotNone(response)
         self.assertEqual(response, "UDC That Response.")
 
     def test_the_star_other_question(self):
-        response = self._client_context.bot.ask_question(self._client_context, "The Question Other")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "The Question Other"
+        )
         self.assertIsNotNone(response)
         self.assertEqual(response, "UDC THE OTHER Response.")
 
     def test_udc_something_question(self):
-        response = self._client_context.bot.ask_question(self._client_context, "Something")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "Something"
+        )
         self.assertIsNotNone(response)
         self.assertEqual(response, "UDC Star Response.")
 

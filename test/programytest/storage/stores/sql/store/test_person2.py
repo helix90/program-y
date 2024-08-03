@@ -1,10 +1,11 @@
 import unittest
 
 import programytest.storage.engines as Engines
+from programytest.storage.asserts.store.assert_person2s import Person2sStoreAsserts
+
 from programy.storage.stores.sql.config import SQLStorageConfiguration
 from programy.storage.stores.sql.engine import SQLStorageEngine
 from programy.storage.stores.sql.store.lookups import SQLPerson2Store
-from programytest.storage.asserts.store.assert_person2s import Person2sStoreAsserts
 
 
 class SQLPerson2StoreTests(Person2sStoreAsserts):

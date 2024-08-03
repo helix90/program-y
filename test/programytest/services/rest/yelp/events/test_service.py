@@ -1,13 +1,14 @@
-import unittest
-from unittest.mock import patch
-from unittest.mock import Mock
 import os
-from programy.services.rest.yelp.events.service import YelpEventsSearchService
-from programy.services.config import ServiceConfiguration
-from programytest.services.testclient import ServiceTestClient
-from programytest.services.testcase import ServiceTestCase
+import unittest
+from unittest.mock import Mock, patch
+
 from programytest.externals import integration_tests_active, integration_tests_disabled
 from programytest.services.rest.yelp.events.responses import search_success_reponse
+from programytest.services.testcase import ServiceTestCase
+from programytest.services.testclient import ServiceTestClient
+
+from programy.services.config import ServiceConfiguration
+from programy.services.rest.yelp.events.service import YelpEventsSearchService
 
 
 class YelpEventsSearchServiceTestClient(ServiceTestClient):
@@ -23,7 +24,9 @@ class YelpEventsSearchServiceTestClient(ServiceTestClient):
 class YelpEventsSearchServiceTests(ServiceTestCase):
 
     def test_init(self):
-        service = YelpEventsSearchService(ServiceConfiguration.from_data("rest", "yelp.events.search", "search"))
+        service = YelpEventsSearchService(
+            ServiceConfiguration.from_data("rest", "yelp.events.search", "search")
+        )
         self.assertIsNotNone(service)
 
     def patch_requests_search_success_reponse(self, url, headers, timeout):
@@ -33,28 +36,45 @@ class YelpEventsSearchServiceTests(ServiceTestCase):
         return mock_response
 
     def _do_search(self):
-        service = YelpEventsSearchService(ServiceConfiguration.from_data("rest", "yelp.events.search", "search"))
+        service = YelpEventsSearchService(
+            ServiceConfiguration.from_data("rest", "yelp.events.search", "search")
+        )
         self.assertIsNotNone(service)
 
         client = YelpEventsSearchServiceTestClient()
         service.initialise(client)
 
         response = service.search("kinghorn")
-        self.assertResponse(response, 'search', "yelp.events.search", "search")
+        self.assertResponse(response, "search", "yelp.events.search", "search")
 
     @unittest.skipIf(integration_tests_active() is False, integration_tests_disabled)
     def test_search_integration(self):
         self._do_search()
 
-    @patch("programy.services.rest.base.RESTService._requests_get", patch_requests_search_success_reponse)
+    @patch(
+        "programy.services.rest.base.RESTService._requests_get",
+        patch_requests_search_success_reponse,
+    )
     def test_search_unit(self):
         self._do_search()
 
-    @patch("programy.services.rest.base.RESTService._requests_get", patch_requests_search_success_reponse)
+    @patch(
+        "programy.services.rest.base.RESTService._requests_get",
+        patch_requests_search_success_reponse,
+    )
     def test_search_aiml(self):
         client = YelpEventsSearchServiceTestClient()
         conf_file = YelpEventsSearchService.get_default_conf_file()
 
-        response = self._do_handler_load(client, conf_file, "yelp.events.search", "YELP EVENTS SEARCH LOCATION KINGHORN")
+        response = self._do_handler_load(
+            client,
+            conf_file,
+            "yelp.events.search",
+            "YELP EVENTS SEARCH LOCATION KINGHORN",
+        )
         self.assertIsNotNone(response)
-        self.assertTrue(response.startswith("<ul>\n<li>10th Annual Hilton Head Island Seafood Festival"))
+        self.assertTrue(
+            response.startswith(
+                "<ul>\n<li>10th Annual Hilton Head Island Seafood Festival"
+            )
+        )

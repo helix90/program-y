@@ -1,7 +1,8 @@
 import unittest
 
-from programy.extensions.admin.rdf import RDFAdminExtension
 from programytest.client import TestClient
+
+from programy.extensions.admin.rdf import RDFAdminExtension
 
 
 class RDFAdminExtensionClient(TestClient):

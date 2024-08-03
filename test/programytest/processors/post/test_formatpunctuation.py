@@ -1,8 +1,9 @@
 import unittest
 
+from programytest.client import TestClient
+
 from programy.context import ClientContext
 from programy.processors.post.formatpunctuation import FormatPunctuationProcessor
-from programytest.client import TestClient
 
 
 class FormatNumbersTests(unittest.TestCase):
@@ -12,9 +13,9 @@ class FormatNumbersTests(unittest.TestCase):
 
     def test_format_punctuation_empty(self):
         processor = FormatPunctuationProcessor()
-        result = processor.process(self.context, '')
+        result = processor.process(self.context, "")
         self.assertIsNotNone(result)
-        self.assertEqual('', result)
+        self.assertEqual("", result)
 
     def test_format_punctuation(self):
         processor = FormatPunctuationProcessor()

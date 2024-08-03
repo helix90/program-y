@@ -24,9 +24,10 @@ class ThatAIMLTests(unittest.TestCase):
     def test_multiple_sentenes(self):
         response = self._client_context.bot.ask_question(self._client_context, "START")
         self.assertIsNotNone(response)
-        self.assertEqual(response, 'This is sentence 1. This is sentence two.')
+        self.assertEqual(response, "This is sentence 1. This is sentence two.")
 
-        response = self._client_context.bot.ask_question(self._client_context, "CONTINUE")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "CONTINUE"
+        )
         self.assertIsNotNone(response)
-        self.assertEqual(response, 'TEST PASS.')
-
+        self.assertEqual(response, "TEST PASS.")

@@ -14,9 +14,11 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 import xml.etree.ElementTree as ET  # pylint: disable=wrong-import-order
-from programy.utils.logging.ylogger import YLogger
+
 from programy.oob.callmom.oob import OutOfBandProcessor
+from programy.utils.logging.ylogger import YLogger
 
 
 class SearchOutOfBandProcessor(OutOfBandProcessor):
@@ -39,5 +41,7 @@ class SearchOutOfBandProcessor(OutOfBandProcessor):
             return False
 
     def execute_oob_command(self, client_context):
-        YLogger.info(client_context, "SearchOutOfBandProcessor: Searching=%s", self._search)
+        YLogger.info(
+            client_context, "SearchOutOfBandProcessor: Searching=%s", self._search
+        )
         return "SEARCH"

@@ -1,20 +1,21 @@
 import unittest.mock
 
+from programytest.clients.arguments import MockArgumentParser
 from twilio.rest import Client
 
+from programy.clients.render.text import TextRenderer
 from programy.clients.restful.flask.twilio.client import TwilioBotClient
 from programy.clients.restful.flask.twilio.config import TwilioConfiguration
-from programy.clients.render.text import TextRenderer
-from programytest.clients.arguments import MockArgumentParser
 
 
-class MockArgs():
+class MockArgs:
 
     def __init__(self):
         self._args = {}
 
     def get(self, name):
         return self._args[name]
+
 
 class MockTwilioClient(Client):
 
@@ -35,7 +36,7 @@ class MockTwilioBotClient(TwilioBotClient):
     def get_license_keys(self):
         self._account_sid = "TWILIO_ACCOUNT_SID"
         self._auth_token = "TWILIO_AUTH_TOKEN"
-        self._from_number  = "+447777777777"
+        self._from_number = "+447777777777"
 
     def ask_question(self, sessionid, question):
         if self.test_question is not None:
@@ -45,7 +46,7 @@ class MockTwilioBotClient(TwilioBotClient):
     def create_twilio_client(self):
         if self.test_twilio_client is not None:
             return self.test_twilio_client
-        return super(MockTwilioBotClient,self).create_twilio_client()
+        return super(MockTwilioBotClient, self).create_twilio_client()
 
     def make_response_v1(self, data, status_code):
         return '<?xml version="1.0" encoding="UTF-8"?><Response><Message to="+447777777777">Hi There</Message></Response>'
@@ -82,36 +83,49 @@ class TwilioBotClientTests(unittest.TestCase):
 
         response = client.create_response("+447777777777", "Hi There")
         self.assertIsNotNone(response)
-        self.assertEqual('<?xml version="1.0" encoding="UTF-8"?><Response><Message to="+447777777777">Hi There</Message></Response>', response)
+        self.assertEqual(
+            '<?xml version="1.0" encoding="UTF-8"?><Response><Message to="+447777777777">Hi There</Message></Response>',
+            response,
+        )
 
     def test_receive_message_post(self):
         arguments = MockArgumentParser()
-        client = MockTwilioBotClient(arguments, twilio_client=MockTwilioClient("SID", "TOKEN"))
+        client = MockTwilioBotClient(
+            arguments, twilio_client=MockTwilioClient("SID", "TOKEN")
+        )
         self.assertIsNotNone(client)
 
         client.test_question = "Hi there"
 
         request = unittest.mock.Mock()
-        request.method = 'POST'
+        request.method = "POST"
         request.form = {"From": "+447777777888", "Body": "Hello"}
 
         response = client.receive_message(request)
         self.assertIsNotNone(response)
-        self.assertEqual('<?xml version="1.0" encoding="UTF-8"?><Response><Message to="+447777777888">Hi there</Message></Response>', response)
+        self.assertEqual(
+            '<?xml version="1.0" encoding="UTF-8"?><Response><Message to="+447777777888">Hi there</Message></Response>',
+            response,
+        )
 
     def test_receive_message_get(self):
         arguments = MockArgumentParser()
-        client = MockTwilioBotClient(arguments, twilio_client=MockTwilioClient("SID", "TOKEN"))
+        client = MockTwilioBotClient(
+            arguments, twilio_client=MockTwilioClient("SID", "TOKEN")
+        )
         self.assertIsNotNone(client)
 
         client.test_question = "Hi there"
 
         request = unittest.mock.Mock()
-        request.method = 'GET'
+        request.method = "GET"
         request.args = MockArgs()
         request.args._args["From"] = "+447777777888"
         request.args._args["Body"] = "Hello"
 
         response = client.receive_message(request)
         self.assertIsNotNone(response)
-        self.assertEqual('<?xml version="1.0" encoding="UTF-8"?><Response><Message to="+447777777888">Hi there</Message></Response>', response)
+        self.assertEqual(
+            '<?xml version="1.0" encoding="UTF-8"?><Response><Message to="+447777777888">Hi there</Message></Response>',
+            response,
+        )

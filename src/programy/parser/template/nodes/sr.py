@@ -14,9 +14,10 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
-from programy.parser.template.nodes.base import TemplateNode
+
 from programy.parser.exceptions import ParserException
+from programy.parser.template.nodes.base import TemplateNode
+from programy.utils.logging.ylogger import YLogger
 
 
 class TemplateSrNode(TemplateNode):
@@ -25,7 +26,11 @@ class TemplateSrNode(TemplateNode):
         TemplateNode.__init__(self)
 
     def resolve_to_string(self, client_context):
-        sentence = client_context.bot.get_conversation(client_context).current_question().current_sentence()
+        sentence = (
+            client_context.bot.get_conversation(client_context)
+            .current_question()
+            .current_sentence()
+        )
         star = sentence.matched_context.star(client_context, 1)
 
         if star is not None:
@@ -35,7 +40,9 @@ class TemplateSrNode(TemplateNode):
             YLogger.error(client_context, "Sr node has no stars available")
             resolved = ""
 
-        YLogger.debug(client_context, "[%s] resolved to [%s]", self.to_string(), resolved)
+        YLogger.debug(
+            client_context, "[%s] resolved to [%s]", self.to_string(), resolved
+        )
         return resolved
 
     def to_string(self):
@@ -51,4 +58,6 @@ class TemplateSrNode(TemplateNode):
     def parse_expression(self, graph, expression):
         self._parse_node(graph, expression)
         if self.children:
-            raise ParserException("<sr> node should not contain child text, use <sr /> or <sr></sr> only")
+            raise ParserException(
+                "<sr> node should not contain child text, use <sr /> or <sr></sr> only"
+            )

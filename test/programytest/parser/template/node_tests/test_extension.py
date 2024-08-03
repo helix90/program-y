@@ -1,9 +1,10 @@
 import xml.etree.ElementTree as ET
 
+from programytest.parser.base import ParserTestsBaseClass
+
 from programy.parser.template.nodes.base import TemplateNode
 from programy.parser.template.nodes.extension import TemplateExtensionNode
 from programy.parser.template.nodes.word import TemplateWordNode
-from programytest.parser.base import ParserTestsBaseClass
 
 
 class MockExtension(object):
@@ -35,8 +36,13 @@ class TemplateExtensionNodeTests(ParserTestsBaseClass):
         self.assertIsNotNone(node)
         self.assertIsNone(node.path)
 
-        node.path = "programytest.parser.template.node_tests.test_extension.MockExtension"
-        self.assertEqual("programytest.parser.template.node_tests.test_extension.MockExtension", node.path)
+        node.path = (
+            "programytest.parser.template.node_tests.test_extension.MockExtension"
+        )
+        self.assertEqual(
+            "programytest.parser.template.node_tests.test_extension.MockExtension",
+            node.path,
+        )
 
         root.append(node)
         self.assertEqual(len(root.children), 1)
@@ -55,8 +61,13 @@ class TemplateExtensionNodeTests(ParserTestsBaseClass):
 
         node.append(TemplateWordNode("Test"))
 
-        node.path = "programytest.parser.template.node_tests.test_extension.MockExtension"
-        self.assertEqual("programytest.parser.template.node_tests.test_extension.MockExtension", node.path)
+        node.path = (
+            "programytest.parser.template.node_tests.test_extension.MockExtension"
+        )
+        self.assertEqual(
+            "programytest.parser.template.node_tests.test_extension.MockExtension",
+            node.path,
+        )
 
         root.append(node)
         self.assertEqual(len(root.children), 1)
@@ -66,7 +77,9 @@ class TemplateExtensionNodeTests(ParserTestsBaseClass):
     def test_node_invalid_class(self):
         root = TemplateNode()
         node = TemplateExtensionNode()
-        node.path = "programytest.parser.template.node_tests.test_extension.MockExtensionOther"
+        node.path = (
+            "programytest.parser.template.node_tests.test_extension.MockExtensionOther"
+        )
         root.append(node)
         self.assertEqual(root.resolve(self._client_context), "")
 
@@ -77,14 +90,19 @@ class TemplateExtensionNodeTests(ParserTestsBaseClass):
         self.assertEqual(len(root.children), 0)
 
         node = TemplateExtensionNode()
-        node.path = "programytest.parser.template.node_tests.test_extension.MockExtension"
+        node.path = (
+            "programytest.parser.template.node_tests.test_extension.MockExtension"
+        )
         node.append(TemplateWordNode("Test"))
         root.append(node)
 
         xml = root.xml_tree(self._client_context)
         self.assertIsNotNone(xml)
         xml_str = ET.tostring(xml, "utf-8").decode("utf-8")
-        self.assertEqual('<template><extension path="programytest.parser.template.node_tests.test_extension.MockExtension">Test</extension></template>', xml_str)
+        self.assertEqual(
+            '<template><extension path="programytest.parser.template.node_tests.test_extension.MockExtension">Test</extension></template>',
+            xml_str,
+        )
 
     def test_node_exception_handling(self):
         root = TemplateNode()

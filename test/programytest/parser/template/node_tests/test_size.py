@@ -1,8 +1,9 @@
 import xml.etree.ElementTree as ET
 
+from programytest.parser.base import ParserTestsBaseClass
+
 from programy.parser.template.nodes.base import TemplateNode
 from programy.parser.template.nodes.size import TemplateSizeNode
-from programytest.parser.base import ParserTestsBaseClass
 
 
 class MockTemplateSizeNode(TemplateSizeNode):
@@ -11,6 +12,7 @@ class MockTemplateSizeNode(TemplateSizeNode):
 
     def resolve_to_string(self, context):
         raise Exception("This is an error")
+
 
 class TemplateSizeNodeTests(ParserTestsBaseClass):
 

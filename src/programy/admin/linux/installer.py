@@ -1,8 +1,9 @@
 import argparse
 import os
+import shutil
 import sys
 import zipfile
-import shutil
+
 import wget
 
 ybot = "https://github.com/keiffster/y-bot/archive/master.zip"
@@ -15,7 +16,7 @@ ybot_root = "./Y-bot"
 systemd_root = "/etc/systemd"  # /system
 
 webserver = "nginx"
-webserver_root = "/etc/nginx"      # /site-enabled
+webserver_root = "/etc/nginx"  # /site-enabled
 
 clients = [
     {"name": "Alexa", "src": "./alexa"},
@@ -34,7 +35,7 @@ clients = [
     {"name": "Twitter", "src": "./twitter"},
     {"name": "Viber", "src": "./viber"},
     {"name": "Web", "src": "./web", "remove_default": True},
-    {"name": "XMPP", "src": "./xmpp"}
+    {"name": "XMPP", "src": "./xmpp"},
 ]
 
 
@@ -63,28 +64,56 @@ class Installer:
         self._debug = False
 
     def parse_arguments(self):
-        parser = argparse.ArgumentParser(description='Program-u multi client installer')
+        parser = argparse.ArgumentParser(description="Program-u multi client installer")
 
-        parser.add_argument('--name', dest='name', help='Name of your multi client bot')
+        parser.add_argument("--name", dest="name", help="Name of your multi client bot")
 
-        parser.add_argument('--programyroot', dest='programyroot', help='Programy install folder')
+        parser.add_argument(
+            "--programyroot", dest="programyroot", help="Programy install folder"
+        )
 
-        parser.add_argument('--ybot', dest='ybot', action='store_true', help='Install y-bot core')
-        parser.add_argument('--ybotroot', dest='ybotroot', help='Y-bot install folder')
+        parser.add_argument(
+            "--ybot", dest="ybot", action="store_true", help="Install y-bot core"
+        )
+        parser.add_argument("--ybotroot", dest="ybotroot", help="Y-bot install folder")
 
-        parser.add_argument('--servusai', action='store_true', help='Install servusai clients')
-        parser.add_argument('--servusairoot', dest='servusairoot', help='Servusai install folder')
+        parser.add_argument(
+            "--servusai", action="store_true", help="Install servusai clients"
+        )
+        parser.add_argument(
+            "--servusairoot", dest="servusairoot", help="Servusai install folder"
+        )
 
-        parser.add_argument('--systemdroot', dest='systemdroot', help='Systemd root directory')
+        parser.add_argument(
+            "--systemdroot", dest="systemdroot", help="Systemd root directory"
+        )
 
-        parser.add_argument('--webserver', dest='webserver', help='Which web server to install for [nginx]')
-        parser.add_argument('--webserverroot', dest='webserverroot', help='Web server root folder')
+        parser.add_argument(
+            "--webserver",
+            dest="webserver",
+            help="Which web server to install for [nginx]",
+        )
+        parser.add_argument(
+            "--webserverroot", dest="webserverroot", help="Web server root folder"
+        )
 
-        parser.add_argument('--list', dest='listclients', action='store_true', help='List all clients')
-        parser.add_argument('--clients', dest='clients', action='store_true', help='Loop through install of clients')
-        parser.add_argument('--client', dest='client', help='Install specific client')
+        parser.add_argument(
+            "--list", dest="listclients", action="store_true", help="List all clients"
+        )
+        parser.add_argument(
+            "--clients",
+            dest="clients",
+            action="store_true",
+            help="Loop through install of clients",
+        )
+        parser.add_argument("--client", dest="client", help="Install specific client")
 
-        parser.add_argument('--debug', dest='debug', action='store_true', help='Do not actually execute commands')
+        parser.add_argument(
+            "--debug",
+            dest="debug",
+            action="store_true",
+            help="Do not actually execute commands",
+        )
 
         self._args = parser.parse_args()
 
@@ -154,27 +183,29 @@ class Installer:
             print("\tClient:", self._client)
 
     def _wget_download(self, url):
-        return wget.download(url, bar=wget.bar_thermometer)     # pragma: no cover
+        return wget.download(url, bar=wget.bar_thermometer)  # pragma: no cover
 
     def _download_bot(self, name, url):
         print("Downloading [%s] from [%s]" % (name, url))
         filename = self._wget_download(url)
 
-        self._extract_bot(filename)                                                      # pragma: no cover
+        self._extract_bot(filename)  # pragma: no cover
 
-        master_dir = self._zip_dir_name_from_filename(filename)                          # pragma: no cover
+        master_dir = self._zip_dir_name_from_filename(filename)  # pragma: no cover
 
         os.mkdir(name)
 
-        self._recursive_copy(master_dir, name)                                           # pragma: no cover
+        self._recursive_copy(master_dir, name)  # pragma: no cover
 
-        if os.name == 'posix':                                                           # pragma: no cover
-            self._make_all_executable(name + os.sep + "scripts" + os.sep + "xnix")       # pragma: no cover
+        if os.name == "posix":  # pragma: no cover
+            self._make_all_executable(
+                name + os.sep + "scripts" + os.sep + "xnix"
+            )  # pragma: no cover
 
-        shutil.rmtree(master_dir)                                                        # pragma: no cover
+        shutil.rmtree(master_dir)  # pragma: no cover
 
     def _extract_bot(self, filename, path=None, remove_after=True):
-        zip_ref = zipfile.ZipFile(filename, 'r')
+        zip_ref = zipfile.ZipFile(filename, "r")
         zip_ref.extractall(path=path)
         zip_ref.close()
         if remove_after is True:
@@ -195,7 +226,7 @@ class Installer:
                 shutil.copy(file_path, dest)
 
             # else if item is a folder, recurse
-            else: # os.path.isdir(file_path):
+            else:  # os.path.isdir(file_path):
                 new_dest = os.path.join(dest, item)
                 os.mkdir(new_dest)
                 self._recursive_copy(file_path, new_dest)
@@ -229,7 +260,7 @@ class Installer:
     def _list_clients(self):
         print("\nAvailable Clients:")
         for client in clients:
-            print("\t", client['name'])
+            print("\t", client["name"])
         print()
 
     def _install_ybot(self):
@@ -243,11 +274,11 @@ class Installer:
     def _install_clients(self):
         print("\nInstalling Clients")
         for client in clients:
-            self._install_client(client['name'])
+            self._install_client(client["name"])
 
     def _install_client(self, name):
         for client in clients:
-            if name.upper() == client['name'].upper():
+            if name.upper() == client["name"].upper():
                 print("\nInstalling Client", name)
                 self._do_client_install(client)
                 return
@@ -261,14 +292,17 @@ class Installer:
         self._install_web_service(client)
 
     def _install_systemd_service(self, client):
-        print("%s systemd service install" % client['name'])
+        print("%s systemd service install" % client["name"])
 
         service_file = "servusai-%s.service" % client["name"].lower()
 
-        service_file_src = self._servusai_root + "/Servusai/%s/config/xnix/%s" % (client["name"].lower(), service_file)
+        service_file_src = self._servusai_root + "/Servusai/%s/config/xnix/%s" % (
+            client["name"].lower(),
+            service_file,
+        )
         service_file_dest = self._systemd_root + "/system/%s" % service_file
 
-        self._execute("cp %s %s" %(service_file_src, service_file_dest))
+        self._execute("cp %s %s" % (service_file_src, service_file_dest))
 
         self._execute("systemctl daemon-reload")
 
@@ -278,12 +312,15 @@ class Installer:
         print()
 
     def _install_web_service(self, client):
-        print("%s web service install" % client['name'])
+        print("%s web service install" % client["name"])
 
         if client.get("remove_default", False) is True:
             self._execute("rm /etc/nginx/sites-enabled/default")
 
-        web_site_src = self._servusai_root + "/Servusai/%s/config/xnix/%s.site" % (client["name"].lower(), client["name"].lower())
+        web_site_src = self._servusai_root + "/Servusai/%s/config/xnix/%s.site" % (
+            client["name"].lower(),
+            client["name"].lower(),
+        )
         web_site_dest = self._webserver_root + "/sites-enabled"
 
         self._execute("cp %s %s" % (web_site_src, web_site_dest))
@@ -309,11 +346,10 @@ class Installer:
         return False
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     installer = Installer()
 
     installer.parse_arguments()
 
     installer.install()
-

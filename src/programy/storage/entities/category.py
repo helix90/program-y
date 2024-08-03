@@ -14,47 +14,52 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 import re
-from programy.utils.parsing.linenumxml import LineNumberingParser
 import xml.etree.ElementTree as ET  # pylint: disable=wrong-import-order
-from programy.utils.logging.ylogger import YLogger
+
+from programy.parser.exceptions import DuplicateGrammarException, ParserException
 from programy.storage.entities.store import Store
-from programy.parser.exceptions import ParserException
-from programy.parser.exceptions import DuplicateGrammarException
+from programy.utils.logging.ylogger import YLogger
+from programy.utils.parsing.linenumxml import LineNumberingParser
 from programy.utils.text.text import TextUtils
 
 
 class CategoryReadOnlyStore(Store):
-    WHITESPACE = re.compile('[\n\t\r+]')
+    WHITESPACE = re.compile("[\n\t\r+]")
 
     def __init__(self):
         Store.__init__(self)
 
     def load_all(self, collector):
-        raise NotImplementedError("load_all missing from Category Store")  # pragma: no cover
+        raise NotImplementedError(
+            "load_all missing from Category Store"
+        )  # pragma: no cover
 
     def load(self, collector, name=None):
-        raise NotImplementedError("load missing from Category Store")  # pragma: no cover
+        raise NotImplementedError(
+            "load missing from Category Store"
+        )  # pragma: no cover
 
     @staticmethod
     def extract_content(name, element):
-        content = ET.tostring(element, encoding='utf-8', method='xml').decode('utf-8')
-        content = CategoryReadOnlyStore.WHITESPACE.sub('', content)
-        content = content.replace('<br>', '<br />')
-        content = re.sub(r'\s+', ' ', content)
-        start = '<%s>' % name
-        end = '</%s>' % name
+        content = ET.tostring(element, encoding="utf-8", method="xml").decode("utf-8")
+        content = CategoryReadOnlyStore.WHITESPACE.sub("", content)
+        content = content.replace("<br>", "<br />")
+        content = re.sub(r"\s+", " ", content)
+        start = "<%s>" % name
+        end = "</%s>" % name
         firstpos = content.find(start)
         lastpos = content.rfind(end)
 
         if firstpos == -1 or lastpos == -1:
             return None
 
-        return content[firstpos + len(start):lastpos]
+        return content[firstpos + len(start) : lastpos]
 
     def find_all(self, element, name, namespace=None):
         if namespace is not None:
-            search = "%s:%s"%(list(namespace.keys())[0], name)
+            search = "%s:%s" % (list(namespace.keys())[0], name)
             return element.findall(search, namespaces=namespace)
         return element.findall(name)
 
@@ -76,7 +81,12 @@ class CategoryReadOnlyStore(Store):
     <topic>%s</topic>
     <that>%s</that>
     <template>%s</template>
-</category>""" % (pattern, topic, that, template)
+</category>""" % (
+            pattern,
+            topic,
+            that,
+            template,
+        )
 
         xml = None
         try:
@@ -99,17 +109,22 @@ class CategoryReadWriteStore(CategoryReadOnlyStore):
         CategoryReadOnlyStore.__init__(self)
 
     def _parse_topic_expression(self, expression, namespace, groupname, count, success):
-        topic = expression.attrib['name']
+        topic = expression.attrib["name"]
         for topic_expression in expression:
             that = self.find_element_str("that", topic_expression, namespace)
             pattern = self.find_element_str("pattern", topic_expression, namespace)
             template = self.find_element_str("template", topic_expression, namespace)
-            if self.store_category(groupname, "*", topic, that, pattern, template) is True:
+            if (
+                self.store_category(groupname, "*", topic, that, pattern, template)
+                is True
+            ):
                 success += 1
             count += 1
         return count, success
 
-    def _parse_category_expression(self, expression, namespace, groupname, count, success):
+    def _parse_category_expression(
+        self, expression, namespace, groupname, count, success
+    ):
         topic = self.find_element_str("topic", expression, namespace)
         that = self.find_element_str("that", expression, namespace)
         pattern = self.find_element_str("pattern", expression, namespace)
@@ -130,11 +145,15 @@ class CategoryReadWriteStore(CategoryReadOnlyStore):
         for expression in aiml:
             tag_name, namespace = TextUtils.tag_and_namespace_from_text(expression.tag)
 
-            if tag_name == 'topic':
-                count, success = self._parse_topic_expression(expression, namespace, groupname, count, success)
+            if tag_name == "topic":
+                count, success = self._parse_topic_expression(
+                    expression, namespace, groupname, count, success
+                )
 
-            elif tag_name == 'category':
-                count, success = self._parse_category_expression(expression, namespace, groupname, count, success)
+            elif tag_name == "category":
+                count, success = self._parse_category_expression(
+                    expression, namespace, groupname, count, success
+                )
 
             else:
                 YLogger.error(self, "Invalid aiml tag type [%s]", tag_name)
@@ -142,15 +161,20 @@ class CategoryReadWriteStore(CategoryReadOnlyStore):
 
         return count, success
 
-    def upload_from_file(self, filename, fileformat=Store.XML_FORMAT, commit=True, verbose=False):
+    def upload_from_file(
+        self, filename, fileformat=Store.XML_FORMAT, commit=True, verbose=False
+    ):
         try:
             return self._upload(filename)
 
         except Exception as excep:
-            YLogger.exception(self, "Failed to load contents of AIML file from [%s]",
-                              excep, filename)  # pragma: no cover
+            YLogger.exception(
+                self, "Failed to load contents of AIML file from [%s]", excep, filename
+            )  # pragma: no cover
 
         return 0, 0
 
     def store_category(self, groupid, userid, topic, that, pattern, template):
-        raise NotImplementedError("store_category missing from Category Store")  # pragma: no cover
+        raise NotImplementedError(
+            "store_category missing from Category Store"
+        )  # pragma: no cover

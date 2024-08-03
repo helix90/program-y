@@ -14,13 +14,16 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 import datetime
+
 from dateutil.relativedelta import relativedelta
-from programy.utils.logging.ylogger import YLogger
-from programy.parser.template.nodes.base import TemplateNode
-from programy.utils.text.text import TextUtils
-from programy.parser.template.nodes.word import TemplateWordNode
+
 from programy.parser.exceptions import ParserException
+from programy.parser.template.nodes.base import TemplateNode
+from programy.parser.template.nodes.word import TemplateWordNode
+from programy.utils.logging.ylogger import YLogger
+from programy.utils.text.text import TextUtils
 
 
 class TemplateIntervalNode(TemplateNode):
@@ -39,7 +42,7 @@ class TemplateIntervalNode(TemplateNode):
     @interval_format.setter
     def interval_format(self, interval_format: TemplateNode):
         if isinstance(interval_format, TemplateNode):
-           self._interval_format = interval_format
+            self._interval_format = interval_format
         else:
             self._interval_format = TemplateWordNode(interval_format)
 
@@ -111,15 +114,29 @@ class TemplateIntervalNode(TemplateNode):
         elif style == "microseconds":
             resolved = str(difference.microseconds)
         elif style == "ymd":
-            resolved = "%d years, %d months, %d days" % \
-                       (difference.years, difference.months, difference.days)
+            resolved = "%d years, %d months, %d days" % (
+                difference.years,
+                difference.months,
+                difference.days,
+            )
         elif style == "hms":
-            resolved = "%d hours, %d minutes, %d seconds" % \
-                       (difference.hours, difference.minutes, difference.seconds)
+            resolved = "%d hours, %d minutes, %d seconds" % (
+                difference.hours,
+                difference.minutes,
+                difference.seconds,
+            )
         elif style == "ymdhms":
-            resolved = "%d years, %d months, %d days, %d hours, %d minutes, %d seconds" % \
-                       (difference.years, difference.months, difference.days,
-                        difference.hours, difference.minutes, difference.seconds)
+            resolved = (
+                "%d years, %d months, %d days, %d hours, %d minutes, %d seconds"
+                % (
+                    difference.years,
+                    difference.months,
+                    difference.days,
+                    difference.hours,
+                    difference.minutes,
+                    difference.seconds,
+                )
+            )
         else:
             YLogger.error(client_context, "Unknown interval style [%s]", style)
             resolved = ""
@@ -131,21 +148,21 @@ class TemplateIntervalNode(TemplateNode):
         return "[INTERVAL]"
 
     def to_xml(self, client_context):
-        xml = '<interval'
+        xml = "<interval"
         if self.interval_format is not None:
             xml += ' format="%s"' % self.interval_format.to_xml(client_context)
         if self.style is not None:
             xml += ' style="%s"' % self.style.to_xml(client_context)
-        xml += '>'
+        xml += ">"
         if self.interval_from is not None:
-            xml += '<from>'
+            xml += "<from>"
             xml += self.interval_from.to_xml(client_context)
-            xml += '</from>'
+            xml += "</from>"
         if self.interval_to is not None:
-            xml += '<to>'
+            xml += "<to>"
             xml += self.interval_to.to_xml(client_context)
-            xml += '</to>'
-        xml += '</interval>'
+            xml += "</to>"
+        xml += "</interval>"
         return xml
 
     #######################################################################################################
@@ -158,17 +175,17 @@ class TemplateIntervalNode(TemplateNode):
 
     def parse_expression(self, graph, expression):
 
-        if 'format' in expression.attrib:
-            self._interval_format = graph.get_word_node(expression.attrib['format'])
+        if "format" in expression.attrib:
+            self._interval_format = graph.get_word_node(expression.attrib["format"])
 
-        if 'style' in expression.attrib:
-            self._style = graph.get_word_node(expression.attrib['style'])
+        if "style" in expression.attrib:
+            self._style = graph.get_word_node(expression.attrib["style"])
 
-        if 'from' in expression.attrib:
-            self._interval_from = graph.get_word_node(expression.attrib['from'])
+        if "from" in expression.attrib:
+            self._interval_from = graph.get_word_node(expression.attrib["from"])
 
-        if 'to' in expression.attrib:
-            self._interval_to = graph.get_word_node(expression.attrib['to'])
+        if "to" in expression.attrib:
+            self._interval_to = graph.get_word_node(expression.attrib["to"])
 
         head_text = self.get_text_from_element(expression)
         self.parse_text(graph, head_text)
@@ -176,10 +193,12 @@ class TemplateIntervalNode(TemplateNode):
         for child in expression:
             tag_name = TextUtils.tag_from_text(child.tag)
 
-            if tag_name == 'format':
-                self._interval_format = graph.get_word_node(self.get_text_from_element(child))
+            if tag_name == "format":
+                self._interval_format = graph.get_word_node(
+                    self.get_text_from_element(child)
+                )
 
-            elif tag_name == 'style':
+            elif tag_name == "style":
                 node = graph.get_base_node()
                 node.parse_text(graph, self.get_text_from_element(child))
                 for sub_child in child:
@@ -187,7 +206,7 @@ class TemplateIntervalNode(TemplateNode):
                     node.parse_text(graph, self.get_text_from_element(child))
                 self._style = node
 
-            elif tag_name == 'from':
+            elif tag_name == "from":
                 node = graph.get_base_node()
                 node.parse_text(graph, self.get_text_from_element(child))
                 for sub_child in child:
@@ -195,7 +214,7 @@ class TemplateIntervalNode(TemplateNode):
                     node.parse_text(graph, self.get_text_from_element(child))
                 self._interval_from = node
 
-            elif tag_name == 'to':
+            elif tag_name == "to":
                 node = graph.get_base_node()
                 node.parse_text(graph, self.get_text_from_element(child))
                 for sub_child in child:

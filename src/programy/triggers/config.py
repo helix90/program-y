@@ -14,8 +14,9 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
+
 from programy.config.base import BaseConfigurationData
+from programy.utils.logging.ylogger import YLogger
 from programy.utils.substitutions.substitues import Substitutions
 
 
@@ -34,23 +35,28 @@ class TriggerConfiguration(BaseConfigurationData):
     def additionals_to_add(self):
         return ["url", "method", "token"]
 
-    def load_config_section(self, configuration_file, section, bot_root, subs: Substitutions = None):
+    def load_config_section(
+        self, configuration_file, section, bot_root, subs: Substitutions = None
+    ):
         del bot_root
         del subs
         triggers = configuration_file.get_section(self._section_name, section)
         if triggers is not None:
-            self._manager = configuration_file.get_option(triggers, "manager",
-                                                          missing_value=TriggerConfiguration.LOCAL_MANAGER)
+            self._manager = configuration_file.get_option(
+                triggers, "manager", missing_value=TriggerConfiguration.LOCAL_MANAGER
+            )
             self.load_additional_key_values(configuration_file, triggers)
         else:
-            YLogger.warning(self, "'triggers' section missing from client config, using defaults")
+            YLogger.warning(
+                self, "'triggers' section missing from client config, using defaults"
+            )
 
     def to_yaml(self, data, defaults=True):
 
         assert data is not None
 
         if defaults is True:
-            data['manager'] = TriggerConfiguration.LOCAL_MANAGER
+            data["manager"] = TriggerConfiguration.LOCAL_MANAGER
 
         else:
-            data['manager'] = self._manager
+            data["manager"] = self._manager

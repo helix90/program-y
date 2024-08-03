@@ -14,13 +14,14 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 from programy.parser.exceptions import ParserException
 from programy.parser.pattern.nodes.base import PatternNode
 
 
 class PatternTemplateNode(PatternNode):
 
-    def __init__(self, template, userid='*'):
+    def __init__(self, template, userid="*"):
         PatternNode.__init__(self, userid)
         self._template = template
 
@@ -52,10 +53,10 @@ class PatternTemplateNode(PatternNode):
         if include_user is True:
             string += '<template userid="%s">' % self.userid
         else:
-            string += '<template>'
+            string += "<template>"
         string2 = super(PatternTemplateNode, self).to_xml(client_context, include_user)
         string += string2
-        string += '</template>\n'
+        string += "</template>\n"
         return string
 
     def to_string(self, verbose=True):

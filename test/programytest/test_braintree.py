@@ -1,8 +1,10 @@
-import unittest
 import os
+import unittest
+
+from programytest.client import TestClient
+
 from programy.braintree import BraintreeManager
 from programy.config.brain.braintree import BrainBraintreeConfiguration
-from programytest.client import TestClient
 
 
 class BraintreeManagerTests(unittest.TestCase):
@@ -32,10 +34,11 @@ class BraintreeManagerTests(unittest.TestCase):
         mgr.dump_brain_tree(client_context)
 
     def get_temp_dir(self):
-        if os.name == 'posix':
-            return '/tmp'
-        elif os.name == 'nt':
+        if os.name == "posix":
+            return "/tmp"
+        elif os.name == "nt":
             import tempfile
+
             return tempfile.gettempdir()
         else:
             raise Exception("Unknown operating system [%s]" % os.name)

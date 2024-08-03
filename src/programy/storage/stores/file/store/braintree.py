@@ -14,9 +14,10 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
-from programy.storage.stores.file.store.filestore import FileStore
+
 from programy.storage.entities.braintree import BraintreeStore
+from programy.storage.stores.file.store.filestore import FileStore
+from programy.utils.logging.ylogger import YLogger
 
 
 class FileBraintreeStore(FileStore, BraintreeStore):
@@ -48,14 +49,16 @@ class FileBraintreeStore(FileStore, BraintreeStore):
 
         elif fileformat == FileStore.XML_FORMAT:
             braintree = '<?xml version="1.0" encoding="%s"?>\n' % encoding
-            braintree += '<aiml>\n'
+            braintree += "<aiml>\n"
             braintree += pattern_graph.root.to_xml(client_context)
-            braintree += '</aiml>\n'
+            braintree += "</aiml>\n"
             with open(braintree_fullpath, "w+", encoding=encoding) as dump_file:
                 dump_file.write(braintree)
 
         else:
-            YLogger.error(client_context, "Unknown braintree content type [%s]", fileformat)
+            YLogger.error(
+                client_context, "Unknown braintree content type [%s]", fileformat
+            )
 
     def save_braintree(self, client_context, pattern_graph):
 

@@ -14,17 +14,17 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
-from programy.utils.classes.loader import ClassLoader
 
 from programy.storage.entities.store import Store
-from programy.storage.stores.nosql.mongo.store.mongostore import MongoStore
 from programy.storage.entities.triggers import TriggersStore
 from programy.storage.stores.nosql.mongo.dao.trigger import Trigger
+from programy.storage.stores.nosql.mongo.store.mongostore import MongoStore
+from programy.utils.classes.loader import ClassLoader
+from programy.utils.logging.ylogger import YLogger
 
 
 class MongoTriggerStore(MongoStore, TriggersStore):
-    TriggerS = 'triggers'
+    TriggerS = "triggers"
 
     def __init__(self, storage_engine):
         MongoStore.__init__(self, storage_engine)
@@ -41,10 +41,18 @@ class MongoTriggerStore(MongoStore, TriggersStore):
         triggers = self.get_all_triggers()
         for trigger in triggers:
             try:
-                collector.add_trigger(trigger['name'], ClassLoader.instantiate_class(trigger['trigger_class'])())
+                collector.add_trigger(
+                    trigger["name"],
+                    ClassLoader.instantiate_class(trigger["trigger_class"])(),
+                )
 
             except Exception as excep:
-                YLogger.exception(self, "Failed pre-instantiating Trigger [%s]", excep, trigger['trigger_class'])
+                YLogger.exception(
+                    self,
+                    "Failed pre-instantiating Trigger [%s]",
+                    excep,
+                    trigger["trigger_class"],
+                )
 
     def get_all_triggers(self):
         collection = self.collection()
@@ -60,9 +68,16 @@ class MongoTriggerStore(MongoStore, TriggersStore):
                 count += 1
         return count, success
 
-    def upload_from_file(self, filename, fileformat=Store.TEXT_FORMAT, commit=True, verbose=False):
+    def upload_from_file(
+        self, filename, fileformat=Store.TEXT_FORMAT, commit=True, verbose=False
+    ):
 
-        YLogger.info(self, "Uploading %s to Mongo from file [%s]", self.collection_name(), filename)
+        YLogger.info(
+            self,
+            "Uploading %s to Mongo from file [%s]",
+            self.collection_name(),
+            filename,
+        )
         try:
             return self._load_triggers_from_file(filename, verbose)
 
@@ -73,16 +88,16 @@ class MongoTriggerStore(MongoStore, TriggersStore):
 
     def process_config_line(self, line, verbose=False):
         line = line.strip()
-        if line.startswith('#') is False:
+        if line.startswith("#") is False:
             splits = line.split("=")
             if len(splits) > 1:
                 trigger_name = splits[0].strip()
                 class_name = splits[1].strip()
                 trigger = self._get_entity(trigger_name, class_name)
                 if verbose is True:
-                    YLogger.debug(self, "Loading trigger [%s] = [%s]", trigger_name, class_name)
+                    YLogger.debug(
+                        self, "Loading trigger [%s] = [%s]", trigger_name, class_name
+                    )
                 return self.add_document(trigger)
 
         return False
-
-

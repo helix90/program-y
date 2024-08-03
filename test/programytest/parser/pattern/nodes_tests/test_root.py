@@ -1,3 +1,5 @@
+from programytest.parser.base import ParserTestsBaseClass
+
 from programy.parser.exceptions import ParserException
 from programy.parser.pattern.nodes.base import PatternNode
 from programy.parser.pattern.nodes.oneormore import PatternOneOrMoreWildCardNode
@@ -9,7 +11,6 @@ from programy.parser.pattern.nodes.topic import PatternTopicNode
 from programy.parser.pattern.nodes.word import PatternWordNode
 from programy.parser.pattern.nodes.zeroormore import PatternZeroOrMoreWildCardNode
 from programy.parser.template.nodes.base import TemplateNode
-from programytest.parser.base import ParserTestsBaseClass
 
 
 class PatternRootNodeTests(ParserTestsBaseClass):
@@ -34,11 +35,15 @@ class PatternRootNodeTests(ParserTestsBaseClass):
         self.assertFalse(node.has_children())
 
         self.assertTrue(node.equivalent(PatternRootNode()))
-        self.assertEqual(node.to_string(), "ROOT [*] [P(0)^(0)#(0)C(0)_(0)*(0)To(0)Th(0)Te(0)]")
+        self.assertEqual(
+            node.to_string(), "ROOT [*] [P(0)^(0)#(0)C(0)_(0)*(0)To(0)Th(0)Te(0)]"
+        )
 
         node.add_child(PatternNode())
         self.assertEqual(len(node.children), 1)
-        self.assertEqual(node.to_string(), "ROOT [*] [P(0)^(0)#(0)C(1)_(0)*(0)To(0)Th(0)Te(0)]")
+        self.assertEqual(
+            node.to_string(), "ROOT [*] [P(0)^(0)#(0)C(1)_(0)*(0)To(0)Th(0)Te(0)]"
+        )
 
     def test_multiple_roots(self):
         node1 = PatternRootNode()
@@ -46,7 +51,11 @@ class PatternRootNodeTests(ParserTestsBaseClass):
 
         with self.assertRaises(ParserException) as raised:
             node1.can_add(node2)
-        self.assertTrue(str(raised.exception).startswith("Cannot add root node to existing root node"))
+        self.assertTrue(
+            str(raised.exception).startswith(
+                "Cannot add root node to existing root node"
+            )
+        )
 
     def test_root_added_to_child(self):
         node1 = PatternWordNode("test")
@@ -54,7 +63,9 @@ class PatternRootNodeTests(ParserTestsBaseClass):
 
         with self.assertRaises(ParserException) as raised:
             node1.can_add(node2)
-        self.assertTrue(str(raised.exception).startswith("Cannot add root node to child node"))
+        self.assertTrue(
+            str(raised.exception).startswith("Cannot add root node to child node")
+        )
 
     def test_root_to_root(self):
         node1 = PatternRootNode()
@@ -62,7 +73,9 @@ class PatternRootNodeTests(ParserTestsBaseClass):
 
         with self.assertRaises(ParserException) as raised:
             node1.can_add(node2)
-        self.assertEqual(str(raised.exception), "Cannot add root node to existing root node")
+        self.assertEqual(
+            str(raised.exception), "Cannot add root node to existing root node"
+        )
 
     def test_template_to_root(self):
         node1 = PatternRootNode()
@@ -94,16 +107,24 @@ class PatternRootNodeTests(ParserTestsBaseClass):
 
         with self.assertRaises(ParserException) as raised:
             node1.can_add(node2)
-        self.assertEqual(str(raised.exception), "Cannot add 'template' node to template node")
+        self.assertEqual(
+            str(raised.exception), "Cannot add 'template' node to template node"
+        )
 
     def test_to_string(self):
         node1 = PatternRootNode()
         self.assertEqual("ROOT ", node1.to_string(verbose=False))
-        self.assertEqual("ROOT [*] [P(0)^(0)#(0)C(0)_(0)*(0)To(0)Th(0)Te(0)]", node1.to_string(verbose=True))
+        self.assertEqual(
+            "ROOT [*] [P(0)^(0)#(0)C(0)_(0)*(0)To(0)Th(0)Te(0)]",
+            node1.to_string(verbose=True),
+        )
 
         node2 = PatternRootNode("testid")
         self.assertEqual("ROOT ", node2.to_string(verbose=False))
-        self.assertEqual("ROOT [testid] [P(0)^(0)#(0)C(0)_(0)*(0)To(0)Th(0)Te(0)]", node2.to_string(verbose=True))
+        self.assertEqual(
+            "ROOT [testid] [P(0)^(0)#(0)C(0)_(0)*(0)To(0)Th(0)Te(0)]",
+            node2.to_string(verbose=True),
+        )
 
     def test_equivalent_userid(self):
         node1 = PatternRootNode()
@@ -228,10 +249,10 @@ class PatternRootNodeTests(ParserTestsBaseClass):
 
         root.add_child(PatternPriorityWordNode("test1", userid="user1"))
         root.add_child(PatternWordNode("test2", userid="user1"))
-        root.add_child(PatternZeroOrMoreWildCardNode('^', userid="user1"))
-        root.add_child(PatternZeroOrMoreWildCardNode('#', userid="user1"))
-        root.add_child(PatternOneOrMoreWildCardNode('_', userid="user1"))
-        root.add_child(PatternOneOrMoreWildCardNode('*', userid="user1"))
+        root.add_child(PatternZeroOrMoreWildCardNode("^", userid="user1"))
+        root.add_child(PatternZeroOrMoreWildCardNode("#", userid="user1"))
+        root.add_child(PatternOneOrMoreWildCardNode("_", userid="user1"))
+        root.add_child(PatternOneOrMoreWildCardNode("*", userid="user1"))
 
         self.assertEqual(1, len(root.priority_words))
         self.assertIsNotNone(root._0ormore_hash)

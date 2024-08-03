@@ -15,10 +15,9 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
-from programy.utils.logging.ylogger import YLogger
-
 from programy.dynamic.maps.map import DynamicMap
 from programy.nlp.lemmatize import Lemmatizer
+from programy.utils.logging.ylogger import YLogger
 
 
 class LemmatizeMap(DynamicMap):
@@ -33,5 +32,7 @@ class LemmatizeMap(DynamicMap):
         lemmatize = Lemmatizer()
         lemma_value = lemmatize.lemmatize(input_value)
 
-        YLogger.debug(client_context, "LemmatizeMap converted %s to %s", input_value, lemma_value)
+        YLogger.debug(
+            client_context, "LemmatizeMap converted %s to %s", input_value, lemma_value
+        )
         return lemma_value

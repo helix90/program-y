@@ -15,9 +15,8 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
-from programy.utils.logging.ylogger import YLogger
-
 from programy.config.base import BaseConfigurationData
+from programy.utils.logging.ylogger import YLogger
 from programy.utils.substitutions.substitues import Substitutions
 
 
@@ -51,34 +50,45 @@ class BotConversationsConfiguration(BaseConfigurationData):
     def multi_client(self):
         return self._multi_client
 
-    def load_config_section(self, configuration_file, configuration, bot_root, subs: Substitutions = None):
+    def load_config_section(
+        self, configuration_file, configuration, bot_root, subs: Substitutions = None
+    ):
         del bot_root
-        Conversations = configuration_file.get_section(self._section_name, configuration)
+        Conversations = configuration_file.get_section(
+            self._section_name, configuration
+        )
         if Conversations is not None:
-            self._max_histories = configuration_file.get_int_option(Conversations, "max_histories", missing_value=100,
-                                                                    subs=subs)
-            self._initial_topic = configuration_file.get_option(Conversations, "initial_topic", missing_value="*",
-                                                                subs=subs)
-            self._restore_last_topic = configuration_file.get_bool_option(Conversations, "restore_last_topic",
-                                                                          missing_value=False, subs=subs)
-            self._empty_on_start = configuration_file.get_bool_option(Conversations, "empty_on_start",
-                                                                      missing_value=False, subs=subs)
-            self._multi_client = configuration_file.get_bool_option(Conversations, "multi_client", missing_value=False,
-                                                                    subs=subs)
+            self._max_histories = configuration_file.get_int_option(
+                Conversations, "max_histories", missing_value=100, subs=subs
+            )
+            self._initial_topic = configuration_file.get_option(
+                Conversations, "initial_topic", missing_value="*", subs=subs
+            )
+            self._restore_last_topic = configuration_file.get_bool_option(
+                Conversations, "restore_last_topic", missing_value=False, subs=subs
+            )
+            self._empty_on_start = configuration_file.get_bool_option(
+                Conversations, "empty_on_start", missing_value=False, subs=subs
+            )
+            self._multi_client = configuration_file.get_bool_option(
+                Conversations, "multi_client", missing_value=False, subs=subs
+            )
         else:
-            YLogger.warning(self, "'Conversations' section missing from bot config, using defaults")
+            YLogger.warning(
+                self, "'Conversations' section missing from bot config, using defaults"
+            )
 
     def to_yaml(self, data, defaults=True):
         if defaults is True:
-            data['max_histories'] = 100
-            data['restore_last_topic'] = True
-            data['initial_topic'] = "*"
-            data['empty_on_start'] = True
-            data['multi_client'] = False
+            data["max_histories"] = 100
+            data["restore_last_topic"] = True
+            data["initial_topic"] = "*"
+            data["empty_on_start"] = True
+            data["multi_client"] = False
 
         else:
-            data['max_histories'] = self._max_histories
-            data['restore_last_topic'] = self._restore_last_topic
-            data['initial_topic'] = self._initial_topic
-            data['empty_on_start'] = self._empty_on_start
-            data['multi_client'] = self._multi_client
+            data["max_histories"] = self._max_histories
+            data["restore_last_topic"] = self._restore_last_topic
+            data["initial_topic"] = self._initial_topic
+            data["empty_on_start"] = self._empty_on_start
+            data["multi_client"] = self._multi_client

@@ -14,17 +14,17 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
-from programy.utils.classes.loader import ClassLoader
 
-from programy.storage.entities.store import Store
-from programy.storage.stores.nosql.mongo.store.mongostore import MongoStore
 from programy.storage.entities.oobs import OOBsStore
+from programy.storage.entities.store import Store
 from programy.storage.stores.nosql.mongo.dao.oob import OOB
+from programy.storage.stores.nosql.mongo.store.mongostore import MongoStore
+from programy.utils.classes.loader import ClassLoader
+from programy.utils.logging.ylogger import YLogger
 
 
 class MongoOOBStore(MongoStore, OOBsStore):
-    OOBS = 'oobs'
+    OOBS = "oobs"
 
     def __init__(self, storage_engine):
         MongoStore.__init__(self, storage_engine)
@@ -41,10 +41,14 @@ class MongoOOBStore(MongoStore, OOBsStore):
         oobs = self.get_all_oobs()
         for oob in oobs:
             try:
-                collector.add_oob(oob['name'], ClassLoader.instantiate_class(oob['oob_class'])())
+                collector.add_oob(
+                    oob["name"], ClassLoader.instantiate_class(oob["oob_class"])()
+                )
 
             except Exception as excep:
-                YLogger.exception(self, "Failed pre-instantiating OOB [%s]", excep, oob['oob_class'])
+                YLogger.exception(
+                    self, "Failed pre-instantiating OOB [%s]", excep, oob["oob_class"]
+                )
 
     def get_all_oobs(self):
         collection = self.collection()
@@ -60,9 +64,16 @@ class MongoOOBStore(MongoStore, OOBsStore):
                 count += 1
         return count, success
 
-    def upload_from_file(self, filename, fileformat=Store.TEXT_FORMAT, commit=True, verbose=False):
+    def upload_from_file(
+        self, filename, fileformat=Store.TEXT_FORMAT, commit=True, verbose=False
+    ):
 
-        YLogger.info(self, "Uploading %s to Mongo from file [%s]", self.collection_name(), filename)
+        YLogger.info(
+            self,
+            "Uploading %s to Mongo from file [%s]",
+            self.collection_name(),
+            filename,
+        )
         try:
             return self._load_oobs_from_file(filename, verbose)
 
@@ -73,7 +84,7 @@ class MongoOOBStore(MongoStore, OOBsStore):
 
     def process_config_line(self, line, verbose=False):
         line = line.strip()
-        if line.startswith('#') is False:
+        if line.startswith("#") is False:
             splits = line.split("=")
             if len(splits) > 1:
                 oob_name = splits[0].strip()
@@ -84,5 +95,3 @@ class MongoOOBStore(MongoStore, OOBsStore):
                 return self.add_document(oob)
 
         return False
-
-

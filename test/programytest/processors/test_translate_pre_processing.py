@@ -1,6 +1,8 @@
 import unittest
 
 import programytest.externals as Externals
+from programytest.client import TestClient
+
 from programy.bot import Bot
 from programy.config.bot.bot import BotConfiguration
 from programy.context import ClientContext
@@ -9,12 +11,14 @@ from programy.processors.pre.normalize import NormalizePreProcessor
 from programy.processors.pre.removepunctuation import RemovePunctuationPreProcessor
 from programy.processors.pre.toupper import ToUpperPreProcessor
 from programy.processors.pre.translate import TranslatorPreProcessor
-from programytest.client import TestClient
 
 
 class PreProcessingTests(unittest.TestCase):
 
-    @unittest.skipIf(Externals.google_translate is False or Externals.all_externals is False, Externals.google_translate_disabled)
+    @unittest.skipIf(
+        Externals.google_translate is False or Externals.all_externals is False,
+        Externals.google_translate_disabled,
+    )
     def test_pre_cleanup(self):
         self.client = TestClient()
 
@@ -22,11 +26,15 @@ class PreProcessingTests(unittest.TestCase):
 
         config = BotConfiguration()
 
-        config.from_translator._classname = "programy.nlp.translate.textblob_translator.TextBlobTranslator"
+        config.from_translator._classname = (
+            "programy.nlp.translate.textblob_translator.TextBlobTranslator"
+        )
         config.from_translator._from_lang = "fr"
         config.from_translator._to_lang = "en"
 
-        config.to_translator._classname = "programy.nlp.translate.textblob_translator.TextBlobTranslator"
+        config.to_translator._classname = (
+            "programy.nlp.translate.textblob_translator.TextBlobTranslator"
+        )
         config.to_translator._from_lang = "en"
         config.to_translator._to_lang = "fr"
 

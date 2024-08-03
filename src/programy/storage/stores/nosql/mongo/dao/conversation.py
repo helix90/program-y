@@ -14,11 +14,12 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 from programy.dialog.conversation import Conversation as Convo
 from programy.storage.stores.utils import DAOUtils
 
 
-class Conversation():
+class Conversation:
 
     def __init__(self, client_context, conversation):
         self.id = None
@@ -37,30 +38,48 @@ class Conversation():
         self.conversation = conversation
 
     def __repr__(self):
-        return "<Conversation(id='%s', client='%s', user='%s', bot='%s', brain='%s')" % \
-               ((DAOUtils.valid_id(self.id)), self.clientid, self.userid, self.botid, self.brainid)
+        return (
+            "<Conversation(id='%s', client='%s', user='%s', bot='%s', brain='%s')"
+            % (
+                (DAOUtils.valid_id(self.id)),
+                self.clientid,
+                self.userid,
+                self.botid,
+                self.brainid,
+            )
+        )
 
     def to_document(self):
-        document = {"clientid": self.clientid,
-                    "userid": self.userid,
-                    "botid": self.botid,
-                    "brainid": self.brainid,
-                    "conversation": self.conversation.to_json()}
+        document = {
+            "clientid": self.clientid,
+            "userid": self.userid,
+            "botid": self.botid,
+            "brainid": self.brainid,
+            "conversation": self.conversation.to_json(),
+        }
         if self.id is not None:
-            document['_id'] = self.id
+            document["_id"] = self.id
         return document
 
     @staticmethod
     def from_document(client_context, data):
         conversation = Conversation(client_context, None)
-        conversation.id = DAOUtils.get_value_from_data(data, '_id')
-        conversation.clientid = DAOUtils.get_value_from_data(data, 'clientid', client_context.client.id)
-        conversation.userid = DAOUtils.get_value_from_data(data, 'userid', client_context.userid)
-        conversation.botid = DAOUtils.get_value_from_data(data, 'botid', client_context.bot.id)
-        conversation.brainid = DAOUtils.get_value_from_data(data, 'brainid', client_context.brain.id)
+        conversation.id = DAOUtils.get_value_from_data(data, "_id")
+        conversation.clientid = DAOUtils.get_value_from_data(
+            data, "clientid", client_context.client.id
+        )
+        conversation.userid = DAOUtils.get_value_from_data(
+            data, "userid", client_context.userid
+        )
+        conversation.botid = DAOUtils.get_value_from_data(
+            data, "botid", client_context.bot.id
+        )
+        conversation.brainid = DAOUtils.get_value_from_data(
+            data, "brainid", client_context.brain.id
+        )
 
-        if 'conversation' in data:
+        if "conversation" in data:
             conversation.conversation = Convo(client_context)
-            conversation.conversation.from_json(client_context, data['conversation'])
+            conversation.conversation.from_json(client_context, data["conversation"])
 
         return conversation

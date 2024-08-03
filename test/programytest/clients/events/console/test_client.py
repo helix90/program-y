@@ -1,8 +1,9 @@
 import unittest
 
+from programytest.clients.arguments import MockArgumentParser
+
 from programy.clients.events.console.client import ConsoleBotClient
 from programy.clients.render.text import TextRenderer
-from programytest.clients.arguments import MockArgumentParser
 
 
 class MockConsoleBotClient(ConsoleBotClient):
@@ -30,7 +31,7 @@ class MockConsoleBotClient(ConsoleBotClient):
             return self.question
 
     def process_response(self, client_context, response):
-        super (MockConsoleBotClient, self).process_response(client_context, response)
+        super(MockConsoleBotClient, self).process_response(client_context, response)
         self.response += response
 
     def process_question_answer(self, client_context):
@@ -56,7 +57,7 @@ class ConsoleBotClientTests(unittest.TestCase):
         self.assertIsNotNone(client)
         self.assertIsNotNone(client.arguments)
         self.assertEqual(client.id, "Console")
-        self.assertEqual('ProgramY AIML2.0 Client', client.get_description())
+        self.assertEqual("ProgramY AIML2.0 Client", client.get_description())
 
         self.assertTrue(client._render_callback())
         self.assertIsInstance(client.renderer, TextRenderer)
@@ -84,7 +85,9 @@ class ConsoleBotClientTests(unittest.TestCase):
         client._arguments.context = False
         context = client.create_client_context("console")
         client.display_startup_messages(context)
-        self.assertEqual("None, App: vNone Grammar vNone, initiated NoneHello", client.response)
+        self.assertEqual(
+            "None, App: vNone Grammar vNone, initiated NoneHello", client.response
+        )
 
     def test_process_question_answer(self):
         arguments = MockArgumentParser()
@@ -103,7 +106,7 @@ class ConsoleBotClientTests(unittest.TestCase):
         client.question = None
         context = client.create_client_context("console")
         client.process_question_answer(context)
-        self.assertEqual('', client.response)
+        self.assertEqual("", client.response)
 
     def test_process_question_answer_with_context(self):
         arguments = MockArgumentParser()
@@ -120,4 +123,3 @@ class ConsoleBotClientTests(unittest.TestCase):
         client = MockConsoleBotClient(arguments)
         client.arguments._no_loop = True
         client.run()
-

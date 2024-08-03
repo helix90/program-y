@@ -1,10 +1,11 @@
 import unittest
 
 import programytest.storage.engines as Engines
+from programytest.storage.asserts.store.assert_duplicates import DuplicateStoreAsserts
+
 from programy.storage.stores.sql.config import SQLStorageConfiguration
 from programy.storage.stores.sql.engine import SQLStorageEngine
 from programy.storage.stores.sql.store.duplicates import SQLDuplicatesStore
-from programytest.storage.asserts.store.assert_duplicates import DuplicateStoreAsserts
 
 
 class SQLDuplicatesStoreTests(DuplicateStoreAsserts):

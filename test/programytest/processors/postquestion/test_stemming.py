@@ -1,7 +1,8 @@
 import unittest
 
-from programy.processors.postquestion.stemming import StemmingPostQuestionProcessor
 from programytest.client import TestClient
+
+from programy.processors.postquestion.stemming import StemmingPostQuestionProcessor
 
 
 class MockBrain(object):
@@ -27,7 +28,9 @@ class StemmingTests(unittest.TestCase):
         client = TestClient()
         client_context = client.create_client_context("user1")
         tokenizer = client_context.brain.tokenizer
-        client_context._brain = MockBrain("My troubl with cat", "Stemming is working", client_context)
+        client_context._brain = MockBrain(
+            "My troubl with cat", "Stemming is working", client_context
+        )
         client_context._brain.tokenizer = tokenizer
 
         processor = StemmingPostQuestionProcessor()
@@ -40,7 +43,9 @@ class StemmingTests(unittest.TestCase):
         client = TestClient()
         client_context = client.create_client_context("user1")
         tokenizer = client_context.brain.tokenizer
-        client_context._brain = MockBrain("Something else", "Stemming is working", client_context)
+        client_context._brain = MockBrain(
+            "Something else", "Stemming is working", client_context
+        )
         client_context._brain.tokenizer = tokenizer
 
         processor = StemmingPostQuestionProcessor()

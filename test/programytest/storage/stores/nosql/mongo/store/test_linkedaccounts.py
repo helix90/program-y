@@ -1,10 +1,15 @@
 import unittest
 
 import programytest.storage.engines as Engines
+from programytest.storage.asserts.store.assert_linkedaccount import (
+    LinkedAccountStoreAsserts,
+)
+
 from programy.storage.stores.nosql.mongo.config import MongoStorageConfiguration
 from programy.storage.stores.nosql.mongo.engine import MongoStorageEngine
-from programy.storage.stores.nosql.mongo.store.linkedaccounts import MongoLinkedAccountStore
-from programytest.storage.asserts.store.assert_linkedaccount import LinkedAccountStoreAsserts
+from programy.storage.stores.nosql.mongo.store.linkedaccounts import (
+    MongoLinkedAccountStore,
+)
 
 
 class MongoLinkedAccountStoreTests(LinkedAccountStoreAsserts):

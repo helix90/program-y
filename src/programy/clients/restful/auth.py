@@ -14,8 +14,9 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
+
 from programy.clients.restful.config import RestConfiguration
+from programy.utils.logging.ylogger import YLogger
 
 
 class RestAuthorizationHandler:
@@ -25,25 +26,30 @@ class RestAuthorizationHandler:
         self._configuration = configuration
 
     def initialise(self, client):
-        pass    # pragma: no cover
+        pass  # pragma: no cover
 
     @staticmethod
     def load_authorisation(client):
         if client.configuration.client_configuration.authorization is not None:
-            if client.configuration.client_configuration.authorization == 'Basic':
+            if client.configuration.client_configuration.authorization == "Basic":
                 YLogger.info(client, "Loading Authorization - Basic")
-                auth = RestBasicAuthorizationHandler(client.configuration.client_configuration)
+                auth = RestBasicAuthorizationHandler(
+                    client.configuration.client_configuration
+                )
                 auth.initialise(client)
                 return auth
             else:
-                YLogger.error(client, "Unsupported Authentication [%s]",
-                              client.configuration.client_configuration.authorization)
+                YLogger.error(
+                    client,
+                    "Unsupported Authentication [%s]",
+                    client.configuration.client_configuration.authorization,
+                )
         return None
 
 
 class RestBasicAuthorizationHandler(RestAuthorizationHandler):
     BASIC = "Basic"
-    BASIC_AUTH_TOKEN = 'BASIC_AUTH_TOKEN'
+    BASIC_AUTH_TOKEN = "BASIC_AUTH_TOKEN"
 
     def __init__(self, configuration: RestConfiguration):
         RestAuthorizationHandler.__init__(self, configuration)
@@ -51,17 +57,24 @@ class RestBasicAuthorizationHandler(RestAuthorizationHandler):
 
     @staticmethod
     def get_auth_token_from_license_keys(client_context):
-        return client_context.client.license_keys.get_key(RestBasicAuthorizationHandler.BASIC_AUTH_TOKEN)
+        return client_context.client.license_keys.get_key(
+            RestBasicAuthorizationHandler.BASIC_AUTH_TOKEN
+        )
 
     @staticmethod
     def add_authorisation_header(client_context, headers):
-        headers[RestBasicAuthorizationHandler.AUTHORIZATION] = "Basic %s" % \
-                                                               client_context.client.license_keys.get_key(
-                                                                   RestBasicAuthorizationHandler.BASIC_AUTH_TOKEN)
+        headers[RestBasicAuthorizationHandler.AUTHORIZATION] = (
+            "Basic %s"
+            % client_context.client.license_keys.get_key(
+                RestBasicAuthorizationHandler.BASIC_AUTH_TOKEN
+            )
+        )
 
     @staticmethod
     def get_license_key(client):
-        return client.license_keys.get_key(RestBasicAuthorizationHandler.BASIC_AUTH_TOKEN)
+        return client.license_keys.get_key(
+            RestBasicAuthorizationHandler.BASIC_AUTH_TOKEN
+        )
 
     def initialise(self, client):
         self._basic_auth_token = RestBasicAuthorizationHandler.get_license_key(client)

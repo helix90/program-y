@@ -1,10 +1,11 @@
 import unittest
 
+from programytest.client import TestClient
+
+from programy.activate import Activatable
 from programy.config.bot.spelling import BotSpellingConfiguration
 from programy.dialog.sentence import Sentence
 from programy.spelling.base import SpellingChecker
-from programytest.client import TestClient
-from programy.activate import Activatable
 
 
 class MockSpellingChecker(SpellingChecker):
@@ -19,7 +20,7 @@ class MockSpellingChecker(SpellingChecker):
 class MockBrain(object):
 
     def __init__(self):
-        self.id = 'id'
+        self.id = "id"
         self.tokenizer = None
 
     def ask_question(self, client_context, each_sentence):
@@ -31,11 +32,15 @@ class SpellingCheckerTests(unittest.TestCase):
     def test_initiate_spellchecker(self):
 
         spelling_config = BotSpellingConfiguration()
-        spelling_config._classname = "programytest.spelling.test_base.MockSpellingChecker"
+        spelling_config._classname = (
+            "programytest.spelling.test_base.MockSpellingChecker"
+        )
 
         storage_factory = None
 
-        spell_checker = SpellingChecker.initiate_spellchecker(spelling_config, storage_factory)
+        spell_checker = SpellingChecker.initiate_spellchecker(
+            spelling_config, storage_factory
+        )
 
         self.assertIsNotNone(spell_checker)
 
@@ -46,29 +51,39 @@ class SpellingCheckerTests(unittest.TestCase):
 
         storage_factory = None
 
-        spell_checker = SpellingChecker.initiate_spellchecker(spelling_config, storage_factory)
+        spell_checker = SpellingChecker.initiate_spellchecker(
+            spelling_config, storage_factory
+        )
 
         self.assertIsNone(spell_checker)
 
     def test_initiate_spellchecker_invalid_classname(self):
 
         spelling_config = BotSpellingConfiguration()
-        spelling_config._classname = "programytest.spelling.test_base.InvalidSpellingChecker"
+        spelling_config._classname = (
+            "programytest.spelling.test_base.InvalidSpellingChecker"
+        )
 
         storage_factory = None
 
-        spell_checker = SpellingChecker.initiate_spellchecker(spelling_config, storage_factory)
+        spell_checker = SpellingChecker.initiate_spellchecker(
+            spelling_config, storage_factory
+        )
 
         self.assertIsNone(spell_checker)
-        
+
     def test_check_spelling_before_true(self):
         spelling_config = BotSpellingConfiguration()
-        spelling_config._classname = "programytest.spelling.test_base.MockSpellingChecker"
+        spelling_config._classname = (
+            "programytest.spelling.test_base.MockSpellingChecker"
+        )
         spelling_config._check_before = True
 
         storage_factory = None
 
-        spell_checker = SpellingChecker.initiate_spellchecker(spelling_config, storage_factory)
+        spell_checker = SpellingChecker.initiate_spellchecker(
+            spelling_config, storage_factory
+        )
 
         client = TestClient()
         client_context = client.create_client_context("user1")
@@ -81,12 +96,16 @@ class SpellingCheckerTests(unittest.TestCase):
 
     def test_check_spelling_before_false(self):
         spelling_config = BotSpellingConfiguration()
-        spelling_config._classname = "programytest.spelling.test_base.MockSpellingChecker"
+        spelling_config._classname = (
+            "programytest.spelling.test_base.MockSpellingChecker"
+        )
         spelling_config._check_before = False
 
         storage_factory = None
 
-        spell_checker = SpellingChecker.initiate_spellchecker(spelling_config, storage_factory)
+        spell_checker = SpellingChecker.initiate_spellchecker(
+            spelling_config, storage_factory
+        )
 
         client = TestClient()
         client_context = client.create_client_context("user1")
@@ -99,12 +118,16 @@ class SpellingCheckerTests(unittest.TestCase):
 
     def test_check_spelling_switched_off(self):
         spelling_config = BotSpellingConfiguration()
-        spelling_config._classname = "programytest.spelling.test_base.MockSpellingChecker"
+        spelling_config._classname = (
+            "programytest.spelling.test_base.MockSpellingChecker"
+        )
         spelling_config._check_before = True
 
         storage_factory = None
 
-        spell_checker = SpellingChecker.initiate_spellchecker(spelling_config, storage_factory)
+        spell_checker = SpellingChecker.initiate_spellchecker(
+            spelling_config, storage_factory
+        )
         spell_checker.active = Activatable.OFF
 
         client = TestClient()
@@ -118,13 +141,17 @@ class SpellingCheckerTests(unittest.TestCase):
 
     def test_check_spelling_and_retry_true(self):
         spelling_config = BotSpellingConfiguration()
-        spelling_config._classname = "programytest.spelling.test_base.MockSpellingChecker"
+        spelling_config._classname = (
+            "programytest.spelling.test_base.MockSpellingChecker"
+        )
         spelling_config._check_and_retry = True
 
         storage_factory = None
 
-        spell_checker = SpellingChecker.initiate_spellchecker(spelling_config, storage_factory)
-    
+        spell_checker = SpellingChecker.initiate_spellchecker(
+            spelling_config, storage_factory
+        )
+
         client = TestClient()
         client_context = client.create_client_context("user1")
         tokenizer = client_context.brain.tokenizer
@@ -140,12 +167,16 @@ class SpellingCheckerTests(unittest.TestCase):
 
     def test_check_spelling_and_retry_false(self):
         spelling_config = BotSpellingConfiguration()
-        spelling_config._classname = "programytest.spelling.test_base.MockSpellingChecker"
+        spelling_config._classname = (
+            "programytest.spelling.test_base.MockSpellingChecker"
+        )
         spelling_config._check_and_retry = False
 
         storage_factory = None
 
-        spell_checker = SpellingChecker.initiate_spellchecker(spelling_config, storage_factory)
+        spell_checker = SpellingChecker.initiate_spellchecker(
+            spelling_config, storage_factory
+        )
 
         client = TestClient()
         client_context = client.create_client_context("user1")
@@ -161,12 +192,16 @@ class SpellingCheckerTests(unittest.TestCase):
 
     def test_check_spelling_and_retry_switched_off(self):
         spelling_config = BotSpellingConfiguration()
-        spelling_config._classname = "programytest.spelling.test_base.MockSpellingChecker"
+        spelling_config._classname = (
+            "programytest.spelling.test_base.MockSpellingChecker"
+        )
         spelling_config._check_and_retry = False
 
         storage_factory = None
 
-        spell_checker = SpellingChecker.initiate_spellchecker(spelling_config, storage_factory)
+        spell_checker = SpellingChecker.initiate_spellchecker(
+            spelling_config, storage_factory
+        )
         spell_checker.active = Activatable.OFF
 
         client = TestClient()

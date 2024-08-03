@@ -14,9 +14,10 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
-from programy.parser.template.nodes.base import TemplateNode
+
 from programy.parser.exceptions import ParserException
+from programy.parser.template.nodes.base import TemplateNode
+from programy.utils.logging.ylogger import YLogger
 
 
 class TemplateAuthoriseNode(TemplateNode):
@@ -47,12 +48,21 @@ class TemplateAuthoriseNode(TemplateNode):
         # in the tag and exists then we can execute the inner children
         # Assumption is that user has been authenticated and passed and is value
         if client_context.brain.security.authorisation is not None:
-            if client_context.brain.security.authorisation.authorise(client_context.userid, self.role) is False:
+            if (
+                client_context.brain.security.authorisation.authorise(
+                    client_context.userid, self.role
+                )
+                is False
+            ):
                 if self._denied_srai is not None:
                     srai_text = self._denied_srai
                 else:
-                    srai_text = client_context.brain.security.authorisation.get_default_denied_srai()
-                resolved = client_context.bot.ask_question(client_context, srai_text, srai=True)
+                    srai_text = (
+                        client_context.brain.security.authorisation.get_default_denied_srai()
+                    )
+                resolved = client_context.bot.ask_question(
+                    client_context, srai_text, srai=True
+                )
                 YLogger.debug(self, "[%s] resolved to [%s]", self.to_string(), resolved)
                 return resolved
 
@@ -70,13 +80,13 @@ class TemplateAuthoriseNode(TemplateNode):
         return text
 
     def to_xml(self, client_context):
-        xml = '<authorise'
+        xml = "<authorise"
         xml += ' role="%s"' % self._role
         if self._denied_srai is not None:
             xml += ' denied_srai="%s"' % self._denied_srai
-        xml += '>'
+        xml += ">"
         xml += self.children_to_xml(client_context)
-        xml += '</authorise>'
+        xml += "</authorise>"
         return xml
 
     #######################################################################################################
@@ -85,8 +95,8 @@ class TemplateAuthoriseNode(TemplateNode):
 
     def parse_expression(self, graph, expression):
 
-        if 'role' in expression.attrib:
-            self._role = expression.attrib['role']
+        if "role" in expression.attrib:
+            self._role = expression.attrib["role"]
 
         if self._role is None:
             raise ParserException("AUTHORISE role attribute missing !")
@@ -94,8 +104,8 @@ class TemplateAuthoriseNode(TemplateNode):
         if self._role == "":
             raise ParserException("AUTHORISE role attribute empty !")
 
-        if 'denied_srai' in expression.attrib:
-            self._denied_srai = expression.attrib['denied_srai']
+        if "denied_srai" in expression.attrib:
+            self._denied_srai = expression.attrib["denied_srai"]
 
             if self._denied_srai == "":
                 raise ParserException("AUTHORISE denied_srai attribute empty !")

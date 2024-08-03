@@ -14,9 +14,10 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
-from programy.utils.geo.google import GoogleMaps
+
 from programy.extensions.base import Extension
+from programy.utils.geo.google import GoogleMaps
+from programy.utils.logging.ylogger import YLogger
 
 
 class GoogleMapsExtension(Extension):
@@ -38,20 +39,31 @@ class GoogleMapsExtension(Extension):
                 googlemaps = self.get_geo_locator()
 
                 if command == "DISTANCE":
-                    distance = googlemaps.get_distance_between_addresses(from_place, to_place)
+                    distance = googlemaps.get_distance_between_addresses(
+                        from_place, to_place
+                    )
                     if distance is not None:
                         return self._format_distance_for_programy(distance)
 
                 elif command == "DIRECTIONS":
-                    directions = googlemaps.get_directions_between_addresses(from_place, to_place)
+                    directions = googlemaps.get_directions_between_addresses(
+                        from_place, to_place
+                    )
                     if directions is not None:
                         return self._format_directions_for_programy(directions)
 
                 else:
-                    YLogger.error(client_context, "Unknown Google Maps Extension command [%s]", command)
+                    YLogger.error(
+                        client_context,
+                        "Unknown Google Maps Extension command [%s]",
+                        command,
+                    )
 
             else:
-                YLogger.error(client_context, "Invalid Google Maps Extension command DISTANCE|DIRECTIONS TO FROM")
+                YLogger.error(
+                    client_context,
+                    "Invalid Google Maps Extension command DISTANCE|DIRECTIONS TO FROM",
+                )
 
         except Exception as e:
             YLogger.exception(client_context, "Failed to execute maps extension", e)
@@ -72,7 +84,7 @@ class GoogleMapsExtension(Extension):
             frac = "0"
 
         units = distance_splits[1]
-        if units == 'mi':
+        if units == "mi":
             units = "miles"
 
         return "DISTANCE DEC %s FRAC %s UNITS %s" % (dec, frac, units)

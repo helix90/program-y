@@ -14,14 +14,15 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 from programy.parser.exceptions import ParserException
-from programy.parser.pattern.nodes.base import PatternNode
 from programy.parser.pattern.equalsmatch import EqualsMatch
+from programy.parser.pattern.nodes.base import PatternNode
 
 
 class PatternWordNode(PatternNode):
 
-    def __init__(self, word, userid='*'):
+    def __init__(self, word, userid="*"):
         PatternNode.__init__(self, userid)
         self._word = word
 
@@ -39,12 +40,16 @@ class PatternWordNode(PatternNode):
         else:
             string += '<word word="%s">' % self.word
         string += super(PatternWordNode, self).to_xml(client_context, include_user)
-        string += '</word>\n'
+        string += "</word>\n"
         return string
 
     def to_string(self, verbose=True):
         if verbose is True:
-            return "WORD [%s] [%s] word=[%s]" % (self.userid, self._child_count(verbose), self.word)
+            return "WORD [%s] [%s] word=[%s]" % (
+                self.userid,
+                self._child_count(verbose),
+                self.word,
+            )
         return "WORD [%s]" % (self.word)
 
     def can_add(self, new_node):
@@ -61,7 +66,7 @@ class PatternWordNode(PatternNode):
     def equals(self, client_context, words, word_no):
         word = words.word(word_no)
 
-        if self.userid != '*':
+        if self.userid != "*":
             if self.userid != client_context.userid:
                 return EqualsMatch(False, word_no)
 

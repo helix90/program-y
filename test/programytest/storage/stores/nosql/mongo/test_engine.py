@@ -1,39 +1,52 @@
 import unittest.mock
 
 import programytest.storage.engines as Engines
+from programytest.storage.test_utils import StorageEngineTestUtils
+
 from programy.storage.stores.nosql.mongo.config import MongoStorageConfiguration
 from programy.storage.stores.nosql.mongo.engine import MongoStorageEngine
 from programy.storage.stores.nosql.mongo.store.categories import MongoCategoryStore
-from programy.storage.stores.nosql.mongo.store.conversations import MongoConversationStore
+from programy.storage.stores.nosql.mongo.store.conversations import (
+    MongoConversationStore,
+)
 from programy.storage.stores.nosql.mongo.store.duplicates import MongoDuplicatesStore
 from programy.storage.stores.nosql.mongo.store.errors import MongoErrorsStore
 from programy.storage.stores.nosql.mongo.store.learnf import MongoLearnfStore
 from programy.storage.stores.nosql.mongo.store.licensekeys import MongoLicenseKeysStore
-from programy.storage.stores.nosql.mongo.store.linkedaccounts import MongoLinkedAccountStore
+from programy.storage.stores.nosql.mongo.store.linkedaccounts import (
+    MongoLinkedAccountStore,
+)
 from programy.storage.stores.nosql.mongo.store.links import MongoLinkStore
-from programy.storage.stores.nosql.mongo.store.lookups import MongoDenormalStore
-from programy.storage.stores.nosql.mongo.store.lookups import MongoGenderStore
-from programy.storage.stores.nosql.mongo.store.lookups import MongoNormalStore
-from programy.storage.stores.nosql.mongo.store.lookups import MongoPerson2Store
-from programy.storage.stores.nosql.mongo.store.lookups import MongoPersonStore
+from programy.storage.stores.nosql.mongo.store.lookups import (
+    MongoDenormalStore,
+    MongoGenderStore,
+    MongoNormalStore,
+    MongoPerson2Store,
+    MongoPersonStore,
+)
 from programy.storage.stores.nosql.mongo.store.maps import MongoMapsStore
-from programy.storage.stores.nosql.mongo.store.nodes import MongoPatternNodeStore
-from programy.storage.stores.nosql.mongo.store.nodes import MongoTemplateNodeStore
-from programy.storage.stores.nosql.mongo.store.processors import MongoPostProcessorStore
-from programy.storage.stores.nosql.mongo.store.processors import MongoPostQuestionProcessorStore
-from programy.storage.stores.nosql.mongo.store.processors import MongoPreProcessorStore
-from programy.storage.stores.nosql.mongo.store.properties import MongoDefaultVariablesStore
-from programy.storage.stores.nosql.mongo.store.properties import MongoPropertyStore
-from programy.storage.stores.nosql.mongo.store.properties import MongoRegexesStore
+from programy.storage.stores.nosql.mongo.store.nodes import (
+    MongoPatternNodeStore,
+    MongoTemplateNodeStore,
+)
+from programy.storage.stores.nosql.mongo.store.oobs import MongoOOBStore
+from programy.storage.stores.nosql.mongo.store.processors import (
+    MongoPostProcessorStore,
+    MongoPostQuestionProcessorStore,
+    MongoPreProcessorStore,
+)
+from programy.storage.stores.nosql.mongo.store.properties import (
+    MongoDefaultVariablesStore,
+    MongoPropertyStore,
+    MongoRegexesStore,
+)
 from programy.storage.stores.nosql.mongo.store.rdfs import MongoRDFsStore
 from programy.storage.stores.nosql.mongo.store.sets import MongoSetsStore
 from programy.storage.stores.nosql.mongo.store.spelling import MongoSpellingStore
+from programy.storage.stores.nosql.mongo.store.triggers import MongoTriggerStore
 from programy.storage.stores.nosql.mongo.store.twitter import MongoTwitterStore
 from programy.storage.stores.nosql.mongo.store.usergroups import MongoUserGroupsStore
 from programy.storage.stores.nosql.mongo.store.users import MongoUserStore
-from programy.storage.stores.nosql.mongo.store.triggers import MongoTriggerStore
-from programy.storage.stores.nosql.mongo.store.oobs import MongoOOBStore
-from programytest.storage.test_utils import StorageEngineTestUtils
 
 
 class MongoStorageEngineTests(StorageEngineTestUtils):
@@ -72,7 +85,9 @@ class MongoStorageEngineTests(StorageEngineTestUtils):
         self.assertIsInstance(engine.template_nodes_store(), MongoTemplateNodeStore)
         self.assertIsInstance(engine.preprocessors_store(), MongoPreProcessorStore)
         self.assertIsInstance(engine.postprocessors_store(), MongoPostProcessorStore)
-        self.assertIsInstance(engine.postquestionprocessors_store(), MongoPostQuestionProcessorStore)
+        self.assertIsInstance(
+            engine.postquestionprocessors_store(), MongoPostQuestionProcessorStore
+        )
         self.assertIsInstance(engine.usergroups_store(), MongoUserGroupsStore)
         self.assertIsInstance(engine.user_store(), MongoUserStore)
         self.assertIsInstance(engine.linked_account_store(), MongoLinkedAccountStore)

@@ -14,15 +14,15 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from abc import ABC
-from abc import abstractmethod
-from programy.utils.logging.ylogger import YLogger
+
+from abc import ABC, abstractmethod
+
 from programy.clients.client import BotClient
-from programy.clients.restful.config import RestConfiguration
-from programy.clients.restful.apihandlers import APIHandler_V1_0
-from programy.clients.restful.apihandlers import APIHandler_V2_0
+from programy.clients.restful.apihandlers import APIHandler_V1_0, APIHandler_V2_0
 from programy.clients.restful.apikeys import APIKeysHandler
 from programy.clients.restful.auth import RestAuthorizationHandler
+from programy.clients.restful.config import RestConfiguration
+from programy.utils.logging.ylogger import YLogger
 
 
 class RestBotClient(BotClient, ABC):
@@ -48,25 +48,31 @@ class RestBotClient(BotClient, ABC):
         self._api_keys.load_api_keys()
         self._authorization = RestAuthorizationHandler.load_authorisation(self)
 
-    def get_variable(self, rest_request, name, method='GET'):
-        if method == 'GET':
+    def get_variable(self, rest_request, name, method="GET"):
+        if method == "GET":
             if name not in rest_request.args or rest_request.args[name] is None:
                 YLogger.error(self, "'%s' missing from GET request", name)
-                self.server_abort(message="'%s' missing from GET request"%name, status_code=400)
+                self.server_abort(
+                    message="'%s' missing from GET request" % name, status_code=400
+                )
             if isinstance(rest_request.args[name], list):
                 return rest_request.args[name][0]
             else:
                 return rest_request.args[name]
 
-        elif method == 'POST':
+        elif method == "POST":
             if name not in rest_request.json or rest_request.json[name] is None:
                 YLogger.error(self, "'%s' missing from POST request", name)
-                self.server_abort(message="'%s' missing from POST request"%name, status_code=400)
+                self.server_abort(
+                    message="'%s' missing from POST request" % name, status_code=400
+                )
             return rest_request.json[name]
 
         else:
             YLogger.error(self, "Invalid REST request type '%s'", method)
-            self.server_abort(message="Invalid REST request type '%s'"%method, status_code=400)
+            self.server_abort(
+                message="Invalid REST request type '%s'" % method, status_code=400
+            )
 
     @abstractmethod
     def server_abort(self, message, status_code):
@@ -79,31 +85,39 @@ class RestBotClient(BotClient, ABC):
     def _get_metadata(self, client_context, metadata):
 
         if client_context.brain.properties.has_property("fullname"):
-            metadata['botName'] = client_context.brain.properties.property("fullname")
+            metadata["botName"] = client_context.brain.properties.property("fullname")
         else:
-            metadata['botName'] = "Program-y"
+            metadata["botName"] = "Program-y"
 
         if client_context.brain.properties.has_property("app_version"):
-            metadata['version'] = client_context.brain.properties.property("app_version")
+            metadata["version"] = client_context.brain.properties.property(
+                "app_version"
+            )
         else:
-            metadata['version'] = "1.0.0"
+            metadata["version"] = "1.0.0"
 
         if client_context.brain.properties.has_property("copyright"):
-            metadata['copyright'] = client_context.brain.properties.property("copyright")
+            metadata["copyright"] = client_context.brain.properties.property(
+                "copyright"
+            )
         else:
-            metadata['copyright'] = "Copyright 2016-2020 keithsterling.com"
+            metadata["copyright"] = "Copyright 2016-2020 keithsterling.com"
 
         if client_context.brain.properties.has_property("botmaster"):
-            metadata['authors'] = [client_context.brain.properties.property("botmaster")]
+            metadata["authors"] = [
+                client_context.brain.properties.property("botmaster")
+            ]
         else:
-            metadata['authors'] = ["Keith Sterling"]
+            metadata["authors"] = ["Keith Sterling"]
 
     def ask_question(self, userid, question, metadata=None):
         response = ""
         try:
             self._questions += 1
             client_context = self.create_client_context(userid)
-            response = client_context.bot.ask_question(client_context, question, responselogger=self)
+            response = client_context.bot.ask_question(
+                client_context, question, responselogger=self
+            )
 
             if metadata is not None:
                 self._get_metadata(client_context, metadata)
@@ -122,7 +136,7 @@ class RestBotClient(BotClient, ABC):
         if self._api_keys is not None:
             if self._api_keys.use_api_keys():
                 if self._api_keys.verify_api_key_usage(request) is False:
-                    return 'Unauthorized access', 401
+                    return "Unauthorized access", 401
 
         if version == 1.0:
             return self._v1_0_handler.process_request(self, request)
@@ -131,7 +145,7 @@ class RestBotClient(BotClient, ABC):
             return self._v2_0_handler.process_request(self, request)
 
         else:
-            return 'Invalid API version', 400
+            return "Invalid API version", 400
 
     def dump_request(self, request):
         YLogger.debug(self, str(request))

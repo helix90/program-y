@@ -13,7 +13,7 @@ class GenderAIMLTestClient(TestClient):
         super(GenderAIMLTestClient, self).load_storage()
         self.add_default_stores()
         self.add_categories_store([os.path.dirname(__file__)])
-        self.add_gender_store(os.path.dirname(__file__)+ os.sep + "gender.txt")
+        self.add_gender_store(os.path.dirname(__file__) + os.sep + "gender.txt")
 
 
 class GenderAIMLTests(unittest.TestCase):
@@ -23,6 +23,8 @@ class GenderAIMLTests(unittest.TestCase):
         self._client_context = client.create_client_context("testid")
 
     def test_gender(self):
-        response = self._client_context.bot.ask_question(self._client_context,  "TEST GENDER")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "TEST GENDER"
+        )
         self.assertIsNotNone(response)
         self.assertEqual(response, "This goes to her.")

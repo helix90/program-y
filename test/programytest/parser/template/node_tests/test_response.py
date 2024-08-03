@@ -1,10 +1,11 @@
 import xml.etree.ElementTree as ET
 
+from programytest.parser.base import ParserTestsBaseClass
+
 from programy.dialog.conversation import Conversation
 from programy.dialog.question import Question
 from programy.parser.template.nodes.base import TemplateNode
 from programy.parser.template.nodes.response import TemplateResponseNode
-from programytest.parser.base import ParserTestsBaseClass
 
 
 class MockTemplateResponseNode(TemplateResponseNode):
@@ -13,6 +14,7 @@ class MockTemplateResponseNode(TemplateResponseNode):
 
     def resolve_to_string(self, context):
         raise Exception("This is an error")
+
 
 class TemplateResponseNodeTests(ParserTestsBaseClass):
 
@@ -67,7 +69,9 @@ class TemplateResponseNodeTests(ParserTestsBaseClass):
         question.current_sentence()._response = "Hello2 response"
         conversation.record_dialog(question)
 
-        self._client_context.bot._conversation_mgr._conversations["testid"] = conversation
+        self._client_context.bot._conversation_mgr._conversations["testid"] = (
+            conversation
+        )
 
         response = root.resolve(self._client_context)
         self.assertIsNotNone(response)
@@ -96,7 +100,9 @@ class TemplateResponseNodeTests(ParserTestsBaseClass):
         question.current_sentence()._response = "Hello2 response"
         conversation.record_dialog(question)
 
-        self._client_context.bot._conversation_mgr._conversations["testid"] = conversation
+        self._client_context.bot._conversation_mgr._conversations["testid"] = (
+            conversation
+        )
 
         response = root.resolve(self._client_context)
         self.assertIsNotNone(response)

@@ -1,10 +1,12 @@
 import unittest
 from unittest.mock import patch
+
 import programytest.storage.engines as Engines
+from programytest.storage.asserts.store.assert_oobs import OOBsStoreAsserts
+
 from programy.storage.stores.sql.config import SQLStorageConfiguration
 from programy.storage.stores.sql.engine import SQLStorageEngine
 from programy.storage.stores.sql.store.oobs import SQLOOBsStore
-from programytest.storage.asserts.store.assert_oobs import OOBsStoreAsserts
 
 
 class SQLOOBsStoreTests(OOBsStoreAsserts):
@@ -31,7 +33,10 @@ class SQLOOBsStoreTests(OOBsStoreAsserts):
         raise Exception("Mock Exception")
 
     @unittest.skipIf(Engines.sql is False, Engines.sql_disabled)
-    @patch("programy.utils.classes.loader.ClassLoader.instantiate_class", patch_instantiate_class)
+    @patch(
+        "programy.utils.classes.loader.ClassLoader.instantiate_class",
+        patch_instantiate_class,
+    )
     def test_load_oobs_exception(self):
         config = SQLStorageConfiguration()
         engine = SQLStorageEngine(config)
@@ -62,8 +67,10 @@ class SQLOOBsStoreTests(OOBsStoreAsserts):
         raise Exception("Mock Exception")
 
     @unittest.skipIf(Engines.sql is False, Engines.sql_disabled)
-    @patch("programy.storage.stores.sql.store.oobs.SQLOOBsStore._load_oobs_from_file",
-           patch_load_oobs_from_file)
+    @patch(
+        "programy.storage.stores.sql.store.oobs.SQLOOBsStore._load_oobs_from_file",
+        patch_load_oobs_from_file,
+    )
     def test_upload_from_file_exception(self):
         config = SQLStorageConfiguration()
         engine = SQLStorageEngine(config)

@@ -15,10 +15,11 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 """
-from programy.utils.logging.ylogger import YLogger
+
 from programy.extensions.base import Extension
-from programy.parser.template.nodes.get import TemplateGetNode
 from programy.parser.template.nodes.bot import TemplateBotNode
+from programy.parser.template.nodes.get import TemplateGetNode
+from programy.utils.logging.ylogger import YLogger
 
 
 class PropertiesAdminExtension(Extension):
@@ -31,13 +32,15 @@ class PropertiesAdminExtension(Extension):
 
         splits = data.split()
         command = splits[0]
-        if command == 'GET':
+        if command == "GET":
 
             get_command = splits[1]
-            if get_command == 'BOT':
+            if get_command == "BOT":
                 if len(splits) == 3:
                     var_name = splits[2]
-                    properties = TemplateBotNode.get_bot_variable(client_context, var_name)
+                    properties = TemplateBotNode.get_bot_variable(
+                        client_context, var_name
+                    )
                 else:
                     return "Missing variable name for GET BOT"
 
@@ -46,23 +49,27 @@ class PropertiesAdminExtension(Extension):
                     return "Invalid syntax for GET USER, LOCAL or GLOBAL"
 
                 var_type = splits[2].upper()
-                if var_type not in ['LOCAL', 'GLOBAL']:
+                if var_type not in ["LOCAL", "GLOBAL"]:
                     return "Invalid GET USER var type [%s]" % var_type
 
                 if len(splits) < 4:
                     return "Missing variable name for GET USER"
                 var_name = splits[3]
 
-                if var_type == 'LOCAL':
-                    properties = TemplateGetNode.get_property_value(client_context, True, var_name)
+                if var_type == "LOCAL":
+                    properties = TemplateGetNode.get_property_value(
+                        client_context, True, var_name
+                    )
 
                 else:
-                    properties = TemplateGetNode.get_property_value(client_context, False, var_name)
+                    properties = TemplateGetNode.get_property_value(
+                        client_context, False, var_name
+                    )
 
             else:
                 return "Unknown GET command [%s]" % get_command
 
-        elif command == 'BOT':
+        elif command == "BOT":
             properties += "Properties:<br /><ul>"
             for pair in client_context.brain.properties.pairs:
                 properties += "<li>%s = %s</li>" % (pair[0], pair[1])

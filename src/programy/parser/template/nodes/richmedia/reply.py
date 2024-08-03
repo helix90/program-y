@@ -14,9 +14,10 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
+from programy.parser.exceptions import ParserException
 from programy.parser.template.nodes.base import TemplateNode
 from programy.utils.text.text import TextUtils
-from programy.parser.exceptions import ParserException
 
 
 class TemplateReplyNode(TemplateNode):
@@ -30,7 +31,9 @@ class TemplateReplyNode(TemplateNode):
         resolved = "<reply>"
         resolved += "<text>%s</text>" % self._text.resolve(client_context)
         if self._postback is not None:
-            resolved += "<postback>%s</postback>" % self._postback.resolve(client_context)
+            resolved += "<postback>%s</postback>" % self._postback.resolve(
+                client_context
+            )
         resolved += "</reply>"
         return resolved
 
@@ -44,11 +47,11 @@ class TemplateReplyNode(TemplateNode):
     #
 
     def parse_expression(self, graph, expression):
-        if 'text' in expression.attrib:
-            self._text = graph.get_word_node(expression.attrib['text'])
+        if "text" in expression.attrib:
+            self._text = graph.get_word_node(expression.attrib["text"])
 
-        if 'postback' in expression.attrib:
-            self._postback = graph.get_word_node(expression.attrib['postback'])
+        if "postback" in expression.attrib:
+            self._postback = graph.get_word_node(expression.attrib["postback"])
 
         head_text = self.get_text_from_element(expression)
         self.parse_text(graph, head_text)
@@ -56,9 +59,9 @@ class TemplateReplyNode(TemplateNode):
         for child in expression:
             tag_name = TextUtils.tag_from_text(child.tag)
 
-            if tag_name == 'text':
+            if tag_name == "text":
                 self._text = self.parse_children_as_word_node(graph, child)
-            elif tag_name == 'postback':
+            elif tag_name == "postback":
                 self._postback = self.parse_children_as_word_node(graph, child)
             else:
                 raise ParserException("Invalid children in reply")

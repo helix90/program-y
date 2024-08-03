@@ -1,8 +1,9 @@
 import unittest
 
+from programytest.client import TestClient
+
 from programy.context import ClientContext
 from programy.dynamic.variables.datetime import GetTime
-from programytest.client import TestClient
 
 
 class GetTimeDynamicVarTests(unittest.TestCase):
@@ -15,4 +16,3 @@ class GetTimeDynamicVarTests(unittest.TestCase):
         self.assertIsNotNone(dyn_var)
         time = dyn_var.get_value(self._client_context)
         self.assertIsNotNone(time)
-

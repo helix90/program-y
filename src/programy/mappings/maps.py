@@ -14,8 +14,9 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
+
 from programy.storage.factory import StorageFactory
+from programy.utils.logging.ylogger import YLogger
 
 
 class MapCollection:
@@ -46,7 +47,7 @@ class MapCollection:
         if mapname in self._stores:
             return self._stores[mapname]
         return None
-    
+
     def add_map(self, name, the_map, map_store):
         self._maps[name.upper()] = the_map
         self._stores[name.upper()] = map_store
@@ -65,7 +66,9 @@ class MapCollection:
 
     def load(self, storage_factory):
         if storage_factory.entity_storage_engine_available(StorageFactory.MAPS) is True:
-            maps_store_engine = storage_factory.entity_storage_engine(StorageFactory.MAPS)
+            maps_store_engine = storage_factory.entity_storage_engine(
+                StorageFactory.MAPS
+            )
             try:
                 self._load_collection(maps_store_engine)
 
@@ -80,7 +83,9 @@ class MapCollection:
 
     def reload(self, storage_factory, map_name):
         if storage_factory.entity_storage_engine_available(StorageFactory.MAPS) is True:
-            maps_store_engine = storage_factory.entity_storage_engine(StorageFactory.MAPS)
+            maps_store_engine = storage_factory.entity_storage_engine(
+                StorageFactory.MAPS
+            )
             try:
                 self._reload_collection(maps_store_engine, map_name)
 

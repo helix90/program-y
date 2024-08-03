@@ -14,9 +14,10 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.storage.stores.sql.store.sqlstore import SQLStore
+
 from programy.storage.entities.duplicates import DuplicatesStore
 from programy.storage.stores.sql.dao.duplicate import Duplicate
+from programy.storage.stores.sql.store.sqlstore import SQLStore
 
 
 class SQLDuplicatesStore(SQLStore, DuplicatesStore):
@@ -33,7 +34,12 @@ class SQLDuplicatesStore(SQLStore, DuplicatesStore):
 
     def save_duplicates(self, duplicates, commit=True):
         for duplicate in duplicates:
-            db_duplicate = Duplicate(duplicate=duplicate[0], file=duplicate[1], start=duplicate[2], end=duplicate[3])
+            db_duplicate = Duplicate(
+                duplicate=duplicate[0],
+                file=duplicate[1],
+                start=duplicate[2],
+                end=duplicate[3],
+            )
             self._storage_engine.session.add(db_duplicate)
 
         self.commit(commit)

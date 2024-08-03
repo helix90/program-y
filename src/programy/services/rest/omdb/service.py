@@ -14,12 +14,13 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-import urllib.parse
+
 import os
-from programy.utils.logging.ylogger import YLogger
+import urllib.parse
+
 from programy.services.base import ServiceQuery
-from programy.services.rest.base import RESTService
-from programy.services.rest.base import RESTServiceException
+from programy.services.rest.base import RESTService, RESTServiceException
+from programy.utils.logging.ylogger import YLogger
 
 
 class OMDBTitleSearchServiceQuery(ServiceQuery):
@@ -39,16 +40,17 @@ class OMDBTitleSearchServiceQuery(ServiceQuery):
         return self._service.title_search(self._title)
 
     def aiml_response(self, response):
-        payload = response['response']['payload']
-        title = payload['Title']
-        released = payload['Released']
-        director = payload['Director']
-        writers = payload['Writer']
-        actors = payload['Actors']
-        plot = payload['Plot']
+        payload = response["response"]["payload"]
+        title = payload["Title"]
+        released = payload["Released"]
+        director = payload["Director"]
+        writers = payload["Writer"]
+        actors = payload["Actors"]
+        plot = payload["Plot"]
 
-        result = "TITLE FILM {0} RELEASED {1} DIRECTOR {2} WRITER {3} ACTORS {4} PLOT {5}".format(title, released, director,
-                                                                                          writers, actors, plot)
+        result = "TITLE FILM {0} RELEASED {1} DIRECTOR {2} WRITER {3} ACTORS {4} PLOT {5}".format(
+            title, released, director, writers, actors, plot
+        )
         YLogger.debug(self, result)
         return result
 
@@ -60,13 +62,11 @@ class OMDBServiceException(RESTServiceException):
 
 
 class OMDBService(RESTService):
-    """
-    """
-    PATTERNS = [
-        [r"TITLE\sSEARCH\s(.+)", OMDBTitleSearchServiceQuery]
-    ]
+    """ """
 
-    BASE_URL="http://www.omdbapi.com/"
+    PATTERNS = [[r"TITLE\sSEARCH\s(.+)", OMDBTitleSearchServiceQuery]]
+
+    BASE_URL = "http://www.omdbapi.com/"
 
     def __init__(self, configuration):
         RESTService.__init__(self, configuration)
@@ -76,9 +76,12 @@ class OMDBService(RESTService):
         return OMDBService.PATTERNS
 
     def initialise(self, client):
-        self._api_key = client.license_keys.get_key('OMDB_KEY')
+        self._api_key = client.license_keys.get_key("OMDB_KEY")
         if self._api_key is None:
-            YLogger.error(self, "OMDB_KEY missing from license.keys, service will not function correctly!")
+            YLogger.error(
+                self,
+                "OMDB_KEY missing from license.keys, service will not function correctly!",
+            )
 
     def get_default_aiml_file(self):
         return os.path.dirname(__file__) + os.sep + "omdb.aiml"
@@ -96,9 +99,8 @@ class OMDBService(RESTService):
 
     def title_search(self, title):
         url = self._build_title_search_url(title)
-        response = self.query('title_search', url)
+        response = self.query("title_search", url)
         return response
 
     def _response_to_json(self, api, response):
         return response.json()
-

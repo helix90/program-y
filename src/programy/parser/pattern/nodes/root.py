@@ -14,6 +14,7 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 from programy.parser.exceptions import ParserException
 from programy.parser.pattern.match import Match
 from programy.parser.pattern.nodes.base import PatternNode
@@ -21,7 +22,7 @@ from programy.parser.pattern.nodes.base import PatternNode
 
 class PatternRootNode(PatternNode):
 
-    def __init__(self, userid='*'):
+    def __init__(self, userid="*"):
         PatternNode.__init__(self, userid)
 
     def is_root(self):

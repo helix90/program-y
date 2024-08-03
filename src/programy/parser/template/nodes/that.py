@@ -14,9 +14,9 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
-from programy.parser.template.nodes.indexed import TemplateIndexedNode
 
+from programy.parser.template.nodes.indexed import TemplateIndexedNode
+from programy.utils.logging.ylogger import YLogger
 
 ######################################################################################################################
 #
@@ -39,12 +39,14 @@ class TemplateThatNode(TemplateIndexedNode):
             int_sentence = -1
         elif len(parts) == 2:
             int_question = int(parts[0])
-            if parts[1] != '*':
+            if parts[1] != "*":
                 int_sentence = int(parts[1])
             else:
                 int_sentence = -1
         else:
-            YLogger.error(client_context, "Thatstar index not of valid format [%s]", index)
+            YLogger.error(
+                client_context, "Thatstar index not of valid format [%s]", index
+            )
             return ""
 
         conversation = client_context.bot.get_conversation(client_context)
@@ -56,13 +58,15 @@ class TemplateThatNode(TemplateIndexedNode):
         else:
             resolved = question.sentence(int_sentence - 1).response
 
-        YLogger.debug(client_context, "[%s] resolved to [%s]", self.to_string(), resolved)
+        YLogger.debug(
+            client_context, "[%s] resolved to [%s]", self.to_string(), resolved
+        )
 
         return resolved
 
     def to_string(self):
         string = "[THAT"
-        string += self.index.to_string() + ']'
+        string += self.index.to_string() + "]"
         return string
 
     def to_xml(self, client_context):

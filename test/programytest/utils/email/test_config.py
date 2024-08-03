@@ -11,7 +11,8 @@ class EmailConfigurationTests(unittest.TestCase):
     def test_with_data(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         console:
             email:
                 host: 127.0.0.1
@@ -19,7 +20,10 @@ class EmailConfigurationTests(unittest.TestCase):
                 username: emailuser
                 password: emailpassword
                 from_addr: emailfromuser
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         client_config = yaml.get_section("console")
 
@@ -38,13 +42,17 @@ class EmailConfigurationTests(unittest.TestCase):
     def test_with_data_no_useridpassword(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         console:
             email:
                 host: 127.0.0.1
                 port: 80
                 from_addr: emailfromuser
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         client_config = yaml.get_section("console")
 
@@ -63,10 +71,14 @@ class EmailConfigurationTests(unittest.TestCase):
     def test_without_data(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         console:
             email:
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         client_config = yaml.get_section("email")
 
@@ -82,9 +94,13 @@ class EmailConfigurationTests(unittest.TestCase):
     def test_with_no_data(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         console:
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         client_config = yaml.get_section("email")
 
@@ -100,14 +116,18 @@ class EmailConfigurationTests(unittest.TestCase):
     def test_with_username_for_addr(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         console:
             email:
                 host: 127.0.0.1
                 port: 80
                 username: emailuser
                 password: emailpassword
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         client_config = yaml.get_section("console")
 
@@ -120,19 +140,32 @@ class EmailConfigurationTests(unittest.TestCase):
         email_config = EmailConfiguration()
         data = {}
         email_config.to_yaml(data, defaults=True)
-        self.assertEquals({'from_addr': None, 'host': None, 'password': None, 'port': None, 'username': None}, data)
+        self.assertEquals(
+            {
+                "from_addr": None,
+                "host": None,
+                "password": None,
+                "port": None,
+                "username": None,
+            },
+            data,
+        )
 
     def test_to_yaml_without_defaults(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         console:
             email:
                 host: 127.0.0.1
                 port: 80
                 username: emailuser
                 password: emailpassword
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         client_config = yaml.get_section("console")
 
@@ -141,7 +174,16 @@ class EmailConfigurationTests(unittest.TestCase):
 
         data = {}
         email_config.to_yaml(data, defaults=False)
-        self.assertEquals({'from_addr': 'emailuser', 'host': '127.0.0.1', 'password': 'emailpassword', 'port': 80, 'username': 'emailuser'}, data)
+        self.assertEquals(
+            {
+                "from_addr": "emailuser",
+                "host": "127.0.0.1",
+                "password": "emailpassword",
+                "port": 80,
+                "username": "emailuser",
+            },
+            data,
+        )
 
     def test_defaults(self):
         email_config = EmailConfiguration()
@@ -152,8 +194,8 @@ class EmailConfigurationTests(unittest.TestCase):
 
     @staticmethod
     def assert_defaults(test, data):
-        test.assertIsNone(data['host'])
-        test.assertIsNone(data['port'])
-        test.assertIsNone(data['username'])
-        test.assertIsNone(data['password'])
-        test.assertIsNone(data['from_addr'])
+        test.assertIsNone(data["host"])
+        test.assertIsNone(data["port"])
+        test.assertIsNone(data["username"])
+        test.assertIsNone(data["password"])
+        test.assertIsNone(data["from_addr"])

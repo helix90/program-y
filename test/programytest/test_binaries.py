@@ -2,18 +2,24 @@ import os
 import os.path
 import unittest
 from unittest.mock import patch
+
+from programytest.client import TestClient
+
 from programy.binaries import BinariesManager
 from programy.config.brain.binaries import BrainBinariesConfiguration
 from programy.storage.factory import StorageFactory
-from programy.storage.stores.file.config import FileStorageConfiguration
-from programy.storage.stores.file.config import FileStoreConfiguration
+from programy.storage.stores.file.config import (
+    FileStorageConfiguration,
+    FileStoreConfiguration,
+)
 from programy.storage.stores.file.engine import FileStorageEngine
-from programytest.client import TestClient
 
 
 class MockBinariesManager(BinariesManager):
 
-    def __init__(self, binaries_configuration, except_on_load=False, except_on_save=False):
+    def __init__(
+        self, binaries_configuration, except_on_load=False, except_on_save=False
+    ):
         BinariesManager.__init__(self, binaries_configuration)
         self._except_on_load = except_on_load
         self._except_on_save = except_on_save
@@ -28,7 +34,9 @@ class MockBinariesManager(BinariesManager):
         if self._except_on_save is True:
             raise Exception("Mock Error")
         else:
-            super(MockBinariesManager, self)._save_to_storage(storage_factory, aiml_parser)
+            super(MockBinariesManager, self)._save_to_storage(
+                storage_factory, aiml_parser
+            )
 
 
 class BinariesTests(unittest.TestCase):
@@ -45,8 +53,9 @@ class BinariesTests(unittest.TestCase):
 
     def create_storage_factory(self, fullpath):
         config = FileStorageConfiguration()
-        config._binaries_storage = FileStoreConfiguration(file=fullpath, fileformat="binary", encoding="utf-8",
-                                                          delete_on_start=False)
+        config._binaries_storage = FileStoreConfiguration(
+            file=fullpath, fileformat="binary", encoding="utf-8", delete_on_start=False
+        )
 
         factory = StorageFactory()
 
@@ -77,7 +86,9 @@ class BinariesTests(unittest.TestCase):
         test_client = TestClient()
         client_context = test_client.create_client_context("test1")
 
-        self.assertTrue(manager.save_binary(factory, client_context.bot.brain.aiml_parser))
+        self.assertTrue(
+            manager.save_binary(factory, client_context.bot.brain.aiml_parser)
+        )
 
         self.assertTrue(os.path.exists(fullpath))
 
@@ -101,7 +112,9 @@ class BinariesTests(unittest.TestCase):
         test_client = TestClient()
         client_context = test_client.create_client_context("test1")
 
-        self.assertFalse(manager.save_binary(factory, client_context.bot.brain.aiml_parser))
+        self.assertFalse(
+            manager.save_binary(factory, client_context.bot.brain.aiml_parser)
+        )
 
         self.assertIsNone(manager.load_binary(factory))
 
@@ -127,12 +140,16 @@ class BinariesTests(unittest.TestCase):
         test_client = TestClient()
         client_context = test_client.create_client_context("test1")
 
-        self.assertFalse(manager.save_binary(factory, client_context.bot.brain.aiml_parser))
+        self.assertFalse(
+            manager.save_binary(factory, client_context.bot.brain.aiml_parser)
+        )
 
     def patch_load_from_storage(self, storage_factory):
         raise Exception("Mock Exception")
 
-    @patch("programy.binaries.BinariesManager._load_from_storage", patch_load_from_storage)
+    @patch(
+        "programy.binaries.BinariesManager._load_from_storage", patch_load_from_storage
+    )
     def test_load_with_exception_and_raise(self):
 
         config = BrainBinariesConfiguration()
@@ -152,7 +169,9 @@ class BinariesTests(unittest.TestCase):
         with self.assertRaises(Exception):
             manager.load_binary(factory)
 
-    @patch("programy.binaries.BinariesManager._load_from_storage", patch_load_from_storage)
+    @patch(
+        "programy.binaries.BinariesManager._load_from_storage", patch_load_from_storage
+    )
     def test_load_with_exception_and_not_raise(self):
 
         config = BrainBinariesConfiguration()

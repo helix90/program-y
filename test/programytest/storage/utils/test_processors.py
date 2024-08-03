@@ -1,18 +1,18 @@
-import unittest
 import os
-from programy.storage.utils.processors import TextFile
-from programy.storage.utils.processors import CSVFileReader
-from programy.storage.utils.processors import CSVFileWriter
+import unittest
+
+from programy.storage.utils.processors import CSVFileReader, CSVFileWriter, TextFile
 
 
 def get_temp_dir():
-    if os.name == 'posix':                                              # pragma: no cover
-        return '/tmp'                                                   # pragma: no cover
-    elif os.name == 'nt':                                               # pragma: no cover
-        import tempfile                                                 # pragma: no cover
-        return tempfile.gettempdir()                                    # pragma: no cover
-    else:                                                               # pragma: no cover
-        raise Exception("Unknown operating system [%s]" % os.name)      # pragma: no cover
+    if os.name == "posix":  # pragma: no cover
+        return "/tmp"  # pragma: no cover
+    elif os.name == "nt":  # pragma: no cover
+        import tempfile  # pragma: no cover
+
+        return tempfile.gettempdir()  # pragma: no cover
+    else:  # pragma: no cover
+        raise Exception("Unknown operating system [%s]" % os.name)  # pragma: no cover
 
 
 class MockTextFileWriter:

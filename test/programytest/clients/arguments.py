@@ -1,11 +1,14 @@
 class MockArguments(object):
 
-    def __init__(self, bot_root=".",
-                 logging=None,
-                 config=None,
-                 cformat="yaml",
-                 noloop = False,
-                 substitutions='subs.txt'):
+    def __init__(
+        self,
+        bot_root=".",
+        logging=None,
+        config=None,
+        cformat="yaml",
+        noloop=False,
+        substitutions="subs.txt",
+    ):
         self.bot_root = bot_root
         self.logging = logging
         self.config = config
@@ -16,7 +19,15 @@ class MockArguments(object):
 
 class MockArgumentParser(object):
 
-    def __init__(self, bot_root=".", logging=None, config=None, cformat="yaml", noloop=False, substitutions='subs.txt'):
+    def __init__(
+        self,
+        bot_root=".",
+        logging=None,
+        config=None,
+        cformat="yaml",
+        noloop=False,
+        substitutions="subs.txt",
+    ):
         self.bot_root = bot_root
         self.logging = logging
         self.config = config
@@ -28,9 +39,11 @@ class MockArgumentParser(object):
         pass
 
     def parse_args(self):
-        return MockArguments(bot_root=self.bot_root,
-                             logging=self.logging,
-                             config=self.config,
-                             cformat=self.cformat,
-                             noloop=self.noloop,
-                             substitutions=self.substitutions)
+        return MockArguments(
+            bot_root=self.bot_root,
+            logging=self.logging,
+            config=self.config,
+            cformat=self.cformat,
+            noloop=self.noloop,
+            substitutions=self.substitutions,
+        )

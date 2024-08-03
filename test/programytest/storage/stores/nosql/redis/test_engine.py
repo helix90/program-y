@@ -1,8 +1,10 @@
 import unittest
+
 import programytest.storage.engines as Engines
+from programytest.storage.test_utils import StorageEngineTestUtils
+
 from programy.storage.stores.nosql.redis.config import RedisStorageConfiguration
 from programy.storage.stores.nosql.redis.engine import RedisStorageEngine
-from programytest.storage.test_utils import StorageEngineTestUtils
 
 
 class RedisStorageEngineTests(StorageEngineTestUtils):

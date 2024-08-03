@@ -14,11 +14,13 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 import os
 import os.path
-from programy.utils.logging.ylogger import YLogger
-from programy.storage.stores.file.store.filestore import FileStore
+
 from programy.storage.entities.spelling import SpellingStore
+from programy.storage.stores.file.store.filestore import FileStore
+from programy.utils.logging.ylogger import YLogger
 
 
 class FileSpellingStore(FileStore, SpellingStore):
@@ -48,7 +50,8 @@ class FileSpellingStore(FileStore, SpellingStore):
             return True
 
         except Exception as e:
-            YLogger.exception_nostack(self, "Failed to load corpus [%s]", e, corpus_filename)
+            YLogger.exception_nostack(
+                self, "Failed to load corpus [%s]", e, corpus_filename
+            )
 
         return False
-

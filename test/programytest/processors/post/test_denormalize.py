@@ -1,11 +1,12 @@
 import re
 import unittest
 
+from programytest.client import TestClient
+
 from programy.bot import Bot
 from programy.config.bot.bot import BotConfiguration
 from programy.context import ClientContext
 from programy.processors.post.denormalize import DenormalizePostProcessor
-from programytest.client import TestClient
 
 
 class DenormalizeTests(unittest.TestCase):
@@ -13,10 +14,13 @@ class DenormalizeTests(unittest.TestCase):
     def setUp(self):
         self.client = TestClient()
         self.bot = Bot(config=BotConfiguration(), client=self.client)
-        self.bot.brain.denormals.add_to_lookup(" DOT COM ", [re.compile('(^DOT COM | DOT COM | DOT COM$)', re.IGNORECASE), '.COM '])
+        self.bot.brain.denormals.add_to_lookup(
+            " DOT COM ",
+            [re.compile("(^DOT COM | DOT COM | DOT COM$)", re.IGNORECASE), ".COM "],
+        )
 
     def test_denormalize(self):
-        processor = DenormalizePostProcessor ()
+        processor = DenormalizePostProcessor()
 
         context = ClientContext(self.client, "testid")
         context.bot = self.bot

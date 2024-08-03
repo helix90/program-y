@@ -22,15 +22,20 @@ class WildcardAIMLTests(unittest.TestCase):
         self._client_context = client.create_client_context("testid")
 
     def test_gianfrasoft_196(self):
-        response = self._client_context.bot.ask_question(self._client_context,  "HELLO TEST1")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "HELLO TEST1"
+        )
         self.assertIsNotNone(response)
-        self.assertEqual(response, 'HELLO RESULT1.')
+        self.assertEqual(response, "HELLO RESULT1.")
 
-        response = self._client_context.bot.ask_question(self._client_context,  "HELLO TEST2")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "HELLO TEST2"
+        )
         self.assertIsNotNone(response)
-        self.assertEqual(response, 'HELLO RESULT2.')
+        self.assertEqual(response, "HELLO RESULT2.")
 
-        response = self._client_context.bot.ask_question(self._client_context,  "HELLO TEST2 THERE")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "HELLO TEST2 THERE"
+        )
         self.assertIsNotNone(response)
-        self.assertEqual(response, 'HELLO RESULT3 THERE.')
-
+        self.assertEqual(response, "HELLO RESULT3 THERE.")

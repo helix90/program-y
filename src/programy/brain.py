@@ -14,32 +14,36 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
-from programy.processors.processing import PreProcessorCollection
-from programy.processors.processing import PostProcessorCollection
-from programy.processors.processing import PostQuestionProcessorCollection
+
+from programy.binaries import BinariesManager
+from programy.braintree import BraintreeManager
 from programy.config.brain.brain import BrainConfiguration
+from programy.dialog.tokenizer.tokenizer import Tokenizer
+from programy.dynamic.dynamics import DynamicsCollection
 from programy.mappings.denormal import DenormalCollection
 from programy.mappings.gender import GenderCollection
 from programy.mappings.maps import MapCollection
 from programy.mappings.normal import NormalCollection
-from programy.mappings.person import PersonCollection
-from programy.mappings.person import Person2Collection
-from programy.mappings.properties import PropertiesCollection
-from programy.mappings.properties import RegexTemplatesCollection
-from programy.mappings.properties import DefaultVariablesCollection
+from programy.mappings.person import Person2Collection, PersonCollection
+from programy.mappings.properties import (
+    DefaultVariablesCollection,
+    PropertiesCollection,
+    RegexTemplatesCollection,
+)
 from programy.mappings.sets import SetCollection
-from programy.dynamic.dynamics import DynamicsCollection
-from programy.rdf.collection import RDFCollection
+from programy.oob.handler import OOBHandler
 from programy.parser.aiml_parser import AIMLParser
-from programy.services.handler import ServiceHandler
-from programy.dialog.tokenizer.tokenizer import Tokenizer
 from programy.parser.pattern.factory import PatternNodeFactory
 from programy.parser.template.factory import TemplateNodeFactory
-from programy.binaries import BinariesManager
-from programy.braintree import BraintreeManager
+from programy.processors.processing import (
+    PostProcessorCollection,
+    PostQuestionProcessorCollection,
+    PreProcessorCollection,
+)
+from programy.rdf.collection import RDFCollection
 from programy.security.manager import SecurityManager
-from programy.oob.handler import OOBHandler
+from programy.services.handler import ServiceHandler
+from programy.utils.logging.ylogger import YLogger
 
 
 class Brain:
@@ -226,7 +230,9 @@ class Brain:
             self.load_aiml()
 
         if configuration.binaries.save_binary is True:
-            self._binaries.save_binary(self.bot.client.storage_factory, self._aiml_parser)
+            self._binaries.save_binary(
+                self.bot.client.storage_factory, self._aiml_parser
+            )
 
         YLogger.info(self, "Loading collections")
         self.load_collections()
@@ -287,7 +293,9 @@ class Brain:
             self._default_variables_collection.set_value("positivity", str(positivity))
 
         if self._default_variables_collection.has_variable("subjectivity") is False:
-            self._default_variables_collection.set_value("subjectivity", str(subjectivity))
+            self._default_variables_collection.set_value(
+                "subjectivity", str(subjectivity)
+            )
 
     def load_maps(self):
         self._maps_collection.empty()
@@ -354,7 +362,9 @@ class Brain:
         self._load_postprocessors()
         self._load_postquestionprocessors()
 
-    def load_services(self, ):
+    def load_services(
+        self,
+    ):
         self._services.load_services(self.bot.client)
 
     def load_security_services(self):
@@ -388,7 +398,11 @@ class Brain:
 
         template_node = match_context.template_node
 
-        YLogger.debug(client_context, "AIML Parser evaluating template [%s]", template_node.to_string())
+        YLogger.debug(
+            client_context,
+            "AIML Parser evaluating template [%s]",
+            template_node.to_string(),
+        )
 
         response = template_node.template.resolve(client_context)
 
@@ -419,10 +433,12 @@ class Brain:
 
         that_pattern = conversation.get_that_pattern(client_context, srai)
 
-        match_context = self._aiml_parser.match_sentence(client_context,
-                                                         sentence,
-                                                         topic_pattern=topic_pattern,
-                                                         that_pattern=that_pattern)
+        match_context = self._aiml_parser.match_sentence(
+            client_context,
+            sentence,
+            topic_pattern=topic_pattern,
+            that_pattern=that_pattern,
+        )
 
         if match_context is not None:
             match_context.sentence = sentence.text(client_context)

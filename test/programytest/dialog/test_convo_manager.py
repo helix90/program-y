@@ -2,11 +2,12 @@ import os
 import shutil
 import unittest
 
+from programytest.client import TestClient
+
 from programy.config.bot.conversations import BotConversationsConfiguration
 from programy.dialog.convo_mgr import ConversationManager
 from programy.dialog.question import Question
 from programy.storage.factory import StorageFactory
-from programytest.client import TestClient
 
 
 class MockStorageFactory(StorageFactory):
@@ -49,10 +50,11 @@ class ConversationManagerTests(unittest.TestCase):
         self.assertIsNone(mgr.storage)
 
     def get_temp_dir(self):
-        if os.name == 'posix':
-            return '/tmp'
-        elif os.name == 'nt':
+        if os.name == "posix":
+            return "/tmp"
+        elif os.name == "nt":
             import tempfile
+
             return tempfile.gettempdir()
         else:
             raise Exception("Unknown operating system [%s]" % os.name)
@@ -165,7 +167,7 @@ class ConversationManagerTests(unittest.TestCase):
             shutil.rmtree(convo_dir)
 
         client = TestClient()
-        #client.add_conversation_store(convo_dir)
+        # client.add_conversation_store(convo_dir)
 
         mgr.initialise(client.storage_factory)
 
@@ -303,4 +305,3 @@ class ConversationManagerTests(unittest.TestCase):
 
         self.assertIsNotNone(conversation)
         self.assertEqual(len(conversation.questions), 3)
-

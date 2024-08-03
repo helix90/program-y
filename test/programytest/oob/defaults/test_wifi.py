@@ -2,8 +2,9 @@ import unittest
 import unittest.mock
 import xml.etree.ElementTree as ET
 
-from programy.oob.callmom.wifi import WifiOutOfBandProcessor
 from programytest.client import TestClient
+
+from programy.oob.callmom.wifi import WifiOutOfBandProcessor
 
 
 class WifiOutOfBandProcessorTests(unittest.TestCase):
@@ -31,11 +32,17 @@ class WifiOutOfBandProcessorTests(unittest.TestCase):
         self.assertIsNotNone(oob_processor)
 
         oob_content = ET.fromstring("<wifi>on</wifi>")
-        self.assertEqual("WIFI", oob_processor.process_out_of_bounds(self._client_context, oob_content))
+        self.assertEqual(
+            "WIFI",
+            oob_processor.process_out_of_bounds(self._client_context, oob_content),
+        )
 
     def test_processor_off(self):
         oob_processor = WifiOutOfBandProcessor()
         self.assertIsNotNone(oob_processor)
 
         oob_content = ET.fromstring("<wifi>off</wifi>")
-        self.assertEqual("WIFI", oob_processor.process_out_of_bounds(self._client_context, oob_content))
+        self.assertEqual(
+            "WIFI",
+            oob_processor.process_out_of_bounds(self._client_context, oob_content),
+        )

@@ -15,11 +15,11 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
-import logging
 import argparse
+import logging
 
 
-class ClientArguments():
+class ClientArguments:
 
     def __init__(self, client, parser=None):
         del client
@@ -32,7 +32,7 @@ class ClientArguments():
         self._substitutions = None
 
     def parse_args(self, client):
-        pass    # pragma: no cover
+        pass  # pragma: no cover
 
     @property
     def bot_root(self):
@@ -80,12 +80,33 @@ class CommandLineClientArguments(ClientArguments):
         else:
             self.parser = parser
 
-        self.parser.add_argument('--bot_root', dest='bot_root', help='root folder for all bot configuration data')
-        self.parser.add_argument('--config', dest='config', help='configuration file location')
-        self.parser.add_argument('--substitutions', dest='substitutions', help='values to substitute in the config file')
-        self.parser.add_argument('--cformat', dest='cformat', help='configuration file format (yaml|json|ini)')
-        self.parser.add_argument('--logging', dest='logging', help='logging configuration file')
-        self.parser.add_argument('--noloop', dest='noloop', action='store_true', help='do not enter conversation loop')
+        self.parser.add_argument(
+            "--bot_root",
+            dest="bot_root",
+            help="root folder for all bot configuration data",
+        )
+        self.parser.add_argument(
+            "--config", dest="config", help="configuration file location"
+        )
+        self.parser.add_argument(
+            "--substitutions",
+            dest="substitutions",
+            help="values to substitute in the config file",
+        )
+        self.parser.add_argument(
+            "--cformat",
+            dest="cformat",
+            help="configuration file format (yaml|json|ini)",
+        )
+        self.parser.add_argument(
+            "--logging", dest="logging", help="logging configuration file"
+        )
+        self.parser.add_argument(
+            "--noloop",
+            dest="noloop",
+            action="store_true",
+            help="do not enter conversation loop",
+        )
 
         client.add_client_arguments(self.parser)
 

@@ -14,6 +14,7 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 from programy.clients.restful.config import RestConfiguration
 from programy.utils.substitutions.substitues import Substitutions
 
@@ -43,28 +44,37 @@ class KikConfiguration(RestConfiguration):
     def unknown_command_srai(self):
         return self._unknown_command_srai
 
-    def load_configuration_section(self, configuration_file, section, bot_root, subs: Substitutions = None):
+    def load_configuration_section(
+        self, configuration_file, section, bot_root, subs: Substitutions = None
+    ):
         assert section is not None
 
-        self._bot_name = configuration_file.get_option(section, "bot_name", missing_value="program-y", subs=subs)
-        self._webhook = configuration_file.get_option(section, "webhook", missing_value="https://localhost:5000",
-                                                      subs=subs)
-        self._unknown_command = configuration_file.get_option(section, "unknown_command",
-                                                              missing_value="Unknown command", subs=subs)
-        self._unknown_command_srai = configuration_file.get_option(section, "unknown_command_srai",
-                                                                   missing_value=None, subs=subs)
-        super(KikConfiguration, self).load_configuration_section(configuration_file, section, bot_root, subs=subs)
+        self._bot_name = configuration_file.get_option(
+            section, "bot_name", missing_value="program-y", subs=subs
+        )
+        self._webhook = configuration_file.get_option(
+            section, "webhook", missing_value="https://localhost:5000", subs=subs
+        )
+        self._unknown_command = configuration_file.get_option(
+            section, "unknown_command", missing_value="Unknown command", subs=subs
+        )
+        self._unknown_command_srai = configuration_file.get_option(
+            section, "unknown_command_srai", missing_value=None, subs=subs
+        )
+        super(KikConfiguration, self).load_configuration_section(
+            configuration_file, section, bot_root, subs=subs
+        )
 
     def to_yaml(self, data, defaults=True):
         if defaults is True:
-            data['bot_name'] = "program-y"
-            data['webhook'] = "https://666666666.ngrok.io"
-            data['unknown_command'] = "Unknown command"
-            data['unknown_command_srai'] = 'KIKUNKNONWCOMMAND'
+            data["bot_name"] = "program-y"
+            data["webhook"] = "https://666666666.ngrok.io"
+            data["unknown_command"] = "Unknown command"
+            data["unknown_command_srai"] = "KIKUNKNONWCOMMAND"
         else:
-            data['bot_name'] = self._bot_name
-            data['webhook'] = self._webhook
-            data['unknown_command'] = self._unknown_command
-            data['unknown_command_srai'] = self._unknown_command_srai
+            data["bot_name"] = self._bot_name
+            data["webhook"] = self._webhook
+            data["unknown_command"] = self._unknown_command
+            data["unknown_command_srai"] = self._unknown_command_srai
 
         super(KikConfiguration, self).to_yaml(data, defaults)

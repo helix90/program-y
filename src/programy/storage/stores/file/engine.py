@@ -14,37 +14,46 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 from programy.storage.engine import StorageEngine
-from programy.storage.stores.file.store.properties import FilePropertyStore
-from programy.storage.stores.file.store.properties import FileDefaultVariablesStore
-from programy.storage.stores.file.store.conversations import FileConversationStore
-from programy.storage.stores.file.store.twitter import FileTwitterStore
-from programy.storage.stores.file.store.sets import FileSetsStore
-from programy.storage.stores.file.store.maps import FileMapsStore
-from programy.storage.stores.file.store.rdfs import FileRDFStore
-from programy.storage.stores.file.store.lookups import FileDenormalStore
-from programy.storage.stores.file.store.lookups import FileNormalStore
-from programy.storage.stores.file.store.lookups import FileGenderStore
-from programy.storage.stores.file.store.lookups import FilePersonStore
-from programy.storage.stores.file.store.lookups import FilePerson2Store
-from programy.storage.stores.file.store.properties import FileRegexStore
-from programy.storage.stores.file.store.errors import FileErrorsStore
-from programy.storage.stores.file.store.duplicates import FileDuplicatesStore
-from programy.storage.stores.file.store.categories import FileCategoryStore
-from programy.storage.stores.file.store.learnf import FileLearnfStore
-from programy.storage.stores.file.store.spelling import FileSpellingStore
-from programy.storage.stores.file.store.licensekeys import FileLicenseStore
-from programy.storage.stores.file.store.nodes import FilePatternNodeStore
-from programy.storage.stores.file.store.nodes import FileTemplateNodeStore
 from programy.storage.stores.file.store.binaries import FileBinariesStore
 from programy.storage.stores.file.store.braintree import FileBraintreeStore
-from programy.storage.stores.file.store.processors import FilePreProcessorsStore
-from programy.storage.stores.file.store.processors import FilePostProcessorsStore
-from programy.storage.stores.file.store.processors import FilePostQuestionProcessorsStore
-from programy.storage.stores.file.store.usergroups import FileUserGroupStore
-from programy.storage.stores.file.store.triggers import FileTriggersStore
+from programy.storage.stores.file.store.categories import FileCategoryStore
+from programy.storage.stores.file.store.conversations import FileConversationStore
+from programy.storage.stores.file.store.duplicates import FileDuplicatesStore
+from programy.storage.stores.file.store.errors import FileErrorsStore
+from programy.storage.stores.file.store.learnf import FileLearnfStore
+from programy.storage.stores.file.store.licensekeys import FileLicenseStore
+from programy.storage.stores.file.store.lookups import (
+    FileDenormalStore,
+    FileGenderStore,
+    FileNormalStore,
+    FilePerson2Store,
+    FilePersonStore,
+)
+from programy.storage.stores.file.store.maps import FileMapsStore
+from programy.storage.stores.file.store.nodes import (
+    FilePatternNodeStore,
+    FileTemplateNodeStore,
+)
 from programy.storage.stores.file.store.oobs import FileOOBStore
+from programy.storage.stores.file.store.processors import (
+    FilePostProcessorsStore,
+    FilePostQuestionProcessorsStore,
+    FilePreProcessorsStore,
+)
+from programy.storage.stores.file.store.properties import (
+    FileDefaultVariablesStore,
+    FilePropertyStore,
+    FileRegexStore,
+)
+from programy.storage.stores.file.store.rdfs import FileRDFStore
 from programy.storage.stores.file.store.services import FileServiceStore
+from programy.storage.stores.file.store.sets import FileSetsStore
+from programy.storage.stores.file.store.spelling import FileSpellingStore
+from programy.storage.stores.file.store.triggers import FileTriggersStore
+from programy.storage.stores.file.store.twitter import FileTwitterStore
+from programy.storage.stores.file.store.usergroups import FileUserGroupStore
 
 
 class FileStorageEngine(StorageEngine):

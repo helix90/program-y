@@ -1,8 +1,9 @@
+from programytest.parser.base import ParserTestsBaseClass
+
 from programy.parser.template.nodes.base import TemplateNode
 from programy.parser.template.nodes.richmedia.reply import TemplateReplyNode
 from programy.parser.template.nodes.word import TemplateWordNode
 
-from programytest.parser.base import ParserTestsBaseClass
 
 class TemplateReplyNodeTests(ParserTestsBaseClass):
 
@@ -21,7 +22,9 @@ class TemplateReplyNodeTests(ParserTestsBaseClass):
         self.assertIsNotNone(resolved)
         self.assertEqual("<reply><text>SAY HELLO</text></reply>", resolved)
 
-        self.assertEqual("<reply><text>SAY HELLO</text></reply>", root.to_xml(self._client_context))
+        self.assertEqual(
+            "<reply><text>SAY HELLO</text></reply>", root.to_xml(self._client_context)
+        )
 
     def test_text_postback__replynode(self):
         root = TemplateNode()
@@ -37,6 +40,11 @@ class TemplateReplyNodeTests(ParserTestsBaseClass):
 
         resolved = root.resolve(self._client_context)
         self.assertIsNotNone(resolved)
-        self.assertEqual("<reply><text>SAY HELLO</text><postback>HELLO</postback></reply>", resolved)
+        self.assertEqual(
+            "<reply><text>SAY HELLO</text><postback>HELLO</postback></reply>", resolved
+        )
 
-        self.assertEqual("<reply><text>SAY HELLO</text><postback>HELLO</postback></reply>", root.to_xml(self._client_context))
+        self.assertEqual(
+            "<reply><text>SAY HELLO</text><postback>HELLO</postback></reply>",
+            root.to_xml(self._client_context),
+        )

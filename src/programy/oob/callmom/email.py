@@ -14,10 +14,12 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.parsing.linenumxml import LineNumberingParser
+
 import xml.etree.ElementTree as ET  # pylint: disable=wrong-import-order
-from programy.utils.logging.ylogger import YLogger
+
 from programy.oob.callmom.oob import OutOfBandProcessor
+from programy.utils.logging.ylogger import YLogger
+from programy.utils.parsing.linenumxml import LineNumberingParser
 
 
 class EmailOutOfBandProcessor(OutOfBandProcessor):
@@ -40,18 +42,22 @@ class EmailOutOfBandProcessor(OutOfBandProcessor):
     def parse_oob_xml(self, oob: ET.Element):
         if oob is not None:
             for child in oob:
-                if child.tag == 'to':
+                if child.tag == "to":
                     self._to = child.text
-                elif child.tag == 'subject':
+                elif child.tag == "subject":
                     self._subject = child.text
-                elif child.tag == 'body':
+                elif child.tag == "body":
                     self._body = child.text
                 else:
-                    YLogger.error(self, "Unknown child element [%s] in email oob", child.tag)
+                    YLogger.error(
+                        self, "Unknown child element [%s] in email oob", child.tag
+                    )
 
-            if self._to is not None and \
-                self._subject is not None and \
-                self._body is not None:
+            if (
+                self._to is not None
+                and self._subject is not None
+                and self._body is not None
+            ):
                 return True
 
         YLogger.error(self, "Invalid email oob command")

@@ -14,14 +14,21 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-import logging
+
 import hashlib
-from datetime import datetime
-from datetime import timedelta
+import logging
+from datetime import datetime, timedelta
+
+from apscheduler.events import (
+    EVENT_ALL,
+    JobEvent,
+    JobExecutionEvent,
+    JobSubmissionEvent,
+    SchedulerEvent,
+)
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.schedulers.blocking import BlockingScheduler
-from apscheduler.events import EVENT_ALL
-from apscheduler.events import SchedulerEvent, JobEvent, JobSubmissionEvent, JobExecutionEvent
+
 from programy.utils.logging.ylogger import YLogger
 
 
@@ -72,7 +79,7 @@ class ProgramyScheduler:
             ProgramyScheduler.schedulers[name] = scheduler
 
     def set_debug_level(self, level):
-        logging.getLogger('apscheduler').setLevel(level)
+        logging.getLogger("apscheduler").setLevel(level)
 
     def register_listeners(self):
         self._scheduler.add_listener(scheduler_listener, EVENT_ALL)
@@ -150,44 +157,88 @@ class ProgramyScheduler:
         YLogger.debug(None, "Scheduler scheduling every %d seconds" % seconds)
         job_id = self.create_job_id(userid, clientid, action, text)
         self.remove_existing_job(job_id)
-        self._scheduler.add_job(scheduled, 'interval', [self.name, userid, clientid, action, text], id=job_id,
-                                seconds=seconds)
+        self._scheduler.add_job(
+            scheduled,
+            "interval",
+            [self.name, userid, clientid, action, text],
+            id=job_id,
+            seconds=seconds,
+        )
 
     def schedule_every_n_minutes(self, userid, clientid, action, text, minutes):
         YLogger.debug(None, "Scheduler scheduling every %d minutes" % minutes)
         job_id = self.create_job_id(userid, clientid, action, text)
         self.remove_existing_job(job_id)
-        self._scheduler.add_job(scheduled, 'interval', [self.name, userid, clientid, action, text], id=job_id,
-                                minutes=minutes)
+        self._scheduler.add_job(
+            scheduled,
+            "interval",
+            [self.name, userid, clientid, action, text],
+            id=job_id,
+            minutes=minutes,
+        )
 
     def schedule_every_n_hours(self, userid, clientid, action, text, hours):
         YLogger.debug(None, "Scheduler scheduling every %d hours" % hours)
         job_id = self.create_job_id(userid, clientid, action, text)
         self.remove_existing_job(job_id)
-        self._scheduler.add_job(scheduled, 'interval', [self.name, userid, clientid, action, text], id=job_id,
-                                hours=hours)
+        self._scheduler.add_job(
+            scheduled,
+            "interval",
+            [self.name, userid, clientid, action, text],
+            id=job_id,
+            hours=hours,
+        )
 
     def schedule_every_n_days(self, userid, clientid, action, text, days):
         YLogger.debug(None, "Scheduler scheduling every %d days" % days)
         job_id = self.create_job_id(userid, clientid, action, text)
         self.remove_existing_job(job_id)
-        self._scheduler.add_job(scheduled, 'interval', [self.name, userid, clientid, action, text], id=job_id,
-                                days=days)
+        self._scheduler.add_job(
+            scheduled,
+            "interval",
+            [self.name, userid, clientid, action, text],
+            id=job_id,
+            days=days,
+        )
 
     def schedule_every_n_weeks(self, userid, clientid, action, text, weeks):
         YLogger.debug(None, "Scheduler scheduling every %d weeks" % weeks)
         job_id = self.create_job_id(userid, clientid, action, text)
         self.remove_existing_job(job_id)
-        self._scheduler.add_job(scheduled, 'interval', [self.name, userid, clientid, action, text], id=job_id,
-                                weeks=weeks)
+        self._scheduler.add_job(
+            scheduled,
+            "interval",
+            [self.name, userid, clientid, action, text],
+            id=job_id,
+            weeks=weeks,
+        )
 
-    def schedule_every_n(self, userid, clientid, action, text, weeks=0, days=0, hours=0, minutes=0, seconds=0):
+    def schedule_every_n(
+        self,
+        userid,
+        clientid,
+        action,
+        text,
+        weeks=0,
+        days=0,
+        hours=0,
+        minutes=0,
+        seconds=0,
+    ):
         YLogger.debug(None, "Scheduler scheduling every n")
         job_id = self.create_job_id(userid, clientid, action, text)
         self.remove_existing_job(job_id)
-        self._scheduler.add_job(scheduled, 'interval', [self.name, userid, clientid, action, text], id=job_id,
-                                weeks=weeks, days=days,
-                                hours=hours, minutes=minutes, seconds=seconds)
+        self._scheduler.add_job(
+            scheduled,
+            "interval",
+            [self.name, userid, clientid, action, text],
+            id=job_id,
+            weeks=weeks,
+            days=days,
+            hours=hours,
+            minutes=minutes,
+            seconds=seconds,
+        )
 
     #################################################################################################################
     # Date trigger
@@ -226,20 +277,49 @@ class ProgramyScheduler:
         YLogger.debug(None, "Scheduler scheduling in datetime")
         job_id = self.create_job_id(userid, clientid, action, text)
         self.remove_existing_job(job_id)
-        self._scheduler.add_job(scheduled, 'date', [self.name, userid, clientid, action, text], id=job_id,
-                                run_date=schedule)
+        self._scheduler.add_job(
+            scheduled,
+            "date",
+            [self.name, userid, clientid, action, text],
+            id=job_id,
+            run_date=schedule,
+        )
 
     #################################################################################################################
     # Cron triggers
 
-    def schedule_as_cron(self, userid, clientid, action, text, year='*', month='*', day='*', week='*', day_of_week='*',
-                         hour='*', minute='*', second='*'):
+    def schedule_as_cron(
+        self,
+        userid,
+        clientid,
+        action,
+        text,
+        year="*",
+        month="*",
+        day="*",
+        week="*",
+        day_of_week="*",
+        hour="*",
+        minute="*",
+        second="*",
+    ):
         YLogger.debug(None, "Scheduler scheduling cron")
         job_id = self.create_job_id(userid, clientid, action, text)
         self.remove_existing_job(job_id)
-        self._scheduler.add_job(scheduled, 'cron', [self.name, userid, clientid, action, text], id=job_id, year=year,
-                                month=month, day=day,
-                                week=week, day_of_week=day_of_week, hour=hour, minute=minute, second=second)
+        self._scheduler.add_job(
+            scheduled,
+            "cron",
+            [self.name, userid, clientid, action, text],
+            id=job_id,
+            year=year,
+            month=month,
+            day=day,
+            week=week,
+            day_of_week=day_of_week,
+            hour=hour,
+            minute=minute,
+            second=second,
+        )
 
     #################################################################################################################
     # Admin/Debug Functions
@@ -249,18 +329,38 @@ class ProgramyScheduler:
         if isinstance(event, JobExecutionEvent):
             if event.exception:
                 return "JobExecutionEvent [%s] [%s] [%s] [%s] [%s] [%s]" % (
-                    event.code, event.job_id, event.jobstore, event.scheduled_run_time, event.retval, event.exception)
+                    event.code,
+                    event.job_id,
+                    event.jobstore,
+                    event.scheduled_run_time,
+                    event.retval,
+                    event.exception,
+                )
 
             else:
                 return "JobExecutionEvent [%s] [%s] [%s] [%s] [%s]" % (
-                    event.code, event.job_id, event.jobstore, event.scheduled_run_time, event.retval)
+                    event.code,
+                    event.job_id,
+                    event.jobstore,
+                    event.scheduled_run_time,
+                    event.retval,
+                )
 
         elif isinstance(event, JobSubmissionEvent):
             return "JobSubmissionEvent [%s] [%s] [%s] [%s]" % (
-                str(event.code), event.job_id, event.jobstore, event.scheduled_run_times)
+                str(event.code),
+                event.job_id,
+                event.jobstore,
+                event.scheduled_run_times,
+            )
 
         elif isinstance(event, JobEvent):
-            return "JobEvent [%s] [%s] [%s] [%s]" % (event.code, event.job_id, event.jobstore, event.alias)
+            return "JobEvent [%s] [%s] [%s] [%s]" % (
+                event.code,
+                event.job_id,
+                event.jobstore,
+                event.alias,
+            )
 
         elif isinstance(event, SchedulerEvent):
             return "SchedulerEvent [%s] [%s]" % (event.code, event.alias)
@@ -281,8 +381,15 @@ class ProgramyScheduler:
 
     @staticmethod
     def scheduled_event(name, userid, clientid, action, text):
-        YLogger.debug(None, "Received Scheduled Event [%s] [%s] [%s] [%s] [%s]",
-                      name, userid, clientid, action, text)
+        YLogger.debug(
+            None,
+            "Received Scheduled Event [%s] [%s] [%s] [%s] [%s]",
+            name,
+            userid,
+            clientid,
+            action,
+            text,
+        )
 
         if name in ProgramyScheduler.schedulers:
             scheduler = ProgramyScheduler.schedulers[name]
@@ -292,14 +399,21 @@ class ProgramyScheduler:
             YLogger.error(None, "Unknown scheduler [%s]", name)
 
     def scheduled(self, userid, clientid, action, text):
-        YLogger.debug(None, "Processing Scheduled Event [%s] [%s] [%s] [%s] [%s]",
-                      self.name, userid, clientid, action, text)
+        YLogger.debug(
+            None,
+            "Processing Scheduled Event [%s] [%s] [%s] [%s] [%s]",
+            self.name,
+            userid,
+            clientid,
+            action,
+            text,
+        )
 
         client_context = self._client.create_client_context(userid)
-        if action == 'TEXT':
+        if action == "TEXT":
             self._client.render_response(client_context, text)
 
-        elif action == 'SRAI':
+        elif action == "SRAI":
             response = client_context.bot.ask_question(client_context, text)
             self._client.render_response(client_context, response)
 

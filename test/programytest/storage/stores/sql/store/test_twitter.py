@@ -1,10 +1,11 @@
 import unittest
 
 import programytest.storage.engines as Engines
+from programytest.storage.asserts.store.assert_twitter import TwitterStoreAsserts
+
 from programy.storage.stores.sql.config import SQLStorageConfiguration
 from programy.storage.stores.sql.engine import SQLStorageEngine
 from programy.storage.stores.sql.store.twitter import SQLTwitterStore
-from programytest.storage.asserts.store.assert_twitter import TwitterStoreAsserts
 
 
 class SQLTwitterStoreTests(TwitterStoreAsserts):
@@ -25,4 +26,3 @@ class SQLTwitterStoreTests(TwitterStoreAsserts):
         store = SQLTwitterStore(engine)
 
         self.assert_twitter_storage(store)
-

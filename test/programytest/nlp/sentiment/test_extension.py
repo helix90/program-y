@@ -1,9 +1,11 @@
 import unittest
+
+from programytest.client import TestClient
+
 from programy.bot import Bot
 from programy.config.bot.bot import BotConfiguration
-from programy.nlp.sentiment.extension import SentimentExtension
 from programy.dialog.question import Question
-from programytest.client import TestClient
+from programy.nlp.sentiment.extension import SentimentExtension
 
 
 class SentimentExtensionTests(unittest.TestCase):
@@ -12,8 +14,12 @@ class SentimentExtensionTests(unittest.TestCase):
         self._client = TestClient()
 
         config = BotConfiguration()
-        config.sentiment_analyser._classname = "programy.nlp.sentiment.textblob_sentiment.TextBlobSentimentAnalyser"
-        config.sentiment_analyser._scores = "programy.nlp.sentiment.scores.SentimentScores"
+        config.sentiment_analyser._classname = (
+            "programy.nlp.sentiment.textblob_sentiment.TextBlobSentimentAnalyser"
+        )
+        config.sentiment_analyser._scores = (
+            "programy.nlp.sentiment.scores.SentimentScores"
+        )
 
         self.client_context = self._client.create_client_context("testuser")
 
@@ -94,8 +100,8 @@ class SentimentExtensionTests(unittest.TestCase):
 
         conversation = self.client_context.bot.get_conversation(self.client_context)
         self.assertIsNotNone(conversation)
-        conversation.properties['positivity'] = 0.00
-        conversation.properties['subjectivity'] = 0.00
+        conversation.properties["positivity"] = 0.00
+        conversation.properties["subjectivity"] = 0.00
 
         result = extension.execute(self.client_context, "SENTIMENT CURRENT NUMERIC")
         self.assertIsNotNone(result)
@@ -107,12 +113,15 @@ class SentimentExtensionTests(unittest.TestCase):
 
         conversation = self.client_context.bot.get_conversation(self.client_context)
         self.assertIsNotNone(conversation)
-        conversation.properties['positivity'] = 0.00
-        conversation.properties['subjectivity'] = 0.00
+        conversation.properties["positivity"] = 0.00
+        conversation.properties["subjectivity"] = 0.00
 
         result = extension.execute(self.client_context, "SENTIMENT CURRENT TEXT")
         self.assertIsNotNone(result)
-        self.assertEqual("SENTIMENT SCORES POSITIVITY NEUTRAL SUBJECTIVITY COMPLETELY OBJECTIVE", result)
+        self.assertEqual(
+            "SENTIMENT SCORES POSITIVITY NEUTRAL SUBJECTIVITY COMPLETELY OBJECTIVE",
+            result,
+        )
 
     def test_sentiment_feeling_current_other(self):
         extension = SentimentExtension()
@@ -120,8 +129,8 @@ class SentimentExtensionTests(unittest.TestCase):
 
         conversation = self.client_context.bot.get_conversation(self.client_context)
         self.assertIsNotNone(conversation)
-        conversation.properties['positivity'] = 0.00
-        conversation.properties['subjectivity'] = 0.00
+        conversation.properties["positivity"] = 0.00
+        conversation.properties["subjectivity"] = 0.00
 
         result = extension.execute(self.client_context, "SENTIMENT CURRENT OTHER")
         self.assertIsNotNone(result)
@@ -133,7 +142,10 @@ class SentimentExtensionTests(unittest.TestCase):
 
         result = extension.execute(self.client_context, "SENTIMENT SCORE I LIKE PEAS")
         self.assertIsNotNone(result)
-        self.assertEqual("SENTIMENT SCORES POSITIVITY NEUTRAL SUBJECTIVITY COMPLETELY OBJECTIVE", result)
+        self.assertEqual(
+            "SENTIMENT SCORES POSITIVITY NEUTRAL SUBJECTIVITY COMPLETELY OBJECTIVE",
+            result,
+        )
 
     def test_sentiment_score_no_analyser(self):
         extension = SentimentExtension()
@@ -152,9 +164,13 @@ class SentimentExtensionTests(unittest.TestCase):
         # Need to create a conversation first
 
         conversation = self.client_context.bot.get_conversation(self.client_context)
-        question1 = Question.create_from_text(self.client_context, "Hello", self.client_context.bot.sentence_splitter)
+        question1 = Question.create_from_text(
+            self.client_context, "Hello", self.client_context.bot.sentence_splitter
+        )
         conversation.record_dialog(question1)
-        question2 = Question.create_from_text(self.client_context, "Hello", self.client_context.bot.sentence_splitter)
+        question2 = Question.create_from_text(
+            self.client_context, "Hello", self.client_context.bot.sentence_splitter
+        )
         conversation.record_dialog(question2)
         conversation.recalculate_sentiment_score(self.client_context)
 
@@ -170,7 +186,9 @@ class SentimentExtensionTests(unittest.TestCase):
 
         conversation = self.client_context.bot.get_conversation(self.client_context)
         self.assertIsNotNone(conversation)
-        question = Question.create_from_text(self.client_context, "Hello", self.client_context.bot.sentence_splitter)
+        question = Question.create_from_text(
+            self.client_context, "Hello", self.client_context.bot.sentence_splitter
+        )
         conversation.record_dialog(question)
 
         result = extension.execute(self.client_context, "SENTIMENT FEELING LAST 10")
@@ -214,7 +232,9 @@ class SentimentExtensionTests(unittest.TestCase):
 
         result = extension.execute(self.client_context, "SENTIMENT SCORE I LIKE YOU")
         self.assertIsNotNone(result)
-        self.assertEqual("SENTIMENT SCORES POSITIVITY UNKNOWN SUBJECTIVITY UNKNOWN", result)
+        self.assertEqual(
+            "SENTIMENT SCORES POSITIVITY UNKNOWN SUBJECTIVITY UNKNOWN", result
+        )
 
     def test_sentiment_sentiment_score(self):
         extension = SentimentExtension()
@@ -222,7 +242,10 @@ class SentimentExtensionTests(unittest.TestCase):
 
         result = extension.execute(self.client_context, "SENTIMENT SCORE I LIKE YOU")
         self.assertIsNotNone(result)
-        self.assertEqual("SENTIMENT SCORES POSITIVITY NEUTRAL SUBJECTIVITY COMPLETELY OBJECTIVE", result)
+        self.assertEqual(
+            "SENTIMENT SCORES POSITIVITY NEUTRAL SUBJECTIVITY COMPLETELY OBJECTIVE",
+            result,
+        )
 
     def test_sentiment_sentiment_positivity(self):
         extension = SentimentExtension()
@@ -239,4 +262,3 @@ class SentimentExtensionTests(unittest.TestCase):
         result = extension.execute(self.client_context, "SENTIMENT SUBJECTIVITY 0.5")
         self.assertIsNotNone(result)
         self.assertEqual("NEUTRAL", result)
-

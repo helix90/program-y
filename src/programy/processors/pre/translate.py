@@ -14,8 +14,9 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
+
 from programy.processors.processing import PreProcessor
+from programy.utils.logging.ylogger import YLogger
 
 
 class TranslatorPreProcessor(PreProcessor):
@@ -24,14 +25,21 @@ class TranslatorPreProcessor(PreProcessor):
         PreProcessor.__init__(self)
 
     def _translate(self, context, translator, translator_config, word_string):
-        trans_string = translator.translate(word_string,
-                                            from_lang=translator_config.from_lang,
-                                            to_lang=translator_config.to_lang)
+        trans_string = translator.translate(
+            word_string,
+            from_lang=translator_config.from_lang,
+            to_lang=translator_config.to_lang,
+        )
 
-        YLogger.debug(context, "Pre translated [%s](%s) to [%s](%s)", word_string, translator_config.from_lang,
-                      trans_string, translator_config.to_lang)
+        YLogger.debug(
+            context,
+            "Pre translated [%s](%s) to [%s](%s)",
+            word_string,
+            translator_config.from_lang,
+            trans_string,
+            translator_config.to_lang,
+        )
         return trans_string
-
 
     def process(self, context, word_string):
         translator_config = context.bot.configuration.from_translator
@@ -39,10 +47,18 @@ class TranslatorPreProcessor(PreProcessor):
 
         try:
             if translator is not None:
-                return self._translate(context, translator, translator_config, word_string)
+                return self._translate(
+                    context, translator, translator_config, word_string
+                )
 
         except Exception as e:
-            YLogger.exception(context, "Failed to translate [%s] from [%s] to [%s]", e, word_string,
-                              translator_config.from_lang, translator_config.to_lang)
+            YLogger.exception(
+                context,
+                "Failed to translate [%s] from [%s] to [%s]",
+                e,
+                word_string,
+                translator_config.from_lang,
+                translator_config.to_lang,
+            )
 
         return word_string

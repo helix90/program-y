@@ -14,6 +14,7 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 from programy.parser.exceptions import ParserException
 from programy.utils.text.text import TextUtils
 
@@ -44,16 +45,18 @@ class TemplateGraph:
         if self._template_factory.exists(name):
             return self._template_factory.new_node_class(name)
         else:
-            raise ParserException("No node [%s] registered in Template Node Factory" % (name))
+            raise ParserException(
+                "No node [%s] registered in Template Node Factory" % (name)
+            )
 
     # Helper function to return TemplateNode
     def get_base_node(self):
-        base_class = self.get_node_class_by_name('base')
+        base_class = self.get_node_class_by_name("base")
         return base_class()
 
     # Helper function to return TemplateWordNode
     def get_word_node(self, text):
-        word_class = self.get_node_class_by_name('word')
+        word_class = self.get_node_class_by_name("word")
         return word_class(text)
 
     def parse_tag_expression(self, expression, branch):
@@ -72,7 +75,7 @@ class TemplateGraph:
     # 	UNKNONWN NODE
     #   When its a node we don't know, add it as a text node. This deals with html nodes creeping into the text
     def parse_unknown_as_xml_node(self, expression, branch):
-        xml_node_class = self.get_node_class_by_name('xml')
+        xml_node_class = self.get_node_class_by_name("xml")
         xml_node = xml_node_class()
         branch.children.append(xml_node)
         xml_node.parse_expression(self, expression)

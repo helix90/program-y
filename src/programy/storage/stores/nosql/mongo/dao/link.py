@@ -14,12 +14,21 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 from programy.storage.stores.utils import DAOUtils
 
 
-class Link():
+class Link:
 
-    def __init__(self, primary_user, provided_key, generated_key, expires=None, expired=False, retry_count=0):
+    def __init__(
+        self,
+        primary_user,
+        provided_key,
+        generated_key,
+        expires=None,
+        expired=False,
+        retry_count=0,
+    ):
         self.id = None
         self.primary_user = primary_user
         self.provided_key = provided_key
@@ -29,35 +38,39 @@ class Link():
         self.retry_count = retry_count
 
     def __repr__(self):
-        return "<Linked(id='%s', primary='%s', generated='%s', provided='%s', expired='%s', expires='%s')>" % (
-            DAOUtils.valid_id(self.id),
-            self.primary_user,
-            self.generated_key,
-            self.provided_key,
-            DAOUtils.valid_id(self.expires),
-            DAOUtils.valid_id(self.expired),
+        return (
+            "<Linked(id='%s', primary='%s', generated='%s', provided='%s', expired='%s', expires='%s')>"
+            % (
+                DAOUtils.valid_id(self.id),
+                self.primary_user,
+                self.generated_key,
+                self.provided_key,
+                DAOUtils.valid_id(self.expires),
+                DAOUtils.valid_id(self.expired),
+            )
         )
 
     def to_document(self):
-        document = {"primary_user": self.primary_user,
-                    "provided_key": self.provided_key,
-                    "generated_key": self.generated_key,
-                    "expires": self.expires,
-                    "expired": self.expired,
-                    "retry_count": self.retry_count
-                    }
+        document = {
+            "primary_user": self.primary_user,
+            "provided_key": self.provided_key,
+            "generated_key": self.generated_key,
+            "expires": self.expires,
+            "expired": self.expired,
+            "retry_count": self.retry_count,
+        }
         if self.id is not None:
-            document['_id'] = self.id
+            document["_id"] = self.id
         return document
 
     @staticmethod
     def from_document(data):
         link = Link(None, None, None)
-        link.id = DAOUtils.get_value_from_data(data, '_id')
-        link.primary_user = DAOUtils.get_value_from_data(data, 'primary_user')
-        link.generated_key = DAOUtils.get_value_from_data(data, 'generated_key')
-        link.provided_key = DAOUtils.get_value_from_data(data, 'provided_key')
-        link.expires = DAOUtils.get_value_from_data(data, 'expires')
-        link.expired = DAOUtils.get_value_from_data(data, 'expired')
-        link.retry_count = DAOUtils.get_value_from_data(data, 'retry_count', 0)
+        link.id = DAOUtils.get_value_from_data(data, "_id")
+        link.primary_user = DAOUtils.get_value_from_data(data, "primary_user")
+        link.generated_key = DAOUtils.get_value_from_data(data, "generated_key")
+        link.provided_key = DAOUtils.get_value_from_data(data, "provided_key")
+        link.expires = DAOUtils.get_value_from_data(data, "expires")
+        link.expired = DAOUtils.get_value_from_data(data, "expired")
+        link.retry_count = DAOUtils.get_value_from_data(data, "retry_count", 0)
         return link

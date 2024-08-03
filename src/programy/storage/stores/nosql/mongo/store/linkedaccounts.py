@@ -14,14 +14,15 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
-from programy.storage.stores.nosql.mongo.store.mongostore import MongoStore
+
 from programy.storage.entities.linked import LinkedAccountStore
 from programy.storage.stores.nosql.mongo.dao.linked import LinkedAccount
+from programy.storage.stores.nosql.mongo.store.mongostore import MongoStore
+from programy.utils.logging.ylogger import YLogger
 
 
 class MongoLinkedAccountStore(MongoStore, LinkedAccountStore):
-    LINKEDACCOUNTS = 'linkedaccounts'
+    LINKEDACCOUNTS = "linkedaccounts"
     PRIMARY_USERID = "primary_userid"
     LINKED_USERID = "linked_userid"
 
@@ -33,27 +34,35 @@ class MongoLinkedAccountStore(MongoStore, LinkedAccountStore):
         return MongoLinkedAccountStore.LINKEDACCOUNTS
 
     def link_accounts(self, primary_userid, linked_userid):
-        YLogger.info(self, "Linking accounts [%s] [%s] in Mongo", primary_userid, linked_userid)
+        YLogger.info(
+            self, "Linking accounts [%s] [%s] in Mongo", primary_userid, linked_userid
+        )
         linked = LinkedAccount(primary_userid, linked_userid)
         return self.add_document(linked)
 
     def unlink_accounts(self, primary_userid):
         YLogger.info(self, "Unlinking accounts [%s] in Mongo", primary_userid)
         collection = self.collection()
-        result = collection.delete_many({MongoLinkedAccountStore.PRIMARY_USERID: primary_userid})
+        result = collection.delete_many(
+            {MongoLinkedAccountStore.PRIMARY_USERID: primary_userid}
+        )
         return bool(result.deleted_count > 0)
 
     def linked_accounts(self, primary_userid):
         collection = self.collection()
-        linked_accounts = collection.find({MongoLinkedAccountStore.PRIMARY_USERID: primary_userid})
+        linked_accounts = collection.find(
+            {MongoLinkedAccountStore.PRIMARY_USERID: primary_userid}
+        )
         accounts = []
         for account in linked_accounts:
-            accounts.append(account['linked_userid'])
+            accounts.append(account["linked_userid"])
         return accounts
 
     def primary_account(self, linked_userid):
         collection = self.collection()
-        account = collection.find_one({MongoLinkedAccountStore.LINKED_USERID: linked_userid})
+        account = collection.find_one(
+            {MongoLinkedAccountStore.LINKED_USERID: linked_userid}
+        )
         if account is not None:
-            return account['primary_userid']
+            return account["primary_userid"]
         return None

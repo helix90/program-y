@@ -1,14 +1,18 @@
 import os.path
 import shutil
 from unittest.mock import patch
-from programy.storage.stores.file.config import FileStorageConfiguration
-from programy.storage.stores.file.engine import FileStorageEngine
-from programy.storage.stores.file.store.conversations import FileConversationStore
-from programytest.storage.asserts.store.assert_conversations import ConverstionStoreAsserts
-from programy.storage.stores.file.store.config import FileStoreConfiguration
+
 from programytest.client import TestClient
+from programytest.storage.asserts.store.assert_conversations import (
+    ConverstionStoreAsserts,
+)
+
 from programy.dialog.conversation import Conversation
 from programy.dialog.question import Question
+from programy.storage.stores.file.config import FileStorageConfiguration
+from programy.storage.stores.file.engine import FileStorageEngine
+from programy.storage.stores.file.store.config import FileStoreConfiguration
+from programy.storage.stores.file.store.conversations import FileConversationStore
 
 
 class FileConversationStoreTests(ConverstionStoreAsserts):
@@ -36,7 +40,7 @@ class FileConversationStoreTests(ConverstionStoreAsserts):
         engine.initialise()
         store = FileConversationStore(engine)
 
-        self.assertEquals('/tmp/conversations', store._get_storage_path())
+        self.assertEquals("/tmp/conversations", store._get_storage_path())
         self.assertIsInstance(store.get_storage(), FileStoreConfiguration)
 
     def test_conversation_storage(self):
@@ -53,7 +57,10 @@ class FileConversationStoreTests(ConverstionStoreAsserts):
     def patch_write_file(self, conversation_filepath, json_text):
         raise Exception("Mock Exception")
 
-    @patch('programy.storage.stores.file.store.conversations.FileConversationStore._write_file', patch_write_file)
+    @patch(
+        "programy.storage.stores.file.store.conversations.FileConversationStore._write_file",
+        patch_write_file,
+    )
     def test_save_conversation_with_exception(self):
         config = FileStorageConfiguration()
         config.conversation_storage._dirs = [self._tmpdir]
@@ -78,7 +85,10 @@ class FileConversationStoreTests(ConverstionStoreAsserts):
     def patch_read_file(self, conversation_filepath, conversation):
         raise Exception("Mock Exception")
 
-    @patch('programy.storage.stores.file.store.conversations.FileConversationStore._read_file', patch_read_file)
+    @patch(
+        "programy.storage.stores.file.store.conversations.FileConversationStore._read_file",
+        patch_read_file,
+    )
     def test_load_conversation_with_exception(self):
         config = FileStorageConfiguration()
         config.conversation_storage._dirs = [self._tmpdir]

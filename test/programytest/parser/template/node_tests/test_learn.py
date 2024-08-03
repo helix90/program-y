@@ -1,10 +1,11 @@
 import unittest
 import xml.etree.ElementTree as ET
 
-from programy.parser.template.nodes.base import TemplateNode
-from programy.parser.template.nodes.learn import TemplateLearnNode, LearnCategory
-from programy.parser.template.nodes.word import TemplateWordNode
 from programytest.parser.base import ParserTestsBaseClass
+
+from programy.parser.template.nodes.base import TemplateNode
+from programy.parser.template.nodes.learn import LearnCategory, TemplateLearnNode
+from programy.parser.template.nodes.word import TemplateWordNode
 
 
 class MockTemplateLearnNode(TemplateLearnNode):
@@ -52,10 +53,12 @@ class TemplateLearnNodeTests(ParserTestsBaseClass):
         learn = TemplateLearnNode()
         self.assertIsNotNone(learn)
 
-        learn_cat = LearnCategory(ET.fromstring("<pattern>HELLO LEARN</pattern>"),
-                                  ET.fromstring("<topic>*</topic>"),
-                                  ET.fromstring("<that>*</that>"),
-                                  TemplateWordNode("LEARN"))
+        learn_cat = LearnCategory(
+            ET.fromstring("<pattern>HELLO LEARN</pattern>"),
+            ET.fromstring("<topic>*</topic>"),
+            ET.fromstring("<that>*</that>"),
+            TemplateWordNode("LEARN"),
+        )
         learn.append(learn_cat)
 
         root.append(learn)
@@ -68,17 +71,22 @@ class TemplateLearnNodeTests(ParserTestsBaseClass):
     def test_to_xml(self):
         root = TemplateNode()
         learn = TemplateLearnNode()
-        learn_cat = LearnCategory(ET.fromstring("<pattern>HELLO LEARN</pattern>"),
-                                  ET.fromstring("<topic>*</topic>"),
-                                  ET.fromstring("<that>*</that>"),
-                                  TemplateWordNode("LEARN"))
+        learn_cat = LearnCategory(
+            ET.fromstring("<pattern>HELLO LEARN</pattern>"),
+            ET.fromstring("<topic>*</topic>"),
+            ET.fromstring("<that>*</that>"),
+            TemplateWordNode("LEARN"),
+        )
         learn.append(learn_cat)
         root.append(learn)
 
         xml = root.xml_tree(self._client_context)
         self.assertIsNotNone(xml)
         xml_str = ET.tostring(xml, "utf-8").decode("utf-8")
-        self.assertEqual("<template><learn><category><pattern>HELLO LEARN</pattern><topic>*</topic><that>*</that><template>LEARN</template></category></learn></template>", xml_str)
+        self.assertEqual(
+            "<template><learn><category><pattern>HELLO LEARN</pattern><topic>*</topic><that>*</that><template>LEARN</template></category></learn></template>",
+            xml_str,
+        )
 
     def test_node_exception_handling(self):
         root = TemplateNode()

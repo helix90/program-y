@@ -14,13 +14,15 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
+import json
 import os
 import os.path
 import shutil
-import json
-from programy.utils.logging.ylogger import YLogger
-from programy.storage.stores.file.store.filestore import FileStore
+
 from programy.storage.entities.conversation import ConversationStore
+from programy.storage.stores.file.store.filestore import FileStore
+from programy.utils.logging.ylogger import YLogger
 
 
 class FileConversationStore(FileStore, ConversationStore):
@@ -36,8 +38,15 @@ class FileConversationStore(FileStore, ConversationStore):
         return self.storage_engine.configuration.conversation_storage
 
     def empty(self):
-        if os.path.exists(self._storage_engine.configuration.conversation_storage.dirs[0]) is True:
-            shutil.rmtree(self._storage_engine.configuration.conversation_storage.dirs[0])
+        if (
+            os.path.exists(
+                self._storage_engine.configuration.conversation_storage.dirs[0]
+            )
+            is True
+        ):
+            shutil.rmtree(
+                self._storage_engine.configuration.conversation_storage.dirs[0]
+            )
 
     def _conversations_filename(self, storage_dir, clientid, userid, ext="conv"):
         return "%s%s%s_%s.%s" % (storage_dir, os.sep, clientid, userid, ext)
@@ -47,11 +56,15 @@ class FileConversationStore(FileStore, ConversationStore):
             convo_file.write(json_text)
 
     def store_conversation(self, client_context, conversation, commit=True):
-        self._ensure_dir_exists(self._storage_engine.configuration.conversation_storage.dirs[0])
+        self._ensure_dir_exists(
+            self._storage_engine.configuration.conversation_storage.dirs[0]
+        )
 
         conversation_filepath = self._conversations_filename(
-            self._storage_engine.configuration.conversation_storage.dirs[0], client_context.client.id,
-            client_context.userid)
+            self._storage_engine.configuration.conversation_storage.dirs[0],
+            client_context.client.id,
+            client_context.userid,
+        )
 
         YLogger.debug(self, "Writing conversation to [%s]", conversation_filepath)
 
@@ -62,7 +75,12 @@ class FileConversationStore(FileStore, ConversationStore):
             self._write_file(conversation_filepath, json_text)
 
         except Exception as excep:
-            YLogger.exception_nostack(self, "Failed to write conversation file [%s]", excep, conversation_filepath)
+            YLogger.exception_nostack(
+                self,
+                "Failed to write conversation file [%s]",
+                excep,
+                conversation_filepath,
+            )
 
     def _read_file(self, conversation_filepath, conversation):
         with open(conversation_filepath, "r+") as convo_file:
@@ -72,8 +90,10 @@ class FileConversationStore(FileStore, ConversationStore):
 
     def load_conversation(self, client_context, conversation):
         conversation_filepath = self._conversations_filename(
-            self._storage_engine.configuration.conversation_storage.dirs[0], client_context.client.id,
-            client_context.userid)
+            self._storage_engine.configuration.conversation_storage.dirs[0],
+            client_context.client.id,
+            client_context.userid,
+        )
 
         if self._file_exists(conversation_filepath):
             try:
@@ -81,6 +101,11 @@ class FileConversationStore(FileStore, ConversationStore):
                 return True
 
             except Exception as excep:
-                YLogger.exception_nostack(self, "Failed to read conversation file [%s]", excep, conversation_filepath)
+                YLogger.exception_nostack(
+                    self,
+                    "Failed to read conversation file [%s]",
+                    excep,
+                    conversation_filepath,
+                )
 
         return False

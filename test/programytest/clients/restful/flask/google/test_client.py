@@ -1,9 +1,10 @@
 import unittest.mock
 
+from programytest.clients.arguments import MockArgumentParser
+
+from programy.clients.render.text import TextRenderer
 from programy.clients.restful.flask.google.client import GoogleBotClient
 from programy.clients.restful.flask.google.config import GoogleConfiguration
-from programy.clients.render.text import TextRenderer
-from programytest.clients.arguments import MockArgumentParser
 
 
 class MockGoogleBotClient(GoogleBotClient):
@@ -29,7 +30,7 @@ class GoogleClientBotClientTests(unittest.TestCase):
         self.assertIsNotNone(client)
 
         self.assertIsInstance(client.get_client_configuration(), GoogleConfiguration)
-        self.assertEqual('ProgramY AIML2.0 Client', client.get_description())
+        self.assertEqual("ProgramY AIML2.0 Client", client.get_description())
 
         self.assertFalse(client._render_callback())
         self.assertIsInstance(client.renderer, TextRenderer)
@@ -47,7 +48,8 @@ class GoogleClientBotClientTests(unittest.TestCase):
         client = MockGoogleBotClient(arguments)
         self.assertIsNotNone(client)
 
-        http_request = MockHttpRequest("""
+        http_request = MockHttpRequest(
+            """
         {
             "queryResult": {
               "intent": {
@@ -57,5 +59,5 @@ class GoogleClientBotClientTests(unittest.TestCase):
             }
         }
         """
-                                       )
+        )
         client.receive_message(http_request)

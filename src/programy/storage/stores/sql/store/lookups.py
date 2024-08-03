@@ -14,18 +14,22 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 import os
-from programy.utils.logging.ylogger import YLogger
-from programy.storage.stores.sql.store.sqlstore import SQLStore
-from programy.storage.entities.lookups import LookupsStore
-from programy.storage.stores.sql.dao.lookup import Denormal
-from programy.storage.stores.sql.dao.lookup import Normal
-from programy.storage.stores.sql.dao.lookup import Person
-from programy.storage.stores.sql.dao.lookup import Person2
-from programy.storage.stores.sql.dao.lookup import Gender
-from programy.storage.entities.store import Store
+
 from programy.mappings.base import DoubleStringPatternSplitCollection
+from programy.storage.entities.lookups import LookupsStore
+from programy.storage.entities.store import Store
+from programy.storage.stores.sql.dao.lookup import (
+    Denormal,
+    Gender,
+    Normal,
+    Person,
+    Person2,
+)
+from programy.storage.stores.sql.store.sqlstore import SQLStore
 from programy.utils.console.console import outputLog
+from programy.utils.logging.ylogger import YLogger
 
 
 class SQLLookupsStore(SQLStore, LookupsStore):
@@ -40,7 +44,9 @@ class SQLLookupsStore(SQLStore, LookupsStore):
     def load(self, collector, name=None):
         db_lookups = self._get_all()
         for db_lookup in db_lookups:
-            key, value = DoubleStringPatternSplitCollection.process_key_value(db_lookup.key, db_lookup.value)
+            key, value = DoubleStringPatternSplitCollection.process_key_value(
+                db_lookup.key, db_lookup.value
+            )
             collector.add_to_lookup(key, value)
 
     def _get_entity(self, key, value):
@@ -57,7 +63,9 @@ class SQLLookupsStore(SQLStore, LookupsStore):
                 lookup.value = value
 
             else:
-                YLogger.error(self, "Existing value in SQL lookup [%s] = [%s]", key, value)
+                YLogger.error(
+                    self, "Existing value in SQL lookup [%s] = [%s]", key, value
+                )
                 return False
 
         else:
@@ -76,20 +84,24 @@ class SQLLookupsStore(SQLStore, LookupsStore):
         return lookups
 
     def remove_lookup_key(self, key):
-        raise NotImplementedError()         # pragma: no cover
+        raise NotImplementedError()  # pragma: no cover
 
     def remove_lookup(self):
-        raise NotImplementedError()         # pragma: no cover
+        raise NotImplementedError()  # pragma: no cover
 
     def split_into_fields(self, line):
-        return DoubleStringPatternSplitCollection.\
-            split_line_by_pattern(line, DoubleStringPatternSplitCollection.RE_OF_SPLIT_PATTERN)
+        return DoubleStringPatternSplitCollection.split_line_by_pattern(
+            line, DoubleStringPatternSplitCollection.RE_OF_SPLIT_PATTERN
+        )
 
     def process_line(self, name, fields, verbose=False):
         if fields and len(fields) == 2:
             result = self.add_to_lookup(fields[0].upper(), fields[1].upper())
             if verbose is True:
-                outputLog(self, "Key=[%s], Value={%s]" % (fields[0].upper(), fields[1].upper()))
+                outputLog(
+                    self,
+                    "Key=[%s], Value={%s]" % (fields[0].upper(), fields[1].upper()),
+                )
             return result
         return False
 
@@ -105,16 +117,21 @@ class SQLLookupsStore(SQLStore, LookupsStore):
                 count += 1
         return count, success
 
-    def upload_from_file(self, filename, fileformat=Store.TEXT_FORMAT, commit=True, verbose=False):
+    def upload_from_file(
+        self, filename, fileformat=Store.TEXT_FORMAT, commit=True, verbose=False
+    ):
         try:
             count, success = self._read_lookups_from_file(filename, verbose)
             self.commit(commit)
             return count, success
 
         except Exception as e:
-            YLogger.exception(None, "Failed to upload lookups from file [%s]", e, filename)
+            YLogger.exception(
+                None, "Failed to upload lookups from file [%s]", e, filename
+            )
 
         return 0, 0
+
 
 class SQLDenormalStore(SQLLookupsStore):
 
@@ -125,7 +142,9 @@ class SQLDenormalStore(SQLLookupsStore):
         self._get_all().delete()
 
     def remove_lookup_key(self, key):
-        self._storage_engine.session.query(Denormal).filter(Denormal.key == key).delete()
+        self._storage_engine.session.query(Denormal).filter(
+            Denormal.key == key
+        ).delete()
 
     def remove_lookup(self):
         self._storage_engine.session.query(Denormal).delete()
@@ -138,7 +157,11 @@ class SQLDenormalStore(SQLLookupsStore):
 
     def _exists(self, key):
         try:
-            return self._storage_engine.session.query(Denormal).filter(Denormal.key == key).one()
+            return (
+                self._storage_engine.session.query(Denormal)
+                .filter(Denormal.key == key)
+                .one()
+            )
 
         except Exception:
             return None
@@ -166,7 +189,11 @@ class SQLNormalStore(SQLLookupsStore):
 
     def _exists(self, key):
         try:
-            return self._storage_engine.session.query(Normal).filter(Denormal.key == key).one()
+            return (
+                self._storage_engine.session.query(Normal)
+                .filter(Denormal.key == key)
+                .one()
+            )
 
         except Exception:
             return None
@@ -194,7 +221,11 @@ class SQLGenderStore(SQLLookupsStore):
 
     def _exists(self, key):
         try:
-            return self._storage_engine.session.query(Gender).filter(Gender.key == key).one()
+            return (
+                self._storage_engine.session.query(Gender)
+                .filter(Gender.key == key)
+                .one()
+            )
 
         except Exception:
             return None
@@ -222,7 +253,11 @@ class SQLPersonStore(SQLLookupsStore):
 
     def _exists(self, key):
         try:
-            return self._storage_engine.session.query(Person).filter(Person.key == key).one()
+            return (
+                self._storage_engine.session.query(Person)
+                .filter(Person.key == key)
+                .one()
+            )
 
         except Exception:
             return None
@@ -250,7 +285,11 @@ class SQLPerson2Store(SQLLookupsStore):
 
     def _exists(self, key):
         try:
-            return self._storage_engine.session.query(Person2).filter(Denormal.key == key).one()
+            return (
+                self._storage_engine.session.query(Person2)
+                .filter(Denormal.key == key)
+                .one()
+            )
 
         except Exception:
             return None

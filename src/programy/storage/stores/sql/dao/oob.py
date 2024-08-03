@@ -14,15 +14,15 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from sqlalchemy import Column
-from sqlalchemy import Integer
-from sqlalchemy import String
+
+from sqlalchemy import Column, Integer, String
+
 from programy.storage.stores.sql.base import Base
 from programy.storage.stores.utils import DAOUtils
 
 
 class OOB(Base):
-    __tablename__ = 'oobs'
+    __tablename__ = "oobs"
 
     id = Column(Integer, primary_key=True)
     name = Column(String(48))
@@ -30,5 +30,7 @@ class OOB(Base):
 
     def __repr__(self):
         return "<OOB(id='%s', name='%s', oob_class='%s')>" % (
-            DAOUtils.valid_id(self.id), self.name, self.oob_class)
-
+            DAOUtils.valid_id(self.id),
+            self.name,
+            self.oob_class,
+        )

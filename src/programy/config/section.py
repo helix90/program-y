@@ -14,7 +14,9 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 from abc import abstractmethod
+
 from programy.config.base import BaseConfigurationData
 from programy.utils.substitutions.substitues import Substitutions
 
@@ -25,7 +27,9 @@ class BaseSectionConfigurationData(BaseConfigurationData):
         BaseConfigurationData.__init__(self, name)
 
     @abstractmethod
-    def load_config_section(self, configuration_file, configuration, bot_root, subs: Substitutions = None):
+    def load_config_section(
+        self, configuration_file, configuration, bot_root, subs: Substitutions = None
+    ):
         """
         Never Implemented
         """

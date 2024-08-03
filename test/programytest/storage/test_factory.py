@@ -1,7 +1,9 @@
 import unittest
 
 import programytest.storage.engines as Engines
+
 from programy.clients.events.console.config import ConsoleConfiguration
+from programy.config.base import BaseConfigurationData
 from programy.config.file.yaml_file import YamlConfigurationFile
 from programy.storage.config import StorageConfiguration
 from programy.storage.factory import StorageFactory
@@ -10,7 +12,6 @@ from programy.storage.stores.logger.engine import LoggerStorageEngine
 from programy.storage.stores.nosql.mongo.engine import MongoStorageEngine
 from programy.storage.stores.nosql.redis.engine import RedisStorageEngine
 from programy.storage.stores.sql.engine import SQLStorageEngine
-from programy.config.base import BaseConfigurationData
 
 
 class MockStorageConfiguration(BaseConfigurationData):
@@ -32,7 +33,8 @@ class StorageFactoryTests(unittest.TestCase):
 
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         console:
             storage:
                 entities:
@@ -51,7 +53,10 @@ class StorageFactoryTests(unittest.TestCase):
                             properties_storage: ./storage/properties
                             conversation_storage: ./storage/conversations
 
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         bot_config = yaml.get_section("console")
 
@@ -71,15 +76,23 @@ class StorageFactoryTests(unittest.TestCase):
         self.assertTrue(factory.entity_storage_engine_available("users"))
         self.assertIsInstance(factory.entity_storage_engine("users"), FileStorageEngine)
         self.assertTrue(factory.entity_storage_engine_available("linked_accounts"))
-        self.assertIsInstance(factory.entity_storage_engine("linked_accounts"), FileStorageEngine)
+        self.assertIsInstance(
+            factory.entity_storage_engine("linked_accounts"), FileStorageEngine
+        )
         self.assertTrue(factory.entity_storage_engine_available("links"))
         self.assertIsInstance(factory.entity_storage_engine("links"), FileStorageEngine)
         self.assertTrue(factory.entity_storage_engine_available("properties"))
-        self.assertIsInstance(factory.entity_storage_engine("properties"), FileStorageEngine)
+        self.assertIsInstance(
+            factory.entity_storage_engine("properties"), FileStorageEngine
+        )
         self.assertTrue(factory.entity_storage_engine_available("conversations"))
-        self.assertIsInstance(factory.entity_storage_engine("conversations"), FileStorageEngine)
+        self.assertIsInstance(
+            factory.entity_storage_engine("conversations"), FileStorageEngine
+        )
         self.assertTrue(factory.entity_storage_engine_available("categories"))
-        self.assertIsInstance(factory.entity_storage_engine("categories"), FileStorageEngine)
+        self.assertIsInstance(
+            factory.entity_storage_engine("categories"), FileStorageEngine
+        )
         self.assertFalse(factory.entity_storage_engine_available("other"))
         self.assertIsNone(factory.entity_storage_engine("other"))
 
@@ -88,7 +101,8 @@ class StorageFactoryTests(unittest.TestCase):
 
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         console:
             storage:
                 entities:
@@ -109,7 +123,10 @@ class StorageFactoryTests(unittest.TestCase):
                             create_db: true
                             drop_all_first: true
 
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         bot_config = yaml.get_section("console")
 
@@ -131,15 +148,23 @@ class StorageFactoryTests(unittest.TestCase):
         self.assertTrue(factory.entity_storage_engine_available("users"))
         self.assertIsInstance(factory.entity_storage_engine("users"), SQLStorageEngine)
         self.assertTrue(factory.entity_storage_engine_available("linked_accounts"))
-        self.assertIsInstance(factory.entity_storage_engine("linked_accounts"), SQLStorageEngine)
+        self.assertIsInstance(
+            factory.entity_storage_engine("linked_accounts"), SQLStorageEngine
+        )
         self.assertTrue(factory.entity_storage_engine_available("links"))
         self.assertIsInstance(factory.entity_storage_engine("links"), SQLStorageEngine)
         self.assertTrue(factory.entity_storage_engine_available("properties"))
-        self.assertIsInstance(factory.entity_storage_engine("properties"), SQLStorageEngine)
+        self.assertIsInstance(
+            factory.entity_storage_engine("properties"), SQLStorageEngine
+        )
         self.assertTrue(factory.entity_storage_engine_available("conversations"))
-        self.assertIsInstance(factory.entity_storage_engine("conversations"), SQLStorageEngine)
+        self.assertIsInstance(
+            factory.entity_storage_engine("conversations"), SQLStorageEngine
+        )
         self.assertTrue(factory.entity_storage_engine_available("categories"))
-        self.assertIsInstance(factory.entity_storage_engine("categories"), SQLStorageEngine)
+        self.assertIsInstance(
+            factory.entity_storage_engine("categories"), SQLStorageEngine
+        )
         self.assertFalse(factory.entity_storage_engine_available("other"))
         self.assertIsNone(factory.entity_storage_engine("other"))
 
@@ -148,7 +173,8 @@ class StorageFactoryTests(unittest.TestCase):
 
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         console:
             storage:
                 entities:
@@ -167,7 +193,10 @@ class StorageFactoryTests(unittest.TestCase):
                             database: programy
                             drop_all_first: true
 
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         bot_config = yaml.get_section("console")
 
@@ -187,26 +216,42 @@ class StorageFactoryTests(unittest.TestCase):
         self.assertIsNone(factory.storage_engine("other"))
 
         self.assertTrue(factory.entity_storage_engine_available("users"))
-        self.assertIsInstance(factory.entity_storage_engine("users"), MongoStorageEngine)
+        self.assertIsInstance(
+            factory.entity_storage_engine("users"), MongoStorageEngine
+        )
         self.assertTrue(factory.entity_storage_engine_available("linked_accounts"))
-        self.assertIsInstance(factory.entity_storage_engine("linked_accounts"), MongoStorageEngine)
+        self.assertIsInstance(
+            factory.entity_storage_engine("linked_accounts"), MongoStorageEngine
+        )
         self.assertTrue(factory.entity_storage_engine_available("links"))
-        self.assertIsInstance(factory.entity_storage_engine("links"), MongoStorageEngine)
+        self.assertIsInstance(
+            factory.entity_storage_engine("links"), MongoStorageEngine
+        )
         self.assertTrue(factory.entity_storage_engine_available("properties"))
-        self.assertIsInstance(factory.entity_storage_engine("properties"), MongoStorageEngine)
+        self.assertIsInstance(
+            factory.entity_storage_engine("properties"), MongoStorageEngine
+        )
         self.assertTrue(factory.entity_storage_engine_available("conversations"))
-        self.assertIsInstance(factory.entity_storage_engine("conversations"), MongoStorageEngine)
+        self.assertIsInstance(
+            factory.entity_storage_engine("conversations"), MongoStorageEngine
+        )
         self.assertTrue(factory.entity_storage_engine_available("categories"))
-        self.assertIsInstance(factory.entity_storage_engine("categories"), MongoStorageEngine)
+        self.assertIsInstance(
+            factory.entity_storage_engine("categories"), MongoStorageEngine
+        )
         self.assertFalse(factory.entity_storage_engine_available("other"))
         self.assertIsNone(factory.entity_storage_engine("other"))
 
-    @unittest.skipIf(Engines.mongo is False or Engines.sql is False or Engines.redis is False, Engines.all_disabled)
-    def  test_initialise_with_config_mixed(self):
+    @unittest.skipIf(
+        Engines.mongo is False or Engines.sql is False or Engines.redis is False,
+        Engines.all_disabled,
+    )
+    def test_initialise_with_config_mixed(self):
 
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         console:
             storage:
                 entities:
@@ -256,7 +301,10 @@ class StorageFactoryTests(unittest.TestCase):
                         config:
                             conversation_logger: conversation
 
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         bot_config = yaml.get_section("console")
 
@@ -282,22 +330,32 @@ class StorageFactoryTests(unittest.TestCase):
         self.assertTrue(factory.entity_storage_engine_available("users"))
         self.assertIsInstance(factory.entity_storage_engine("users"), SQLStorageEngine)
         self.assertTrue(factory.entity_storage_engine_available("linked_accounts"))
-        self.assertIsInstance(factory.entity_storage_engine("linked_accounts"), SQLStorageEngine)
+        self.assertIsInstance(
+            factory.entity_storage_engine("linked_accounts"), SQLStorageEngine
+        )
         self.assertTrue(factory.entity_storage_engine_available("links"))
         self.assertIsInstance(factory.entity_storage_engine("links"), SQLStorageEngine)
         self.assertTrue(factory.entity_storage_engine_available("properties"))
-        self.assertIsInstance(factory.entity_storage_engine("properties"), RedisStorageEngine)
+        self.assertIsInstance(
+            factory.entity_storage_engine("properties"), RedisStorageEngine
+        )
         self.assertTrue(factory.entity_storage_engine_available("conversations"))
-        self.assertIsInstance(factory.entity_storage_engine("conversations"), MongoStorageEngine)
+        self.assertIsInstance(
+            factory.entity_storage_engine("conversations"), MongoStorageEngine
+        )
         self.assertTrue(factory.entity_storage_engine_available("categories"))
-        self.assertIsInstance(factory.entity_storage_engine("categories"), SQLStorageEngine)
+        self.assertIsInstance(
+            factory.entity_storage_engine("categories"), SQLStorageEngine
+        )
         self.assertFalse(factory.entity_storage_engine_available("other"))
         self.assertIsNone(factory.entity_storage_engine("other"))
 
     def test_load_engines_from_config_return_none(self):
         storage_config = StorageConfiguration()
         storage_config._entity_store["MOCK"] = storage_config
-        storage_config._store_configs["MOCK"] = MockStorageConfiguration("MOCK", throwexcept=False)
+        storage_config._store_configs["MOCK"] = MockStorageConfiguration(
+            "MOCK", throwexcept=False
+        )
         factory = StorageFactory()
 
         factory.load_engines_from_config(storage_config)
@@ -307,7 +365,9 @@ class StorageFactoryTests(unittest.TestCase):
     def test_load_engines_from_config_raise_exception(self):
         storage_config = StorageConfiguration()
         storage_config._entity_store["MOCK"] = storage_config
-        storage_config._store_configs["MOCK"] = MockStorageConfiguration("MOCK", throwexcept=True)
+        storage_config._store_configs["MOCK"] = MockStorageConfiguration(
+            "MOCK", throwexcept=True
+        )
         factory = StorageFactory()
 
         factory.load_engines_from_config(storage_config)

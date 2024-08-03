@@ -20,12 +20,18 @@ class DynamicAIMLTests(unittest.TestCase):
     def setUp(self):
         client = DynamicAIMLTestClient()
         self._client_context = client.create_client_context("testid")
-        self._client_context.brain.properties.load_from_text("""
+        self._client_context.brain.properties.load_from_text(
+            """
              default_get:unknown
-         """)
-        self._client_context.bot.brain.dynamics.add_dynamic_var('gettime', "programy.dynamic.variables.datetime.GetTime", None)
+         """
+        )
+        self._client_context.bot.brain.dynamics.add_dynamic_var(
+            "gettime", "programy.dynamic.variables.datetime.GetTime", None
+        )
 
     def test_dynamic_get(self):
-        response = self._client_context.bot.ask_question(self._client_context, "DYNAMIC GET")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "DYNAMIC GET"
+        )
         self.assertIsNotNone(response)
         self.assertTrue(response.startswith("The time is "))

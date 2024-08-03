@@ -14,29 +14,33 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 import re
-from programy.utils.logging.ylogger import YLogger
-from programy.parser.pattern.nodes.base import PatternNode
-from programy.parser.pattern.equalsmatch import EqualsMatch
+
 from programy.parser.exceptions import ParserException
+from programy.parser.pattern.equalsmatch import EqualsMatch
+from programy.parser.pattern.nodes.base import PatternNode
+from programy.utils.logging.ylogger import YLogger
 
 
 class PatternRegexNode(PatternNode):
 
-    def __init__(self, attribs, text, userid='*'):
+    def __init__(self, attribs, text, userid="*"):
         # @TODO This does not handle upper and lower case
         PatternNode.__init__(self, userid)
         self._pattern_text = None
         self._pattern_template = None
         self._pattern = None
-        if 'pattern' in attribs:
-            self._pattern_text = attribs['pattern']
-        elif 'template' in attribs:
-            self._pattern_template = attribs['template']
+        if "pattern" in attribs:
+            self._pattern_text = attribs["pattern"]
+        elif "template" in attribs:
+            self._pattern_template = attribs["template"]
         elif text:
             self._pattern_text = text
         else:
-            raise ParserException("Invalid regex node, neither pattern or template specified as attribute or text")
+            raise ParserException(
+                "Invalid regex node, neither pattern or template specified as attribute or text"
+            )
 
         if self._pattern_text is not None:
             self._pattern = re.compile(self._pattern_text, re.IGNORECASE)
@@ -60,12 +64,18 @@ class PatternRegexNode(PatternNode):
         string = ""
         if self._pattern_template is not None:
             if include_user is True:
-                string += '<regex userid="%s" template="%s">' % (self.userid, self._pattern_template)
+                string += '<regex userid="%s" template="%s">' % (
+                    self.userid,
+                    self._pattern_template,
+                )
             else:
                 string += '<regex template="%s">' % self._pattern_template
         else:
             if include_user is True:
-                string += '<regex userid="%s" pattern="%s">' % (self.userid, self._pattern_text)
+                string += '<regex userid="%s" pattern="%s">' % (
+                    self.userid,
+                    self._pattern_text,
+                )
             else:
                 string += '<regex pattern="%s">' % self._pattern_text
         string += super(PatternRegexNode, self).to_xml(client_context)
@@ -76,8 +86,15 @@ class PatternRegexNode(PatternNode):
         if verbose is True:
             if self._pattern_template is not None:
                 return "REGEX [%s] [%s] template=[%s]" % (
-                    self.userid, self._child_count(verbose), self._pattern_template)
-            return "REGEX [%s] [%s] pattern=[%s]" % (self.userid, self._child_count(verbose), self._pattern_text)
+                    self.userid,
+                    self._child_count(verbose),
+                    self._pattern_template,
+                )
+            return "REGEX [%s] [%s] pattern=[%s]" % (
+                self.userid,
+                self._child_count(verbose),
+                self._pattern_text,
+            )
 
         if self._pattern_template is not None:
             return "REGEX template=[%s]" % self._pattern_template
@@ -97,12 +114,14 @@ class PatternRegexNode(PatternNode):
     def equals(self, client_context, words, word_no):
         word = words.word(word_no)
 
-        if self.userid != '*':
+        if self.userid != "*":
             if self.userid != client_context.userid:
                 return EqualsMatch(False, word_no)
 
         if self._pattern_template is not None:
-            template = client_context.brain.regex_templates.regex(self._pattern_template)
+            template = client_context.brain.regex_templates.regex(
+                self._pattern_template
+            )
             if template is not None:
                 result = template.match(word)
                 if result is not None:

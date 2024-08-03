@@ -14,12 +14,13 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
-from programy.storage.stores.sql.store.sqlstore import SQLStore
+
 from programy.storage.entities.spelling import SpellingStore
-from programy.storage.stores.sql.dao.corpus import Corpus
 from programy.storage.entities.store import Store
+from programy.storage.stores.sql.dao.corpus import Corpus
+from programy.storage.stores.sql.store.sqlstore import SQLStore
 from programy.utils.console.console import outputLog
+from programy.utils.logging.ylogger import YLogger
 
 
 class SQLSpellingStore(SQLStore, SpellingStore):
@@ -39,7 +40,7 @@ class SQLSpellingStore(SQLStore, SpellingStore):
         success = 0
         with open(filename, "r") as text_file:
             for lines in text_file:
-                words = lines.split(' ')
+                words = lines.split(" ")
                 for word in words:
                     corpus = Corpus(word=word)
                     self.storage_engine.session.add(corpus)
@@ -50,7 +51,9 @@ class SQLSpellingStore(SQLStore, SpellingStore):
 
         return count, success
 
-    def upload_from_file(self, filename, fileformat=Store.TEXT_FORMAT, commit=True, verbose=False):
+    def upload_from_file(
+        self, filename, fileformat=Store.TEXT_FORMAT, commit=True, verbose=False
+    ):
 
         try:
             count, success = self._read_corpus_from_file(filename, verbose)

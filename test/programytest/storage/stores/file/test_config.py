@@ -1,15 +1,18 @@
 import os
 import unittest
+
+import programytest.storage.engines as Engines
+
 from programy.clients.events.console.config import ConsoleConfiguration
 from programy.config.file.yaml_file import YamlConfigurationFile
 from programy.storage.stores.file.config import FileStorageConfiguration
 from programy.storage.stores.file.store.filestore import FileStore
-import programytest.storage.engines as Engines
 
 
 class FileStorageConfigurationTests(unittest.TestCase):
 
     unittest.skipIf(Engines.file is True, Engines.file_disabled)
+
     def test_initial_creation_with_defaults(self):
 
         config = FileStorageConfiguration()
@@ -61,7 +64,8 @@ class FileStorageConfigurationTests(unittest.TestCase):
 
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
               file:
                 type:   file
                 config:                    
@@ -234,62 +238,253 @@ class FileStorageConfigurationTests(unittest.TestCase):
                       encoding: utf-8     
                       delete_on_start: false            
 
-                """, ConsoleConfiguration(), ".")
+                """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         file_config = yaml.get_section("file")
 
         config = FileStorageConfiguration()
         config.load_config_section(yaml, file_config, ".")
 
-        self.assert_object_config(config.categories_storage, dirs=["./storage/categories"], extension="aiml", subdirs=True, fileformat="xml", encoding="utf-8", delete_on_start=False)
-        self.assert_object_config(config.learnf_storage, dirs=["./storage/categories/learnf"], extension="aiml", subdirs=False, fileformat="xml", encoding="utf-8", delete_on_start=False)
+        self.assert_object_config(
+            config.categories_storage,
+            dirs=["./storage/categories"],
+            extension="aiml",
+            subdirs=True,
+            fileformat="xml",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
+        self.assert_object_config(
+            config.learnf_storage,
+            dirs=["./storage/categories/learnf"],
+            extension="aiml",
+            subdirs=False,
+            fileformat="xml",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
 
-        self.assert_object_config(config.conversation_storage, dirs=["./storage/conversations"], extension="txt", subdirs=False, fileformat="text", encoding="utf-8", delete_on_start=False)
+        self.assert_object_config(
+            config.conversation_storage,
+            dirs=["./storage/conversations"],
+            extension="txt",
+            subdirs=False,
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
 
-        self.assert_object_config(config.sets_storage, dirs=["./storage/sets"], extension="txt", subdirs=False, fileformat="text", encoding="utf-8", delete_on_start=False)
-        self.assert_object_config(config.maps_storage, dirs=["./storage/maps"], extension="txt", subdirs=False, fileformat="text", encoding="utf-8", delete_on_start=False)
-        self.assert_object_config(config.rdf_storage, dirs=["./storage/rdfs"], extension="txt", subdirs=True, fileformat="text", encoding="utf-8", delete_on_start=False)
+        self.assert_object_config(
+            config.sets_storage,
+            dirs=["./storage/sets"],
+            extension="txt",
+            subdirs=False,
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
+        self.assert_object_config(
+            config.maps_storage,
+            dirs=["./storage/maps"],
+            extension="txt",
+            subdirs=False,
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
+        self.assert_object_config(
+            config.rdf_storage,
+            dirs=["./storage/rdfs"],
+            extension="txt",
+            subdirs=True,
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
 
-        self.assert_object_config(config.denormal_storage, file="./storage/lookups/denormal.txt", fileformat="text", encoding="utf-8", delete_on_start=False)
-        self.assert_object_config(config.normal_storage, file="./storage/lookups/normal.txt", fileformat="text", encoding="utf-8", delete_on_start=False)
-        self.assert_object_config(config.gender_storage, file="./storage/lookups/gender.txt", fileformat="text", encoding="utf-8", delete_on_start=False)
-        self.assert_object_config(config.person_storage, file="./storage/lookups/person.txt", fileformat="text", encoding="utf-8", delete_on_start=False)
-        self.assert_object_config(config.person2_storage, file="./storage/lookups/person2.txt", fileformat="text", encoding="utf-8", delete_on_start=False)
-        self.assert_object_config(config.regex_storage, file="./storage/lookups/regex.txt", fileformat="text", encoding="utf-8", delete_on_start=False)
+        self.assert_object_config(
+            config.denormal_storage,
+            file="./storage/lookups/denormal.txt",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
+        self.assert_object_config(
+            config.normal_storage,
+            file="./storage/lookups/normal.txt",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
+        self.assert_object_config(
+            config.gender_storage,
+            file="./storage/lookups/gender.txt",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
+        self.assert_object_config(
+            config.person_storage,
+            file="./storage/lookups/person.txt",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
+        self.assert_object_config(
+            config.person2_storage,
+            file="./storage/lookups/person2.txt",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
+        self.assert_object_config(
+            config.regex_storage,
+            file="./storage/lookups/regex.txt",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
 
-        self.assert_object_config(config.properties_storage, file="./storage/properties.txt", fileformat="text", encoding="utf-8", delete_on_start=False)
-        self.assert_object_config(config.defaults_storage, file="./storage/defaults.txt", fileformat="text", encoding="utf-8", delete_on_start=False)
+        self.assert_object_config(
+            config.properties_storage,
+            file="./storage/properties.txt",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
+        self.assert_object_config(
+            config.defaults_storage,
+            file="./storage/defaults.txt",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
 
-        self.assert_object_config(config.twitter_storage, dirs=["./storage/twitter"], extension="txt", subdirs=False, fileformat="text", encoding="utf-8", delete_on_start=False)
+        self.assert_object_config(
+            config.twitter_storage,
+            dirs=["./storage/twitter"],
+            extension="txt",
+            subdirs=False,
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
 
-        self.assert_object_config(config.spelling_storage, file="./storage/spelling/corpus.txt", fileformat="text", encoding="utf-8", delete_on_start=False)
+        self.assert_object_config(
+            config.spelling_storage,
+            file="./storage/spelling/corpus.txt",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
 
-        self.assert_object_config(config.license_storage, file="./storage/licenses/license.keys", fileformat="text", encoding="utf-8", delete_on_start=False)
+        self.assert_object_config(
+            config.license_storage,
+            file="./storage/licenses/license.keys",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
 
-        self.assert_object_config(config.pattern_nodes_storage, file="./storage/nodes/pattern_nodes.conf", fileformat="text", encoding="utf-8", delete_on_start=False)
-        self.assert_object_config(config.template_nodes_storage, file="./storage/nodes/template_nodes.conf", fileformat="text", encoding="utf-8", delete_on_start=False)
+        self.assert_object_config(
+            config.pattern_nodes_storage,
+            file="./storage/nodes/pattern_nodes.conf",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
+        self.assert_object_config(
+            config.template_nodes_storage,
+            file="./storage/nodes/template_nodes.conf",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
 
-        self.assert_object_config(config.binaries_storage, file="./storage/braintree/braintree.bin", fileformat="binary", encoding="utf-8", delete_on_start=False)
-        self.assert_object_config(config.braintree_storage, file="./storage/braintree/braintree.xml", fileformat="xml", encoding="utf-8", delete_on_start=False)
+        self.assert_object_config(
+            config.binaries_storage,
+            file="./storage/braintree/braintree.bin",
+            fileformat="binary",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
+        self.assert_object_config(
+            config.braintree_storage,
+            file="./storage/braintree/braintree.xml",
+            fileformat="xml",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
 
-        self.assert_object_config(config.preprocessors_storage, file="./storage/processing/preprocessors.conf", fileformat="text", encoding="utf-8", delete_on_start=False)
-        self.assert_object_config(config.postprocessors_storage, file="./storage/processing/postprocessors.conf", fileformat="text", encoding="utf-8", delete_on_start=False)
-        self.assert_object_config(config.postquestionprocessors_storage, file="./storage/processing/postquestionprocessors.conf", fileformat="text", encoding="utf-8", delete_on_start=False)
+        self.assert_object_config(
+            config.preprocessors_storage,
+            file="./storage/processing/preprocessors.conf",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
+        self.assert_object_config(
+            config.postprocessors_storage,
+            file="./storage/processing/postprocessors.conf",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
+        self.assert_object_config(
+            config.postquestionprocessors_storage,
+            file="./storage/processing/postquestionprocessors.conf",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
 
-        self.assert_object_config(config.usergroups_storage, file="./storage/security/usergroups.yaml", fileformat="yaml", encoding="utf-8", delete_on_start=False)
+        self.assert_object_config(
+            config.usergroups_storage,
+            file="./storage/security/usergroups.yaml",
+            fileformat="yaml",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
 
-        self.assert_object_config(config.triggers_storage, file="./storage/triggers/triggers.txt", fileformat="text", encoding="utf-8", delete_on_start=False)
+        self.assert_object_config(
+            config.triggers_storage,
+            file="./storage/triggers/triggers.txt",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
 
-        self.assert_object_config(config.oobs_storage, file="./storage/oobs/callmom.conf", fileformat="text", encoding="utf-8", delete_on_start=False)
+        self.assert_object_config(
+            config.oobs_storage,
+            file="./storage/oobs/callmom.conf",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
 
-        self.assert_object_config(config.services_storage, dirs=["./storage/services"], extension="yaml", subdirs=True, fileformat="yaml", encoding="utf-8", delete_on_start=False)
+        self.assert_object_config(
+            config.services_storage,
+            dirs=["./storage/services"],
+            extension="yaml",
+            subdirs=True,
+            fileformat="yaml",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
 
     def test_initialise_without_config(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
                 files:
-                """, ConsoleConfiguration(), ".")
+                """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         file_config = yaml.get_section("files")
 
@@ -298,55 +493,243 @@ class FileStorageConfigurationTests(unittest.TestCase):
 
         tmpdir = FileStorageConfiguration.get_temp_dir()
 
-        self.assert_object_config(config.categories_storage, dirs=[tmpdir + os.sep + "categories"], extension="aiml", subdirs=True, fileformat="xml", encoding="utf-8", delete_on_start=False)
-        self.assert_object_config(config.learnf_storage, dirs=[tmpdir + os.sep + "categories/learnf"], extension="aiml", subdirs=False, fileformat="xml", encoding="utf-8", delete_on_start=False)
+        self.assert_object_config(
+            config.categories_storage,
+            dirs=[tmpdir + os.sep + "categories"],
+            extension="aiml",
+            subdirs=True,
+            fileformat="xml",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
+        self.assert_object_config(
+            config.learnf_storage,
+            dirs=[tmpdir + os.sep + "categories/learnf"],
+            extension="aiml",
+            subdirs=False,
+            fileformat="xml",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
 
-        self.assert_object_config(config.conversation_storage, dirs=[tmpdir + os.sep + "conversations"], extension="txt", subdirs=False, fileformat="text", encoding="utf-8", delete_on_start=False)
+        self.assert_object_config(
+            config.conversation_storage,
+            dirs=[tmpdir + os.sep + "conversations"],
+            extension="txt",
+            subdirs=False,
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
 
-        self.assert_object_config(config.sets_storage, dirs=[tmpdir + os.sep + "sets"], extension="txt", subdirs=False, fileformat="text", encoding="utf-8", delete_on_start=False)
-        self.assert_object_config(config.maps_storage, dirs=[tmpdir + os.sep + "maps"], extension="txt", subdirs=False, fileformat="text", encoding="utf-8", delete_on_start=False)
-        self.assert_object_config(config.rdf_storage, dirs=[tmpdir + os.sep + "rdfs"], extension="txt", subdirs=True, fileformat="text", encoding="utf-8", delete_on_start=False)
+        self.assert_object_config(
+            config.sets_storage,
+            dirs=[tmpdir + os.sep + "sets"],
+            extension="txt",
+            subdirs=False,
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
+        self.assert_object_config(
+            config.maps_storage,
+            dirs=[tmpdir + os.sep + "maps"],
+            extension="txt",
+            subdirs=False,
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
+        self.assert_object_config(
+            config.rdf_storage,
+            dirs=[tmpdir + os.sep + "rdfs"],
+            extension="txt",
+            subdirs=True,
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
 
-        self.assert_object_config(config.denormal_storage, file=tmpdir + os.sep + "lookups/denormal.txt", fileformat="text", encoding="utf-8", delete_on_start=False)
-        self.assert_object_config(config.normal_storage, file=tmpdir + os.sep + "lookups/normal.txt", fileformat="text", encoding="utf-8", delete_on_start=False)
-        self.assert_object_config(config.gender_storage, file=tmpdir + os.sep + "lookups/gender.txt", fileformat="text", encoding="utf-8", delete_on_start=False)
-        self.assert_object_config(config.person_storage, file=tmpdir + os.sep + "lookups/person.txt", fileformat="text", encoding="utf-8", delete_on_start=False)
-        self.assert_object_config(config.person2_storage, file=tmpdir + os.sep + "lookups/person2.txt", fileformat="text", encoding="utf-8", delete_on_start=False)
-        self.assert_object_config(config.regex_storage, file=tmpdir + os.sep + "regex/regex-templates.txt", fileformat="text", encoding="utf-8", delete_on_start=False)
+        self.assert_object_config(
+            config.denormal_storage,
+            file=tmpdir + os.sep + "lookups/denormal.txt",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
+        self.assert_object_config(
+            config.normal_storage,
+            file=tmpdir + os.sep + "lookups/normal.txt",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
+        self.assert_object_config(
+            config.gender_storage,
+            file=tmpdir + os.sep + "lookups/gender.txt",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
+        self.assert_object_config(
+            config.person_storage,
+            file=tmpdir + os.sep + "lookups/person.txt",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
+        self.assert_object_config(
+            config.person2_storage,
+            file=tmpdir + os.sep + "lookups/person2.txt",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
+        self.assert_object_config(
+            config.regex_storage,
+            file=tmpdir + os.sep + "regex/regex-templates.txt",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
 
-        self.assert_object_config(config.properties_storage, file=tmpdir + os.sep + "properties/properties.txt", fileformat="text", encoding="utf-8", delete_on_start=False)
-        self.assert_object_config(config.defaults_storage, file=tmpdir + os.sep + "properties/defaults.txt", fileformat="text", encoding="utf-8", delete_on_start=False)
+        self.assert_object_config(
+            config.properties_storage,
+            file=tmpdir + os.sep + "properties/properties.txt",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
+        self.assert_object_config(
+            config.defaults_storage,
+            file=tmpdir + os.sep + "properties/defaults.txt",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
 
-        self.assert_object_config(config.twitter_storage, dirs=[tmpdir + os.sep + "twitter"], extension="txt", subdirs=False, fileformat="text", encoding="utf-8", delete_on_start=False)
+        self.assert_object_config(
+            config.twitter_storage,
+            dirs=[tmpdir + os.sep + "twitter"],
+            extension="txt",
+            subdirs=False,
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
 
-        self.assert_object_config(config.spelling_storage, file=tmpdir + os.sep + "spelling/corpus.txt", fileformat="text", encoding="utf-8", delete_on_start=False)
+        self.assert_object_config(
+            config.spelling_storage,
+            file=tmpdir + os.sep + "spelling/corpus.txt",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
 
-        self.assert_object_config(config.license_storage, file=tmpdir + os.sep + "licenses/license.keys", fileformat="text", encoding="utf-8", delete_on_start=False)
+        self.assert_object_config(
+            config.license_storage,
+            file=tmpdir + os.sep + "licenses/license.keys",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
 
-        self.assert_object_config(config.pattern_nodes_storage, file=tmpdir + os.sep + "nodes/pattern_nodes.conf", fileformat="text", encoding="utf-8", delete_on_start=False)
-        self.assert_object_config(config.template_nodes_storage, file=tmpdir + os.sep + "nodes/template_nodes.conf", fileformat="text", encoding="utf-8", delete_on_start=False)
+        self.assert_object_config(
+            config.pattern_nodes_storage,
+            file=tmpdir + os.sep + "nodes/pattern_nodes.conf",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
+        self.assert_object_config(
+            config.template_nodes_storage,
+            file=tmpdir + os.sep + "nodes/template_nodes.conf",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
 
-        self.assert_object_config(config.binaries_storage, file=tmpdir + os.sep + "binaries/binaries.bin", fileformat="binary", encoding="utf-8", delete_on_start=False)
-        self.assert_object_config(config.braintree_storage, file=tmpdir + os.sep + "braintree/braintree.xml", fileformat="xml", encoding="utf-8", delete_on_start=False)
+        self.assert_object_config(
+            config.binaries_storage,
+            file=tmpdir + os.sep + "binaries/binaries.bin",
+            fileformat="binary",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
+        self.assert_object_config(
+            config.braintree_storage,
+            file=tmpdir + os.sep + "braintree/braintree.xml",
+            fileformat="xml",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
 
-        self.assert_object_config(config.preprocessors_storage, file=tmpdir + os.sep + "processing/preprocessors.conf", fileformat="text", encoding="utf-8", delete_on_start=False)
-        self.assert_object_config(config.postprocessors_storage, file=tmpdir + os.sep + "processing/postprocessors.conf", fileformat="text", encoding="utf-8", delete_on_start=False)
-        self.assert_object_config(config.postquestionprocessors_storage, file=tmpdir + os.sep + "processing/postquestionprocessors.conf", fileformat="text", encoding="utf-8", delete_on_start=False)
+        self.assert_object_config(
+            config.preprocessors_storage,
+            file=tmpdir + os.sep + "processing/preprocessors.conf",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
+        self.assert_object_config(
+            config.postprocessors_storage,
+            file=tmpdir + os.sep + "processing/postprocessors.conf",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
+        self.assert_object_config(
+            config.postquestionprocessors_storage,
+            file=tmpdir + os.sep + "processing/postquestionprocessors.conf",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
 
-        self.assert_object_config(config.usergroups_storage, file=tmpdir + os.sep + "security/usergroups.yaml", fileformat="yaml", encoding="utf-8", delete_on_start=False)
+        self.assert_object_config(
+            config.usergroups_storage,
+            file=tmpdir + os.sep + "security/usergroups.yaml",
+            fileformat="yaml",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
 
-        self.assert_object_config(config.triggers_storage, file=tmpdir + os.sep + "triggers/triggers.txt", fileformat="text", encoding="utf-8", delete_on_start=False)
+        self.assert_object_config(
+            config.triggers_storage,
+            file=tmpdir + os.sep + "triggers/triggers.txt",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
 
-        self.assert_object_config(config.oobs_storage, file=tmpdir + os.sep + "oob/callmom.conf", fileformat="text", encoding="utf-8", delete_on_start=False)
+        self.assert_object_config(
+            config.oobs_storage,
+            file=tmpdir + os.sep + "oob/callmom.conf",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
 
-        self.assert_object_config(config.services_storage, dirs=[tmpdir + os.sep + "services"], extension="yaml", subdirs=False, fileformat="yaml", encoding="utf-8", delete_on_start=False)
+        self.assert_object_config(
+            config.services_storage,
+            dirs=[tmpdir + os.sep + "services"],
+            extension="yaml",
+            subdirs=False,
+            fileformat="yaml",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
 
     def test_initialise_without_config_no_data(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
                 other:
-                """, ConsoleConfiguration(), ".")
+                """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         file_config = yaml.get_section("files")
 
@@ -355,50 +738,244 @@ class FileStorageConfigurationTests(unittest.TestCase):
 
         tmpdir = FileStorageConfiguration.get_temp_dir()
 
-        self.assert_object_config(config.categories_storage, dirs=[tmpdir + os.sep + "categories"], extension="aiml", subdirs=True, fileformat="xml", encoding="utf-8", delete_on_start=False)
-        self.assert_object_config(config.learnf_storage, dirs=[tmpdir + os.sep + "categories/learnf"], extension="aiml", subdirs=False, fileformat="xml", encoding="utf-8", delete_on_start=False)
+        self.assert_object_config(
+            config.categories_storage,
+            dirs=[tmpdir + os.sep + "categories"],
+            extension="aiml",
+            subdirs=True,
+            fileformat="xml",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
+        self.assert_object_config(
+            config.learnf_storage,
+            dirs=[tmpdir + os.sep + "categories/learnf"],
+            extension="aiml",
+            subdirs=False,
+            fileformat="xml",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
 
-        self.assert_object_config(config.conversation_storage, dirs=[tmpdir + os.sep + "conversations"], extension="txt", subdirs=False, fileformat="text", encoding="utf-8", delete_on_start=False)
+        self.assert_object_config(
+            config.conversation_storage,
+            dirs=[tmpdir + os.sep + "conversations"],
+            extension="txt",
+            subdirs=False,
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
 
-        self.assert_object_config(config.sets_storage, dirs=[tmpdir + os.sep + "sets"], extension="txt", subdirs=False, fileformat="text", encoding="utf-8", delete_on_start=False)
-        self.assert_object_config(config.maps_storage, dirs=[tmpdir + os.sep + "maps"], extension="txt", subdirs=False, fileformat="text", encoding="utf-8", delete_on_start=False)
-        self.assert_object_config(config.rdf_storage, dirs=[tmpdir + os.sep + "rdfs"], extension="txt", subdirs=True, fileformat="text", encoding="utf-8", delete_on_start=False)
+        self.assert_object_config(
+            config.sets_storage,
+            dirs=[tmpdir + os.sep + "sets"],
+            extension="txt",
+            subdirs=False,
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
+        self.assert_object_config(
+            config.maps_storage,
+            dirs=[tmpdir + os.sep + "maps"],
+            extension="txt",
+            subdirs=False,
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
+        self.assert_object_config(
+            config.rdf_storage,
+            dirs=[tmpdir + os.sep + "rdfs"],
+            extension="txt",
+            subdirs=True,
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
 
-        self.assert_object_config(config.denormal_storage, file=tmpdir + os.sep + "lookups/denormal.txt", fileformat="text", encoding="utf-8", delete_on_start=False)
-        self.assert_object_config(config.normal_storage, file=tmpdir + os.sep + "lookups/normal.txt", fileformat="text", encoding="utf-8", delete_on_start=False)
-        self.assert_object_config(config.gender_storage, file=tmpdir + os.sep + "lookups/gender.txt", fileformat="text", encoding="utf-8", delete_on_start=False)
-        self.assert_object_config(config.person_storage, file=tmpdir + os.sep + "lookups/person.txt", fileformat="text", encoding="utf-8", delete_on_start=False)
-        self.assert_object_config(config.person2_storage, file=tmpdir + os.sep + "lookups/person2.txt", fileformat="text", encoding="utf-8", delete_on_start=False)
-        self.assert_object_config(config.regex_storage, file=tmpdir + os.sep + "regex/regex-templates.txt", fileformat="text", encoding="utf-8", delete_on_start=False)
+        self.assert_object_config(
+            config.denormal_storage,
+            file=tmpdir + os.sep + "lookups/denormal.txt",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
+        self.assert_object_config(
+            config.normal_storage,
+            file=tmpdir + os.sep + "lookups/normal.txt",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
+        self.assert_object_config(
+            config.gender_storage,
+            file=tmpdir + os.sep + "lookups/gender.txt",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
+        self.assert_object_config(
+            config.person_storage,
+            file=tmpdir + os.sep + "lookups/person.txt",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
+        self.assert_object_config(
+            config.person2_storage,
+            file=tmpdir + os.sep + "lookups/person2.txt",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
+        self.assert_object_config(
+            config.regex_storage,
+            file=tmpdir + os.sep + "regex/regex-templates.txt",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
 
-        self.assert_object_config(config.properties_storage, file=tmpdir + os.sep + "properties/properties.txt", fileformat="text", encoding="utf-8", delete_on_start=False)
-        self.assert_object_config(config.defaults_storage, file=tmpdir + os.sep + "properties/defaults.txt", fileformat="text", encoding="utf-8", delete_on_start=False)
+        self.assert_object_config(
+            config.properties_storage,
+            file=tmpdir + os.sep + "properties/properties.txt",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
+        self.assert_object_config(
+            config.defaults_storage,
+            file=tmpdir + os.sep + "properties/defaults.txt",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
 
-        self.assert_object_config(config.twitter_storage, dirs=[tmpdir + os.sep + "twitter"], extension="txt", subdirs=False, fileformat="text", encoding="utf-8", delete_on_start=False)
+        self.assert_object_config(
+            config.twitter_storage,
+            dirs=[tmpdir + os.sep + "twitter"],
+            extension="txt",
+            subdirs=False,
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
 
-        self.assert_object_config(config.spelling_storage, file=tmpdir + os.sep + "spelling/corpus.txt", fileformat="text", encoding="utf-8", delete_on_start=False)
+        self.assert_object_config(
+            config.spelling_storage,
+            file=tmpdir + os.sep + "spelling/corpus.txt",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
 
-        self.assert_object_config(config.license_storage, file=tmpdir + os.sep + "licenses/license.keys", fileformat="text", encoding="utf-8", delete_on_start=False)
+        self.assert_object_config(
+            config.license_storage,
+            file=tmpdir + os.sep + "licenses/license.keys",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
 
-        self.assert_object_config(config.pattern_nodes_storage, file=tmpdir + os.sep + "nodes/pattern_nodes.conf", fileformat="text", encoding="utf-8", delete_on_start=False)
-        self.assert_object_config(config.template_nodes_storage, file=tmpdir + os.sep + "nodes/template_nodes.conf", fileformat="text", encoding="utf-8", delete_on_start=False)
+        self.assert_object_config(
+            config.pattern_nodes_storage,
+            file=tmpdir + os.sep + "nodes/pattern_nodes.conf",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
+        self.assert_object_config(
+            config.template_nodes_storage,
+            file=tmpdir + os.sep + "nodes/template_nodes.conf",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
 
-        self.assert_object_config(config.binaries_storage, file=tmpdir + os.sep + "binaries/binaries.bin", fileformat="binary", encoding="utf-8", delete_on_start=False)
-        self.assert_object_config(config.braintree_storage, file=tmpdir + os.sep + "braintree/braintree.xml", fileformat="xml", encoding="utf-8", delete_on_start=False)
+        self.assert_object_config(
+            config.binaries_storage,
+            file=tmpdir + os.sep + "binaries/binaries.bin",
+            fileformat="binary",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
+        self.assert_object_config(
+            config.braintree_storage,
+            file=tmpdir + os.sep + "braintree/braintree.xml",
+            fileformat="xml",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
 
-        self.assert_object_config(config.preprocessors_storage, file=tmpdir + os.sep + "processing/preprocessors.conf", fileformat="text", encoding="utf-8", delete_on_start=False)
-        self.assert_object_config(config.postprocessors_storage, file=tmpdir + os.sep + "processing/postprocessors.conf", fileformat="text", encoding="utf-8", delete_on_start=False)
-        self.assert_object_config(config.postquestionprocessors_storage, file=tmpdir + os.sep + "processing/postquestionprocessors.conf", fileformat="text", encoding="utf-8", delete_on_start=False)
+        self.assert_object_config(
+            config.preprocessors_storage,
+            file=tmpdir + os.sep + "processing/preprocessors.conf",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
+        self.assert_object_config(
+            config.postprocessors_storage,
+            file=tmpdir + os.sep + "processing/postprocessors.conf",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
+        self.assert_object_config(
+            config.postquestionprocessors_storage,
+            file=tmpdir + os.sep + "processing/postquestionprocessors.conf",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
 
-        self.assert_object_config(config.usergroups_storage, file=tmpdir + os.sep + "security/usergroups.yaml", fileformat="yaml", encoding="utf-8", delete_on_start=False)
+        self.assert_object_config(
+            config.usergroups_storage,
+            file=tmpdir + os.sep + "security/usergroups.yaml",
+            fileformat="yaml",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
 
-        self.assert_object_config(config.triggers_storage, file=tmpdir + os.sep + "triggers/triggers.txt", fileformat="text", encoding="utf-8", delete_on_start=False)
+        self.assert_object_config(
+            config.triggers_storage,
+            file=tmpdir + os.sep + "triggers/triggers.txt",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
 
-        self.assert_object_config(config.oobs_storage, file=tmpdir + os.sep + "oob/callmom.conf", fileformat="text", encoding="utf-8", delete_on_start=False)
+        self.assert_object_config(
+            config.oobs_storage,
+            file=tmpdir + os.sep + "oob/callmom.conf",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
 
-        self.assert_object_config(config.services_storage, dirs=[tmpdir + os.sep + "services"], extension="yaml", subdirs=False, fileformat="yaml", encoding="utf-8", delete_on_start=False)
+        self.assert_object_config(
+            config.services_storage,
+            dirs=[tmpdir + os.sep + "services"],
+            extension="yaml",
+            subdirs=False,
+            fileformat="yaml",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
 
-    def assert_object_config(self, config, dirs=None, file=None, extension=None, subdirs=False, fileformat=None, encoding=None, delete_on_start=False):
+    def assert_object_config(
+        self,
+        config,
+        dirs=None,
+        file=None,
+        extension=None,
+        subdirs=False,
+        fileformat=None,
+        encoding=None,
+        delete_on_start=False,
+    ):
         self.assertIsNotNone(config)
         if config.has_multiple_dirs() is True:
             self.assertEqual(dirs, config.dirs)
@@ -413,11 +990,17 @@ class FileStorageConfigurationTests(unittest.TestCase):
     def _assert_storage_map(self, amap, config):
         self.assertEquals(30, len(amap.keys()))
 
-        self.assertEquals(amap[FileStore.CATEGORIES_STORAGE], config._categories_storage)
+        self.assertEquals(
+            amap[FileStore.CATEGORIES_STORAGE], config._categories_storage
+        )
         self.assertEquals(amap[FileStore.ERRORS_STORAGE], config._errors_storage)
-        self.assertEquals(amap[FileStore.DUPLICATES_STORAGE], config._duplicates_storage)
+        self.assertEquals(
+            amap[FileStore.DUPLICATES_STORAGE], config._duplicates_storage
+        )
         self.assertEquals(amap[FileStore.LEARNF_STORAGE], config._learnf_storage)
-        self.assertEquals(amap[FileStore.CONVERSATION_STORAGE], config._conversation_storage)
+        self.assertEquals(
+            amap[FileStore.CONVERSATION_STORAGE], config._conversation_storage
+        )
         self.assertEquals(amap[FileStore.SETS_STORAGE], config._sets_storage)
         self.assertEquals(amap[FileStore.MAPS_STORAGE], config._maps_storage)
         self.assertEquals(amap[FileStore.RDF_STORAGE], config._rdf_storage)
@@ -427,19 +1010,34 @@ class FileStorageConfigurationTests(unittest.TestCase):
         self.assertEquals(amap[FileStore.PERSON_STORAGE], config._person_storage)
         self.assertEquals(amap[FileStore.PERSON2_STORAGE], config._person2_storage)
         self.assertEquals(amap[FileStore.REGEX_STORAGE], config._regex_storage)
-        self.assertEquals(amap[FileStore.PROPERTIES_STORAGE], config._properties_storage)
+        self.assertEquals(
+            amap[FileStore.PROPERTIES_STORAGE], config._properties_storage
+        )
         self.assertEquals(amap[FileStore.DEFAULTS_STORAGE], config._defaults_storage)
         self.assertEquals(amap[FileStore.TWITTER_STORAGE], config._twitter_storage)
         self.assertEquals(amap[FileStore.SPELLING_STORAGE], config._spelling_storage)
         self.assertEquals(amap[FileStore.LICENSE_STORAGE], config._license_storage)
-        self.assertEquals(amap[FileStore.PATTERN_NODES_STORAGE], config._pattern_nodes_storage)
-        self.assertEquals(amap[FileStore.TEMPLATE_NODES_STORAGE], config._template_nodes_storage)
+        self.assertEquals(
+            amap[FileStore.PATTERN_NODES_STORAGE], config._pattern_nodes_storage
+        )
+        self.assertEquals(
+            amap[FileStore.TEMPLATE_NODES_STORAGE], config._template_nodes_storage
+        )
         self.assertEquals(amap[FileStore.BINARIES_STORAGE], config._binaries_storage)
         self.assertEquals(amap[FileStore.BRAINTREE_STORAGE], config._braintree_storage)
-        self.assertEquals(amap[FileStore.PREPROCESSORS_STORAGE], config._preprocessors_storage)
-        self.assertEquals(amap[FileStore.POSTPROCESSORS_STORAGE], config._postprocessors_storage)
-        self.assertEquals(amap[FileStore.POSTQUESTIONPROCESSORS_STORAGE], config._postquestionprocessors_storage)
-        self.assertEquals(amap[FileStore.USERGROUPS_STORAGE], config._usergroups_storage)
+        self.assertEquals(
+            amap[FileStore.PREPROCESSORS_STORAGE], config._preprocessors_storage
+        )
+        self.assertEquals(
+            amap[FileStore.POSTPROCESSORS_STORAGE], config._postprocessors_storage
+        )
+        self.assertEquals(
+            amap[FileStore.POSTQUESTIONPROCESSORS_STORAGE],
+            config._postquestionprocessors_storage,
+        )
+        self.assertEquals(
+            amap[FileStore.USERGROUPS_STORAGE], config._usergroups_storage
+        )
         self.assertEquals(amap[FileStore.TRIGGERS_STORAGE], config._triggers_storage)
         self.assertEquals(amap[FileStore.OOBS_STORAGE], config._oobs_storage)
         self.assertEquals(amap[FileStore.SERVICES_STORAGE], config._services_storage)
@@ -487,91 +1085,283 @@ class FileStorageConfigurationTests(unittest.TestCase):
     def assert_defaults(test, data):
         tmpdir = FileStorageConfiguration.get_temp_dir()
 
-        FileStorageConfigurationTests.assert_yaml_config(test, data['categories_storage'], dirs=[tmpdir + os.sep + "categories"], extension="aiml",
-                                subdirs=True, fileformat="xml", encoding="utf-8", delete_on_start=False)
-        FileStorageConfigurationTests.assert_yaml_config(test, data['learnf_storage'], dirs=[tmpdir + os.sep + "categories/learnf"], extension="aiml",
-                                subdirs=False, fileformat="xml", encoding="utf-8", delete_on_start=False)
+        FileStorageConfigurationTests.assert_yaml_config(
+            test,
+            data["categories_storage"],
+            dirs=[tmpdir + os.sep + "categories"],
+            extension="aiml",
+            subdirs=True,
+            fileformat="xml",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
+        FileStorageConfigurationTests.assert_yaml_config(
+            test,
+            data["learnf_storage"],
+            dirs=[tmpdir + os.sep + "categories/learnf"],
+            extension="aiml",
+            subdirs=False,
+            fileformat="xml",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
 
-        FileStorageConfigurationTests.assert_yaml_config(test, data['conversation_storage'], dirs=[tmpdir + os.sep + "conversations"], extension="txt",
-                                subdirs=False, fileformat="text", encoding="utf-8", delete_on_start=False)
+        FileStorageConfigurationTests.assert_yaml_config(
+            test,
+            data["conversation_storage"],
+            dirs=[tmpdir + os.sep + "conversations"],
+            extension="txt",
+            subdirs=False,
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
 
-        FileStorageConfigurationTests.assert_yaml_config(test, data['sets_storage'], dirs=[tmpdir + os.sep + "sets"], extension="txt", subdirs=False,
-                                fileformat="text", encoding="utf-8", delete_on_start=False)
-        FileStorageConfigurationTests.assert_yaml_config(test, data['maps_storage'], dirs=[tmpdir + os.sep + "maps"], extension="txt", subdirs=False,
-                                fileformat="text", encoding="utf-8", delete_on_start=False)
-        FileStorageConfigurationTests.assert_yaml_config(test, data['rdf_storage'], dirs=[tmpdir + os.sep + "rdfs"], extension="txt", subdirs=True,
-                                fileformat="text", encoding="utf-8", delete_on_start=False)
+        FileStorageConfigurationTests.assert_yaml_config(
+            test,
+            data["sets_storage"],
+            dirs=[tmpdir + os.sep + "sets"],
+            extension="txt",
+            subdirs=False,
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
+        FileStorageConfigurationTests.assert_yaml_config(
+            test,
+            data["maps_storage"],
+            dirs=[tmpdir + os.sep + "maps"],
+            extension="txt",
+            subdirs=False,
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
+        FileStorageConfigurationTests.assert_yaml_config(
+            test,
+            data["rdf_storage"],
+            dirs=[tmpdir + os.sep + "rdfs"],
+            extension="txt",
+            subdirs=True,
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
 
-        FileStorageConfigurationTests.assert_yaml_config(test, data['denormal_storage'], file=tmpdir + os.sep + "lookups/denormal.txt",
-                                fileformat="text", encoding="utf-8", delete_on_start=False)
-        FileStorageConfigurationTests.assert_yaml_config(test, data['normal_storage'], file=tmpdir + os.sep + "lookups/normal.txt", fileformat="text",
-                                encoding="utf-8", delete_on_start=False)
-        FileStorageConfigurationTests.assert_yaml_config(test, data['gender_storage'], file=tmpdir + os.sep + "lookups/gender.txt", fileformat="text",
-                                encoding="utf-8", delete_on_start=False)
-        FileStorageConfigurationTests.assert_yaml_config(test, data['person_storage'], file=tmpdir + os.sep + "lookups/person.txt", fileformat="text",
-                                encoding="utf-8", delete_on_start=False)
-        FileStorageConfigurationTests.assert_yaml_config(test, data['person2_storage'], file=tmpdir + os.sep + "lookups/person2.txt",
-                                fileformat="text", encoding="utf-8", delete_on_start=False)
-        FileStorageConfigurationTests.assert_yaml_config(test, data['regex_storage'], file=tmpdir + os.sep + "regex/regex-templates.txt", fileformat="text",
-                                encoding="utf-8", delete_on_start=False)
+        FileStorageConfigurationTests.assert_yaml_config(
+            test,
+            data["denormal_storage"],
+            file=tmpdir + os.sep + "lookups/denormal.txt",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
+        FileStorageConfigurationTests.assert_yaml_config(
+            test,
+            data["normal_storage"],
+            file=tmpdir + os.sep + "lookups/normal.txt",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
+        FileStorageConfigurationTests.assert_yaml_config(
+            test,
+            data["gender_storage"],
+            file=tmpdir + os.sep + "lookups/gender.txt",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
+        FileStorageConfigurationTests.assert_yaml_config(
+            test,
+            data["person_storage"],
+            file=tmpdir + os.sep + "lookups/person.txt",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
+        FileStorageConfigurationTests.assert_yaml_config(
+            test,
+            data["person2_storage"],
+            file=tmpdir + os.sep + "lookups/person2.txt",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
+        FileStorageConfigurationTests.assert_yaml_config(
+            test,
+            data["regex_storage"],
+            file=tmpdir + os.sep + "regex/regex-templates.txt",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
 
-        FileStorageConfigurationTests.assert_yaml_config(test, data['properties_storage'], file=tmpdir + os.sep + "properties/properties.txt", fileformat="text",
-                                encoding="utf-8", delete_on_start=False)
-        FileStorageConfigurationTests.assert_yaml_config(test, data['defaults_storage'], file=tmpdir + os.sep + "properties/defaults.txt", fileformat="text",
-                                encoding="utf-8", delete_on_start=False)
+        FileStorageConfigurationTests.assert_yaml_config(
+            test,
+            data["properties_storage"],
+            file=tmpdir + os.sep + "properties/properties.txt",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
+        FileStorageConfigurationTests.assert_yaml_config(
+            test,
+            data["defaults_storage"],
+            file=tmpdir + os.sep + "properties/defaults.txt",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
 
-        FileStorageConfigurationTests.assert_yaml_config(test, data['twitter_storage'], dirs=[tmpdir + os.sep + "twitter"], extension="txt",
-                                subdirs=False, fileformat="text", encoding="utf-8", delete_on_start=False)
+        FileStorageConfigurationTests.assert_yaml_config(
+            test,
+            data["twitter_storage"],
+            dirs=[tmpdir + os.sep + "twitter"],
+            extension="txt",
+            subdirs=False,
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
 
-        FileStorageConfigurationTests.assert_yaml_config(test, data['spelling_storage'], file=tmpdir + os.sep + "spelling/corpus.txt",
-                                fileformat="text", encoding="utf-8", delete_on_start=False)
+        FileStorageConfigurationTests.assert_yaml_config(
+            test,
+            data["spelling_storage"],
+            file=tmpdir + os.sep + "spelling/corpus.txt",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
 
-        FileStorageConfigurationTests.assert_yaml_config(test, data['license_storage'], file=tmpdir + os.sep + "licenses/license.keys",
-                                fileformat="text", encoding="utf-8", delete_on_start=False)
+        FileStorageConfigurationTests.assert_yaml_config(
+            test,
+            data["license_storage"],
+            file=tmpdir + os.sep + "licenses/license.keys",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
 
-        FileStorageConfigurationTests.assert_yaml_config(test, data['pattern_nodes_storage'], file=tmpdir + os.sep + "nodes/pattern_nodes.conf",
-                                fileformat="text", encoding="utf-8", delete_on_start=False)
-        FileStorageConfigurationTests.assert_yaml_config(test, data['template_nodes_storage'], file=tmpdir + os.sep + "nodes/template_nodes.conf",
-                                fileformat="text", encoding="utf-8", delete_on_start=False)
+        FileStorageConfigurationTests.assert_yaml_config(
+            test,
+            data["pattern_nodes_storage"],
+            file=tmpdir + os.sep + "nodes/pattern_nodes.conf",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
+        FileStorageConfigurationTests.assert_yaml_config(
+            test,
+            data["template_nodes_storage"],
+            file=tmpdir + os.sep + "nodes/template_nodes.conf",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
 
-        FileStorageConfigurationTests.assert_yaml_config(test, data['binaries_storage'], file=tmpdir + os.sep + "braintree/braintree.bin",
-                                fileformat="binary", encoding="utf-8", delete_on_start=False)
-        FileStorageConfigurationTests.assert_yaml_config(test, data['braintree_storage'], file=tmpdir + os.sep + "braintree/braintree.xml",
-                                fileformat="xml", encoding="utf-8", delete_on_start=False)
+        FileStorageConfigurationTests.assert_yaml_config(
+            test,
+            data["binaries_storage"],
+            file=tmpdir + os.sep + "braintree/braintree.bin",
+            fileformat="binary",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
+        FileStorageConfigurationTests.assert_yaml_config(
+            test,
+            data["braintree_storage"],
+            file=tmpdir + os.sep + "braintree/braintree.xml",
+            fileformat="xml",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
 
-        FileStorageConfigurationTests.assert_yaml_config(test, data['preprocessors_storage'], file=tmpdir + os.sep + "processing/preprocessors.conf",
-                                fileformat="text", encoding="utf-8", delete_on_start=False)
-        FileStorageConfigurationTests.assert_yaml_config(test, data['postprocessors_storage'], file=tmpdir + os.sep + "processing/postprocessors.conf",
-                                fileformat="text", encoding="utf-8", delete_on_start=False)
-        FileStorageConfigurationTests.assert_yaml_config(test, data['postquestionprocessors_storage'],
-                                file=tmpdir + os.sep + "processing/postquestionprocessors.conf", fileformat="text",
-                                encoding="utf-8", delete_on_start=False)
+        FileStorageConfigurationTests.assert_yaml_config(
+            test,
+            data["preprocessors_storage"],
+            file=tmpdir + os.sep + "processing/preprocessors.conf",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
+        FileStorageConfigurationTests.assert_yaml_config(
+            test,
+            data["postprocessors_storage"],
+            file=tmpdir + os.sep + "processing/postprocessors.conf",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
+        FileStorageConfigurationTests.assert_yaml_config(
+            test,
+            data["postquestionprocessors_storage"],
+            file=tmpdir + os.sep + "processing/postquestionprocessors.conf",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
 
-        FileStorageConfigurationTests.assert_yaml_config(test, data['usergroups_storage'], file=tmpdir + os.sep + "security/usergroups.yaml",
-                                fileformat="text", encoding="utf-8", delete_on_start=False)
+        FileStorageConfigurationTests.assert_yaml_config(
+            test,
+            data["usergroups_storage"],
+            file=tmpdir + os.sep + "security/usergroups.yaml",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
 
-        FileStorageConfigurationTests.assert_yaml_config(test, data['triggers_storage'], file=tmpdir + os.sep + "triggers/triggers.txt",
-                                fileformat="text", encoding="utf-8", delete_on_start=False)
+        FileStorageConfigurationTests.assert_yaml_config(
+            test,
+            data["triggers_storage"],
+            file=tmpdir + os.sep + "triggers/triggers.txt",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
 
-        FileStorageConfigurationTests.assert_yaml_config(test, data['oobs_storage'], file=tmpdir + os.sep + "oobs/callmom.conf",
-                                fileformat="text", encoding="utf-8", delete_on_start=False)
+        FileStorageConfigurationTests.assert_yaml_config(
+            test,
+            data["oobs_storage"],
+            file=tmpdir + os.sep + "oobs/callmom.conf",
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
 
-        FileStorageConfigurationTests.assert_yaml_config(test, data['services_storage'], dirs=[tmpdir + os.sep + "services"], extension="yaml",
-                                subdirs=True, fileformat="yaml", encoding="utf-8", delete_on_start=False)
+        FileStorageConfigurationTests.assert_yaml_config(
+            test,
+            data["services_storage"],
+            dirs=[tmpdir + os.sep + "services"],
+            extension="yaml",
+            subdirs=True,
+            fileformat="yaml",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
 
     @staticmethod
-    def assert_yaml_config(test, config, dirs=None, file=None, extension=None, subdirs=False, fileformat=None, encoding=None, delete_on_start=False):
+    def assert_yaml_config(
+        test,
+        config,
+        dirs=None,
+        file=None,
+        extension=None,
+        subdirs=False,
+        fileformat=None,
+        encoding=None,
+        delete_on_start=False,
+    ):
         test.assertIsNotNone(config)
 
         if dirs is not None:
-            test.assertEqual(dirs, config['dirs'])
+            test.assertEqual(dirs, config["dirs"])
 
         if file is not None:
-            test.assertEqual(file, config['file'])
+            test.assertEqual(file, config["file"])
 
-        test.assertEqual(extension, config['extension'])
-        test.assertEqual(subdirs, config['subdirs'])
-        test.assertEqual(fileformat, config['format'])
-        test.assertEqual(encoding, config['encoding'])
-        test.assertEqual(delete_on_start, config['delete_on_start'])
-
+        test.assertEqual(extension, config["extension"])
+        test.assertEqual(subdirs, config["subdirs"])
+        test.assertEqual(fileformat, config["format"])
+        test.assertEqual(encoding, config["encoding"])
+        test.assertEqual(delete_on_start, config["delete_on_start"])

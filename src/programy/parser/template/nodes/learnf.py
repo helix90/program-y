@@ -14,9 +14,10 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
+
 from programy.parser.template.nodes.learn import TemplateLearnNode
 from programy.storage.factory import StorageFactory
+from programy.utils.logging.ylogger import YLogger
 
 
 class TemplateLearnfNode(TemplateLearnNode):
@@ -41,10 +42,19 @@ class TemplateLearnfNode(TemplateLearnNode):
 
     def save_learnf(self, client_context, category):
 
-        if client_context.bot.client.storage_factory.entity_storage_engine_available(StorageFactory.LEARNF) is True:
+        if (
+            client_context.bot.client.storage_factory.entity_storage_engine_available(
+                StorageFactory.LEARNF
+            )
+            is True
+        ):
             YLogger.info(self, "Saving binary brain to [%s]", StorageFactory.LEARNF)
 
-            storage_engine = client_context.bot.client.storage_factory.entity_storage_engine(StorageFactory.LEARNF)
+            storage_engine = (
+                client_context.bot.client.storage_factory.entity_storage_engine(
+                    StorageFactory.LEARNF
+                )
+            )
             learnf_storage = storage_engine.learnf_store()
 
             learnf_storage.save_learnf(client_context, category)

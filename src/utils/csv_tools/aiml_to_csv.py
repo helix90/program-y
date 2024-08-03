@@ -1,7 +1,8 @@
-import sys
-import xml.etree.ElementTree as ET
 import csv
 import re
+import sys
+import xml.etree.ElementTree as ET
+
 
 class AIMLToCSVGenerator(object):
 
@@ -15,33 +16,37 @@ class AIMLToCSVGenerator(object):
         try:
             tree = ET.parse(self._input)
             csv_file = open(self._output, "w+")
-            csv_writer = csv.writer(csv_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_ALL)
+            csv_writer = csv.writer(
+                csv_file, delimiter=",", quotechar='"', quoting=csv.QUOTE_ALL
+            )
             root = tree.getroot()
             for element in root:
-                if element.tag == 'category':
+                if element.tag == "category":
                     self.parse_category_to_file(csv_writer, element, topic="*")
-                elif element.tag == 'topic':
+                elif element.tag == "topic":
                     for child in element:
-                        if child.tag == 'category':
-                            self.parse_category_to_file(csv_writer, child, topic=element.attrib['name'])
+                        if child.tag == "category":
+                            self.parse_category_to_file(
+                                csv_writer, child, topic=element.attrib["name"]
+                            )
 
         except Exception as excep:
-            print (excep)
+            print(excep)
         finally:
             if csv_file is not None:
                 csv_file.flush()
-                csv_file.close ()
+                csv_file.close()
 
     def parse_category_to_file(self, csv_writer, category, topic):
         pattern = None
         that = "*"
         template = None
         for element in category:
-            if element.tag == 'pattern':
+            if element.tag == "pattern":
                 pattern = AIMLToCSVGenerator.element_to_string(element)
-            elif element.tag == 'that':
+            elif element.tag == "that":
                 that = element.text
-            elif element.tag == 'template':
+            elif element.tag == "template":
                 template = AIMLToCSVGenerator.element_to_string(element)
 
         pattern = AIMLToCSVGenerator.strip_all_whitespace(pattern)
@@ -61,11 +66,12 @@ class AIMLToCSVGenerator(object):
 
     @staticmethod
     def strip_all_whitespace(string):
-        first_pass = re.sub(r'[\n\t\r+]', '', string)
-        second_pass = re.sub(r'\s+', ' ', first_pass)
+        first_pass = re.sub(r"[\n\t\r+]", "", string)
+        second_pass = re.sub(r"\s+", " ", first_pass)
         return second_pass.strip()
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
 
     def run():
         print("Convertin AIML to CSV...")

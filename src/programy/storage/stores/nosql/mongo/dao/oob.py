@@ -14,6 +14,7 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 from programy.storage.stores.utils import DAOUtils
 
 
@@ -25,20 +26,22 @@ class OOB:
         self.oob_class = oob_class
 
     def to_document(self):
-        document = {"name": self.name,
-                    "oob_class": self.oob_class}
+        document = {"name": self.name, "oob_class": self.oob_class}
         if self.id is not None:
-            document['_id'] = self.id
+            document["_id"] = self.id
         return document
 
     def __repr__(self):
         return "<OOB(id='%s', name='%s', oob_class='%s')>" % (
-            DAOUtils.valid_id(self.id), self.name, self.oob_class)
+            DAOUtils.valid_id(self.id),
+            self.name,
+            self.oob_class,
+        )
 
     @staticmethod
     def from_document(data):
         oob = OOB(None, None)
-        oob.id = DAOUtils.get_value_from_data(data, '_id')
-        oob.name = DAOUtils.get_value_from_data(data, 'name')
-        oob.oob_class = DAOUtils.get_value_from_data(data, 'oob_class')
+        oob.id = DAOUtils.get_value_from_data(data, "_id")
+        oob.name = DAOUtils.get_value_from_data(data, "name")
+        oob.oob_class = DAOUtils.get_value_from_data(data, "oob_class")
         return oob

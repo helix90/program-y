@@ -1,11 +1,16 @@
 import xml.etree.ElementTree as ET
 
+from programytest.parser.template.graph_tests.graph_test_client import (
+    TemplateGraphTestClient,
+)
+
 from programy.parser.exceptions import ParserException
 from programy.parser.template.nodes.base import TemplateNode
-from programy.parser.template.nodes.condition import TemplateConditionListItemNode
-from programy.parser.template.nodes.condition import TemplateConditionNode
-from programy.parser.template.nodes.condition import TemplateConditionVariable
-from programytest.parser.template.graph_tests.graph_test_client import TemplateGraphTestClient
+from programy.parser.template.nodes.condition import (
+    TemplateConditionListItemNode,
+    TemplateConditionNode,
+    TemplateConditionVariable,
+)
 
 
 class TemplateGraphConditionTests(TemplateGraphTestClient):
@@ -15,7 +20,8 @@ class TemplateGraphConditionTests(TemplateGraphTestClient):
     #
 
     def test_condition_template_block_global_attributes(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
 			<template>
 				<condition name="aname" value="avalue">
 				    X
@@ -26,7 +32,8 @@ class TemplateGraphConditionTests(TemplateGraphTestClient):
 				    Y
 				</condition>
 			</template>
-			""")
+			"""
+        )
         ast = self._graph.parse_template_expression(template)
         self.assertIsNotNone(ast)
         self.assertIsInstance(ast, TemplateNode)
@@ -43,7 +50,8 @@ class TemplateGraphConditionTests(TemplateGraphTestClient):
         self.assertEqual(len(template_node.children), 3)
 
     def test_condition_template_block_var_attributes(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
             <template>
                 <condition var="aname" value="avalue">
                     X 
@@ -54,7 +62,8 @@ class TemplateGraphConditionTests(TemplateGraphTestClient):
                     Y
                 </condition>
             </template>
-            """)
+            """
+        )
         ast = self._graph.parse_template_expression(template)
         self.assertIsNotNone(ast)
         self.assertIsInstance(ast, TemplateNode)
@@ -71,7 +80,8 @@ class TemplateGraphConditionTests(TemplateGraphTestClient):
         self.assertEqual(len(template_node.children), 3)
 
     def test_condition_template_block_bot_attributes(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
             <template>
                 <condition bot="aname" value="avalue">
                     X 
@@ -82,7 +92,8 @@ class TemplateGraphConditionTests(TemplateGraphTestClient):
                     Y
                 </condition>
             </template>
-            """)
+            """
+        )
         ast = self._graph.parse_template_expression(template)
         self.assertIsNotNone(ast)
         self.assertIsInstance(ast, TemplateNode)
@@ -99,14 +110,16 @@ class TemplateGraphConditionTests(TemplateGraphTestClient):
         self.assertEqual(len(template_node.children), 3)
 
     def test_condition_template_block_global_name_attr_val_child(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
 			<template>
 				<condition name="aname">
 				    <value>avalue</value>
 				    X
 				</condition>
 			</template>
-			""")
+			"""
+        )
         ast = self._graph.parse_template_expression(template)
         self.assertIsNotNone(ast)
         self.assertIsInstance(ast, TemplateNode)
@@ -123,14 +136,16 @@ class TemplateGraphConditionTests(TemplateGraphTestClient):
         self.assertEqual(len(template_node.children), 1)
 
     def test_condition_template_block_local_name_attr_val_child(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
             <template>
                 <condition var="aname">
                     <value>avalue</value>
                     X
                 </condition>
             </template>
-            """)
+            """
+        )
         ast = self._graph.parse_template_expression(template)
         self.assertIsNotNone(ast)
         self.assertIsInstance(ast, TemplateNode)
@@ -147,14 +162,16 @@ class TemplateGraphConditionTests(TemplateGraphTestClient):
         self.assertEqual(len(template_node.children), 1)
 
     def test_condition_template_block_bot_name_attr_val_child(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
             <template>
                 <condition bot="aname">
                     <value>avalue</value>
                     X
                 </condition>
             </template>
-            """)
+            """
+        )
         ast = self._graph.parse_template_expression(template)
         self.assertIsNotNone(ast)
         self.assertIsInstance(ast, TemplateNode)
@@ -171,14 +188,16 @@ class TemplateGraphConditionTests(TemplateGraphTestClient):
         self.assertEqual(len(template_node.children), 1)
 
     def test_condition_template_block_global_name_child_val_attr(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
 			<template>
 				<condition value="avalue">
 				    <name>aname</name>
 				    X
 				</condition>
 			</template>
-			""")
+			"""
+        )
         ast = self._graph.parse_template_expression(template)
         self.assertIsNotNone(ast)
         self.assertIsInstance(ast, TemplateNode)
@@ -195,11 +214,13 @@ class TemplateGraphConditionTests(TemplateGraphTestClient):
         self.assertEqual(len(template_node.children), 1)
 
     def test_condition_template_block_local_name_child_val_attr(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
             <template>
                 <condition value="avalue"><var>aname</var>X</condition>
             </template>
-            """)
+            """
+        )
         ast = self._graph.parse_template_expression(template)
         self.assertIsNotNone(ast)
         self.assertIsInstance(ast, TemplateNode)
@@ -216,14 +237,16 @@ class TemplateGraphConditionTests(TemplateGraphTestClient):
         self.assertEqual(len(template_node.children), 1)
 
     def test_condition_template_block_bot_name_child_val_attr(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
             <template>
                 <condition value="avalue">
                     <bot>aname</bot>
                     X
                 </condition>
             </template>
-            """)
+            """
+        )
         ast = self._graph.parse_template_expression(template)
         self.assertIsNotNone(ast)
         self.assertIsInstance(ast, TemplateNode)
@@ -240,7 +263,8 @@ class TemplateGraphConditionTests(TemplateGraphTestClient):
         self.assertEqual(len(template_node.children), 1)
 
     def test_condition_template_block_global_name_child_val_child(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
 			<template>
 				<condition>
 				    <name>aname</name>
@@ -248,7 +272,8 @@ class TemplateGraphConditionTests(TemplateGraphTestClient):
 				    X
 				</condition>
 			</template>
-			""")
+			"""
+        )
         ast = self._graph.parse_template_expression(template)
         self.assertIsNotNone(ast)
         self.assertIsInstance(ast, TemplateNode)
@@ -265,7 +290,8 @@ class TemplateGraphConditionTests(TemplateGraphTestClient):
         self.assertEqual(len(template_node.children), 1)
 
     def test_condition_template_block_local_name_child_val_child(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
             <template>
                 <condition>
                     <var>aname</var>
@@ -273,7 +299,8 @@ class TemplateGraphConditionTests(TemplateGraphTestClient):
                     X
                 </condition>
             </template>
-            """)
+            """
+        )
         ast = self._graph.parse_template_expression(template)
         self.assertIsNotNone(ast)
         self.assertIsInstance(ast, TemplateNode)
@@ -290,7 +317,8 @@ class TemplateGraphConditionTests(TemplateGraphTestClient):
         self.assertEqual(len(template_node.children), 1)
 
     def test_condition_template_block_bot_name_child_val_child(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
             <template>
                 <condition>
                     <bot>aname</bot>
@@ -298,7 +326,8 @@ class TemplateGraphConditionTests(TemplateGraphTestClient):
                     X
                 </condition>
             </template>
-            """)
+            """
+        )
         ast = self._graph.parse_template_expression(template)
         self.assertIsNotNone(ast)
         self.assertIsInstance(ast, TemplateNode)
@@ -319,7 +348,8 @@ class TemplateGraphConditionTests(TemplateGraphTestClient):
     #
 
     def test_condition_template_single_global_name_child_value_attrs(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
 			<template>
 				<condition>
 					<name>aname</name>
@@ -329,7 +359,8 @@ class TemplateGraphConditionTests(TemplateGraphTestClient):
 					<li>D</li>
 				</condition>
 			</template>
-			""")
+			"""
+        )
         ast = self._graph.parse_template_expression(template)
         self.assertIsNotNone(ast)
         self.assertIsInstance(ast, TemplateNode)
@@ -383,7 +414,8 @@ class TemplateGraphConditionTests(TemplateGraphTestClient):
         self.assertEqual(node.children[0].resolve(self._client_context), "D")
 
     def test_condition_template_single_global_name_child_value_attrs_loop(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
             <template>
                 <condition>
                     <name>aname</name>
@@ -393,7 +425,8 @@ class TemplateGraphConditionTests(TemplateGraphTestClient):
                     <li>D</li>
                 </condition>
             </template>
-            """)
+            """
+        )
         ast = self._graph.parse_template_expression(template)
         self.assertIsNotNone(ast)
         self.assertIsInstance(ast, TemplateNode)
@@ -447,7 +480,8 @@ class TemplateGraphConditionTests(TemplateGraphTestClient):
         self.assertEqual(node.children[0].resolve(self._client_context), "D")
 
     def test_condition_template_single_local_name_child_value_attrs_loop(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
             <template>
                 <condition>
                     <var>aname</var>
@@ -457,7 +491,8 @@ class TemplateGraphConditionTests(TemplateGraphTestClient):
                     <li>D</li>
                 </condition>
             </template>
-            """)
+            """
+        )
         ast = self._graph.parse_template_expression(template)
         self.assertIsNotNone(ast)
         self.assertIsInstance(ast, TemplateNode)
@@ -511,7 +546,8 @@ class TemplateGraphConditionTests(TemplateGraphTestClient):
         self.assertEqual(node.children[0].resolve(self._client_context), "D")
 
     def test_condition_template_single_global_name_child_value_attrs(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
 			<template>
 				<condition name="aname">
 					<li value="a">A</li>
@@ -520,7 +556,8 @@ class TemplateGraphConditionTests(TemplateGraphTestClient):
 					<li>D</li>
 				</condition>
 			</template>
-			""")
+			"""
+        )
         ast = self._graph.parse_template_expression(template)
         self.assertIsNotNone(ast)
         self.assertIsInstance(ast, TemplateNode)
@@ -574,7 +611,8 @@ class TemplateGraphConditionTests(TemplateGraphTestClient):
         self.assertEqual(node.children[0].resolve(self._client_context), "D")
 
     def test_condition_template_single_local_name_attr_value_attrs(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
             <template>
                 <condition var="aname">
                     <li value="a">A</li>
@@ -583,7 +621,8 @@ class TemplateGraphConditionTests(TemplateGraphTestClient):
                     <li>D</li>
                 </condition>
             </template>
-            """)
+            """
+        )
         ast = self._graph.parse_template_expression(template)
         self.assertIsNotNone(ast)
         self.assertIsInstance(ast, TemplateNode)
@@ -637,7 +676,8 @@ class TemplateGraphConditionTests(TemplateGraphTestClient):
         self.assertEqual(node.children[0].resolve(self._client_context), "D")
 
     def test_condition_template_single_bot_name_attr_value_attrs(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
             <template>
                 <condition bot="aname">
                     <li value="a">A</li>
@@ -646,7 +686,8 @@ class TemplateGraphConditionTests(TemplateGraphTestClient):
                     <li>D</li>
                 </condition>
             </template>
-            """)
+            """
+        )
         ast = self._graph.parse_template_expression(template)
         self.assertIsNotNone(ast)
         self.assertIsInstance(ast, TemplateNode)
@@ -704,7 +745,8 @@ class TemplateGraphConditionTests(TemplateGraphTestClient):
     #
 
     def test_condition_template_multi_global_name_value_mixed(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
 			<template>
 				<condition>
 					<li name='name1' value="a">Val1</li>
@@ -714,7 +756,8 @@ class TemplateGraphConditionTests(TemplateGraphTestClient):
 					<li>Val5</li>
 				</condition>
 			</template>
-			""")
+			"""
+        )
         ast = self._graph.parse_template_expression(template)
         self.assertIsNotNone(ast)
         self.assertIsInstance(ast, TemplateNode)
@@ -784,7 +827,8 @@ class TemplateGraphConditionTests(TemplateGraphTestClient):
         self.assertEqual(node.children[0].resolve(self._client_context), "Val5")
 
     def test_condition_template_multi_global_name_value_mixed_loop(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
             <template>
                 <condition>
                     <li name='name1' value="a">Val1 <loop /></li>
@@ -794,7 +838,8 @@ class TemplateGraphConditionTests(TemplateGraphTestClient):
                     <li>Val5</li>
                 </condition>
             </template>
-            """)
+            """
+        )
         ast = self._graph.parse_template_expression(template)
         self.assertIsNotNone(ast)
         self.assertIsInstance(ast, TemplateNode)
@@ -864,7 +909,8 @@ class TemplateGraphConditionTests(TemplateGraphTestClient):
         self.assertEqual(node.children[0].resolve(self._client_context), "Val5")
 
     def test_condition_template_multi_local_name_value_mixed(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
 			<template>
 				<condition>
 					<li var='name1' value="a">Val1</li>
@@ -874,7 +920,8 @@ class TemplateGraphConditionTests(TemplateGraphTestClient):
 					<li>Val5</li>
 				</condition>
 			</template>
-			""")
+			"""
+        )
         ast = self._graph.parse_template_expression(template)
         self.assertIsNotNone(ast)
         self.assertIsInstance(ast, TemplateNode)
@@ -944,7 +991,8 @@ class TemplateGraphConditionTests(TemplateGraphTestClient):
         self.assertEqual(node.children[0].resolve(self._client_context), "Val5")
 
     def test_condition_template_multi_local_name_value_mixed_loop(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
             <template>
                 <condition>
                     <li var='name1' value="a">Val1 <loop /></li>
@@ -954,7 +1002,8 @@ class TemplateGraphConditionTests(TemplateGraphTestClient):
                     <li>Val5</li>
                 </condition>
             </template>
-            """)
+            """
+        )
         ast = self._graph.parse_template_expression(template)
         self.assertIsNotNone(ast)
         self.assertIsInstance(ast, TemplateNode)
@@ -1024,7 +1073,8 @@ class TemplateGraphConditionTests(TemplateGraphTestClient):
         self.assertEqual(node.children[0].resolve(self._client_context), "Val5")
 
     def test_condition_template_multi_bot_name_value_mixed(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
 			<template>
 				<condition>
 					<li bot='name1' value="a">Val1</li>
@@ -1034,7 +1084,8 @@ class TemplateGraphConditionTests(TemplateGraphTestClient):
 					<li>Val5</li>
 				</condition>
 			</template>
-			""")
+			"""
+        )
         ast = self._graph.parse_template_expression(template)
         self.assertIsNotNone(ast)
         self.assertIsInstance(ast, TemplateNode)
@@ -1104,7 +1155,8 @@ class TemplateGraphConditionTests(TemplateGraphTestClient):
         self.assertEqual(node.children[0].resolve(self._client_context), "Val5")
 
     def test_condition_template_multi_local_name_value_mixed_loop(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
             <template>
                 <condition>
                     <li bot='name1' value="a">Val1 <loop /></li>
@@ -1114,7 +1166,8 @@ class TemplateGraphConditionTests(TemplateGraphTestClient):
                     <li>Val5</li>
                 </condition>
             </template>
-            """)
+            """
+        )
         ast = self._graph.parse_template_expression(template)
         self.assertIsNotNone(ast)
         self.assertIsInstance(ast, TemplateNode)
@@ -1184,43 +1237,50 @@ class TemplateGraphConditionTests(TemplateGraphTestClient):
         self.assertEqual(node.children[0].resolve(self._client_context), "Val5")
 
     def test_get_condition_name_multi_names(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
             <template>
                 <condition>
                     <name>name1</name>
                     <name>name2</name>
                 </condition>
             </template>
-            """)
+            """
+        )
         with self.assertRaises(ParserException):
             _ = self._graph.parse_template_expression(template)
 
     def test_get_condition_name_multi_var(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
             <template>
                 <condition>
                     <var>name1</var>
                     <var>name2</var>
                 </condition>
             </template>
-            """)
+            """
+        )
         with self.assertRaises(ParserException):
             _ = self._graph.parse_template_expression(template)
 
     def test_get_condition_name_multi_bot(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
             <template>
                 <condition>
                     <bot>name1</bot>
                     <bot>name2</bot>
                 </condition>
             </template>
-            """)
+            """
+        )
         with self.assertRaises(ParserException):
             _ = self._graph.parse_template_expression(template)
 
     def get_condition_value_mulit_values(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
             <template>
                 <condition>
                     <name>name1</bame>
@@ -1228,12 +1288,14 @@ class TemplateGraphConditionTests(TemplateGraphTestClient):
                     <value>value3</value>
                 </condition>
             </template>
-            """)
+            """
+        )
         with self.assertRaises(ParserException):
             _ = self._graph.parse_template_expression(template)
 
     def test_type1_with_li_children(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
             <template>
                 <condition>
                     <name>name1</name>
@@ -1241,12 +1303,14 @@ class TemplateGraphConditionTests(TemplateGraphTestClient):
                     <li>something</li>
                 </condition>
             </template>
-            """)
+            """
+        )
         with self.assertRaises(ParserException):
             _ = self._graph.parse_template_expression(template)
 
     def test_type1_with_loop_children(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
             <template>
                 <condition>
                     <name>name1</name>
@@ -1254,12 +1318,14 @@ class TemplateGraphConditionTests(TemplateGraphTestClient):
                     <loop />>
                 </condition>
             </template>
-            """)
+            """
+        )
         with self.assertRaises(ParserException):
             _ = self._graph.parse_template_expression(template)
 
     def test_type2_with_other_children(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
             <template>
                 <condition name="property">
                     <li value="a">X</li>
@@ -1268,24 +1334,28 @@ class TemplateGraphConditionTests(TemplateGraphTestClient):
                     <id />			        
                 </condition>
             </template>
-            """)
+            """
+        )
         with self.assertRaises(ParserException):
             _ = self._graph.parse_template_expression(template)
 
     def test_type3_with_multi_values(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
             <template>
                  <condition>
                     <li><value>a</value><value>c</value>X</li>
                     <li><value>b</value>Y</li>
                   </condition>
             </template>
-            """)
+            """
+        )
         with self.assertRaises(ParserException):
             _ = self._graph.parse_template_expression(template)
 
     def test_type3_with_name(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
             <template>
                  <condition>
                     <value>Name1</value>
@@ -1296,12 +1366,14 @@ class TemplateGraphConditionTests(TemplateGraphTestClient):
                     <li>Z</li>	        
                   </condition>
             </template>
-            """)
+            """
+        )
         with self.assertRaises(ParserException):
             _ = self._graph.parse_template_expression(template)
 
     def test_type3_with_other_children(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
             <template>
                  <condition>
                     <li name='1' value="a">X</li>
@@ -1312,6 +1384,7 @@ class TemplateGraphConditionTests(TemplateGraphTestClient):
                     <id />		        
                   </condition>
             </template>
-            """)
+            """
+        )
         with self.assertRaises(ParserException):
             _ = self._graph.parse_template_expression(template)

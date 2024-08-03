@@ -14,10 +14,12 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.parsing.linenumxml import LineNumberingParser
+
 import xml.etree.ElementTree as ET  # pylint: disable=wrong-import-order
-from programy.utils.logging.ylogger import YLogger
+
 from programy.oob.callmom.oob import OutOfBandProcessor
+from programy.utils.logging.ylogger import YLogger
+from programy.utils.parsing.linenumxml import LineNumberingParser
 
 
 class DialogOutOfBandProcessor(OutOfBandProcessor):
@@ -35,15 +37,16 @@ class DialogOutOfBandProcessor(OutOfBandProcessor):
     def parse_oob_xml(self, oob: ET.Element):
         if oob is not None:
             for child in oob:
-                if child.tag == 'title':
+                if child.tag == "title":
                     self._title = child.text
-                elif child.tag == 'list':
+                elif child.tag == "list":
                     self._list = child.text
                 else:
-                    YLogger.error(self, "Unknown child element [%s] in dialog oob", child.tag)
+                    YLogger.error(
+                        self, "Unknown child element [%s] in dialog oob", child.tag
+                    )
 
-            if self._title is not None and \
-                self._list is not None:
+            if self._title is not None and self._list is not None:
                 return True
 
         YLogger.error(self, "Invalid dialog oob command")

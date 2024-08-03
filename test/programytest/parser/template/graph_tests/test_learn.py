@@ -1,9 +1,12 @@
 import xml.etree.ElementTree as ET
 
+from programytest.parser.template.graph_tests.graph_test_client import (
+    TemplateGraphTestClient,
+)
+
 from programy.parser.exceptions import ParserException
 from programy.parser.template.nodes.base import TemplateNode
-from programy.parser.template.nodes.learn import TemplateLearnNode, LearnCategory
-from programytest.parser.template.graph_tests.graph_test_client import TemplateGraphTestClient
+from programy.parser.template.nodes.learn import LearnCategory, TemplateLearnNode
 
 
 class TemplateGraphLearnTests(TemplateGraphTestClient):
@@ -11,7 +14,8 @@ class TemplateGraphLearnTests(TemplateGraphTestClient):
     def test_learn_simple(self):
         client_context1 = self.create_client_context("testid")
 
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
 			<template>
 				<learn>
 				    <category>
@@ -20,7 +24,8 @@ class TemplateGraphLearnTests(TemplateGraphTestClient):
 				    </category>
 				</learn>
 			</template>
-			""")
+			"""
+        )
 
         ast = self._graph.parse_template_expression(template)
         self.assertIsNotNone(ast)
@@ -45,13 +50,16 @@ class TemplateGraphLearnTests(TemplateGraphTestClient):
         resolved = learn_node.resolve(client_context1)
         self.assertEqual(resolved, "")
 
-        response = client_context1.bot.ask_question(client_context1, "HELLO WORLD THERE")
+        response = client_context1.bot.ask_question(
+            client_context1, "HELLO WORLD THERE"
+        )
         self.assertEqual("HIYA.", response)
 
     def test_learn_multi_user(self):
         client_context1 = self._client.create_client_context("testid")
 
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
 			<template>
 				<learn>
 				    <category>
@@ -60,7 +68,8 @@ class TemplateGraphLearnTests(TemplateGraphTestClient):
 				    </category>
 				</learn>
 			</template>
-			""")
+			"""
+        )
 
         ast = self._graph.parse_template_expression(template)
 
@@ -73,7 +82,8 @@ class TemplateGraphLearnTests(TemplateGraphTestClient):
 
         client_context2 = self._client.create_client_context("testid2")
 
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
 			<template>
 				<learn>
 				    <category>
@@ -82,7 +92,8 @@ class TemplateGraphLearnTests(TemplateGraphTestClient):
 				    </category>
 				</learn>
 			</template>
-			""")
+			"""
+        )
 
         ast = self._graph.parse_template_expression(template)
 
@@ -104,7 +115,8 @@ class TemplateGraphLearnTests(TemplateGraphTestClient):
     def test_multiple_patterns(self):
         client_context1 = self._client.create_client_context("testid")
 
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
         			<template>
         				<learn>
         				    <category>
@@ -113,7 +125,8 @@ class TemplateGraphLearnTests(TemplateGraphTestClient):
         				    </category>
         				</learn>
         			</template>
-        			""")
+        			"""
+        )
 
         ast = self._graph.parse_template_expression(template)
 
@@ -126,7 +139,8 @@ class TemplateGraphLearnTests(TemplateGraphTestClient):
 
         client_context2 = self._client.create_client_context("testid")
 
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
         			<template>
         				<learn>
         				    <category>
@@ -135,7 +149,8 @@ class TemplateGraphLearnTests(TemplateGraphTestClient):
         				    </category>
         				</learn>
         			</template>
-        			""")
+        			"""
+        )
 
         ast = self._graph.parse_template_expression(template)
 
@@ -147,20 +162,23 @@ class TemplateGraphLearnTests(TemplateGraphTestClient):
         self.assertEqual("HIYA TWO.", response)
 
     def test_category_missing(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
          			<template>
          				<learn>
          				        <pattern>HELLO THERE</pattern>
          				        <template>HIYA TWO</template>
          				</learn>
          			</template>
-         			""")
+         			"""
+        )
 
         with self.assertRaises(ParserException):
             _ = self._graph.parse_template_expression(template)
 
     def test_topic_present(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
          			<template>
          				<learn>
          				    <topic>
@@ -171,13 +189,15 @@ class TemplateGraphLearnTests(TemplateGraphTestClient):
          				    </topic>
          				</learn>
          			</template>
-         			""")
+         			"""
+        )
 
         with self.assertRaises(ParserException):
             _ = self._graph.parse_template_expression(template)
 
     def test_other_tag(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
          			<template>
          				<learn>
          				      <categoryx>
@@ -186,7 +206,8 @@ class TemplateGraphLearnTests(TemplateGraphTestClient):
          				      </categoryx>
          				</learn>
          			</template>
-         			""")
+         			"""
+        )
 
         with self.assertRaises(ParserException):
             _ = self._graph.parse_template_expression(template)

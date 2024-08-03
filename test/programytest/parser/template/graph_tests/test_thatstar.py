@@ -1,17 +1,22 @@
 import xml.etree.ElementTree as ET
 
+from programytest.parser.template.graph_tests.graph_test_client import (
+    TemplateGraphTestClient,
+)
+
 from programy.parser.template.nodes.thatstar import TemplateThatStarNode
-from programytest.parser.template.graph_tests.graph_test_client import TemplateGraphTestClient
 
 
 class TemplateGraphThatStarTests(TemplateGraphTestClient):
 
     def test_thatstar_index_default(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
             <template>
                 <thatstar />
             </template>
-            """)
+            """
+        )
         root = self._graph.parse_template_expression(template)
         self.assertIsNotNone(root)
         node = root.children[0]
@@ -24,11 +29,13 @@ class TemplateGraphThatStarTests(TemplateGraphTestClient):
         self.assertIsNotNone(result)
 
     def test_thatstar_index_as_attrib(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
             <template>
                 <thatstar index="1"></thatstar>
             </template>
-            """)
+            """
+        )
         root = self._graph.parse_template_expression(template)
         self.assertIsNotNone(root)
         node = root.children[0]
@@ -41,13 +48,15 @@ class TemplateGraphThatStarTests(TemplateGraphTestClient):
         self.assertIsNotNone(result)
 
     def test_thatstar_index_as_child(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
             <template>
                 <thatstar>
                     <index>1</index>
                 </thatstar>
             </template>
-            """)
+            """
+        )
         root = self._graph.parse_template_expression(template)
         self.assertIsNotNone(root)
         node = root.children[0]

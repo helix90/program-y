@@ -14,10 +14,11 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 from programy.storage.stores.utils import DAOUtils
 
 
-class Property():
+class Property:
 
     def __init__(self, name, value):
         self.id = None
@@ -25,21 +26,24 @@ class Property():
         self.value = value
 
     def __repr__(self):
-        return "<Property(id='%s', name='%s', value='%s')>" % (DAOUtils.valid_id(self.id), self.name, self.value)
+        return "<Property(id='%s', name='%s', value='%s')>" % (
+            DAOUtils.valid_id(self.id),
+            self.name,
+            self.value,
+        )
 
     def to_document(self):
-        document = {"name": self.name,
-                    "value": self.value}
+        document = {"name": self.name, "value": self.value}
         if self.id is not None:
-            document['_id'] = self.id
+            document["_id"] = self.id
         return document
 
     @staticmethod
     def from_document(data):
         propertydao = Property(None, None)
-        propertydao.id = DAOUtils.get_value_from_data(data, '_id')
-        propertydao.name = DAOUtils.get_value_from_data(data, 'name')
-        propertydao.value = DAOUtils.get_value_from_data(data, 'value')
+        propertydao.id = DAOUtils.get_value_from_data(data, "_id")
+        propertydao.name = DAOUtils.get_value_from_data(data, "name")
+        propertydao.value = DAOUtils.get_value_from_data(data, "value")
         return propertydao
 
 
@@ -49,14 +53,18 @@ class DefaultVariable(Property):
         Property.__init__(self, name, value)
 
     def __repr__(self):
-        return "<DefaultVariable(id='%s', name='%s', value='%s')>" % (DAOUtils.valid_id(self.id), self.name, self.value)
+        return "<DefaultVariable(id='%s', name='%s', value='%s')>" % (
+            DAOUtils.valid_id(self.id),
+            self.name,
+            self.value,
+        )
 
     @staticmethod
     def from_document(data):
         variabledao = DefaultVariable(None, None)
-        variabledao.id = DAOUtils.get_value_from_data(data, '_id')
-        variabledao.name = DAOUtils.get_value_from_data(data, 'name')
-        variabledao.value = DAOUtils.get_value_from_data(data, 'value')
+        variabledao.id = DAOUtils.get_value_from_data(data, "_id")
+        variabledao.name = DAOUtils.get_value_from_data(data, "name")
+        variabledao.value = DAOUtils.get_value_from_data(data, "value")
         return variabledao
 
 
@@ -66,12 +74,16 @@ class Regex(Property):
         Property.__init__(self, name, value)
 
     def __repr__(self):
-        return "<Regex(id='%s', name='%s', value='%s')>" % (DAOUtils.valid_id(self.id), self.name, self.value)
+        return "<Regex(id='%s', name='%s', value='%s')>" % (
+            DAOUtils.valid_id(self.id),
+            self.name,
+            self.value,
+        )
 
     @staticmethod
     def from_document(data):
         regexdao = Regex(None, None)
-        regexdao.id = DAOUtils.get_value_from_data(data, '_id')
-        regexdao.name = DAOUtils.get_value_from_data(data, 'name')
-        regexdao.value = DAOUtils.get_value_from_data(data, 'value')
+        regexdao.id = DAOUtils.get_value_from_data(data, "_id")
+        regexdao.name = DAOUtils.get_value_from_data(data, "name")
+        regexdao.value = DAOUtils.get_value_from_data(data, "value")
         return regexdao

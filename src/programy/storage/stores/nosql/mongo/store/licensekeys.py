@@ -14,12 +14,13 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
-from programy.storage.entities.store import Store
-from programy.storage.stores.nosql.mongo.store.mongostore import MongoStore
+
 from programy.storage.entities.license import LicenseStore
+from programy.storage.entities.store import Store
 from programy.storage.stores.nosql.mongo.dao.license import LicenseKey
+from programy.storage.stores.nosql.mongo.store.mongostore import MongoStore
 from programy.utils.console.console import outputLog
+from programy.utils.logging.ylogger import YLogger
 
 
 class MongoLicenseKeysStore(MongoStore, LicenseStore):
@@ -48,7 +49,7 @@ class MongoLicenseKeysStore(MongoStore, LicenseStore):
 
         licensekeys = collection.find()
         for licensekey in licensekeys:
-            collector.add_key(licensekey['name'], licensekey['key'])
+            collector.add_key(licensekey["name"], licensekey["key"])
 
     def _read_lines_from_file(self, filename, verbose):
         success = 0
@@ -63,7 +64,7 @@ class MongoLicenseKeysStore(MongoStore, LicenseStore):
     def _process_line(self, line, verbose=False):
         line = line.strip()
         result = False
-        if line and line.startswith('#') is False:
+        if line and line.startswith("#") is False:
             splits = line.split("=")
             if len(splits) > 1:
                 key_name = splits[0].strip()
@@ -71,14 +72,16 @@ class MongoLicenseKeysStore(MongoStore, LicenseStore):
                 key = "".join(splits[1:]).strip()
                 result = self.add_licensekey(key_name, key)
                 if verbose is True:
-                    outputLog(self, "%s = %s" % (key_name, key))        # pragma: no cover
+                    outputLog(self, "%s = %s" % (key_name, key))  # pragma: no cover
 
             else:
                 YLogger.warning(self, "Invalid license key [%s]", line)
 
         return result
 
-    def upload_from_file(self, filename, fileformat=Store.TEXT_FORMAT, commit=True, verbose=False):
+    def upload_from_file(
+        self, filename, fileformat=Store.TEXT_FORMAT, commit=True, verbose=False
+    ):
         YLogger.info(self, "Uploading license keys to Mongo [%s]", filename)
         try:
             YLogger.info(self, "Loading license key file: [%s]", filename)
@@ -88,4 +91,3 @@ class MongoLicenseKeysStore(MongoStore, LicenseStore):
             YLogger.exception(self, "Invalid license key file [%s]", excep, filename)
 
         return 0, 0
-

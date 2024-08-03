@@ -1,8 +1,9 @@
 import os
 
+from programytest.clients.arguments import MockArgumentParser
+
 from programy.clients.client import BotClient
 from programy.clients.config import ClientConfigurationData
-from programytest.clients.arguments import MockArgumentParser
 
 
 class MockClientConfiguration(ClientConfigurationData):
@@ -38,12 +39,12 @@ class MockConfigFiles(object):
 
     @staticmethod
     def get_config_files(testclient):
-        if os.name == 'posix':
+        if os.name == "posix":
             logging_file = os.path.dirname(__file__) + os.sep + "logging.yaml"
             testclient.assertTrue(os.path.exists(logging_file))
             config_file = os.path.dirname(__file__) + os.sep + "config.yaml"
             testclient.assertTrue(os.path.exists(config_file))
-        elif os.name == 'nt':
+        elif os.name == "nt":
             logging_file = os.path.dirname(__file__) + os.sep + "logging.windows.yaml"
             testclient.assertTrue(os.path.exists(logging_file))
             config_file = os.path.dirname(__file__) + os.sep + "config.windows.yaml"
@@ -54,10 +55,11 @@ class MockConfigFiles(object):
         return config_file, logging_file
 
     @staticmethod
-    def get_commandline_args(config_file = None, logging_file = None):
-        return MockArgumentParser(bot_root=None,
-                                  logging=logging_file,
-                                  config=config_file,
-                                  cformat="yaml",
-                                  noloop=False)
-
+    def get_commandline_args(config_file=None, logging_file=None):
+        return MockArgumentParser(
+            bot_root=None,
+            logging=logging_file,
+            config=config_file,
+            cformat="yaml",
+            noloop=False,
+        )

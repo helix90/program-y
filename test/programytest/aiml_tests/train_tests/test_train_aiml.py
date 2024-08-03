@@ -23,37 +23,55 @@ class TrainAIMLTests(unittest.TestCase):
         self._client_context = client.create_client_context("testid")
 
     def test_train_noun(self):
-        response = self._client_context.bot.ask_question(self._client_context, "jessica likes to smoke cigars")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "jessica likes to smoke cigars"
+        )
         self.assertIsNotNone(response)
         self.assertEqual("Do you smoke cigars too?", response)
 
-        response = self._client_context.bot.ask_question(self._client_context, "who likes to smoke cigars")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "who likes to smoke cigars"
+        )
         self.assertIsNotNone(response)
         self.assertEqual("Jessica likes to smoke cigars.", response)
 
-        response = self._client_context.bot.ask_question(self._client_context, "who likes to smoke cigars")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "who likes to smoke cigars"
+        )
         self.assertIsNotNone(response)
         self.assertEqual("Jessica likes to smoke cigars.", response)
 
-        response = self._client_context.bot.ask_question(self._client_context, "what does jessica like")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "what does jessica like"
+        )
         self.assertIsNotNone(response)
         self.assertEqual("Jessica likes to smoke cigars.", response)
 
-        response = self._client_context.bot.ask_question(self._client_context, "what does jessica smoke")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "what does jessica smoke"
+        )
         self.assertIsNotNone(response)
         self.assertEqual("Jessica likes to smoke cigars.", response)
 
-        response = self._client_context.bot.ask_question(self._client_context, "who smokes")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "who smokes"
+        )
         self.assertIsNotNone(response)
         self.assertEqual("Jessica likes to smoke cigars.", response)
 
     def test_train_pronoun(self):
-        response = self._client_context.bot.ask_question(self._client_context, "mommy likes to smoke cigars")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "mommy likes to smoke cigars"
+        )
         self.assertIsNotNone(response)
 
-        self.assertEqual('Now you can ask me: " Who likes to smoke cigars ?" and " What does my mommy ?".', response)
+        self.assertEqual(
+            'Now you can ask me: " Who likes to smoke cigars ?" and " What does my mommy ?".',
+            response,
+        )
 
-        response = self._client_context.bot.ask_question(self._client_context, "who likes to smoke cigars")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "who likes to smoke cigars"
+        )
         self.assertIsNotNone(response)
         self.assertEqual("Your mommy.", response)
-

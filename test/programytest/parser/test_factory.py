@@ -19,4 +19,3 @@ class FactoryTests(unittest.TestCase):
         self.assertIsNotNone(factory)
         self.assertEqual({}, factory._nodes_config)
         self.assertEqual("Test", factory._type)
-

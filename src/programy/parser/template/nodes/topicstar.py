@@ -14,9 +14,9 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
-from programy.parser.template.nodes.indexed import TemplateIndexedNode
 
+from programy.parser.template.nodes.indexed import TemplateIndexedNode
+from programy.utils.logging.ylogger import YLogger
 
 ######################################################################################################################
 #
@@ -25,6 +25,7 @@ from programy.parser.template.nodes.indexed import TemplateIndexedNode
 # The topicstar element will either return the current topic if used outside of a topic element or the wildcard
 # element when inside a topic element. The topicstar element can also use index like the star element can, though
 # this will return as the default case for empty predicates if no wildcards are present.
+
 
 class TemplateTopicStarNode(TemplateIndexedNode):
 
@@ -38,12 +39,14 @@ class TemplateTopicStarNode(TemplateIndexedNode):
         question = conversation.current_question()
         sentence = question.current_sentence()
         resolved = sentence.matched_context.topicstar(client_context, int_index)
-        YLogger.debug(client_context, "[%s] resolved to [%s]", self.to_string(), resolved)
+        YLogger.debug(
+            client_context, "[%s] resolved to [%s]", self.to_string(), resolved
+        )
         return resolved
 
     def to_string(self):
         string = "[TOPICSTAR"
-        string += self.index.to_string() + ']'
+        string += self.index.to_string() + "]"
         return string
 
     def to_xml(self, client_context):

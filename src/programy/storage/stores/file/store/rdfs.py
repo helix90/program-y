@@ -14,9 +14,10 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
-from programy.storage.stores.file.store.filestore import FileStore
+
 from programy.storage.entities.rdf import RDFReadOnlyStore
+from programy.storage.stores.file.store.filestore import FileStore
+from programy.utils.logging.ylogger import YLogger
 
 
 class FileRDFStore(FileStore, RDFReadOnlyStore):
@@ -26,7 +27,7 @@ class FileRDFStore(FileStore, RDFReadOnlyStore):
         RDFReadOnlyStore.__init__(self)
 
     def _load_rdfs_from_file(self, filename, collection):
-        with open(filename, 'r', encoding='utf8') as my_file:
+        with open(filename, "r", encoding="utf8") as my_file:
             for line in my_file:
                 splits = line.split(":")
                 if len(splits) > 2:

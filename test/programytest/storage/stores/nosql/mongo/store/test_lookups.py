@@ -1,10 +1,12 @@
-import unittest
 import re
+import unittest
+
 import programytest.storage.engines as Engines
+
+from programy.mappings.base import DoubleStringPatternSplitCollection
 from programy.storage.stores.nosql.mongo.config import MongoStorageConfiguration
 from programy.storage.stores.nosql.mongo.engine import MongoStorageEngine
 from programy.storage.stores.nosql.mongo.store.lookups import MongoLookupStore
-from programy.mappings.base import DoubleStringPatternSplitCollection
 
 
 class TestMongoLookupStore(MongoLookupStore):
@@ -48,7 +50,10 @@ class MongoLookupStoreTests(unittest.TestCase):
 
         self.assertEquals(1, len(collection.pairs.keys()))
         self.assertTrue(collection.has_key("key1"))
-        self.assertEqual([re.compile('(^key1|key1|key1$)', re.IGNORECASE), 'VALUE1'], collection.value("key1"))
+        self.assertEqual(
+            [re.compile("(^key1|key1|key1$)", re.IGNORECASE), "VALUE1"],
+            collection.value("key1"),
+        )
 
     @unittest.skipIf(Engines.mongo is False, Engines.mongo_disabled)
     def test_add_to_lookup_overwrite_true(self):
@@ -66,7 +71,10 @@ class MongoLookupStoreTests(unittest.TestCase):
 
         self.assertEquals(1, len(collection.pairs.keys()))
         self.assertTrue(collection.has_key("key1"))
-        self.assertEqual([re.compile('(^key1|key1|key1$)', re.IGNORECASE), 'VALUE2'], collection.value("key1"))
+        self.assertEqual(
+            [re.compile("(^key1|key1|key1$)", re.IGNORECASE), "VALUE2"],
+            collection.value("key1"),
+        )
 
     @unittest.skipIf(Engines.mongo is False, Engines.mongo_disabled)
     def test_load_no_collection(self):
@@ -98,7 +106,10 @@ class MongoLookupStoreTests(unittest.TestCase):
 
         self.assertEquals(1, len(collection.pairs.keys()))
         self.assertTrue(collection.has_key("key1"))
-        self.assertEqual([re.compile('(^key1|key1|key1$)', re.IGNORECASE), 'VALUE1'], collection.value("key1"))
+        self.assertEqual(
+            [re.compile("(^key1|key1|key1$)", re.IGNORECASE), "VALUE1"],
+            collection.value("key1"),
+        )
 
     @unittest.skipIf(Engines.mongo is False, Engines.mongo_disabled)
     def test_get_lookup_present(self):
@@ -111,7 +122,7 @@ class MongoLookupStoreTests(unittest.TestCase):
         store.add_to_lookup("key1", "value1", overwrite_existing=True)
 
         collection = store.get_lookup()
-        self.assertIsNotNone(collection )
+        self.assertIsNotNone(collection)
 
     @unittest.skipIf(Engines.mongo is False, Engines.mongo_disabled)
     def test_get_lookup_not_present(self):

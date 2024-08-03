@@ -14,11 +14,13 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 import os
 import os.path
-from programy.utils.logging.ylogger import YLogger
-from programy.storage.stores.file.store.filestore import FileStore
+
 from programy.storage.entities.category import CategoryReadOnlyStore
+from programy.storage.stores.file.store.filestore import FileStore
+from programy.utils.logging.ylogger import YLogger
 
 
 class FileCategoryStore(FileStore, CategoryReadOnlyStore):
@@ -52,12 +54,16 @@ class FileCategoryStore(FileStore, CategoryReadOnlyStore):
                     paths = os.listdir(cat_dir)
                     for filename in paths:
                         if filename.endswith(cat_ext):
-                            self._load_file_contents(collector, os.path.join(cat_dir, filename))
+                            self._load_file_contents(
+                                collector, os.path.join(cat_dir, filename)
+                            )
 
                 else:
                     for dirpath, _, filenames in os.walk(cat_dir):
                         for filename in [f for f in filenames if f.endswith(cat_ext)]:
-                            self._load_file_contents(collector, os.path.join(dirpath, filename))
+                            self._load_file_contents(
+                                collector, os.path.join(dirpath, filename)
+                            )
 
     def load(self, collector, filename):
         self._load_file_contents(collector, filename)

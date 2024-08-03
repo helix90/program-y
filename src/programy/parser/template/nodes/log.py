@@ -14,11 +14,12 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
+
 from programy.parser.exceptions import ParserException
 from programy.parser.template.nodes.attrib import TemplateAttribNode
 from programy.parser.template.nodes.word import TemplateWordNode
 from programy.utils.console.console import outputLog
+from programy.utils.logging.ylogger import YLogger
 
 
 class TemplateLogNode(TemplateAttribNode):
@@ -43,7 +44,9 @@ class TemplateLogNode(TemplateAttribNode):
         level = self._level.resolve_to_string(client_context)
 
         if output == "logging":
-            YLogger.debug(client_context, "[%s] resolved to [%s]", self.to_string(), resolved)
+            YLogger.debug(
+                client_context, "[%s] resolved to [%s]", self.to_string(), resolved
+            )
             if level == "debug":
                 YLogger.debug(client_context, resolved)
             elif level == "warning":
@@ -63,15 +66,17 @@ class TemplateLogNode(TemplateAttribNode):
         return "[LOG level=%s]" % (self._level.to_string())
 
     def set_attrib(self, attrib_name, attrib_value):
-        if attrib_name != 'level' and attrib_name != 'output':
-            raise ParserException("Invalid attribute name [%s] for this node" % attrib_name)
+        if attrib_name != "level" and attrib_name != "output":
+            raise ParserException(
+                "Invalid attribute name [%s] for this node" % attrib_name
+            )
 
-        if attrib_name == 'level':
+        if attrib_name == "level":
             if isinstance(attrib_value, TemplateWordNode):
                 self._level = attrib_value
             else:
                 self._level = TemplateWordNode(attrib_value)
-        if attrib_name == 'output':
+        if attrib_name == "output":
             if isinstance(attrib_value, TemplateWordNode):
                 self._output = attrib_value
             else:
@@ -92,4 +97,6 @@ class TemplateLogNode(TemplateAttribNode):
     #
 
     def parse_expression(self, graph, expression):
-        self._parse_node_with_attribs(graph, expression, [["level", "debug"], ["output", "logging"]])
+        self._parse_node_with_attribs(
+            graph, expression, [["level", "debug"], ["output", "logging"]]
+        )

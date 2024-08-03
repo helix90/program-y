@@ -1,4 +1,5 @@
 import unittest
+
 from programy.triggers.null import NullTrigger
 
 
@@ -14,4 +15,4 @@ class NullTriggerTests(unittest.TestCase):
 
     def test_trigger_additional_event(self):
         trigger = NullTrigger()
-        trigger.trigger(additional={'event': "NULL_EVENT"})
+        trigger.trigger(additional={"event": "NULL_EVENT"})

@@ -3,7 +3,9 @@ import os.path
 import unittest
 import unittest.mock
 
-from programy.security.authorise.usergroupsauthorisor import BasicUserGroupAuthorisationService
+from programy.security.authorise.usergroupsauthorisor import (
+    BasicUserGroupAuthorisationService,
+)
 
 
 class UserGroupsStoreAsserts(unittest.TestCase):
@@ -11,7 +13,15 @@ class UserGroupsStoreAsserts(unittest.TestCase):
     def assert_upload_from_file(self, store):
         store.empty()
 
-        store.upload_from_file(os.path.dirname(__file__) + os.sep + "data" + os.sep + "security" + os.sep + "roles.yaml")
+        store.upload_from_file(
+            os.path.dirname(__file__)
+            + os.sep
+            + "data"
+            + os.sep
+            + "security"
+            + os.sep
+            + "roles.yaml"
+        )
 
         config = unittest.mock.Mock()
         config.usergroups = "Test"
@@ -25,7 +35,15 @@ class UserGroupsStoreAsserts(unittest.TestCase):
     def assert_upload_from_file_exception(self, store):
         store.empty()
 
-        store.upload_from_file(os.path.dirname(__file__) + os.sep + "data" + os.sep + "security" + os.sep + "roles.yaml")
+        store.upload_from_file(
+            os.path.dirname(__file__)
+            + os.sep
+            + "data"
+            + os.sep
+            + "security"
+            + os.sep
+            + "roles.yaml"
+        )
 
         config = unittest.mock.Mock()
         config.usergroups = "Test"

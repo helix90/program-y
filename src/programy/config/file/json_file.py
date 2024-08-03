@@ -14,10 +14,12 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 import json
-from programy.utils.logging.ylogger import YLogger
+
 from programy.config.file.file import BaseConfigurationFile
 from programy.config.programy import ProgramyConfiguration
+from programy.utils.logging.ylogger import YLogger
 from programy.utils.substitutions.substitues import Substitutions
 
 
@@ -27,21 +29,27 @@ class JSONConfigurationFile(BaseConfigurationFile):
         BaseConfigurationFile.__init__(self)
         self.json_data = None
 
-    def load_from_text(self, text, client_configuration, bot_root, subs: Substitutions = None):
+    def load_from_text(
+        self, text, client_configuration, bot_root, subs: Substitutions = None
+    ):
         self.json_data = json.loads(text)
         configuration = ProgramyConfiguration(client_configuration)
         configuration.load_config_data(self, bot_root, subs)
         return configuration
 
-    def load_from_file(self, filename, client_configuration, bot_root, subs: Substitutions = None):
+    def load_from_file(
+        self, filename, client_configuration, bot_root, subs: Substitutions = None
+    ):
         configuration = ProgramyConfiguration(client_configuration)
         try:
-            with open(filename, 'r+', encoding="utf-8") as json_data_file:
+            with open(filename, "r+", encoding="utf-8") as json_data_file:
                 self.json_data = json.load(json_data_file)
                 configuration.load_config_data(self, bot_root, subs)
 
         except Exception as excep:
-            YLogger.exception(self, "Failed to open json config file [%s]", excep, filename)
+            YLogger.exception(
+                self, "Failed to open json config file [%s]", excep, filename
+            )
 
         return configuration
 
@@ -63,15 +71,24 @@ class JSONConfigurationFile(BaseConfigurationFile):
 
         return None
 
-    def get_option(self, section, option_name, missing_value=None, subs: Substitutions = None):
+    def get_option(
+        self, section, option_name, missing_value=None, subs: Substitutions = None
+    ):
         if option_name in section:
             option_value = section[option_name]
             return self._replace_subs(subs, option_value)
 
-        YLogger.warning(self, "Missing value for [%s] in config , return default value %s", option_name, missing_value)
+        YLogger.warning(
+            self,
+            "Missing value for [%s] in config , return default value %s",
+            option_name,
+            missing_value,
+        )
         return missing_value
 
-    def get_bool_option(self, section, option_name, missing_value=False, subs: Substitutions = None):
+    def get_bool_option(
+        self, section, option_name, missing_value=False, subs: Substitutions = None
+    ):
         if option_name in section:
             option_value = section[option_name]
             if isinstance(option_value, bool):
@@ -79,24 +96,41 @@ class JSONConfigurationFile(BaseConfigurationFile):
 
             return bool(self._replace_subs(subs, option_value))
 
-        YLogger.warning(self, "Missing value for [%s] in config, return default value %s", option_name, missing_value)
+        YLogger.warning(
+            self,
+            "Missing value for [%s] in config, return default value %s",
+            option_name,
+            missing_value,
+        )
         return missing_value
 
-    def get_int_option(self, section, option_name, missing_value=0, subs: Substitutions = None):
+    def get_int_option(
+        self, section, option_name, missing_value=0, subs: Substitutions = None
+    ):
         if option_name in section:
             option_value = section[option_name]
             if isinstance(option_value, int):
                 return int(option_value)
 
         if missing_value is not None:
-            YLogger.warning(self, "Missing value for [%s] in config, return default value %d", option_name,
-                            missing_value)
+            YLogger.warning(
+                self,
+                "Missing value for [%s] in config, return default value %d",
+                option_name,
+                missing_value,
+            )
         else:
-            YLogger.warning(self, "Missing value for [%s] in config, return default value None", option_name)
+            YLogger.warning(
+                self,
+                "Missing value for [%s] in config, return default value None",
+                option_name,
+            )
 
         return missing_value
 
-    def get_multi_option(self, section, option_name, missing_value=[], subs: Substitutions = None):
+    def get_multi_option(
+        self, section, option_name, missing_value=[], subs: Substitutions = None
+    ):
 
         value = self.get_option(section, option_name, missing_value)
         if isinstance(value, list):
@@ -111,7 +145,14 @@ class JSONConfigurationFile(BaseConfigurationFile):
 
         return multis
 
-    def get_multi_file_option(self, section, option_name, bot_root, missing_value=[], subs: Substitutions = None):
+    def get_multi_file_option(
+        self,
+        section,
+        option_name,
+        bot_root,
+        missing_value=[],
+        subs: Substitutions = None,
+    ):
 
         value = self.get_option(section, option_name, missing_value)
         if isinstance(value, list):
@@ -124,6 +165,6 @@ class JSONConfigurationFile(BaseConfigurationFile):
         for value in values:
             if isinstance(value, str):
                 value = self._replace_subs(subs, value)
-                multis.append(value.replace('$BOT_ROOT', bot_root))
+                multis.append(value.replace("$BOT_ROOT", bot_root))
 
         return multis

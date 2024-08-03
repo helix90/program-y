@@ -1,5 +1,6 @@
 import unittest
 
+
 class LinkedAccountStoreAsserts(unittest.TestCase):
 
     def assert_linkedaccounts_storage(self, store):

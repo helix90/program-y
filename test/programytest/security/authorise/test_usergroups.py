@@ -1,8 +1,6 @@
 import unittest
 
-from programy.security.authorise.usergroups import Authorisable
-from programy.security.authorise.usergroups import Group
-from programy.security.authorise.usergroups import User
+from programy.security.authorise.usergroups import Authorisable, Group, User
 
 
 class UserGroupTests(unittest.TestCase):
@@ -80,9 +78,9 @@ class UserGroupTests(unittest.TestCase):
 
         self.assertEqual([], authorisable.roles)
         authorisable.add_role("user")
-        self.assertEqual(['user'], authorisable.roles)
+        self.assertEqual(["user"], authorisable.roles)
         authorisable.add_role("user")
-        self.assertEqual(['user'], authorisable.roles)
+        self.assertEqual(["user"], authorisable.roles)
         self.assertTrue(authorisable.has_role("user"))
 
         group = Group("sysadmin")
@@ -97,7 +95,7 @@ class UserGroupTests(unittest.TestCase):
         self.assertTrue(authorisable.has_group("sysadmin"))
         self.assertTrue(authorisable.has_role("admin"))
 
-        self.assertEqual(['user', 'admin'], authorisable.available_roles())
+        self.assertEqual(["user", "admin"], authorisable.available_roles())
 
         group2 = Group("root")
         self.assertFalse(authorisable.has_group("root"))

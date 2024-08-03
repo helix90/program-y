@@ -14,17 +14,19 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 import os
 from datetime import datetime
+
 try:
     import wikipedia
 
 except ModuleNotFoundError as error:
     print("First use 'pip install wikipedia' before using this service")
 
-from programy.utils.logging.ylogger import YLogger
 from programy.services.base import ServiceQuery
 from programy.services.library.base import PythonAPIService
+from programy.utils.logging.ylogger import YLogger
 
 
 class WikipediaSearchQuery(ServiceQuery):
@@ -48,7 +50,13 @@ class WikipediaSearchQuery(ServiceQuery):
         return self._service.search(self._title)
 
     def aiml_response(self, response):
-        result = "SEARCH <ul>" + "".join("<li>"+x+"</li>" for x in response['response']['payload']['search']) + "</ul>"
+        result = (
+            "SEARCH <ul>"
+            + "".join(
+                "<li>" + x + "</li>" for x in response["response"]["payload"]["search"]
+            )
+            + "</ul>"
+        )
         YLogger.debug(self, result)
         return result
 
@@ -74,7 +82,7 @@ class WikipediaSummaryQuery(ServiceQuery):
         return self._service.summary(self._query)
 
     def aiml_response(self, response):
-        result = "SUMMARY {0}".format(response['response']['payload']['summary'])
+        result = "SUMMARY {0}".format(response["response"]["payload"]["summary"])
         YLogger.debug(self, result)
         return result
 
@@ -83,7 +91,7 @@ class WikipediaService(PythonAPIService):
 
     PATTERNS = [
         [r"SEARCH\s(\w+)", WikipediaSearchQuery],
-        [r"SUMMARY\s(.+)", WikipediaSummaryQuery]
+        [r"SUMMARY\s(.+)", WikipediaSummaryQuery],
     ]
 
     def __init__(self, configuration):
@@ -114,7 +122,9 @@ class WikipediaService(PythonAPIService):
             return self._create_failure_payload("summary", started, speed)
 
         except Exception as error:
-            return self._create_exception_failure_payload("summary", started, speed, error)
+            return self._create_exception_failure_payload(
+                "summary", started, speed, error
+            )
 
     # Provide a list of articles matching the query
     # Use summary to return the neccassary action
@@ -132,7 +142,9 @@ class WikipediaService(PythonAPIService):
             return self._create_failure_payload("search", started, speed)
 
         except Exception as error:
-            return self._create_exception_failure_payload("search", started, speed, error)
+            return self._create_exception_failure_payload(
+                "search", started, speed, error
+            )
 
     def patterns(self) -> list:
         return WikipediaService.PATTERNS

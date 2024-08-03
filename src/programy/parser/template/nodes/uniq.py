@@ -14,15 +14,19 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
-from programy.parser.template.nodes.triple import TemplateTripleNode
+
 from typing import List
+
+from programy.parser.template.nodes.triple import TemplateTripleNode
+from programy.utils.logging.ylogger import YLogger
 
 
 class TemplateUniqNode(TemplateTripleNode):
 
     def __init__(self, subj=None, pred=None, obj=None):
-        TemplateTripleNode.__init__(self, node_name="uniq", subj=subj, pred=pred, obj=obj)
+        TemplateTripleNode.__init__(
+            self, node_name="uniq", subj=subj, pred=pred, obj=obj
+        )
 
     @staticmethod
     def _filter_results(results):
@@ -34,13 +38,17 @@ class TemplateUniqNode(TemplateTripleNode):
         return values
 
     @staticmethod
-    def _match_only_vars(client_context, rdf_subject, rdf_predicate, rdf_object) -> List:
+    def _match_only_vars(
+        client_context, rdf_subject, rdf_predicate, rdf_object
+    ) -> List:
 
         assert client_context
 
         if client_context.brain is not None:
             if client_context.brain.rdf is not None:
-                return client_context.brain.rdf.match_only_vars(rdf_subject, rdf_predicate, rdf_object)
+                return client_context.brain.rdf.match_only_vars(
+                    rdf_subject, rdf_predicate, rdf_object
+                )
 
         return []
 
@@ -49,7 +57,9 @@ class TemplateUniqNode(TemplateTripleNode):
         rdf_predicate = self._pred.resolve(client_context).upper()
         rdf_object = self._obj.resolve(client_context)
 
-        results = TemplateUniqNode._match_only_vars(client_context, rdf_subject, rdf_predicate, rdf_object)
+        results = TemplateUniqNode._match_only_vars(
+            client_context, rdf_subject, rdf_predicate, rdf_object
+        )
 
         values = TemplateUniqNode._filter_results(results)
 
@@ -57,7 +67,9 @@ class TemplateUniqNode(TemplateTripleNode):
         if values:
             resolved = " ".join(values)
 
-        YLogger.debug(client_context, "[%s] resolved to [%s]", self.to_string(), resolved)
+        YLogger.debug(
+            client_context, "[%s] resolved to [%s]", self.to_string(), resolved
+        )
         return resolved
 
     def to_string(self):

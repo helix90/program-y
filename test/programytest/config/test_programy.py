@@ -19,7 +19,3 @@ class ProgramyConfigurationTests(unittest.TestCase):
         program_config = ProgramyConfiguration(MockConfiguration())
         self.assertIsNotNone(program_config)
         self.assertIsNotNone(program_config.client_configuration)
-
-
-
-

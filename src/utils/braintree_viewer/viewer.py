@@ -1,15 +1,16 @@
 try:
+    from Tkconstants import BOTH, END, HORIZONTAL, VERTICAL, YES, E, N, S, W
     from Tkinter import Tk
-    from ttk import Treeview, Scrollbar, Frame
-    from Tkconstants import HORIZONTAL, VERTICAL, N, S, E, W, END, BOTH, YES
+    from ttk import Frame, Scrollbar, Treeview
 except ImportError:
     from tkinter import Tk
     from tkinter.ttk import Treeview, Scrollbar, Frame
     from tkinter.constants import HORIZONTAL, VERTICAL, N, S, E, W, END, BOTH, YES
 
-import xml.etree.ElementTree as ET
 import sys
+import xml.etree.ElementTree as ET
 from operator import attrgetter
+
 
 def autoscroll(sbar, first, last):
     """Hide and show scrollbar as needed."""
@@ -22,8 +23,17 @@ def autoscroll(sbar, first, last):
 
 
 class XML_Viewer(Frame):
-    def __init__(self, master, xml=None, heading_text=None, heading_anchor=None, padding=None, cursor=None,
-                 takefocus=None, style=None):
+    def __init__(
+        self,
+        master,
+        xml=None,
+        heading_text=None,
+        heading_anchor=None,
+        padding=None,
+        cursor=None,
+        takefocus=None,
+        style=None,
+    ):
         Frame.__init__(self, master, class_="XML_Viewer")
 
         self._vsb = Scrollbar(self, orient=VERTICAL)
@@ -60,8 +70,8 @@ class XML_Viewer(Frame):
         self._treeview.column("#0", stretch=False)
         self._treeview.column("#0", width=500)
 
-        self._vsb['command'] = self._treeview.yview
-        self._hsb['command'] = self._treeview.xview
+        self._vsb["command"] = self._treeview.yview
+        self._hsb["command"] = self._treeview.xview
 
         self._treeview.grid(column=0, row=0, sticky=N + S + W + E)
         self._vsb.grid(column=1, row=0, sticky=N + S)
@@ -79,7 +89,8 @@ class XML_Viewer(Frame):
     def _on_open(self, event):
         del event
         item_ID = self._treeview.focus()
-        if item_ID not in self._item_ID_to_element: return
+        if item_ID not in self._item_ID_to_element:
+            return
 
         node = self._item_ID_to_element[item_ID]
 
@@ -88,7 +99,8 @@ class XML_Viewer(Frame):
     def _on_close(self, event):
         del event
         item_ID = self._treeview.focus()
-        if item_ID not in self._item_ID_to_element: return
+        if item_ID not in self._item_ID_to_element:
+            return
 
         node = self._item_ID_to_element[item_ID]
 
@@ -148,7 +160,7 @@ class XML_Viewer(Frame):
                 for line in text.splitlines():
                     self._treeview.insert(item, END, text=line)
 
-        sorted_nodes = sorted(list(node), key=attrgetter('tag'))
+        sorted_nodes = sorted(list(node), key=attrgetter("tag"))
         for child_node in sorted_nodes:
             self._walk_xml(child_node, depth + 1, parent=item)
 

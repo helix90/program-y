@@ -11,6 +11,3 @@ class ErrorsStoreTests(unittest.TestCase):
         with self.assertRaises(NotImplementedError):
             errors = unittest.mock.Mock()
             store.save_errors(errors)
-
-
-

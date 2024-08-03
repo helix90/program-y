@@ -1,7 +1,9 @@
-import unittest
 import os
-from programy.utils.files.filewriter import TextFile
+import unittest
+
 from programytest.utils.files.utils import get_os_specific_path
+
+from programy.utils.files.filewriter import TextFile
 
 
 class MockFileWriter:
@@ -13,7 +15,7 @@ class MockFileWriter:
 class TextFileTests(unittest.TestCase):
 
     def test_init(self):
-        filename = get_os_specific_path() + 'textfile.tmp'
+        filename = get_os_specific_path() + "textfile.tmp"
 
         if os.path.exists(filename):
             os.remove(filename)
@@ -32,6 +34,3 @@ class TextFileTests(unittest.TestCase):
         os.remove(filename)
 
         self.assertFalse(os.path.exists(filename))
-
-
-

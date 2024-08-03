@@ -1,8 +1,9 @@
 import unittest.mock
 
-from programy.clients.client import BotClient
 from programytest.clients.arguments import MockArgumentParser
 from programytest.clients.mocks import MockBotClient, MockConfigFiles
+
+from programy.clients.client import BotClient
 
 
 class BotClientTests(unittest.TestCase):

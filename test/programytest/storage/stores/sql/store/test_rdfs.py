@@ -1,10 +1,11 @@
 import unittest
 
 import programytest.storage.engines as Engines
+from programytest.storage.asserts.store.assert_rdfs import RDFStoreAsserts
+
 from programy.storage.stores.sql.config import SQLStorageConfiguration
 from programy.storage.stores.sql.engine import SQLStorageEngine
 from programy.storage.stores.sql.store.rdfs import SQLRDFsStore
-from programytest.storage.asserts.store.assert_rdfs import RDFStoreAsserts
 
 
 class SQLRDFsStoreTests(RDFStoreAsserts):
@@ -78,7 +79,9 @@ class SQLRDFsStoreTests(RDFStoreAsserts):
         engine.initialise()
         store = SQLRDFsStore(engine)
 
-        self.assert_upload_from_csv_file(store,)
+        self.assert_upload_from_csv_file(
+            store,
+        )
 
     @unittest.skipIf(Engines.sql is False, Engines.sql_disabled)
     def test_upload_csv_files_from_directory_with_subdir(self):

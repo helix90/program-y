@@ -14,13 +14,14 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.parser.pattern.nodes.base import PatternNode
+
 from programy.parser.pattern.equalsmatch import EqualsMatch
+from programy.parser.pattern.nodes.base import PatternNode
 
 
 class PatternPriorityWordNode(PatternNode):
 
-    def __init__(self, word, userid='*'):
+    def __init__(self, word, userid="*"):
         PatternNode.__init__(self, userid)
         self._priority_word = word
 
@@ -34,16 +35,23 @@ class PatternPriorityWordNode(PatternNode):
     def to_xml(self, client_context, include_user=False):
         string = ""
         if include_user is True:
-            string += '<priority userid="%s" word="%s">' % (self.userid, self.priority_word)
+            string += '<priority userid="%s" word="%s">' % (
+                self.userid,
+                self.priority_word,
+            )
         else:
             string += '<priority word="%s">' % self.priority_word
         string += super(PatternPriorityWordNode, self).to_xml(client_context)
-        string += '</priority>\n'
+        string += "</priority>\n"
         return string
 
     def to_string(self, verbose=True):
         if verbose is True:
-            return "PWORD [%s] [%s] word=[%s]" % (self.userid, self._child_count(verbose), self.priority_word)
+            return "PWORD [%s] [%s] word=[%s]" % (
+                self.userid,
+                self._child_count(verbose),
+                self.priority_word,
+            )
         return "PWORD [%s]" % (self.priority_word)
 
     def equivalent(self, other):
@@ -56,7 +64,7 @@ class PatternPriorityWordNode(PatternNode):
     def equals(self, client_context, words, word_no):
         word = words.word(word_no)
 
-        if self.userid != '*':
+        if self.userid != "*":
             if self.userid != client_context.userid:
                 return EqualsMatch(False, word_no)
 

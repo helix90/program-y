@@ -15,12 +15,10 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
-from programy.utils.logging.ylogger import YLogger
-
-from programy.security.authorise.authorisor import Authoriser
-from programy.security.authorise.authorisor import AuthorisationException
 from programy.config.brain.security import BrainSecurityAuthorisationConfiguration
+from programy.security.authorise.authorisor import AuthorisationException, Authoriser
 from programy.storage.factory import StorageFactory
+from programy.utils.logging.ylogger import YLogger
 
 
 class BasicUserGroupAuthorisationService(Authoriser):
@@ -42,12 +40,21 @@ class BasicUserGroupAuthorisationService(Authoriser):
         self.load_users_and_groups(client)
 
     def load_users_and_groups(self, client):
-        if client.storage_factory.entity_storage_engine_available(StorageFactory.USERGROUPS) is True:
-            storage_engine = client.storage_factory.entity_storage_engine(StorageFactory.USERGROUPS)
+        if (
+            client.storage_factory.entity_storage_engine_available(
+                StorageFactory.USERGROUPS
+            )
+            is True
+        ):
+            storage_engine = client.storage_factory.entity_storage_engine(
+                StorageFactory.USERGROUPS
+            )
             usergroups_store = storage_engine.usergroups_store()
             usergroups_store.load_usergroups(self)
         else:
-            YLogger.warning(self, "No user groups defined, authorisation tag will not work!")
+            YLogger.warning(
+                self, "No user groups defined, authorisation tag will not work!"
+            )
 
     def authorise(self, userid, role):
         if userid not in self._users:

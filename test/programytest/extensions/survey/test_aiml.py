@@ -17,20 +17,28 @@ class SurveyTestsClient(TestClient):
 
 class SurveyAIMLTests(unittest.TestCase):
 
-    def setUp (self):
+    def setUp(self):
         client = SurveyTestsClient()
         self._client_context = client.create_client_context("testid")
 
     def test_survey(self):
         # Question 1
-        response = self._client_context.bot.ask_question(self._client_context, "START SURVEY")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "START SURVEY"
+        )
         self.assertIsNotNone(response)
-        self.assertEqual(response, 'Question 1. What do you like about AIML?')
+        self.assertEqual(response, "Question 1. What do you like about AIML?")
 
-        response = self._client_context.bot.ask_question(self._client_context, "Its really cool")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "Its really cool"
+        )
         self.assertIsNotNone(response)
-        self.assertEqual(response, 'Thanks, now Question 2. What do you dislike about AIML?')
+        self.assertEqual(
+            response, "Thanks, now Question 2. What do you dislike about AIML?"
+        )
 
-        response = self._client_context.bot.ask_question(self._client_context, "Too many undocmented features by the creators")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "Too many undocmented features by the creators"
+        )
         self.assertIsNotNone(response)
-        self.assertEqual(response, 'Thanks, thats the end of the survey.')
+        self.assertEqual(response, "Thanks, thats the end of the survey.")

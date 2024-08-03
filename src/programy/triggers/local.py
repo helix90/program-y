@@ -14,12 +14,14 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 from typing import Dict
-from programy.utils.logging.ylogger import YLogger
-from programy.triggers.config import TriggerConfiguration
+
 from programy.context import ClientContext
-from programy.triggers.manager import TriggerManager
 from programy.storage.factory import StorageFactory
+from programy.triggers.config import TriggerConfiguration
+from programy.triggers.manager import TriggerManager
+from programy.utils.logging.ylogger import YLogger
 
 
 class LocalTriggerManager(TriggerManager):
@@ -68,7 +70,10 @@ class LocalTriggerManager(TriggerManager):
         assert isinstance(storage_factory, StorageFactory)
 
         YLogger.debug(self, "Loading Triggers")
-        if storage_factory.entity_storage_engine_available(StorageFactory.TRIGGERS) is True:
+        if (
+            storage_factory.entity_storage_engine_available(StorageFactory.TRIGGERS)
+            is True
+        ):
             try:
                 self._load_trigger_from_store(storage_factory)
 
@@ -80,7 +85,12 @@ class LocalTriggerManager(TriggerManager):
         trigger.trigger(client_context=client_context, additional=additional)
         return True
 
-    def trigger(self, event: str, client_context: ClientContext = None, additional: Dict[str, str] = None) -> bool:
+    def trigger(
+        self,
+        event: str,
+        client_context: ClientContext = None,
+        additional: Dict[str, str] = None,
+    ) -> bool:
 
         if client_context is not None:
             assert isinstance(client_context, ClientContext)
@@ -99,7 +109,9 @@ class LocalTriggerManager(TriggerManager):
                 try:
                     self._trigger_trigger(trigger, client_context, additional, event)
                 except Exception as excep:
-                    YLogger.exception(client_context, "Trigger %s failed to fire", excep, event)
+                    YLogger.exception(
+                        client_context, "Trigger %s failed to fire", excep, event
+                    )
 
             return True
 

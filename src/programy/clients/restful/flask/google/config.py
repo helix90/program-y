@@ -14,6 +14,7 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 from programy.clients.restful.config import RestConfiguration
 from programy.utils.substitutions.substitues import Substitutions
 
@@ -70,27 +71,44 @@ class GoogleConfiguration(RestConfiguration):
     def error_srai(self):
         return self._error_srai
 
-    def load_configuration_section(self, configuration_file, section, bot_root, subs: Substitutions = None):
+    def load_configuration_section(
+        self, configuration_file, section, bot_root, subs: Substitutions = None
+    ):
         assert section is not None
 
-        self._launch_text = configuration_file.get_option(section, "launch_text",
-                                                              missing_value=GoogleConfiguration.DEFAULT_LAUNCH_TEXT)
-        self._launch_srai = configuration_file.get_option(section, "launch_srai", missing_value=None)
+        self._launch_text = configuration_file.get_option(
+            section,
+            "launch_text",
+            missing_value=GoogleConfiguration.DEFAULT_LAUNCH_TEXT,
+        )
+        self._launch_srai = configuration_file.get_option(
+            section, "launch_srai", missing_value=None
+        )
 
-        self._quit_text = configuration_file.get_option(section, "quit_text",
-                                                        missing_value=GoogleConfiguration.DEFAULT_QUIT_TEXT)
-        self._quit_srai = configuration_file.get_option(section, "quit_srai", missing_value=None)
+        self._quit_text = configuration_file.get_option(
+            section, "quit_text", missing_value=GoogleConfiguration.DEFAULT_QUIT_TEXT
+        )
+        self._quit_srai = configuration_file.get_option(
+            section, "quit_srai", missing_value=None
+        )
 
-        self._help_text = configuration_file.get_option(section, "help_text",
-                                                        missing_value=GoogleConfiguration.DEFAULT_HELP_TEXT)
-        self._help_srai = configuration_file.get_option(section, "help_srai", missing_value=None)
+        self._help_text = configuration_file.get_option(
+            section, "help_text", missing_value=GoogleConfiguration.DEFAULT_HELP_TEXT
+        )
+        self._help_srai = configuration_file.get_option(
+            section, "help_srai", missing_value=None
+        )
 
-        self._error_text = configuration_file.get_option(section, "error_text",
-                                                         missing_value=GoogleConfiguration.DEFAULT_ERROR_TEXT)
-        self._error_srai = configuration_file.get_option(section, "error_srai", missing_value=None)
+        self._error_text = configuration_file.get_option(
+            section, "error_text", missing_value=GoogleConfiguration.DEFAULT_ERROR_TEXT
+        )
+        self._error_srai = configuration_file.get_option(
+            section, "error_srai", missing_value=None
+        )
 
-        super(GoogleConfiguration, self).load_configuration_section(configuration_file, section, bot_root,
-                                                                    subs=subs)
+        super(GoogleConfiguration, self).load_configuration_section(
+            configuration_file, section, bot_root, subs=subs
+        )
 
     def to_yaml(self, data, defaults=True):
         if defaults is True:

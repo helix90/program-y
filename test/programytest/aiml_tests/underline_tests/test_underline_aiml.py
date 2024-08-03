@@ -22,46 +22,64 @@ class UnderlineAIMLTests(unittest.TestCase):
         self._client_context = client.create_client_context("testid")
 
     def test_underline_first(self):
-        response = self._client_context.bot.ask_question(self._client_context,  "SAY HEY")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "SAY HEY"
+        )
         self.assertIsNotNone(response)
-        self.assertEqual(response, 'STAR IS SAY.')
+        self.assertEqual(response, "STAR IS SAY.")
 
     def test_underline_first_multi_words(self):
-        response = self._client_context.bot.ask_question(self._client_context,  "THE MAN SAYS HEY")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "THE MAN SAYS HEY"
+        )
         self.assertIsNotNone(response)
-        self.assertEqual(response, 'STAR IS THE MAN SAYS.')
+        self.assertEqual(response, "STAR IS THE MAN SAYS.")
 
     def test_underline_last(self):
-        response = self._client_context.bot.ask_question(self._client_context,  "HELLO KEIFFBOT")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "HELLO KEIFFBOT"
+        )
         self.assertIsNotNone(response)
-        self.assertEqual(response, 'HI KEIFFBOT.')
+        self.assertEqual(response, "HI KEIFFBOT.")
 
     def test_underline_last_multi_words(self):
-        response = self._client_context.bot.ask_question(self._client_context,  "HELLO KEIFFBOT MATE")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "HELLO KEIFFBOT MATE"
+        )
         self.assertIsNotNone(response)
-        self.assertEqual(response, 'HI KEIFFBOT MATE.')
+        self.assertEqual(response, "HI KEIFFBOT MATE.")
 
     def test_multi_underline(self):
-        response = self._client_context.bot.ask_question(self._client_context, "WELL HI THERE")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "WELL HI THERE"
+        )
         self.assertIsNotNone(response)
-        self.assertEqual(response, 'YOU SAID WELL AND THERE.')
+        self.assertEqual(response, "YOU SAID WELL AND THERE.")
 
     def test_multi_underline_mulit_words(self):
-        response = self._client_context.bot.ask_question(self._client_context, "WELL THEN HI THERE MATE")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "WELL THEN HI THERE MATE"
+        )
         self.assertIsNotNone(response)
-        self.assertEqual(response, 'YOU SAID WELL THEN AND THERE MATE.')
+        self.assertEqual(response, "YOU SAID WELL THEN AND THERE MATE.")
 
     def test_underline_middle(self):
-        response = self._client_context.bot.ask_question(self._client_context, "GOODBYE KEIFF SEEYA")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "GOODBYE KEIFF SEEYA"
+        )
         self.assertIsNotNone(response)
-        self.assertEqual(response, 'LATER KEIFF.')
+        self.assertEqual(response, "LATER KEIFF.")
 
     def test_underline_middle_mulit_words(self):
-        response = self._client_context.bot.ask_question(self._client_context, "GOODBYE KEIFF MATE SEEYA")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "GOODBYE KEIFF MATE SEEYA"
+        )
         self.assertIsNotNone(response)
-        self.assertEqual(response, 'LATER KEIFF MATE.')
+        self.assertEqual(response, "LATER KEIFF MATE.")
 
     def test_underline_in_word(self):
-        response = self._client_context.bot.ask_question(self._client_context, "PLEASE DO _STOP_")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "PLEASE DO _STOP_"
+        )
         self.assertIsNotNone(response)
-        self.assertEqual(response, 'PLEASE DO.')
+        self.assertEqual(response, "PLEASE DO.")

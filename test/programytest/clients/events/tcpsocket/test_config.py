@@ -10,14 +10,18 @@ class SocketConfigurationTests(unittest.TestCase):
     def test_init(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         socket:
           host: 127.0.0.1
           port: 9999
           queue: 5
           max_buffer: 1024
           debug: true
-          """, ConsoleConfiguration(), ".")
+          """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         socket_config = SocketConfiguration()
         socket_config.load_configuration(yaml, ".")
@@ -34,26 +38,31 @@ class SocketConfigurationTests(unittest.TestCase):
         data = {}
         config.to_yaml(data, True)
 
-        self.assertEqual("0.0.0.0", data['host'])
-        self.assertEqual(80, data['port'])
-        self.assertEqual(5, data['queue'])
-        self.assertEqual(1024, data['max_buffer'])
-        self.assertEqual(False, data['debug'])
+        self.assertEqual("0.0.0.0", data["host"])
+        self.assertEqual(80, data["port"])
+        self.assertEqual(5, data["queue"])
+        self.assertEqual(1024, data["max_buffer"])
+        self.assertEqual(False, data["debug"])
 
-        self.assertEqual(data['bot_selector'], "programy.clients.botfactory.DefaultBotSelector")
-        self.assertEqual(data['renderer'], "programy.clients.render.text.TextRenderer")
+        self.assertEqual(
+            data["bot_selector"], "programy.clients.botfactory.DefaultBotSelector"
+        )
+        self.assertEqual(data["renderer"], "programy.clients.render.text.TextRenderer")
 
-        self.assertTrue('bots' in data)
-        self.assertTrue('bot' in data['bots'])
-        self.assertEqual(data['bot_selector'], "programy.clients.botfactory.DefaultBotSelector")
+        self.assertTrue("bots" in data)
+        self.assertTrue("bot" in data["bots"])
+        self.assertEqual(
+            data["bot_selector"], "programy.clients.botfactory.DefaultBotSelector"
+        )
 
-        self.assertTrue('brains' in data['bots']['bot'])
-        self.assertTrue('brain' in data['bots']['bot']['brains'])
+        self.assertTrue("brains" in data["bots"]["bot"])
+        self.assertTrue("brain" in data["bots"]["bot"]["brains"])
 
     def test_to_yaml_without_defaults(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         socket:
           host: 127.0.0.1
           port: 9999
@@ -64,7 +73,10 @@ class SocketConfigurationTests(unittest.TestCase):
           prompt: $
           bot_selector: programy.clients.botfactory.DefaultBotSelector
           renderer: programy.clients.render.text.TextRenderer
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         config = SocketConfiguration()
         config.load_configuration(yaml, ".")
@@ -72,28 +84,36 @@ class SocketConfigurationTests(unittest.TestCase):
         data = {}
         config.to_yaml(data, False)
 
-        self.assertEqual("127.0.0.1", data['host'])
-        self.assertEqual(9999, data['port'])
-        self.assertEqual(5, data['queue'])
-        self.assertEqual(1024, data['max_buffer'])
-        self.assertEqual(True, data['debug'])
+        self.assertEqual("127.0.0.1", data["host"])
+        self.assertEqual(9999, data["port"])
+        self.assertEqual(5, data["queue"])
+        self.assertEqual(1024, data["max_buffer"])
+        self.assertEqual(True, data["debug"])
 
-        self.assertEqual(data['bot_selector'], "programy.clients.botfactory.DefaultBotSelector")
-        self.assertEqual(data['renderer'], "programy.clients.render.text.TextRenderer")
+        self.assertEqual(
+            data["bot_selector"], "programy.clients.botfactory.DefaultBotSelector"
+        )
+        self.assertEqual(data["renderer"], "programy.clients.render.text.TextRenderer")
 
-        self.assertTrue('bots' in data)
-        self.assertTrue('bot' in data['bots'])
-        self.assertEqual(data['bot_selector'], "programy.clients.botfactory.DefaultBotSelector")
+        self.assertTrue("bots" in data)
+        self.assertTrue("bot" in data["bots"])
+        self.assertEqual(
+            data["bot_selector"], "programy.clients.botfactory.DefaultBotSelector"
+        )
 
-        self.assertTrue('brains' in data['bots']['bot'])
-        self.assertTrue('brain' in data['bots']['bot']['brains'])
+        self.assertTrue("brains" in data["bots"]["bot"])
+        self.assertTrue("brain" in data["bots"]["bot"]["brains"])
 
     def test_to_yaml_no_data(self):
         yaml = YamlConfigurationFile()
         self.assertIsNotNone(yaml)
-        yaml.load_from_text("""
+        yaml.load_from_text(
+            """
         other:
-        """, ConsoleConfiguration(), ".")
+        """,
+            ConsoleConfiguration(),
+            ".",
+        )
 
         config = SocketConfiguration()
         config.load_configuration(yaml, ".")
@@ -101,18 +121,22 @@ class SocketConfigurationTests(unittest.TestCase):
         data = {}
         config.to_yaml(data, False)
 
-        self.assertEqual("0.0.0.0", data['host'])
-        self.assertEqual(80, data['port'])
-        self.assertEqual(5, data['queue'])
-        self.assertEqual(1024, data['max_buffer'])
-        self.assertEqual(False, data['debug'])
+        self.assertEqual("0.0.0.0", data["host"])
+        self.assertEqual(80, data["port"])
+        self.assertEqual(5, data["queue"])
+        self.assertEqual(1024, data["max_buffer"])
+        self.assertEqual(False, data["debug"])
 
-        self.assertEqual(data['bot_selector'], "programy.clients.botfactory.DefaultBotSelector")
-        self.assertEqual(data['renderer'], "programy.clients.render.text.TextRenderer")
+        self.assertEqual(
+            data["bot_selector"], "programy.clients.botfactory.DefaultBotSelector"
+        )
+        self.assertEqual(data["renderer"], "programy.clients.render.text.TextRenderer")
 
-        self.assertTrue('bots' in data)
-        self.assertTrue('bot' in data['bots'])
-        self.assertEqual(data['bot_selector'], "programy.clients.botfactory.DefaultBotSelector")
+        self.assertTrue("bots" in data)
+        self.assertTrue("bot" in data["bots"])
+        self.assertEqual(
+            data["bot_selector"], "programy.clients.botfactory.DefaultBotSelector"
+        )
 
-        self.assertTrue('brains' in data['bots']['bot'])
-        self.assertTrue('brain' in data['bots']['bot']['brains'])
+        self.assertTrue("brains" in data["bots"]["bot"])
+        self.assertTrue("brain" in data["bots"]["bot"]["brains"])

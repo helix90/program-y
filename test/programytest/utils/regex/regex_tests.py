@@ -39,7 +39,9 @@ class RegularExpressionTests(unittest.TestCase):
         self.assertIsNone(pattern.match("LEGIONAIRRE"))
 
     def test_email(self):
-        pattern = re.compile(r"^[-a-z0-9_.]+@(?:[-a-z0-9]+\.)+[a-z]{2,6}$", re.IGNORECASE)
+        pattern = re.compile(
+            r"^[-a-z0-9_.]+@(?:[-a-z0-9]+\.)+[a-z]{2,6}$", re.IGNORECASE
+        )
         self.assertIsNotNone(pattern.match("keith@keithsterling.com"))
 
     def test_postcode(self):
@@ -52,10 +54,14 @@ class RegularExpressionTests(unittest.TestCase):
         self.assertIsNotNone(pattern.match("12345 1234"))
 
     def test_ukdate(self):
-        pattern = re.compile(r"^[0123]?\d[-/\s\.](?:[01]\d|[a-z]{3,})[-/\s\.](?:\d{2})?\d{2}$", re.IGNORECASE)
+        pattern = re.compile(
+            r"^[0123]?\d[-/\s\.](?:[01]\d|[a-z]{3,})[-/\s\.](?:\d{2})?\d{2}$",
+            re.IGNORECASE,
+        )
         self.assertIsNotNone(pattern.match("31-02-2017"))
 
     def test_time(self):
-        pattern = re.compile(r"^\d{1,2}:\d{1,2}(?:\s*[aApP]\.?[mM]\.?)?$", re.IGNORECASE)
+        pattern = re.compile(
+            r"^\d{1,2}:\d{1,2}(?:\s*[aApP]\.?[mM]\.?)?$", re.IGNORECASE
+        )
         self.assertIsNotNone(pattern.match("11:23am"))
-

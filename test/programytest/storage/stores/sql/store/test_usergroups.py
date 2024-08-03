@@ -1,15 +1,19 @@
-import yaml
 import unittest.mock
 from unittest.mock import patch
+
 import programytest.storage.engines as Engines
+import yaml
+from programytest.storage.asserts.store.assert_usergroups import UserGroupsStoreAsserts
+
+from programy.config.brain.security import BrainSecurityAuthorisationConfiguration
+from programy.security.authorise.authorisor import AuthorisationException
+from programy.security.authorise.usergroups import User
+from programy.security.authorise.usergroupsauthorisor import (
+    BasicUserGroupAuthorisationService,
+)
 from programy.storage.stores.sql.config import SQLStorageConfiguration
 from programy.storage.stores.sql.engine import SQLStorageEngine
 from programy.storage.stores.sql.store.usergroups import SQLUserGroupStore
-from programytest.storage.asserts.store.assert_usergroups import UserGroupsStoreAsserts
-from programy.security.authorise.usergroupsauthorisor import BasicUserGroupAuthorisationService
-from programy.config.brain.security import BrainSecurityAuthorisationConfiguration
-from programy.security.authorise.usergroups import User
-from programy.security.authorise.authorisor import AuthorisationException
 
 
 class SQLUserGroupStoreTests(UserGroupsStoreAsserts):
@@ -45,8 +49,10 @@ class SQLUserGroupStoreTests(UserGroupsStoreAsserts):
         raise Exception("Mock Exception")
 
     @unittest.skipIf(Engines.sql is False, Engines.sql_disabled)
-    @patch("programy.storage.stores.sql.store.usergroups.SQLUserGroupStore._read_yaml_from_file",
-           patch_read_yaml_from_file)
+    @patch(
+        "programy.storage.stores.sql.store.usergroups.SQLUserGroupStore._read_yaml_from_file",
+        patch_read_yaml_from_file,
+    )
     def test_upload_from_file_exception(self):
         config = SQLStorageConfiguration()
         engine = SQLStorageEngine(config)
@@ -73,10 +79,13 @@ class SQLUserGroupStoreTests(UserGroupsStoreAsserts):
         engine.initialise()
         store = SQLUserGroupStore(engine)
 
-        yaml_data = yaml.load("""
+        yaml_data = yaml.load(
+            """
             groups:
               sysadmin, localuser
-        """, Loader=yaml.FullLoader)
+        """,
+            Loader=yaml.FullLoader,
+        )
 
         store._load_users_user_groups(yaml_data, user, "console")
 
@@ -93,10 +102,13 @@ class SQLUserGroupStoreTests(UserGroupsStoreAsserts):
         engine.initialise()
         store = SQLUserGroupStore(engine)
 
-        yaml_data = yaml.load("""
+        yaml_data = yaml.load(
+            """
             groups:
               sysadmin, localuser, localuser
-        """, Loader=yaml.FullLoader)
+        """,
+            Loader=yaml.FullLoader,
+        )
 
         store._load_users_user_groups(yaml_data, user, "console")
 
@@ -113,10 +125,13 @@ class SQLUserGroupStoreTests(UserGroupsStoreAsserts):
         engine.initialise()
         store = SQLUserGroupStore(engine)
 
-        yaml_data = yaml.load("""
+        yaml_data = yaml.load(
+            """
             roles:
               su, local
-        """, Loader=yaml.FullLoader)
+        """,
+            Loader=yaml.FullLoader,
+        )
 
         store._load_users_user_roles(yaml_data, user, "console")
 
@@ -133,10 +148,13 @@ class SQLUserGroupStoreTests(UserGroupsStoreAsserts):
         engine.initialise()
         store = SQLUserGroupStore(engine)
 
-        yaml_data = yaml.load("""
+        yaml_data = yaml.load(
+            """
             roles:
               su, local, su
-        """, Loader=yaml.FullLoader)
+        """,
+            Loader=yaml.FullLoader,
+        )
 
         store._load_users_user_roles(yaml_data, user, "console")
 
@@ -151,7 +169,8 @@ class SQLUserGroupStoreTests(UserGroupsStoreAsserts):
         engine.initialise()
         store = SQLUserGroupStore(engine)
 
-        yaml_data = yaml.load("""
+        yaml_data = yaml.load(
+            """
             users:
               console:
                 roles:
@@ -163,11 +182,15 @@ class SQLUserGroupStoreTests(UserGroupsStoreAsserts):
                   user
                 groups:
                   local
-        """, Loader=yaml.FullLoader)
+        """,
+            Loader=yaml.FullLoader,
+        )
 
         store._upload_users(yaml_data, verbose=False)
 
-        authorisor = BasicUserGroupAuthorisationService(BrainSecurityAuthorisationConfiguration())
+        authorisor = BasicUserGroupAuthorisationService(
+            BrainSecurityAuthorisationConfiguration()
+        )
         store.load_usergroups(authorisor)
 
         self.assertTrue("console" in authorisor.users)
@@ -184,7 +207,8 @@ class SQLUserGroupStoreTests(UserGroupsStoreAsserts):
         engine.initialise()
         store = SQLUserGroupStore(engine)
 
-        yaml_data = yaml.load("""
+        yaml_data = yaml.load(
+            """
             users:
               console:
                 roles:
@@ -196,11 +220,15 @@ class SQLUserGroupStoreTests(UserGroupsStoreAsserts):
                   user
                 groups:
                   local
-        """, Loader=yaml.FullLoader)
+        """,
+            Loader=yaml.FullLoader,
+        )
 
         store.load_from_yaml(yaml_data, verbose=True)
 
-        authorisor = BasicUserGroupAuthorisationService(BrainSecurityAuthorisationConfiguration())
+        authorisor = BasicUserGroupAuthorisationService(
+            BrainSecurityAuthorisationConfiguration()
+        )
         store.load_usergroups(authorisor)
 
         self.assertTrue("console" in authorisor.users)
@@ -217,7 +245,8 @@ class SQLUserGroupStoreTests(UserGroupsStoreAsserts):
         engine.initialise()
         store = SQLUserGroupStore(engine)
 
-        yaml_data = yaml.load("""
+        yaml_data = yaml.load(
+            """
             other:
               console:
                 roles:
@@ -229,11 +258,15 @@ class SQLUserGroupStoreTests(UserGroupsStoreAsserts):
                   user
                 groups:
                   local
-        """, Loader=yaml.FullLoader)
+        """,
+            Loader=yaml.FullLoader,
+        )
 
         store._upload_users(yaml_data, verbose=True)
 
-        authorisor = BasicUserGroupAuthorisationService(BrainSecurityAuthorisationConfiguration())
+        authorisor = BasicUserGroupAuthorisationService(
+            BrainSecurityAuthorisationConfiguration()
+        )
         store.load_usergroups(authorisor)
 
         self.assertFalse("console" in authorisor.users)
@@ -252,7 +285,8 @@ class SQLUserGroupStoreTests(UserGroupsStoreAsserts):
         engine.initialise()
         store = SQLUserGroupStore(engine)
 
-        yaml_data = yaml.load("""
+        yaml_data = yaml.load(
+            """
             users:
               console:
                 groups:
@@ -260,11 +294,15 @@ class SQLUserGroupStoreTests(UserGroupsStoreAsserts):
               viewer:
                 groups:
                   local
-        """, Loader=yaml.FullLoader)
+        """,
+            Loader=yaml.FullLoader,
+        )
 
         store._upload_users(yaml_data, verbose=True)
 
-        authorisor = BasicUserGroupAuthorisationService(BrainSecurityAuthorisationConfiguration())
+        authorisor = BasicUserGroupAuthorisationService(
+            BrainSecurityAuthorisationConfiguration()
+        )
         store.load_usergroups(authorisor)
 
         self.assertTrue("console" in authorisor.users)
@@ -281,7 +319,8 @@ class SQLUserGroupStoreTests(UserGroupsStoreAsserts):
         engine.initialise()
         store = SQLUserGroupStore(engine)
 
-        yaml_data = yaml.load("""
+        yaml_data = yaml.load(
+            """
              users:
                console:
                  roles:
@@ -289,11 +328,15 @@ class SQLUserGroupStoreTests(UserGroupsStoreAsserts):
                viewer:
                  roles:
                    user
-         """, Loader=yaml.FullLoader)
+         """,
+            Loader=yaml.FullLoader,
+        )
 
         store._upload_users(yaml_data, verbose=True)
 
-        authorisor = BasicUserGroupAuthorisationService(BrainSecurityAuthorisationConfiguration())
+        authorisor = BasicUserGroupAuthorisationService(
+            BrainSecurityAuthorisationConfiguration()
+        )
         store.load_usergroups(authorisor)
 
         self.assertTrue("console" in authorisor.users)
@@ -312,7 +355,8 @@ class SQLUserGroupStoreTests(UserGroupsStoreAsserts):
 
         store.empty()
 
-        yaml_data = yaml.load("""
+        yaml_data = yaml.load(
+            """
         groups:
           group1:
             roles:
@@ -329,11 +373,15 @@ class SQLUserGroupStoreTests(UserGroupsStoreAsserts):
               group3
             users:
               user3
-         """, Loader=yaml.FullLoader)
+         """,
+            Loader=yaml.FullLoader,
+        )
 
         store._upload_groups(yaml_data, verbose=False)
 
-        authorisor = BasicUserGroupAuthorisationService(BrainSecurityAuthorisationConfiguration())
+        authorisor = BasicUserGroupAuthorisationService(
+            BrainSecurityAuthorisationConfiguration()
+        )
         store.load_usergroups(authorisor)
 
         self.assertTrue("group1" in authorisor.groups)
@@ -348,7 +396,8 @@ class SQLUserGroupStoreTests(UserGroupsStoreAsserts):
         engine.initialise()
         store = SQLUserGroupStore(engine)
 
-        yaml_data = yaml.load("""
+        yaml_data = yaml.load(
+            """
         groups:
           group1:
             roles:
@@ -365,11 +414,15 @@ class SQLUserGroupStoreTests(UserGroupsStoreAsserts):
               group3
             users:
               user3
-         """, Loader=yaml.FullLoader)
+         """,
+            Loader=yaml.FullLoader,
+        )
 
         store._upload_groups(yaml_data, verbose=True)
 
-        authorisor = BasicUserGroupAuthorisationService(BrainSecurityAuthorisationConfiguration())
+        authorisor = BasicUserGroupAuthorisationService(
+            BrainSecurityAuthorisationConfiguration()
+        )
         store.load_usergroups(authorisor)
 
     @unittest.skipIf(Engines.sql is False, Engines.sql_disabled)
@@ -379,7 +432,8 @@ class SQLUserGroupStoreTests(UserGroupsStoreAsserts):
         engine.initialise()
         store = SQLUserGroupStore(engine)
 
-        yaml_data = yaml.load("""
+        yaml_data = yaml.load(
+            """
         other:
           group1:
             roles:
@@ -396,11 +450,15 @@ class SQLUserGroupStoreTests(UserGroupsStoreAsserts):
               group3
             users:
               user3
-         """, Loader=yaml.FullLoader)
+         """,
+            Loader=yaml.FullLoader,
+        )
 
         store._upload_groups(yaml_data, verbose=False)
 
-        authorisor = BasicUserGroupAuthorisationService(BrainSecurityAuthorisationConfiguration())
+        authorisor = BasicUserGroupAuthorisationService(
+            BrainSecurityAuthorisationConfiguration()
+        )
         store.load_usergroups(authorisor)
 
     @unittest.skipIf(Engines.sql is False, Engines.sql_disabled)
@@ -410,7 +468,8 @@ class SQLUserGroupStoreTests(UserGroupsStoreAsserts):
         engine.initialise()
         store = SQLUserGroupStore(engine)
 
-        yaml_data = yaml.load("""
+        yaml_data = yaml.load(
+            """
         groups:
           group1:
             groups:
@@ -423,11 +482,15 @@ class SQLUserGroupStoreTests(UserGroupsStoreAsserts):
               group3
             users:
               user3
-         """, Loader=yaml.FullLoader)
+         """,
+            Loader=yaml.FullLoader,
+        )
 
         store._upload_groups(yaml_data, verbose=False)
 
-        authorisor = BasicUserGroupAuthorisationService(BrainSecurityAuthorisationConfiguration())
+        authorisor = BasicUserGroupAuthorisationService(
+            BrainSecurityAuthorisationConfiguration()
+        )
         store.load_usergroups(authorisor)
 
     @unittest.skipIf(Engines.sql is False, Engines.sql_disabled)
@@ -437,7 +500,8 @@ class SQLUserGroupStoreTests(UserGroupsStoreAsserts):
         engine.initialise()
         store = SQLUserGroupStore(engine)
 
-        yaml_data = yaml.load("""
+        yaml_data = yaml.load(
+            """
         groups:
           group1:
             roles:
@@ -450,11 +514,15 @@ class SQLUserGroupStoreTests(UserGroupsStoreAsserts):
               role4, role5  
             users:
               user3
-         """, Loader=yaml.FullLoader)
+         """,
+            Loader=yaml.FullLoader,
+        )
 
         store._upload_groups(yaml_data, verbose=False)
 
-        authorisor = BasicUserGroupAuthorisationService(BrainSecurityAuthorisationConfiguration())
+        authorisor = BasicUserGroupAuthorisationService(
+            BrainSecurityAuthorisationConfiguration()
+        )
         store.load_usergroups(authorisor)
 
     @unittest.skipIf(Engines.sql is False, Engines.sql_disabled)
@@ -464,7 +532,8 @@ class SQLUserGroupStoreTests(UserGroupsStoreAsserts):
         engine.initialise()
         store = SQLUserGroupStore(engine)
 
-        yaml_data = yaml.load("""
+        yaml_data = yaml.load(
+            """
         groups:
           group1:
             roles:
@@ -477,11 +546,15 @@ class SQLUserGroupStoreTests(UserGroupsStoreAsserts):
               role4, role5  
             groups:
               group3
-         """, Loader=yaml.FullLoader)
+         """,
+            Loader=yaml.FullLoader,
+        )
 
         store._upload_groups(yaml_data, verbose=False)
 
-        authorisor = BasicUserGroupAuthorisationService(BrainSecurityAuthorisationConfiguration())
+        authorisor = BasicUserGroupAuthorisationService(
+            BrainSecurityAuthorisationConfiguration()
+        )
         store.load_usergroups(authorisor)
 
     @unittest.skipIf(Engines.sql is False, Engines.sql_disabled)
@@ -491,7 +564,8 @@ class SQLUserGroupStoreTests(UserGroupsStoreAsserts):
         engine.initialise()
         store = SQLUserGroupStore(engine)
 
-        yaml_data = yaml.load("""
+        yaml_data = yaml.load(
+            """
          users:
            user1:
              groups:
@@ -523,13 +597,17 @@ class SQLUserGroupStoreTests(UserGroupsStoreAsserts):
            group3:
              roles:
                role6
-               """, Loader=yaml.FullLoader)
+               """,
+            Loader=yaml.FullLoader,
+        )
 
         store.load_from_yaml(yaml_data, verbose=False)
 
         store.commit()
 
-        authorisor = BasicUserGroupAuthorisationService(BrainSecurityAuthorisationConfiguration())
+        authorisor = BasicUserGroupAuthorisationService(
+            BrainSecurityAuthorisationConfiguration()
+        )
         store.load_usergroups(authorisor)
 
         self.assertTrue("user1" in authorisor.users)

@@ -1,9 +1,10 @@
 import unittest
 
+from programytest.client import TestClient
+
 from programy.triggers.config import TriggerConfiguration
 from programy.triggers.manager import TriggerManager
 from programy.triggers.rest import RestTriggerManager
-from programytest.client import TestClient
 
 
 class MockResponse(object):
@@ -81,7 +82,9 @@ class RestTriggerManagerTests(unittest.TestCase):
         triggered = mgr.trigger("OTHER_EVENT", client_context)
         self.assertTrue(triggered)
 
-        triggered = mgr.trigger("OTHER_EVENT", client_context, additional={"key": "value"})
+        triggered = mgr.trigger(
+            "OTHER_EVENT", client_context, additional={"key": "value"}
+        )
         self.assertTrue(triggered)
 
     def test_trigger_triggers_exception(self):
@@ -102,35 +105,38 @@ class RestTriggerManagerTests(unittest.TestCase):
 
     def test_trigger_with_additionals(self):
         config = TriggerConfiguration()
-        config._additionals['url'] = "http://some.service.com"
-        config._additionals['method'] = "POST"
-        config._additionals['token'] = "ABCDEFGHIJK"
+        config._additionals["url"] = "http://some.service.com"
+        config._additionals["method"] = "POST"
+        config._additionals["token"] = "ABCDEFGHIJK"
 
         mgr = MockRestTriggerManager(config)
 
         mgr.trigger("SYSTEM_STARTUP")
 
         self.assertEquals("http://some.service.com", mgr._api_url_base)
-        self.assertEquals({'Authorisation': 'Bearer ABCDEFGHIJK', 'Content-Type': 'application/json'}, mgr._headers)
-        self.assertEquals({'event': 'SYSTEM_STARTUP'}, mgr._payload)
+        self.assertEquals(
+            {"Authorisation": "Bearer ABCDEFGHIJK", "Content-Type": "application/json"},
+            mgr._headers,
+        )
+        self.assertEquals({"event": "SYSTEM_STARTUP"}, mgr._payload)
 
     def test_trigger_with_additionals_no_token(self):
         config = TriggerConfiguration()
-        config._additionals['url'] = "http://some.service.com"
-        config._additionals['method'] = "POST"
+        config._additionals["url"] = "http://some.service.com"
+        config._additionals["method"] = "POST"
 
         mgr = MockRestTriggerManager(config)
 
         mgr.trigger("SYSTEM_STARTUP")
 
         self.assertEquals("http://some.service.com", mgr._api_url_base)
-        self.assertEquals({'Content-Type': 'application/json'}, mgr._headers)
-        self.assertEquals({'event': 'SYSTEM_STARTUP'}, mgr._payload)
+        self.assertEquals({"Content-Type": "application/json"}, mgr._headers)
+        self.assertEquals({"event": "SYSTEM_STARTUP"}, mgr._payload)
 
     def test_trigger_with_additionals_no_method(self):
         config = TriggerConfiguration()
-        config._additionals['url'] = "http://some.service.com"
-        config._additionals['method'] = "POST"
+        config._additionals["url"] = "http://some.service.com"
+        config._additionals["method"] = "POST"
 
         mgr = MockRestTriggerManager(config)
 
@@ -139,8 +145,8 @@ class RestTriggerManagerTests(unittest.TestCase):
 
     def test_trigger_with_additionals_method_get(self):
         config = TriggerConfiguration()
-        config._additionals['url'] = "http://some.service.com"
-        config._additionals['method'] = "GET"
+        config._additionals["url"] = "http://some.service.com"
+        config._additionals["method"] = "GET"
 
         mgr = MockRestTriggerManager(config)
 

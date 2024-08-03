@@ -1,8 +1,9 @@
+from programytest.parser.base import ParserTestsBaseClass
+
 from programy.dialog.sentence import Sentence
 from programy.parser.exceptions import ParserException
 from programy.parser.pattern.nodes.bot import PatternBotNode
 from programy.parser.pattern.nodes.word import PatternWordNode
-from programytest.parser.base import ParserTestsBaseClass
 
 
 class PatternBotNodeTests(ParserTestsBaseClass):
@@ -25,12 +26,18 @@ class PatternBotNodeTests(ParserTestsBaseClass):
     def test_init_with_invalid_attribs(self):
         with self.assertRaises(ParserException) as raised:
             node = PatternBotNode({"unknwon": "test1"}, "")
-        self.assertEqual(str(raised.exception), "Invalid bot node, neither name or property specified as attribute or text")
+        self.assertEqual(
+            str(raised.exception),
+            "Invalid bot node, neither name or property specified as attribute or text",
+        )
 
     def test_init_with_nothing(self):
         with self.assertRaises(ParserException) as raised:
             node = PatternBotNode({}, "")
-        self.assertEqual(str(raised.exception), "Invalid bot node, neither name or property specified as attribute or text")
+        self.assertEqual(
+            str(raised.exception),
+            "Invalid bot node, neither name or property specified as attribute or text",
+        )
 
     def test_init(self):
         node = PatternBotNode({}, "test1")
@@ -47,8 +54,13 @@ class PatternBotNodeTests(ParserTestsBaseClass):
         self.assertFalse(node.is_that())
         self.assertFalse(node.is_topic())
         self.assertFalse(node.is_wildcard())
-        self.assertEqual(node.to_string(), "BOT [*] [P(0)^(0)#(0)C(0)_(0)*(0)To(0)Th(0)Te(0)] property=[test1]")
-        self.assertEqual('<bot property="test1">\n</bot>', node.to_xml(self._client_context))
+        self.assertEqual(
+            node.to_string(),
+            "BOT [*] [P(0)^(0)#(0)C(0)_(0)*(0)To(0)Th(0)Te(0)] property=[test1]",
+        )
+        self.assertEqual(
+            '<bot property="test1">\n</bot>', node.to_xml(self._client_context)
+        )
 
     def test_equivalent(self):
         node = PatternBotNode({}, "test1")
@@ -85,53 +97,107 @@ class PatternBotNodeTests(ParserTestsBaseClass):
 
     def test_to_xml(self):
         bot1 = PatternBotNode({}, "bot1")
-        self.assertEqual('<bot property="bot1">\n</bot>', bot1.to_xml(self._client_context, include_user=False))
-        self.assertEqual('<bot userid="*" property="bot1">\n</bot>', bot1.to_xml(self._client_context, include_user=True))
+        self.assertEqual(
+            '<bot property="bot1">\n</bot>',
+            bot1.to_xml(self._client_context, include_user=False),
+        )
+        self.assertEqual(
+            '<bot userid="*" property="bot1">\n</bot>',
+            bot1.to_xml(self._client_context, include_user=True),
+        )
 
         bot2 = PatternBotNode({"name": "test"}, "bot2")
-        self.assertEqual('<bot property="test">\n</bot>', bot2.to_xml(self._client_context, include_user=False))
-        self.assertEqual('<bot userid="*" property="test">\n</bot>', bot2.to_xml(self._client_context, include_user=True))
+        self.assertEqual(
+            '<bot property="test">\n</bot>',
+            bot2.to_xml(self._client_context, include_user=False),
+        )
+        self.assertEqual(
+            '<bot userid="*" property="test">\n</bot>',
+            bot2.to_xml(self._client_context, include_user=True),
+        )
 
         bot3 = PatternBotNode({"property": "test"}, "bot3")
-        self.assertEqual('<bot property="test">\n</bot>', bot3.to_xml(self._client_context, include_user=False))
-        self.assertEqual('<bot userid="*" property="test">\n</bot>', bot3.to_xml(self._client_context, include_user=True))
+        self.assertEqual(
+            '<bot property="test">\n</bot>',
+            bot3.to_xml(self._client_context, include_user=False),
+        )
+        self.assertEqual(
+            '<bot userid="*" property="test">\n</bot>',
+            bot3.to_xml(self._client_context, include_user=True),
+        )
 
         bot4 = PatternBotNode({}, "bot4", userid="testid")
-        self.assertEqual('<bot property="bot4">\n</bot>', bot4.to_xml(self._client_context, include_user=False))
-        self.assertEqual('<bot userid="testid" property="bot4">\n</bot>', bot4.to_xml(self._client_context, include_user=True))
+        self.assertEqual(
+            '<bot property="bot4">\n</bot>',
+            bot4.to_xml(self._client_context, include_user=False),
+        )
+        self.assertEqual(
+            '<bot userid="testid" property="bot4">\n</bot>',
+            bot4.to_xml(self._client_context, include_user=True),
+        )
 
         bot5 = PatternBotNode({"name": "test"}, "bot5", userid="testid")
-        self.assertEqual('<bot property="test">\n</bot>', bot5.to_xml(self._client_context, include_user=False))
-        self.assertEqual('<bot userid="testid" property="test">\n</bot>', bot5.to_xml(self._client_context, include_user=True))
+        self.assertEqual(
+            '<bot property="test">\n</bot>',
+            bot5.to_xml(self._client_context, include_user=False),
+        )
+        self.assertEqual(
+            '<bot userid="testid" property="test">\n</bot>',
+            bot5.to_xml(self._client_context, include_user=True),
+        )
 
         bot6 = PatternBotNode({"property": "test"}, "bot6", userid="testid")
-        self.assertEqual('<bot property="test">\n</bot>', bot6.to_xml(self._client_context, include_user=False))
-        self.assertEqual('<bot userid="testid" property="test">\n</bot>', bot6.to_xml(self._client_context, include_user=True))
+        self.assertEqual(
+            '<bot property="test">\n</bot>',
+            bot6.to_xml(self._client_context, include_user=False),
+        )
+        self.assertEqual(
+            '<bot userid="testid" property="test">\n</bot>',
+            bot6.to_xml(self._client_context, include_user=True),
+        )
 
     def test_to_string(self):
         bot1 = PatternBotNode({}, "bot1")
-        self.assertEqual('BOT property=[bot1]', bot1.to_string(verbose=False))
-        self.assertEqual('BOT [*] [P(0)^(0)#(0)C(0)_(0)*(0)To(0)Th(0)Te(0)] property=[bot1]', bot1.to_string(verbose=True))
+        self.assertEqual("BOT property=[bot1]", bot1.to_string(verbose=False))
+        self.assertEqual(
+            "BOT [*] [P(0)^(0)#(0)C(0)_(0)*(0)To(0)Th(0)Te(0)] property=[bot1]",
+            bot1.to_string(verbose=True),
+        )
 
         bot2 = PatternBotNode({"name": "test"}, "bot2")
-        self.assertEqual('BOT property=[test]', bot2.to_string(verbose=False))
-        self.assertEqual('BOT [*] [P(0)^(0)#(0)C(0)_(0)*(0)To(0)Th(0)Te(0)] property=[test]', bot2.to_string(verbose=True))
+        self.assertEqual("BOT property=[test]", bot2.to_string(verbose=False))
+        self.assertEqual(
+            "BOT [*] [P(0)^(0)#(0)C(0)_(0)*(0)To(0)Th(0)Te(0)] property=[test]",
+            bot2.to_string(verbose=True),
+        )
 
         bot3 = PatternBotNode({"property": "test"}, "bot3")
-        self.assertEqual('BOT property=[test]', bot3.to_string(verbose=False))
-        self.assertEqual('BOT [*] [P(0)^(0)#(0)C(0)_(0)*(0)To(0)Th(0)Te(0)] property=[test]', bot3.to_string(verbose=True))
+        self.assertEqual("BOT property=[test]", bot3.to_string(verbose=False))
+        self.assertEqual(
+            "BOT [*] [P(0)^(0)#(0)C(0)_(0)*(0)To(0)Th(0)Te(0)] property=[test]",
+            bot3.to_string(verbose=True),
+        )
 
         bot4 = PatternBotNode({}, "bot4", userid="testid")
-        self.assertEqual('BOT property=[bot4]', bot4.to_string(verbose=False))
-        self.assertEqual('BOT [testid] [P(0)^(0)#(0)C(0)_(0)*(0)To(0)Th(0)Te(0)] property=[bot4]', bot4.to_string(verbose=True))
+        self.assertEqual("BOT property=[bot4]", bot4.to_string(verbose=False))
+        self.assertEqual(
+            "BOT [testid] [P(0)^(0)#(0)C(0)_(0)*(0)To(0)Th(0)Te(0)] property=[bot4]",
+            bot4.to_string(verbose=True),
+        )
 
         bot5 = PatternBotNode({"name": "test"}, "bot5", userid="testid")
-        self.assertEqual('BOT property=[test]', bot5.to_string(verbose=False))
-        self.assertEqual('BOT [testid] [P(0)^(0)#(0)C(0)_(0)*(0)To(0)Th(0)Te(0)] property=[test]', bot5.to_string(verbose=True))
+        self.assertEqual("BOT property=[test]", bot5.to_string(verbose=False))
+        self.assertEqual(
+            "BOT [testid] [P(0)^(0)#(0)C(0)_(0)*(0)To(0)Th(0)Te(0)] property=[test]",
+            bot5.to_string(verbose=True),
+        )
 
         bot6 = PatternBotNode({"property": "test"}, "bot6", userid="testid")
-        self.assertEqual('BOT property=[test]', bot6.to_string(verbose=False))
-        self.assertEqual('BOT [testid] [P(0)^(0)#(0)C(0)_(0)*(0)To(0)Th(0)Te(0)] property=[test]', bot6.to_string(verbose=True))
+        self.assertEqual("BOT property=[test]", bot6.to_string(verbose=False))
+        self.assertEqual(
+            "BOT [testid] [P(0)^(0)#(0)C(0)_(0)*(0)To(0)Th(0)Te(0)] property=[test]",
+            bot6.to_string(verbose=True),
+        )
 
     def test_equals_text(self):
         bot1 = PatternBotNode({}, "bot1")
@@ -164,15 +230,21 @@ class PatternBotNodeTests(ParserTestsBaseClass):
         bot2 = PatternBotNode({}, "test1", userid="testid")
         bot3 = PatternBotNode({}, "test1", userid="testid2")
 
-        match1 = bot1.equals(self._client_context, Sentence(self._client_context, 'value1'), 0)
+        match1 = bot1.equals(
+            self._client_context, Sentence(self._client_context, "value1"), 0
+        )
         self.assertIsNotNone(match1)
         self.assertTrue(match1.matched)
 
-        match2 = bot2.equals(self._client_context, Sentence(self._client_context, 'value1'), 0)
+        match2 = bot2.equals(
+            self._client_context, Sentence(self._client_context, "value1"), 0
+        )
         self.assertIsNotNone(match2)
         self.assertTrue(match2.matched)
 
-        match3 = bot3.equals(self._client_context, Sentence(self._client_context, 'value1'), 0)
+        match3 = bot3.equals(
+            self._client_context, Sentence(self._client_context, "value1"), 0
+        )
         self.assertIsNotNone(match3)
         self.assertFalse(match3.matched)
 
@@ -183,15 +255,21 @@ class PatternBotNodeTests(ParserTestsBaseClass):
         bot2 = PatternBotNode({"name": "test1"}, None, userid="testid")
         bot3 = PatternBotNode({"name": "test1"}, None, userid="testid2")
 
-        match1 = bot1.equals(self._client_context, Sentence(self._client_context, 'value1'), 0)
+        match1 = bot1.equals(
+            self._client_context, Sentence(self._client_context, "value1"), 0
+        )
         self.assertIsNotNone(match1)
         self.assertTrue(match1.matched)
 
-        match2 = bot2.equals(self._client_context, Sentence(self._client_context, 'value1'), 0)
+        match2 = bot2.equals(
+            self._client_context, Sentence(self._client_context, "value1"), 0
+        )
         self.assertIsNotNone(match2)
         self.assertTrue(match2.matched)
 
-        match3 = bot3.equals(self._client_context, Sentence(self._client_context, 'value1'), 0)
+        match3 = bot3.equals(
+            self._client_context, Sentence(self._client_context, "value1"), 0
+        )
         self.assertIsNotNone(match3)
         self.assertFalse(match3.matched)
 
@@ -202,15 +280,20 @@ class PatternBotNodeTests(ParserTestsBaseClass):
         bot2 = PatternBotNode({"property": "test1"}, None, userid="testid")
         bot3 = PatternBotNode({"property": "test1"}, None, userid="testid2")
 
-        match1 = bot1.equals(self._client_context, Sentence(self._client_context, 'value1'), 0)
+        match1 = bot1.equals(
+            self._client_context, Sentence(self._client_context, "value1"), 0
+        )
         self.assertIsNotNone(match1)
         self.assertTrue(match1.matched)
 
-        match2 = bot2.equals(self._client_context, Sentence(self._client_context, 'value1'), 0)
+        match2 = bot2.equals(
+            self._client_context, Sentence(self._client_context, "value1"), 0
+        )
         self.assertIsNotNone(match2)
         self.assertTrue(match2.matched)
 
-        match3 = bot3.equals(self._client_context, Sentence(self._client_context, 'value1'), 0)
+        match3 = bot3.equals(
+            self._client_context, Sentence(self._client_context, "value1"), 0
+        )
         self.assertIsNotNone(match3)
         self.assertFalse(match3.matched)
-

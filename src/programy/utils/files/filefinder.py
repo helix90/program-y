@@ -14,20 +14,21 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 import os
-from abc import ABC
-from abc import abstractmethod
+from abc import ABC, abstractmethod
+
 from programy.utils.logging.ylogger import YLogger
 
 
 class FileFinder(ABC):
 
     def __init__(self):
-        pass    # pragma: no cover
+        pass  # pragma: no cover
 
     @abstractmethod
     def load_file_contents(self, fileid, filename, userid="*"):
-        raise NotImplementedError()     # pragma: no cover
+        raise NotImplementedError()  # pragma: no cover
 
     def find_files(self, path, subdir=False, extension=None):
         found_files = []
@@ -45,7 +46,9 @@ class FileFinder(ABC):
 
         return sorted(found_files, key=lambda element: (element[1], element[0]))
 
-    def load_dir_contents(self, paths, subdir=False, extension=".txt", filename_as_userid=False):
+    def load_dir_contents(
+        self, paths, subdir=False, extension=".txt", filename_as_userid=False
+    ):
 
         files = self.find_files(paths, subdir, extension)
 
@@ -60,11 +63,15 @@ class FileFinder(ABC):
                 else:
                     id = "*"
 
-                collection[just_filename.upper()] = self.load_file_contents(fileid=just_filename, filename=file[1], userid=id)
+                collection[just_filename.upper()] = self.load_file_contents(
+                    fileid=just_filename, filename=file[1], userid=id
+                )
                 file_maps[just_filename.upper()] = file[1]
 
             except Exception as excep:
-                YLogger.exception(self, "Failed to load file contents for file [%s]", excep, file[1])
+                YLogger.exception(
+                    self, "Failed to load file contents for file [%s]", excep, file[1]
+                )
 
         return collection, file_maps
 
@@ -76,7 +83,9 @@ class FileFinder(ABC):
             collection[just_filename] = self.load_file_contents(just_filename, filename)
 
         except Exception as excep:
-            YLogger.exception(self, "Failed to load file contents for file [%s]", excep, filename)
+            YLogger.exception(
+                self, "Failed to load file contents for file [%s]", excep, filename
+            )
 
         return collection
 

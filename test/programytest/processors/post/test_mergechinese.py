@@ -1,8 +1,9 @@
 import unittest
 
+from programytest.client import TestClient
+
 from programy.context import ClientContext
 from programy.processors.post.mergechinese import MergeChinesePostProcessor
-from programytest.client import TestClient
 
 
 class MergeChineseTests(unittest.TestCase):
@@ -11,7 +12,7 @@ class MergeChineseTests(unittest.TestCase):
         processor = MergeChinesePostProcessor()
 
         context = ClientContext(TestClient(), "testid")
-        
+
         result = processor.process(context, "Hello")
         self.assertIsNotNone(result)
         self.assertEqual("Hello", result)
@@ -35,4 +36,3 @@ class MergeChineseTests(unittest.TestCase):
         result = processor.process(context, "XX 你 好 YY")
         self.assertIsNotNone(result)
         self.assertEqual("XX 你好 YY", result)
-

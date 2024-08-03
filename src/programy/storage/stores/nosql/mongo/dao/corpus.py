@@ -14,10 +14,11 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 from programy.storage.stores.utils import DAOUtils
 
 
-class Corpus():
+class Corpus:
 
     def __init__(self, words):
         self.id = None
@@ -29,12 +30,12 @@ class Corpus():
     def to_document(self):
         document = {"words": self.words}
         if self.id is not None:
-            document['_id'] = self.id
+            document["_id"] = self.id
         return document
 
     @staticmethod
     def from_document(data):
         lookup = Corpus(None)
-        lookup.id = DAOUtils.get_value_from_data(data, '_id')
-        lookup.words = DAOUtils.get_value_from_data(data, 'words', default=[])
+        lookup.id = DAOUtils.get_value_from_data(data, "_id")
+        lookup.words = DAOUtils.get_value_from_data(data, "words", default=[])
         return lookup

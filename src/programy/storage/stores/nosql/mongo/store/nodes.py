@@ -14,14 +14,13 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
-from programy.utils.classes.loader import ClassLoader
 
-from programy.storage.entities.store import Store
-from programy.storage.stores.nosql.mongo.store.mongostore import MongoStore
 from programy.storage.entities.nodes import NodesStore
-from programy.storage.stores.nosql.mongo.dao.node import PatternNode
-from programy.storage.stores.nosql.mongo.dao.node import TemplateNode
+from programy.storage.entities.store import Store
+from programy.storage.stores.nosql.mongo.dao.node import PatternNode, TemplateNode
+from programy.storage.stores.nosql.mongo.store.mongostore import MongoStore
+from programy.utils.classes.loader import ClassLoader
+from programy.utils.logging.ylogger import YLogger
 
 
 class MongoNodeStore(MongoStore, NodesStore):
@@ -35,10 +34,18 @@ class MongoNodeStore(MongoStore, NodesStore):
         nodes = self.get_all_nodes()
         for node in nodes:
             try:
-                collector.add_node(node['name'], ClassLoader.instantiate_class(node['node_class']))
+                collector.add_node(
+                    node["name"], ClassLoader.instantiate_class(node["node_class"])
+                )
 
             except Exception as excep:
-                YLogger.exception(self, "Failed pre-instantiating %s Node [%s]", excep, collector.type, node['node_class'])
+                YLogger.exception(
+                    self,
+                    "Failed pre-instantiating %s Node [%s]",
+                    excep,
+                    collector.type,
+                    node["node_class"],
+                )
 
     def get_all_nodes(self):
         collection = self.collection()
@@ -54,9 +61,16 @@ class MongoNodeStore(MongoStore, NodesStore):
                 count += 1
         return count, success
 
-    def upload_from_file(self, filename, fileformat=Store.TEXT_FORMAT, commit=True, verbose=False):
+    def upload_from_file(
+        self, filename, fileformat=Store.TEXT_FORMAT, commit=True, verbose=False
+    ):
 
-        YLogger.info(self, "Uploading %s to Mongo from file [%s]", self.collection_name(), filename)
+        YLogger.info(
+            self,
+            "Uploading %s to Mongo from file [%s]",
+            self.collection_name(),
+            filename,
+        )
         try:
             return self._load_nodes_from_file(filename, verbose)
 
@@ -67,14 +81,16 @@ class MongoNodeStore(MongoStore, NodesStore):
 
     def process_config_line(self, line, verbose=False):
         line = line.strip()
-        if line.startswith('#') is False:
+        if line.startswith("#") is False:
             splits = line.split("=")
             if len(splits) > 1:
                 node_name = splits[0].strip()
                 class_name = splits[1].strip()
                 node = self._get_entity(node_name, class_name)
                 if verbose is True:
-                    YLogger.debug(self, "Loading node [%s] = [%s]", node_name, class_name)
+                    YLogger.debug(
+                        self, "Loading node [%s] = [%s]", node_name, class_name
+                    )
                 return self.add_document(node)
 
         return False
@@ -84,7 +100,7 @@ class MongoNodeStore(MongoStore, NodesStore):
 
 
 class MongoPatternNodeStore(MongoNodeStore):
-    PATTERN_NODES = 'pattern_nodes'
+    PATTERN_NODES = "pattern_nodes"
 
     def __init__(self, storage_engine):
         MongoNodeStore.__init__(self, storage_engine)
@@ -97,7 +113,7 @@ class MongoPatternNodeStore(MongoNodeStore):
 
 
 class MongoTemplateNodeStore(MongoNodeStore):
-    TEMPLATE_NODES = 'template_nodes'
+    TEMPLATE_NODES = "template_nodes"
 
     def __init__(self, storage_engine):
         MongoNodeStore.__init__(self, storage_engine)

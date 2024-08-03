@@ -14,9 +14,9 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
 
 from programy.config.section import BaseSectionConfigurationData
+from programy.utils.logging.ylogger import YLogger
 from programy.utils.substitutions.substitues import Substitutions
 
 
@@ -40,25 +40,32 @@ class BrainOverridesConfiguration(BaseSectionConfigurationData):
     def allow_learnf_aiml(self):
         return self._allow_learnf_aiml
 
-    def load_config_section(self, configuration_file, configuration, bot_root, subs: Substitutions = None):
+    def load_config_section(
+        self, configuration_file, configuration, bot_root, subs: Substitutions = None
+    ):
         overrides = configuration_file.get_section(self._section_name, configuration)
         if overrides is not None:
-            self._allow_system_aiml = configuration_file.get_bool_option(overrides, "allow_system_aiml",
-                                                                         missing_value=False, subs=subs)
-            self._allow_learn_aiml = configuration_file.get_bool_option(overrides, "allow_learn_aiml",
-                                                                        missing_value=False, subs=subs)
-            self._allow_learnf_aiml = configuration_file.get_bool_option(overrides, "allow_learnf_aiml",
-                                                                         missing_value=False, subs=subs)
+            self._allow_system_aiml = configuration_file.get_bool_option(
+                overrides, "allow_system_aiml", missing_value=False, subs=subs
+            )
+            self._allow_learn_aiml = configuration_file.get_bool_option(
+                overrides, "allow_learn_aiml", missing_value=False, subs=subs
+            )
+            self._allow_learnf_aiml = configuration_file.get_bool_option(
+                overrides, "allow_learnf_aiml", missing_value=False, subs=subs
+            )
         else:
-            YLogger.warning(self, "'overrides' section missing from brain config, using to defaults")
+            YLogger.warning(
+                self, "'overrides' section missing from brain config, using to defaults"
+            )
 
     def to_yaml(self, data, defaults=True):
         if defaults is True:
-            data['allow_system_aiml'] = False
-            data['allow_learn_aiml'] = False
-            data['allow_learnf_aiml'] = False
+            data["allow_system_aiml"] = False
+            data["allow_learn_aiml"] = False
+            data["allow_learnf_aiml"] = False
 
         else:
-            data['allow_system_aiml'] = self._allow_system_aiml
-            data['allow_learn_aiml'] = self._allow_learn_aiml
-            data['allow_learnf_aiml'] = self._allow_learnf_aiml
+            data["allow_system_aiml"] = self._allow_system_aiml
+            data["allow_learn_aiml"] = self._allow_learn_aiml
+            data["allow_learnf_aiml"] = self._allow_learnf_aiml

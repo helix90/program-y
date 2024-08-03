@@ -14,14 +14,15 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
-from programy.storage.stores.nosql.mongo.store.mongostore import MongoStore
+
 from programy.storage.entities.errors import ErrorsStore
 from programy.storage.stores.nosql.mongo.dao.duplicate import Duplicate
+from programy.storage.stores.nosql.mongo.store.mongostore import MongoStore
+from programy.utils.logging.ylogger import YLogger
 
 
 class MongoErrorsStore(MongoStore, ErrorsStore):
-    ERRORS = 'errors'
+    ERRORS = "errors"
 
     def __init__(self, storage_engine):
         MongoStore.__init__(self, storage_engine)
@@ -33,5 +34,10 @@ class MongoErrorsStore(MongoStore, ErrorsStore):
     def save_errors(self, errors, commit=True):
         YLogger.info(self, "Saving errors to Mongo")
         for duplicate in errors:
-            db_duplicate = Duplicate(duplicate=duplicate[0], file=duplicate[1], start=duplicate[2], end=duplicate[3])
+            db_duplicate = Duplicate(
+                duplicate=duplicate[0],
+                file=duplicate[1],
+                start=duplicate[2],
+                end=duplicate[3],
+            )
             self.add_document(db_duplicate)

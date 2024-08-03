@@ -14,12 +14,13 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 import os
-from programy.utils.logging.ylogger import YLogger
+
 from programy.services.base import ServiceQuery
-from programy.services.rest.base import RESTService
-from programy.services.rest.base import RESTServiceException
+from programy.services.rest.base import RESTService, RESTServiceException
 from programy.services.utils.geocode import GeoCodeUtils
+from programy.utils.logging.ylogger import YLogger
 
 
 class GoogleLatLongPostCodeServiceQuery(ServiceQuery):
@@ -39,14 +40,14 @@ class GoogleLatLongPostCodeServiceQuery(ServiceQuery):
         return self._service.latlng_for_postcode(self._postcode)
 
     def aiml_response(self, response):
-        payload = response['response']['payload']
-        results = payload['results']
+        payload = response["response"]["payload"]
+        results = payload["results"]
         result = results[0]
-        geometry = result['geometry']
-        location = geometry['location']
+        geometry = result["geometry"]
+        location = geometry["location"]
 
-        lat = location['lat']
-        lng = location['lng']
+        lat = location["lat"]
+        lng = location["lng"]
 
         latText = GeoCodeUtils.float_to_aiml_string(lat)
         lngText = GeoCodeUtils.float_to_aiml_string(lng)
@@ -63,13 +64,13 @@ class GoogleGeoCodeServiceException(RESTServiceException):
 
 
 class GoogleGeoCodeService(RESTService):
-    """
-    """
-    PATTERNS = [
-        [r"LATLNG\sPOSTCODE\s(.+)", GoogleLatLongPostCodeServiceQuery]
-    ]
+    """ """
 
-    LATLNG_FOR_POSTCODE = "https://maps.google.com/maps/api/geocode/json?address={0}&sensor=false&key={1}"
+    PATTERNS = [[r"LATLNG\sPOSTCODE\s(.+)", GoogleLatLongPostCodeServiceQuery]]
+
+    LATLNG_FOR_POSTCODE = (
+        "https://maps.google.com/maps/api/geocode/json?address={0}&sensor=false&key={1}"
+    )
 
     def __init__(self, configuration):
         RESTService.__init__(self, configuration)
@@ -79,9 +80,12 @@ class GoogleGeoCodeService(RESTService):
         return GoogleGeoCodeService.PATTERNS
 
     def initialise(self, client):
-        self._api_key = client.license_keys.get_key('GOOGLE_MAPS')
+        self._api_key = client.license_keys.get_key("GOOGLE_MAPS")
         if self._api_key is None:
-            YLogger.error(self, "GOOGLE_MAPS missing from license.keys, service will not function correctly!")
+            YLogger.error(
+                self,
+                "GOOGLE_MAPS missing from license.keys, service will not function correctly!",
+            )
 
     def get_default_aiml_file(self):
         return os.path.dirname(__file__) + os.sep + "geocode.aiml"
@@ -96,9 +100,8 @@ class GoogleGeoCodeService(RESTService):
 
     def latlng_for_postcode(self, postcode):
         url = self._build_postcode_url(postcode)
-        response = self.query('latlng_for_postcode', url)
+        response = self.query("latlng_for_postcode", url)
         return response
 
     def _response_to_json(self, api, response):
         return response.json()
-

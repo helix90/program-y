@@ -1,11 +1,13 @@
+import re
 import unittest
 from unittest.mock import patch
-import re
+
 import programytest.storage.engines as Engines
+
+from programy.mappings.base import DoubleStringPatternSplitCollection
 from programy.storage.stores.sql.config import SQLStorageConfiguration
 from programy.storage.stores.sql.engine import SQLStorageEngine
 from programy.storage.stores.sql.store.lookups import SQLPersonStore
-from programy.mappings.base import DoubleStringPatternSplitCollection
 
 
 class TestCollection(DoubleStringPatternSplitCollection):
@@ -40,7 +42,10 @@ class SQLPersonStoreTests(unittest.TestCase):
 
         self.assertEquals(1, len(collection.pairs.keys()))
         self.assertTrue(collection.has_key("key1"))
-        self.assertEqual([re.compile('(^key1|key1|key1$)', re.IGNORECASE), 'VALUE1'], collection.value("key1"))
+        self.assertEqual(
+            [re.compile("(^key1|key1|key1$)", re.IGNORECASE), "VALUE1"],
+            collection.value("key1"),
+        )
 
     @unittest.skipIf(Engines.sql is False, Engines.sql_disabled)
     def test_load_no_collection(self):
@@ -61,7 +66,7 @@ class SQLPersonStoreTests(unittest.TestCase):
         engine = SQLStorageEngine(config)
         engine.initialise()
         store = SQLPersonStore(engine)
-        store. empty()
+        store.empty()
 
         store.add_to_lookup("key1", "value1", overwrite_existing=True)
         store.add_to_lookup("key1", "value2", overwrite_existing=True)
@@ -72,7 +77,10 @@ class SQLPersonStoreTests(unittest.TestCase):
 
         self.assertEquals(1, len(collection.pairs.keys()))
         self.assertTrue(collection.has_key("key1"))
-        self.assertEqual([re.compile('(^key1|key1|key1$)', re.IGNORECASE), 'VALUE2'], collection.value("key1"))
+        self.assertEqual(
+            [re.compile("(^key1|key1|key1$)", re.IGNORECASE), "VALUE2"],
+            collection.value("key1"),
+        )
 
     @unittest.skipIf(Engines.sql is False, Engines.sql_disabled)
     def test_load_all(self):
@@ -89,7 +97,10 @@ class SQLPersonStoreTests(unittest.TestCase):
 
         self.assertEquals(1, len(collection.pairs.keys()))
         self.assertTrue(collection.has_key("key1"))
-        self.assertEqual([re.compile('(^key1|key1|key1$)', re.IGNORECASE), 'VALUE1'], collection.value("key1"))
+        self.assertEqual(
+            [re.compile("(^key1|key1|key1$)", re.IGNORECASE), "VALUE1"],
+            collection.value("key1"),
+        )
 
     @unittest.skipIf(Engines.sql is False, Engines.sql_disabled)
     def test_get_lookup_present(self):
@@ -102,7 +113,7 @@ class SQLPersonStoreTests(unittest.TestCase):
         store.add_to_lookup("key1", "value1", overwrite_existing=True)
 
         collection = store.get_lookup()
-        self.assertIsNotNone(collection )
+        self.assertIsNotNone(collection)
 
     @unittest.skipIf(Engines.sql is False, Engines.sql_disabled)
     def test_get_lookup_not_present(self):
@@ -130,7 +141,10 @@ class SQLPersonStoreTests(unittest.TestCase):
         raise Exception("Mock Exception")
 
     @unittest.skipIf(Engines.mongo is False, Engines.mongo_disabled)
-    @patch("programy.storage.stores.sql.store.lookups.SQLLookupsStore._read_lookups_from_file", patch_read_lookups_from_file)
+    @patch(
+        "programy.storage.stores.sql.store.lookups.SQLLookupsStore._read_lookups_from_file",
+        patch_read_lookups_from_file,
+    )
     def test_upload_from_file_add_document_false(self):
         config = SQLStorageConfiguration()
         engine = SQLStorageEngine(config)

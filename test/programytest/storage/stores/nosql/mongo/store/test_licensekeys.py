@@ -1,11 +1,13 @@
-import unittest
 import os
+import unittest
 from unittest.mock import patch
+
 import programytest.storage.engines as Engines
+from programytest.storage.asserts.store.assert_licensekeys import LicenseKeyStoreAsserts
+
 from programy.storage.stores.nosql.mongo.config import MongoStorageConfiguration
 from programy.storage.stores.nosql.mongo.engine import MongoStorageEngine
 from programy.storage.stores.nosql.mongo.store.licensekeys import MongoLicenseKeysStore
-from programytest.storage.asserts.store.assert_licensekeys import LicenseKeyStoreAsserts
 
 
 class MongoLicenseKeysStoreTests(LicenseKeyStoreAsserts):
@@ -31,7 +33,10 @@ class MongoLicenseKeysStoreTests(LicenseKeyStoreAsserts):
         raise Exception("Mock Exception")
 
     @unittest.skipIf(Engines.mongo is False, Engines.mongo_disabled)
-    @patch("programy.storage.stores.nosql.mongo.store.licensekeys.MongoLicenseKeysStore._read_lines_from_file", patch_read_lines_from_file)
+    @patch(
+        "programy.storage.stores.nosql.mongo.store.licensekeys.MongoLicenseKeysStore._read_lines_from_file",
+        patch_read_lines_from_file,
+    )
     def test_upload_from_file_with_exception(self):
         config = MongoStorageConfiguration()
         engine = MongoStorageEngine(config)
@@ -40,6 +45,14 @@ class MongoLicenseKeysStoreTests(LicenseKeyStoreAsserts):
 
         store.empty()
 
-        count, success = store.upload_from_file(os.path.dirname(__file__) + os.sep + "data" + os.sep + "licenses" + os.sep + "test_license.keys")
+        count, success = store.upload_from_file(
+            os.path.dirname(__file__)
+            + os.sep
+            + "data"
+            + os.sep
+            + "licenses"
+            + os.sep
+            + "test_license.keys"
+        )
         self.assertEquals(0, count)
         self.assertEquals(0, success)

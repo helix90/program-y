@@ -14,9 +14,10 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.storage.stores.sql.store.sqlstore import SQLStore
+
 from programy.storage.entities.sets import SetsReadWriteStore
 from programy.storage.stores.sql.dao.set import Set
+from programy.storage.stores.sql.store.sqlstore import SQLStore
 
 
 class SQLSetsStore(SQLStore, SetsReadWriteStore):
@@ -40,7 +41,11 @@ class SQLSetsStore(SQLStore, SetsReadWriteStore):
         return True
 
     def remove_from_set(self, name, value):
-        result = self._storage_engine.session.query(Set).filter(Set.name == name, Set.value == value.upper()).delete()
+        result = (
+            self._storage_engine.session.query(Set)
+            .filter(Set.name == name, Set.value == value.upper())
+            .delete()
+        )
         if result == 0:
             return False
 

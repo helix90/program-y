@@ -1,19 +1,24 @@
 import xml.etree.ElementTree as ET
 
+from programytest.parser.template.graph_tests.graph_test_client import (
+    TemplateGraphTestClient,
+)
+
 from programy.parser.exceptions import ParserException
 from programy.parser.template.nodes.base import TemplateNode
 from programy.parser.template.nodes.bot import TemplateBotNode
-from programytest.parser.template.graph_tests.graph_test_client import TemplateGraphTestClient
 
 
 class TemplateGraphBotTests(TemplateGraphTestClient):
 
     def test_bot_name_as_attrib(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
 			<template>
 				<bot name="somebot">sometext</bot>
 			</template>
-			""")
+			"""
+        )
         ast = self._graph.parse_template_expression(template)
         self.assertIsNotNone(ast)
         self.assertIsInstance(ast, TemplateNode)
@@ -31,11 +36,13 @@ class TemplateGraphBotTests(TemplateGraphTestClient):
         self.assertEqual(set_node.children[0].resolve(self._client_context), "sometext")
 
     def test_bot_name_as_child(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
 			<template>
 				<bot><name>somebot</name>sometext</bot>
 			</template>
-			""")
+			"""
+        )
         ast = self._graph.parse_template_expression(template)
         self.assertIsNotNone(ast)
         self.assertIsInstance(ast, TemplateNode)
@@ -53,31 +60,37 @@ class TemplateGraphBotTests(TemplateGraphTestClient):
         self.assertEqual(set_node.children[0].resolve(self._client_context), "sometext")
 
     def test_invalid_bot_no_name(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
 			<template>
 				<bot></bot>
 			</template>
-			""")
+			"""
+        )
 
         with self.assertRaises(ParserException):
             _ = self._graph.parse_template_expression(template)
 
     def test_invalid_bot_no_name_other_attribs(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
 			<template>
 				<bot other="something"></bot>
 			</template>
-			""")
+			"""
+        )
 
         with self.assertRaises(ParserException):
             _ = self._graph.parse_template_expression(template)
 
     def test_invalid_bot_no_name_other_children(self):
-        template = ET.fromstring("""
+        template = ET.fromstring(
+            """
 			<template>
 				<bot><other>something</other></bot>
 			</template>
-			""")
+			"""
+        )
 
         with self.assertRaises(ParserException):
             _ = self._graph.parse_template_expression(template)

@@ -1,14 +1,17 @@
 import os
 import unittest
 
+from programytest.client import TestClient
+
 from programy.storage.factory import StorageFactory
-from programy.storage.stores.file.config import FileStorageConfiguration
-from programy.storage.stores.file.config import FileStoreConfiguration
+from programy.storage.stores.file.config import (
+    FileStorageConfiguration,
+    FileStoreConfiguration,
+)
 from programy.storage.stores.file.engine import FileStorageEngine
 from programy.triggers.config import TriggerConfiguration
-from programy.triggers.manager import TriggerManager
 from programy.triggers.local import LocalTriggerManager
-from programytest.client import TestClient
+from programy.triggers.manager import TriggerManager
 
 
 class MockLocalTriggerManager(LocalTriggerManager):
@@ -35,11 +38,16 @@ class LocalTriggerManagerTests(unittest.TestCase):
 
         mgr = TriggerManager.load_trigger_manager(config)
 
-        trigger_file = os.path.dirname(__file__)  + os.sep + "triggers.txt"
+        trigger_file = os.path.dirname(__file__) + os.sep + "triggers.txt"
         self.assertTrue(os.path.exists(trigger_file))
 
         config = FileStorageConfiguration()
-        config._triggers_storage = FileStoreConfiguration(file=trigger_file, fileformat="text", encoding="utf-8", delete_on_start=False)
+        config._triggers_storage = FileStoreConfiguration(
+            file=trigger_file,
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
         engine = FileStorageEngine(config)
         engine.initialise()
 
@@ -81,11 +89,16 @@ class LocalTriggerManagerTests(unittest.TestCase):
 
         mgr = TriggerManager.load_trigger_manager(config)
 
-        trigger_file = os.path.dirname(__file__)  + os.sep + "triggers.txt"
+        trigger_file = os.path.dirname(__file__) + os.sep + "triggers.txt"
         self.assertTrue(os.path.exists(trigger_file))
 
         config = FileStorageConfiguration()
-        config._triggers_storage = FileStoreConfiguration(file=trigger_file, fileformat="text", encoding="utf-8", delete_on_start=False)
+        config._triggers_storage = FileStoreConfiguration(
+            file=trigger_file,
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
         engine = FileStorageEngine(config)
         engine.initialise()
 
@@ -103,11 +116,16 @@ class LocalTriggerManagerTests(unittest.TestCase):
 
         mgr = TriggerManager.load_trigger_manager(config)
 
-        trigger_file = os.path.dirname(__file__)  + os.sep + "bad_triggers.txt"
+        trigger_file = os.path.dirname(__file__) + os.sep + "bad_triggers.txt"
         self.assertTrue(os.path.exists(trigger_file))
 
         config = FileStorageConfiguration()
-        config._triggers_storage = FileStoreConfiguration(file=trigger_file, fileformat="text", encoding="utf-8", delete_on_start=False)
+        config._triggers_storage = FileStoreConfiguration(
+            file=trigger_file,
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
         engine = FileStorageEngine(config)
         engine.initialise()
 
@@ -136,11 +154,13 @@ class LocalTriggerManagerTests(unittest.TestCase):
         mgr = TriggerManager.load_trigger_manager(config)
         self.assertIsNotNone(mgr)
 
-        mgr.add_triggers({
-            "SYSTEM_STARTUP": "programytest.triggers.trigger1.Trigger1",
-            "SYSTEM_SHUTDOWN": "programytest.triggers.trigger1.Trigger1",
-            "CONVERSATION_START": "programytest.triggers.trigger1.Trigger1"
-        })
+        mgr.add_triggers(
+            {
+                "SYSTEM_STARTUP": "programytest.triggers.trigger1.Trigger1",
+                "SYSTEM_SHUTDOWN": "programytest.triggers.trigger1.Trigger1",
+                "CONVERSATION_START": "programytest.triggers.trigger1.Trigger1",
+            }
+        )
 
         self.assertTrue("SYSTEM_STARTUP" in mgr.triggers)
         self.assertTrue("SYSTEM_SHUTDOWN" in mgr.triggers)
@@ -152,10 +172,15 @@ class LocalTriggerManagerTests(unittest.TestCase):
 
         mgr = TriggerManager.load_trigger_manager(config)
 
-        trigger_file = os.path.dirname(__file__)  + os.sep + "triggers.txt"
+        trigger_file = os.path.dirname(__file__) + os.sep + "triggers.txt"
 
         config = FileStorageConfiguration()
-        config._triggers_storage = FileStoreConfiguration(file=trigger_file, fileformat="text", encoding="utf-8", delete_on_start=False)
+        config._triggers_storage = FileStoreConfiguration(
+            file=trigger_file,
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
         engine = FileStorageEngine(config)
         engine.initialise()
 
@@ -175,7 +200,9 @@ class LocalTriggerManagerTests(unittest.TestCase):
         triggered = mgr.trigger("SYSTEM_STARTUP", additional={"key": "value"})
         self.assertTrue(triggered)
 
-        triggered = mgr.trigger("SYSTEM_STARTUP", additional={"event": "SYSTEM_STARTUP"})
+        triggered = mgr.trigger(
+            "SYSTEM_STARTUP", additional={"event": "SYSTEM_STARTUP"}
+        )
         self.assertTrue(triggered)
 
         triggered = mgr.trigger("CONVERSATION_START", client_context)
@@ -187,7 +214,9 @@ class LocalTriggerManagerTests(unittest.TestCase):
         triggered = mgr.trigger("OTHER_EVENT", client_context)
         self.assertFalse(triggered)
 
-        triggered = mgr.trigger("OTHER_EVENT", client_context, additional={"key": "value"})
+        triggered = mgr.trigger(
+            "OTHER_EVENT", client_context, additional={"key": "value"}
+        )
         self.assertFalse(triggered)
 
     def test_trigger_exception(self):
@@ -208,11 +237,16 @@ class LocalTriggerManagerTests(unittest.TestCase):
 
         mgr = MockLocalTriggerManager(config, except_on_load=True)
 
-        trigger_file = os.path.dirname(__file__)  + os.sep + "triggers.txt"
+        trigger_file = os.path.dirname(__file__) + os.sep + "triggers.txt"
         self.assertTrue(os.path.exists(trigger_file))
 
         config = FileStorageConfiguration()
-        config._triggers_storage = FileStoreConfiguration(file=trigger_file, fileformat="text", encoding="utf-8", delete_on_start=False)
+        config._triggers_storage = FileStoreConfiguration(
+            file=trigger_file,
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
         engine = FileStorageEngine(config)
         engine.initialise()
 
@@ -233,11 +267,16 @@ class LocalTriggerManagerTests(unittest.TestCase):
 
         mgr = MockLocalTriggerManager(config, except_on_trigger=True)
 
-        trigger_file = os.path.dirname(__file__)  + os.sep + "triggers.txt"
+        trigger_file = os.path.dirname(__file__) + os.sep + "triggers.txt"
         self.assertTrue(os.path.exists(trigger_file))
 
         config = FileStorageConfiguration()
-        config._triggers_storage = FileStoreConfiguration(file=trigger_file, fileformat="text", encoding="utf-8", delete_on_start=False)
+        config._triggers_storage = FileStoreConfiguration(
+            file=trigger_file,
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
         engine = FileStorageEngine(config)
         engine.initialise()
 
@@ -257,11 +296,16 @@ class LocalTriggerManagerTests(unittest.TestCase):
 
         mgr = TriggerManager.load_trigger_manager(config)
 
-        trigger_file = os.path.dirname(__file__)  + os.sep + "triggers.txt"
+        trigger_file = os.path.dirname(__file__) + os.sep + "triggers.txt"
         self.assertTrue(os.path.exists(trigger_file))
 
         config = FileStorageConfiguration()
-        config._triggers_storage = FileStoreConfiguration(file=trigger_file, fileformat="text", encoding="utf-8", delete_on_start=False)
+        config._triggers_storage = FileStoreConfiguration(
+            file=trigger_file,
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
         engine = FileStorageEngine(config)
         engine.initialise()
 
@@ -280,11 +324,16 @@ class LocalTriggerManagerTests(unittest.TestCase):
 
         mgr = TriggerManager.load_trigger_manager(config)
 
-        trigger_file = os.path.dirname(__file__)  + os.sep + "triggers.txt"
+        trigger_file = os.path.dirname(__file__) + os.sep + "triggers.txt"
         self.assertTrue(os.path.exists(trigger_file))
 
         config = FileStorageConfiguration()
-        config._triggers_storage = FileStoreConfiguration(file=trigger_file, fileformat="text", encoding="utf-8", delete_on_start=False)
+        config._triggers_storage = FileStoreConfiguration(
+            file=trigger_file,
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
         engine = FileStorageEngine(config)
         engine.initialise()
 
@@ -303,11 +352,16 @@ class LocalTriggerManagerTests(unittest.TestCase):
 
         mgr = TriggerManager.load_trigger_manager(config)
 
-        trigger_file = os.path.dirname(__file__)  + os.sep + "triggers.txt"
+        trigger_file = os.path.dirname(__file__) + os.sep + "triggers.txt"
         self.assertTrue(os.path.exists(trigger_file))
 
         config = FileStorageConfiguration()
-        config._triggers_storage = FileStoreConfiguration(file=trigger_file, fileformat="text", encoding="utf-8", delete_on_start=False)
+        config._triggers_storage = FileStoreConfiguration(
+            file=trigger_file,
+            fileformat="text",
+            encoding="utf-8",
+            delete_on_start=False,
+        )
         engine = FileStorageEngine(config)
         engine.initialise()
 
@@ -318,4 +372,6 @@ class LocalTriggerManagerTests(unittest.TestCase):
 
         mgr.load_triggers(storage_factory)
 
-        self.assertTrue(mgr.trigger("SYSTEM_STARTUP", additional={'event': "SYSTEM_STARTUP"}))
+        self.assertTrue(
+            mgr.trigger("SYSTEM_STARTUP", additional={"event": "SYSTEM_STARTUP"})
+        )

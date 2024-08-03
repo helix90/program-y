@@ -1,7 +1,8 @@
 import unittest
 
-from programy.processors.postquestion.lemmatize import LemmatizePostQuestionProcessor
 from programytest.client import TestClient
+
+from programy.processors.postquestion.lemmatize import LemmatizePostQuestionProcessor
 
 
 class MockBrain(object):
@@ -27,7 +28,9 @@ class LemmatizerTests(unittest.TestCase):
         client = TestClient()
         client_context = client.create_client_context("user1")
         tokenizer = client_context.brain.tokenizer
-        client_context._brain = MockBrain("my octopus are chasing my mouse", "Lemmatize working", client_context)
+        client_context._brain = MockBrain(
+            "my octopus are chasing my mouse", "Lemmatize working", client_context
+        )
         client_context._brain.tokenizer = tokenizer
 
         processor = LemmatizePostQuestionProcessor()
@@ -40,7 +43,9 @@ class LemmatizerTests(unittest.TestCase):
         client = TestClient()
         client_context = client.create_client_context("user1")
         tokenizer = client_context.brain.tokenizer
-        client_context._brain = MockBrain("Something else", "Lemmatize working", client_context)
+        client_context._brain = MockBrain(
+            "Something else", "Lemmatize working", client_context
+        )
         client_context._brain.tokenizer = tokenizer
 
         processor = LemmatizePostQuestionProcessor()

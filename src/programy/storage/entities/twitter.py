@@ -14,6 +14,7 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 from programy.storage.entities.store import Store
 
 
@@ -23,7 +24,11 @@ class TwitterStore(Store):
         Store.__init__(self)
 
     def store_last_message_ids(self, last_direct_message_id, last_status_id):
-        raise NotImplementedError("store_last_message_ids missing from Twitter Store")  # pragma: no cover
+        raise NotImplementedError(
+            "store_last_message_ids missing from Twitter Store"
+        )  # pragma: no cover
 
     def load_last_message_ids(self):
-        raise NotImplementedError("load_last_message_ids missing from Twitter Store")  # pragma: no cover
+        raise NotImplementedError(
+            "load_last_message_ids missing from Twitter Store"
+        )  # pragma: no cover

@@ -1,7 +1,8 @@
 import unittest
 
-from programy.extensions.scheduler.scheduler import SchedulerExtension
 from programytest.client import TestClient
+
+from programy.extensions.scheduler.scheduler import SchedulerExtension
 
 
 class SchedulerExtensionClient(TestClient):
@@ -14,7 +15,7 @@ class SchedulerExtensionClient(TestClient):
         super(SchedulerExtensionClient, self).load_configuration(arguments)
 
     def load_scheduler(self):
-        if self._mock_scheduler  is not None:
+        if self._mock_scheduler is not None:
             self._scheduler = self._mock_scheduler
         else:
             super(SchedulerExtensionClient, self).load_scheduler()
@@ -41,13 +42,13 @@ class MockScheduler:
     def list_jobs(self):
         return self._jobs
 
-    def pause_job (self, id):
+    def pause_job(self, id):
         pass
 
-    def resume_job (self, id):
+    def resume_job(self, id):
         pass
 
-    def stop_job (self, id):
+    def stop_job(self, id):
         pass
 
     def schedule_every_n_seconds(self, userid, clientid, action, text, seconds):
@@ -65,7 +66,18 @@ class MockScheduler:
     def schedule_every_n_weeks(self, userid, clientid, action, text, weeks):
         pass
 
-    def schedule_every_n(self, userid, clientid, action, text, weeks=0, days=0, hours=0, minutes=0, seconds=0):
+    def schedule_every_n(
+        self,
+        userid,
+        clientid,
+        action,
+        text,
+        weeks=0,
+        days=0,
+        hours=0,
+        minutes=0,
+        seconds=0,
+    ):
         pass
 
     def schedule_in_n_weeks(self, userid, clientid, action, text, weeks):
@@ -107,10 +119,18 @@ class SchedulerExtensionTests(unittest.TestCase):
 
         self.assertEquals("ERR", extension.execute(client_context, "SCHEDULE IN"))
         self.assertEquals("ERR", extension.execute(client_context, "SCHEDULE IN 10"))
-        self.assertEquals("ERR", extension.execute(client_context, "SCHEDULE IN 10 OTHER"))
-        self.assertEquals("ERR", extension.execute(client_context, "SCHEDULE IN 10 MINUTES OTHER"))
-        self.assertEquals("ERR", extension.execute(client_context, "SCHEDULE IN 10 MINUTES TEXT"))
-        self.assertEquals("ERR", extension.execute(client_context, "SCHEDULE IN 10 MINUTES SRAI"))
+        self.assertEquals(
+            "ERR", extension.execute(client_context, "SCHEDULE IN 10 OTHER")
+        )
+        self.assertEquals(
+            "ERR", extension.execute(client_context, "SCHEDULE IN 10 MINUTES OTHER")
+        )
+        self.assertEquals(
+            "ERR", extension.execute(client_context, "SCHEDULE IN 10 MINUTES TEXT")
+        )
+        self.assertEquals(
+            "ERR", extension.execute(client_context, "SCHEDULE IN 10 MINUTES SRAI")
+        )
 
     def test_schedule_every_invalid(self):
         client = SchedulerExtensionClient()
@@ -119,10 +139,18 @@ class SchedulerExtensionTests(unittest.TestCase):
 
         self.assertEquals("ERR", extension.execute(client_context, "SCHEDULE EVERY"))
         self.assertEquals("ERR", extension.execute(client_context, "SCHEDULE EVER 10"))
-        self.assertEquals("ERR", extension.execute(client_context, "SCHEDULE EVER 10 OTHER"))
-        self.assertEquals("ERR", extension.execute(client_context, "SCHEDULE EVER 10 MINUTES OTHER"))
-        self.assertEquals("ERR", extension.execute(client_context, "SCHEDULE EVER 10 MINUTES TEXT"))
-        self.assertEquals("ERR", extension.execute(client_context, "SCHEDULE EVER 10 MINUTES SRAI"))
+        self.assertEquals(
+            "ERR", extension.execute(client_context, "SCHEDULE EVER 10 OTHER")
+        )
+        self.assertEquals(
+            "ERR", extension.execute(client_context, "SCHEDULE EVER 10 MINUTES OTHER")
+        )
+        self.assertEquals(
+            "ERR", extension.execute(client_context, "SCHEDULE EVER 10 MINUTES TEXT")
+        )
+        self.assertEquals(
+            "ERR", extension.execute(client_context, "SCHEDULE EVER 10 MINUTES SRAI")
+        )
 
     # IN XXXX
 
@@ -130,35 +158,45 @@ class SchedulerExtensionTests(unittest.TestCase):
         client = SchedulerExtensionClient()
         client_context = client.create_client_context("testid")
         extension = SchedulerExtension()
-        response = extension.execute(client_context, "SCHEDULE IN 10 SECONDS TEXT WAKEY WAKEY")
+        response = extension.execute(
+            client_context, "SCHEDULE IN 10 SECONDS TEXT WAKEY WAKEY"
+        )
         self.assertEqual("OK", response)
 
     def test_schedule_in_n_minutes(self):
         client = SchedulerExtensionClient()
         client_context = client.create_client_context("testid")
         extension = SchedulerExtension()
-        response = extension.execute(client_context, "SCHEDULE IN 10 MINUTES TEXT WAKEY WAKEY")
+        response = extension.execute(
+            client_context, "SCHEDULE IN 10 MINUTES TEXT WAKEY WAKEY"
+        )
         self.assertEqual("OK", response)
 
     def test_schedule_in_n_hours(self):
         client = SchedulerExtensionClient()
         client_context = client.create_client_context("testid")
         extension = SchedulerExtension()
-        response = extension.execute(client_context, "SCHEDULE IN 10 HOURS TEXT WAKEY WAKEY")
+        response = extension.execute(
+            client_context, "SCHEDULE IN 10 HOURS TEXT WAKEY WAKEY"
+        )
         self.assertEqual("OK", response)
 
     def test_schedule_in_n_days(self):
         client = SchedulerExtensionClient()
         client_context = client.create_client_context("testid")
         extension = SchedulerExtension()
-        response = extension.execute(client_context, "SCHEDULE IN 10 DAYS TEXT WAKEY WAKEY")
+        response = extension.execute(
+            client_context, "SCHEDULE IN 10 DAYS TEXT WAKEY WAKEY"
+        )
         self.assertEqual("OK", response)
 
     def test_schedule_in_n_weeks(self):
         client = SchedulerExtensionClient()
         client_context = client.create_client_context("testid")
         extension = SchedulerExtension()
-        response = extension.execute(client_context, "SCHEDULE IN 10 WEEKS TEXT WAKEY WAKEY")
+        response = extension.execute(
+            client_context, "SCHEDULE IN 10 WEEKS TEXT WAKEY WAKEY"
+        )
         self.assertEqual("OK", response)
 
     # EVERY XXX
@@ -168,35 +206,45 @@ class SchedulerExtensionTests(unittest.TestCase):
         client_context = client.create_client_context("testid")
         client_context.client._scheduler = MockScheduler()
         extension = SchedulerExtension()
-        response = extension.execute(client_context, "SCHEDULE EVERY 10 SECONDS TEXT WAKEY WAKEY")
+        response = extension.execute(
+            client_context, "SCHEDULE EVERY 10 SECONDS TEXT WAKEY WAKEY"
+        )
         self.assertEqual("OK", response)
 
     def test_schedule_every_n_minutes(self):
         client = SchedulerExtensionClient()
         client_context = client.create_client_context("testid")
         extension = SchedulerExtension()
-        response = extension.execute(client_context, "SCHEDULE EVERY 10 MINUTES TEXT WAKEY WAKEY")
+        response = extension.execute(
+            client_context, "SCHEDULE EVERY 10 MINUTES TEXT WAKEY WAKEY"
+        )
         self.assertEqual("OK", response)
 
     def test_schedule_every_n_hours(self):
         client = SchedulerExtensionClient()
         client_context = client.create_client_context("testid")
         extension = SchedulerExtension()
-        response = extension.execute(client_context, "SCHEDULE EVERY 10 HOURS TEXT WAKEY WAKEY")
+        response = extension.execute(
+            client_context, "SCHEDULE EVERY 10 HOURS TEXT WAKEY WAKEY"
+        )
         self.assertEqual("OK", response)
 
     def test_schedule_every_n_days(self):
         client = SchedulerExtensionClient()
         client_context = client.create_client_context("testid")
         extension = SchedulerExtension()
-        response = extension.execute(client_context, "SCHEDULE EVERY 10 DAYS TEXT WAKEY WAKEY")
+        response = extension.execute(
+            client_context, "SCHEDULE EVERY 10 DAYS TEXT WAKEY WAKEY"
+        )
         self.assertEqual("OK", response)
 
     def test_schedule_every_n_weeks(self):
         client = SchedulerExtensionClient()
         client_context = client.create_client_context("testid")
         extension = SchedulerExtension()
-        response = extension.execute(client_context, "SCHEDULE EVERY 10 WEEKS TEXT WAKEY WAKEY")
+        response = extension.execute(
+            client_context, "SCHEDULE EVERY 10 WEEKS TEXT WAKEY WAKEY"
+        )
         self.assertEqual("OK", response)
 
     # Other commands
@@ -389,7 +437,9 @@ class SchedulerExtensionTests(unittest.TestCase):
         client = SchedulerExtensionClient()
         client_context = client.create_client_context("testid")
         client_context.client._scheduler = MockScheduler()
-        client_context.client._scheduler.add_jobs({1: MockJob(1, "testid"), 2: MockJob(2, "testid2"), 3: MockJob(3, "testid")})
+        client_context.client._scheduler.add_jobs(
+            {1: MockJob(1, "testid"), 2: MockJob(2, "testid2"), 3: MockJob(3, "testid")}
+        )
 
         extension = SchedulerExtension()
         response = extension.execute(client_context, "SCHEDULE LIST")

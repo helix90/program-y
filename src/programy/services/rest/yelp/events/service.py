@@ -14,11 +14,12 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-import urllib.parse
+
 import os
+import urllib.parse
+
 from programy.services.base import ServiceQuery
-from programy.services.rest.base import RESTService
-from programy.services.rest.base import RESTServiceException
+from programy.services.rest.base import RESTService, RESTServiceException
 from programy.utils.logging.ylogger import YLogger
 
 
@@ -39,11 +40,11 @@ class YelpEventsSearchQuery(ServiceQuery):
         return self._service.search(self._location)
 
     def aiml_response(self, response):
-        payload = response['response']['payload']
+        payload = response["response"]["payload"]
         events = payload["events"]
         result = "<ul>\n"
         for event in events:
-            result += "<li>{0} - {1}</li>\n".format(event['name'], event['description'])
+            result += "<li>{0} - {1}</li>\n".format(event["name"], event["description"])
         result += "<ul>"
         return result
 
@@ -58,20 +59,22 @@ class YelpEventsSearchService(RESTService):
     """
     https://www.yelp.co.uk/developers/documentation/v3/event_search
     """
-    PATTERNS = [
-        [r"EVENTS\sSEARCH\sLOCATION\s(.+)", YelpEventsSearchQuery]
-    ]
 
-    EVENTS_SEARCH_URL="https://api.yelp.com/v3/events"
+    PATTERNS = [[r"EVENTS\sSEARCH\sLOCATION\s(.+)", YelpEventsSearchQuery]]
+
+    EVENTS_SEARCH_URL = "https://api.yelp.com/v3/events"
 
     def __init__(self, configuration):
         RESTService.__init__(self, configuration)
         self._api_key = None
-        
+
     def initialise(self, client):
-        self._api_key = client.license_keys.get_key('YELP_API_KEY')
+        self._api_key = client.license_keys.get_key("YELP_API_KEY")
         if self._api_key is None:
-            YLogger.error(self, "YELP_API_KEY missing from license.keys, service will not function correctly!")
+            YLogger.error(
+                self,
+                "YELP_API_KEY missing from license.keys, service will not function correctly!",
+            )
 
     def patterns(self) -> list:
         return YelpEventsSearchService.PATTERNS
@@ -94,7 +97,7 @@ class YelpEventsSearchService(RESTService):
     def search(self, location, locale="en_GB"):
         url = self._build_search_url(location, locale)
         headers = self._build_search_headers()
-        response = self.query('search', url, headers=headers)
+        response = self.query("search", url, headers=headers)
         return response
 
     def _response_to_json(self, api, response):

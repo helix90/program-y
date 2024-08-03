@@ -15,14 +15,13 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
-from programy.utils.logging.ylogger import YLogger
-
-from programy.utils.classes.loader import ClassLoader
-from programy.dynamic.sets.numeric import IsNumeric
 from programy.dynamic.maps.plural import PluralMap
-from programy.dynamic.maps.singular import SingularMap
 from programy.dynamic.maps.predecessor import PredecessorMap
+from programy.dynamic.maps.singular import SingularMap
 from programy.dynamic.maps.successor import SuccessorMap
+from programy.dynamic.sets.numeric import IsNumeric
+from programy.utils.classes.loader import ClassLoader
+from programy.utils.logging.ylogger import YLogger
 
 
 class DynamicsCollection:
@@ -37,13 +36,25 @@ class DynamicsCollection:
         if dynamics_configuration is not None:
 
             for set_name in dynamics_configuration.dynamic_sets:
-                self.add_dynamic_set(set_name, dynamics_configuration.dynamic_sets[set_name], dynamics_configuration)
+                self.add_dynamic_set(
+                    set_name,
+                    dynamics_configuration.dynamic_sets[set_name],
+                    dynamics_configuration,
+                )
 
             for map_name in dynamics_configuration.dynamic_maps:
-                self.add_dynamic_map(map_name, dynamics_configuration.dynamic_maps[map_name], dynamics_configuration)
+                self.add_dynamic_map(
+                    map_name,
+                    dynamics_configuration.dynamic_maps[map_name],
+                    dynamics_configuration,
+                )
 
             for var_name in dynamics_configuration.dynamic_vars:
-                self.add_dynamic_var(var_name, dynamics_configuration.dynamic_vars[var_name], dynamics_configuration)
+                self.add_dynamic_var(
+                    var_name,
+                    dynamics_configuration.dynamic_vars[var_name],
+                    dynamics_configuration,
+                )
 
             self.load_default_dynamics(dynamics_configuration)
 
@@ -54,25 +65,47 @@ class DynamicsCollection:
 
     def load_default_dynamic_sets(self, dynamics_configuration):
         if IsNumeric.NAME not in self._dynamic_sets:
-            YLogger.warning(self, "Dynamic set %s not defined, adding default implementation", IsNumeric.NAME)
+            YLogger.warning(
+                self,
+                "Dynamic set %s not defined, adding default implementation",
+                IsNumeric.NAME,
+            )
             self._dynamic_sets[IsNumeric.NAME] = IsNumeric(dynamics_configuration)
 
     def load_default_dynamic_maps(self, dynamics_configuration):
         if PluralMap.NAME not in self._dynamic_maps:
-            YLogger.warning(self, "Dynamic set %s not defined, adding default implementation", PluralMap.NAME)
+            YLogger.warning(
+                self,
+                "Dynamic set %s not defined, adding default implementation",
+                PluralMap.NAME,
+            )
             self._dynamic_maps[PluralMap.NAME] = PluralMap(dynamics_configuration)
 
         if SingularMap.NAME not in self._dynamic_maps:
-            YLogger.warning(self, "Dynamic set %s not defined, adding default implementation", SingularMap.NAME)
+            YLogger.warning(
+                self,
+                "Dynamic set %s not defined, adding default implementation",
+                SingularMap.NAME,
+            )
             self._dynamic_maps[SingularMap.NAME] = SingularMap(dynamics_configuration)
 
         if SuccessorMap.NAME not in self._dynamic_maps:
-            YLogger.warning(self, "Dynamic set %s not defined, adding default implementation", SuccessorMap.NAME)
+            YLogger.warning(
+                self,
+                "Dynamic set %s not defined, adding default implementation",
+                SuccessorMap.NAME,
+            )
             self._dynamic_maps[SuccessorMap.NAME] = SuccessorMap(dynamics_configuration)
 
         if PredecessorMap.NAME not in self._dynamic_maps:
-            YLogger.warning(self, "Dynamic set %s not defined, adding default implementation", PredecessorMap.NAME)
-            self._dynamic_maps[PredecessorMap.NAME] = PredecessorMap(dynamics_configuration)
+            YLogger.warning(
+                self,
+                "Dynamic set %s not defined, adding default implementation",
+                PredecessorMap.NAME,
+            )
+            self._dynamic_maps[PredecessorMap.NAME] = PredecessorMap(
+                dynamics_configuration
+            )
 
     def load_default_dynamic_vars(self, dynamics_configuration):
         del dynamics_configuration
@@ -86,7 +119,9 @@ class DynamicsCollection:
         return self._dynamic_sets
 
     def add_dynamic_set(self, name, classname, config_file):
-        self._dynamic_sets[name.upper()] = (ClassLoader.instantiate_class(classname))(config_file)
+        self._dynamic_sets[name.upper()] = (ClassLoader.instantiate_class(classname))(
+            config_file
+        )
 
     def is_dynamic_set(self, name):
         return bool(name.upper() in self._dynamic_sets)
@@ -106,7 +141,9 @@ class DynamicsCollection:
         return self._dynamic_maps
 
     def add_dynamic_map(self, name, classname, config_file):
-        self._dynamic_maps[name.upper()] = (ClassLoader.instantiate_class(classname))(config_file)
+        self._dynamic_maps[name.upper()] = (ClassLoader.instantiate_class(classname))(
+            config_file
+        )
 
     def is_dynamic_map(self, name):
         return bool(name.upper() in self._dynamic_maps)
@@ -126,7 +163,9 @@ class DynamicsCollection:
         return self._dynamic_vars
 
     def add_dynamic_var(self, name, classname, config_file):
-        self._dynamic_vars[name.upper()] = (ClassLoader.instantiate_class(classname))(config_file)
+        self._dynamic_vars[name.upper()] = (ClassLoader.instantiate_class(classname))(
+            config_file
+        )
 
     def is_dynamic_var(self, name):
         return bool(name.upper() in self._dynamic_vars)

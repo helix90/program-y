@@ -1,5 +1,7 @@
 import unittest
 
+from programytest.client import TestClient
+
 from programy.activate import Activatable
 from programy.bot import Bot
 from programy.config.bot.bot import BotConfiguration
@@ -7,7 +9,6 @@ from programy.config.bot.spelling import BotSpellingConfiguration
 from programy.context import ClientContext
 from programy.dynamic.variables.system.spelling import Spelling
 from programy.spelling.base import SpellingChecker
-from programytest.client import TestClient
 
 
 class MockSpellingChecker(SpellingChecker):
@@ -27,8 +28,12 @@ class SpellingDynamicVarTests(unittest.TestCase):
         self._client_context.bot = Bot(BotConfiguration(), client)
 
         spelling_config = BotSpellingConfiguration()
-        spelling_config._classname = "programytest.spelling.test_base.MockSpellingChecker"
-        self._client_context.bot._spell_checker = SpellingChecker.initiate_spellchecker(spelling_config, None)
+        spelling_config._classname = (
+            "programytest.spelling.test_base.MockSpellingChecker"
+        )
+        self._client_context.bot._spell_checker = SpellingChecker.initiate_spellchecker(
+            spelling_config, None
+        )
 
     def test_spelling_active(self):
         dyn_var = Spelling(None)

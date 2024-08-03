@@ -14,9 +14,9 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
 
 from programy.config.base import BaseConfigurationData
+from programy.utils.logging.ylogger import YLogger
 from programy.utils.substitutions.substitues import Substitutions
 
 
@@ -35,22 +35,31 @@ class BrainTokenizerConfiguration(BaseConfigurationData):
     def split_chars(self):
         return self._split_chars
 
-    def load_config_section(self, configuration_file, configuration, bot_root, subs: Substitutions = None):
+    def load_config_section(
+        self, configuration_file, configuration, bot_root, subs: Substitutions = None
+    ):
         del bot_root
         tokenizer = configuration_file.get_section(self._section_name, configuration)
         if tokenizer is not None:
-            self._classname = configuration_file.get_option(tokenizer, "classname",
-                                                            missing_value="programy.parser.tokenizer.Tokenizer",
-                                                            subs=subs)
-            self._split_chars = configuration_file.get_option(tokenizer, "split_chars", missing_value=" ", subs=subs)
+            self._classname = configuration_file.get_option(
+                tokenizer,
+                "classname",
+                missing_value="programy.parser.tokenizer.Tokenizer",
+                subs=subs,
+            )
+            self._split_chars = configuration_file.get_option(
+                tokenizer, "split_chars", missing_value=" ", subs=subs
+            )
         else:
-            YLogger.warning(self, "'tokenizer' section missing from bot config, using defaults")
+            YLogger.warning(
+                self, "'tokenizer' section missing from bot config, using defaults"
+            )
 
     def to_yaml(self, data, defaults=True):
         if defaults is True:
-            data['classname'] = "programy.dialog.tokenizer.tokenizer.Tokenizer"
-            data['split_chars'] = ' '
+            data["classname"] = "programy.dialog.tokenizer.tokenizer.Tokenizer"
+            data["split_chars"] = " "
 
         else:
-            data['classname'] = self._classname
-            data['split_chars'] = self._split_chars
+            data["classname"] = self._classname
+            data["split_chars"] = self._split_chars

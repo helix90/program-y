@@ -1,8 +1,9 @@
 import unittest
 
+from programytest.client import TestClient
+
 from programy.dialog.question import Question
 from programy.extensions.admin.properties import PropertiesAdminExtension
-from programytest.client import TestClient
 
 
 class PropertiesAdminExtensionClient(TestClient):
@@ -23,7 +24,10 @@ class PropertiesAdminExtensionTests(unittest.TestCase):
         extension = PropertiesAdminExtension()
         self.assertIsNotNone(extension)
 
-        self.assertEquals("Unknown properties command [XXXX]", extension.execute(client_context, "XXXX"))
+        self.assertEquals(
+            "Unknown properties command [XXXX]",
+            extension.execute(client_context, "XXXX"),
+        )
 
     def test_unknown_gets_command(self):
         client = PropertiesAdminExtensionClient()
@@ -32,7 +36,9 @@ class PropertiesAdminExtensionTests(unittest.TestCase):
         extension = PropertiesAdminExtension()
         self.assertIsNotNone(extension)
 
-        self.assertEquals("Unknown GET command [XXXX]", extension.execute(client_context, "GET XXXX"))
+        self.assertEquals(
+            "Unknown GET command [XXXX]", extension.execute(client_context, "GET XXXX")
+        )
 
     def test_get_bot_incomplete(self):
 
@@ -174,7 +180,9 @@ class PropertiesAdminExtensionTests(unittest.TestCase):
         client = PropertiesAdminExtensionClient()
         client_context = client.create_client_context("testid")
 
-        client_context.bot.get_conversation(client_context).set_property("PROP1", "Value1")
+        client_context.bot.get_conversation(client_context).set_property(
+            "PROP1", "Value1"
+        )
 
         extension = PropertiesAdminExtension()
         self.assertIsNotNone(extension)
@@ -210,7 +218,10 @@ class PropertiesAdminExtensionTests(unittest.TestCase):
 
         result = extension.execute(client_context, "BOT")
         self.assertIsNotNone(result)
-        self.assertEqual("Properties:<br /><ul><li>key1 = val1</li><li>key2 = val2</li></ul><br />", result)
+        self.assertEqual(
+            "Properties:<br /><ul><li>key1 = val1</li><li>key2 = val2</li></ul><br />",
+            result,
+        )
 
     def test_get_bot_no_props(self):
 

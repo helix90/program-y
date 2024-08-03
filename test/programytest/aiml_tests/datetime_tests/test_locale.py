@@ -1,8 +1,9 @@
 import os
 import unittest
 
-from programy.utils.text.dateformat import DateFormatter
 from programytest.client import TestClient
+
+from programy.utils.text.dateformat import DateFormatter
 
 
 class LocaleAIMLTestClient(TestClient):
@@ -13,7 +14,9 @@ class LocaleAIMLTestClient(TestClient):
     def load_storage(self):
         super(LocaleAIMLTestClient, self).load_storage()
         self.add_default_stores()
-        self.add_single_categories_store(os.path.dirname(__file__) + os.sep + "locale.aiml")
+        self.add_single_categories_store(
+            os.path.dirname(__file__) + os.sep + "locale.aiml"
+        )
 
 
 class LocaleAIMLTests(unittest.TestCase):
@@ -26,6 +29,8 @@ class LocaleAIMLTests(unittest.TestCase):
         self.date = DateFormatter()
 
     def test_locale(self):
-        response = self._client_context.bot.ask_question(self._client_context, "TESTDATE")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "TESTDATE"
+        )
         self.assertIsNotNone(response)
         self.assertRegex(response, "Nous sommes le \d*\s*\d*")

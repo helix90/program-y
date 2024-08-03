@@ -1,9 +1,11 @@
 import unittest
+
 import programytest.storage.engines as Engines
+from programytest.storage.asserts.store.assert_maps import MapStoreAsserts
+
 from programy.storage.stores.nosql.mongo.config import MongoStorageConfiguration
 from programy.storage.stores.nosql.mongo.engine import MongoStorageEngine
 from programy.storage.stores.nosql.mongo.store.maps import MongoMapsStore
-from programytest.storage.asserts.store.assert_maps import MapStoreAsserts
 
 
 class MongoMapsStoreTests(MapStoreAsserts):
@@ -105,4 +107,3 @@ class MongoMapsStoreTests(MapStoreAsserts):
         store = MongoMapsStore(engine)
 
         self.assert_load_no_map_found(store)
-

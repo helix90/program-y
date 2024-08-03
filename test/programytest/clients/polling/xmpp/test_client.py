@@ -1,12 +1,13 @@
 import unittest
 
+from programytest.clients.arguments import MockArgumentParser
+
 from programy.bot import Bot
 from programy.clients.polling.xmpp.client import XmppBotClient
 from programy.clients.polling.xmpp.config import XmppConfiguration
 from programy.clients.polling.xmpp.xmpp import XmppClient
-from programy.config.bot.bot import BotConfiguration
 from programy.clients.render.text import TextRenderer
-from programytest.clients.arguments import MockArgumentParser
+from programy.config.bot.bot import BotConfiguration
 
 
 class MockBot(Bot):
@@ -62,8 +63,7 @@ class MockXmppClient(XmppClient):
     def send_response(self, msg, response):
         self.response = response
 
-    def connect(self, address=tuple(), reattempt=True,
-                use_tls=True, use_ssl=False):
+    def connect(self, address=tuple(), reattempt=True, use_tls=True, use_ssl=False):
         return self.should_connect
 
 
@@ -103,9 +103,9 @@ class XmppBotClientTests(unittest.TestCase):
         self.assertIsNotNone(client)
         self.assertIsNotNone(client.get_client_configuration())
         self.assertIsInstance(client.get_client_configuration(), XmppConfiguration)
-        self.assertEqual('ProgramY AIML2.0 Client', client.get_description())
-        self.assertEqual('XMPPUSERNAME', client._username)
-        self.assertEqual('XMPPPASSWORD', client._password)
+        self.assertEqual("ProgramY AIML2.0 Client", client.get_description())
+        self.assertEqual("XMPPUSERNAME", client._username)
+        self.assertEqual("XMPPPASSWORD", client._password)
         self.assertEqual("Server", client._server)
         self.assertEqual(8080, client._port)
 
@@ -116,5 +116,5 @@ class XmppBotClientTests(unittest.TestCase):
         arguments = MockArgumentParser()
         client = MockXmppBotClient(arguments)
         self.assertIsNotNone(client)
-        client._xmpp_client = MockXmppClient(client,  "username", "password")
+        client._xmpp_client = MockXmppClient(client, "username", "password")
         client.connect()

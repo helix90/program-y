@@ -1,9 +1,10 @@
 import xml.etree.ElementTree as ET
 
+from programytest.parser.base import ParserTestsBaseClass
+
 from programy.parser.template.nodes.base import TemplateNode
 from programy.parser.template.nodes.rand import TemplateRandomNode
 from programy.parser.template.nodes.word import TemplateWordNode
-from programytest.parser.base import ParserTestsBaseClass
 
 
 class MockTemplateRandomNode(TemplateRandomNode):
@@ -12,6 +13,7 @@ class MockTemplateRandomNode(TemplateRandomNode):
 
     def resolve_to_string(self, context):
         raise Exception("This is an error")
+
 
 class TemplateRandomNodeTests(ParserTestsBaseClass):
 
@@ -43,7 +45,10 @@ class TemplateRandomNodeTests(ParserTestsBaseClass):
         xml = root.xml_tree(self._client_context)
         self.assertIsNotNone(xml)
         xml_str = ET.tostring(xml, "utf-8").decode("utf-8")
-        self.assertEqual("<template><random><li>Test1</li><li>Test2</li></random></template>", xml_str)
+        self.assertEqual(
+            "<template><random><li>Test1</li><li>Test2</li></random></template>",
+            xml_str,
+        )
 
     def test_node_exception_handling(self):
         root = TemplateNode()

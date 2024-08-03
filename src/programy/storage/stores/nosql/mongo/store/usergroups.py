@@ -14,16 +14,18 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 import yaml
-from programy.utils.logging.ylogger import YLogger
+
 from programy.storage.entities.store import Store
-from programy.storage.stores.nosql.mongo.store.mongostore import MongoStore
 from programy.storage.entities.usergroups import UserGroupsStore
 from programy.storage.stores.nosql.mongo.dao.usergroups import UserGroups
+from programy.storage.stores.nosql.mongo.store.mongostore import MongoStore
+from programy.utils.logging.ylogger import YLogger
 
 
 class MongoUserGroupsStore(MongoStore, UserGroupsStore):
-    USERGROUPS = 'usergroups'
+    USERGROUPS = "usergroups"
 
     def __init__(self, storage_engine):
         MongoStore.__init__(self, storage_engine)
@@ -32,7 +34,9 @@ class MongoUserGroupsStore(MongoStore, UserGroupsStore):
     def collection_name(self):
         return MongoUserGroupsStore.USERGROUPS
 
-    def upload_from_file(self, filename, fileformat=Store.TEXT_FORMAT, commit=True, verbose=False):
+    def upload_from_file(
+        self, filename, fileformat=Store.TEXT_FORMAT, commit=True, verbose=False
+    ):
 
         YLogger.info(self, "Uploading usergroups from [%s] to Mongo", filename)
 
@@ -50,10 +54,12 @@ class MongoUserGroupsStore(MongoStore, UserGroupsStore):
         collection = self.collection()
         usergroups = collection.find_one({})
         if usergroups is not None:
-            self.load_users_and_groups_from_yaml(usergroups['usergroups'], usersgroupsauthorisor)
+            self.load_users_and_groups_from_yaml(
+                usergroups["usergroups"], usersgroupsauthorisor
+            )
 
     def _read_yaml_from_file(self, filename):
-        with open(filename, 'r+', encoding="utf-8") as yaml_data_file:
+        with open(filename, "r+", encoding="utf-8") as yaml_data_file:
             yaml_data = yaml.load(yaml_data_file, Loader=yaml.FullLoader)
             return yaml_data
 
@@ -63,6 +69,8 @@ class MongoUserGroupsStore(MongoStore, UserGroupsStore):
             return self._read_yaml_from_file(filename)
 
         except Exception as excep:
-            YLogger.exception(self, "Failed to load usergroups yaml file [%s]", excep, filename)
+            YLogger.exception(
+                self, "Failed to load usergroups yaml file [%s]", excep, filename
+            )
 
         return {}

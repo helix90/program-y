@@ -14,9 +14,10 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
-from programy.parser.template.nodes.base import TemplateNode
+
 from programy.parser.exceptions import ParserException
+from programy.parser.template.nodes.base import TemplateNode
+from programy.utils.logging.ylogger import YLogger
 from programy.utils.text.text import TextUtils
 
 
@@ -47,7 +48,10 @@ class TemplateBotNode(TemplateNode):
 
                 value = client_context.brain.configuration.defaults.default_get
                 if value is None:
-                    YLogger.error(client_context, "No value for default default_property, return 'unknown'")
+                    YLogger.error(
+                        client_context,
+                        "No value for default default_property, return 'unknown'",
+                    )
                     value = "unknown"
 
         return value
@@ -55,7 +59,13 @@ class TemplateBotNode(TemplateNode):
     def resolve_to_string(self, client_context):
         name = self.name.resolve(client_context)
         value = TemplateBotNode.get_bot_variable(client_context, name)
-        YLogger.debug(client_context, "[%s] resolved to [%s] = [%s]", self.to_string(), name, value)
+        YLogger.debug(
+            client_context,
+            "[%s] resolved to [%s] = [%s]",
+            self.to_string(),
+            name,
+            value,
+        )
         return value
 
     def to_string(self):
@@ -75,8 +85,8 @@ class TemplateBotNode(TemplateNode):
     def parse_expression(self, graph, expression):
         name_found = False
 
-        if 'name' in expression.attrib:
-            self.name = self.parse_attrib_value_as_word_node(graph, expression, 'name')
+        if "name" in expression.attrib:
+            self.name = self.parse_attrib_value_as_word_node(graph, expression, "name")
             name_found = True
 
         self.parse_text(graph, self.get_text_from_element(expression))
@@ -84,7 +94,7 @@ class TemplateBotNode(TemplateNode):
         for child in expression:
             tag_name = TextUtils.tag_from_text(child.tag)
 
-            if tag_name == 'name':
+            if tag_name == "name":
                 self.name = self.parse_children_as_word_node(graph, child)
                 self.local = False
                 name_found = True

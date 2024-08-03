@@ -1,9 +1,10 @@
 import unittest
 
+from programytest.client import TestClient
+
 from programy.parser.pattern.match import Match
 from programy.parser.pattern.nodes.oneormore import PatternOneOrMoreWildCardNode
 from programy.parser.pattern.nodes.word import PatternWordNode
-from programytest.client import TestClient
 
 
 class MatcherTestClient(TestClient):
@@ -15,7 +16,7 @@ class MatcherTestClient(TestClient):
         super(MatcherTestClient, self).load_storage()
         self.add_default_stores()
         self.add_pattern_nodes_store()
-        
+
 
 class MatchTests(unittest.TestCase):
 
@@ -35,7 +36,10 @@ class MatchTests(unittest.TestCase):
         self.assertEqual(Match.TOPIC, match.matched_node_type)
         self.assertEqual(Match.TOPIC, match.matched_node_type)
         self.assertEqual([], match.matched_node_words)
-        self.assertEqual("Match=(Topic) Node=(ONEORMORE [*]) Matched=()", match.to_string(self._client_context))
+        self.assertEqual(
+            "Match=(Topic) Node=(ONEORMORE [*]) Matched=()",
+            match.to_string(self._client_context),
+        )
 
     def test_match_word(self):
         topic = PatternOneOrMoreWildCardNode("*")
@@ -45,7 +49,10 @@ class MatchTests(unittest.TestCase):
         self.assertTrue(match.matched_node_multi_word)
         self.assertTrue(match.matched_node_wildcard)
         self.assertEqual("ONEORMORE [*]", match.matched_node_str)
-        self.assertEqual("Match=(Topic) Node=(ONEORMORE [*]) Matched=(Hello)", match.to_string(self._client_context))
+        self.assertEqual(
+            "Match=(Topic) Node=(ONEORMORE [*]) Matched=(Hello)",
+            match.to_string(self._client_context),
+        )
         self.assertEqual(["Hello"], match.matched_node_words)
 
     def test_match_multi_word(self):
@@ -58,7 +65,10 @@ class MatchTests(unittest.TestCase):
         self.assertTrue(match.matched_node_multi_word)
         self.assertTrue(match.matched_node_wildcard)
         self.assertEqual("ONEORMORE [*]", match.matched_node_str)
-        self.assertEqual("Match=(Topic) Node=(ONEORMORE [*]) Matched=(Hello World)", match.to_string(self._client_context))
+        self.assertEqual(
+            "Match=(Topic) Node=(ONEORMORE [*]) Matched=(Hello World)",
+            match.to_string(self._client_context),
+        )
         self.assertEqual(["Hello", "World"], match.matched_node_words)
         self.assertEqual("Hello World", match.joined_words(self._client_context))
 
@@ -82,11 +92,13 @@ class MatchTests(unittest.TestCase):
 
     def test_from_json(self):
 
-        json_data = {"type": Match.type_to_string(Match.WORD),
-                     "node": "WORD [Hello]",
-                     "words": ["Hello"],
-                     "multi_word": False,
-                     "wild_card": False}
+        json_data = {
+            "type": Match.type_to_string(Match.WORD),
+            "node": "WORD [Hello]",
+            "words": ["Hello"],
+            "multi_word": False,
+            "wild_card": False,
+        }
 
         match = Match.from_json(json_data)
         self.assertIsNotNone(match)

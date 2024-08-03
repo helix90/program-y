@@ -17,16 +17,18 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR TH
 This is an example extension that allow syou to call an external service to retreive the bank balance
 of the customer. Currently contains no authentication
 """
-from programy.utils.logging.ylogger import YLogger
 
 from programy.context import ClientContext
 from programy.extensions.base import Extension
 from programy.security.linking.accountlinker import BasicAccountLinkerService
+from programy.utils.logging.ylogger import YLogger
 
 
 class AccountLinkingExtension(Extension):
 
-    def get_account_linker_service(self, context: ClientContext) -> BasicAccountLinkerService:
+    def get_account_linker_service(
+        self, context: ClientContext
+    ) -> BasicAccountLinkerService:
 
         assert isinstance(context, ClientContext)
 
@@ -38,7 +40,7 @@ class AccountLinkingExtension(Extension):
         assert isinstance(context, ClientContext)
         assert isinstance(words, list)
 
-        if words[2] == 'ACCOUNT':
+        if words[2] == "ACCOUNT":
             if len(words) == 6:
                 userid = words[3]
                 account_name = words[4]
@@ -63,7 +65,7 @@ class AccountLinkingExtension(Extension):
         assert isinstance(context, ClientContext)
         assert isinstance(words, list)
 
-        if words[2] == 'ACCOUNT':
+        if words[2] == "ACCOUNT":
             if len(words) == 8:
                 primary_userid = words[3]
                 secondary_userid = words[4]
@@ -77,8 +79,16 @@ class AccountLinkingExtension(Extension):
 
                     assert isinstance(linked, BasicAccountLinkerService)
 
-                    if linked.link_accounts(primary_userid, provided_key, generated_key, secondary_userid,
-                                            secondary_account_name) is True:
+                    if (
+                        linked.link_accounts(
+                            primary_userid,
+                            provided_key,
+                            generated_key,
+                            secondary_userid,
+                            secondary_account_name,
+                        )
+                        is True
+                    ):
                         return "SECONDARY ACCOUNT LINKED"
 
         return "INVALID SECONDARY ACCOUNT COMMAND"
@@ -89,15 +99,18 @@ class AccountLinkingExtension(Extension):
         assert isinstance(client_context, ClientContext)
         assert isinstance(data, str)
 
-        YLogger.debug(client_context, "Account Linking Extension - Calling external service for with extra data [%s]",
-                      data)
+        YLogger.debug(
+            client_context,
+            "Account Linking Extension - Calling external service for with extra data [%s]",
+            data,
+        )
 
         words = data.split(" ")
-        if words[0] == 'LINK':
-            if words[1] == 'PRIMARY':
+        if words[0] == "LINK":
+            if words[1] == "PRIMARY":
                 return self.handle_primary_account_link(client_context, words)
 
-            elif words[1] == 'SECONDARY':
+            elif words[1] == "SECONDARY":
                 return self.handle_secondary_account_link(client_context, words)
 
         return "ACCOUNT LINK FAILED UNKNOWN COMMAND"

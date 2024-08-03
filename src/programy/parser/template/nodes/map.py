@@ -14,9 +14,10 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
-from programy.parser.template.nodes.base import TemplateNode
+
 from programy.parser.exceptions import ParserException
+from programy.parser.template.nodes.base import TemplateNode
+from programy.utils.logging.ylogger import YLogger
 from programy.utils.text.text import TextUtils
 
 
@@ -42,7 +43,10 @@ class TemplateMapNode(TemplateNode):
     def get_default_value(self, client_context):
         value = client_context.brain.properties.property("default_map")
         if value is None:
-            YLogger.error(client_context, "No value for default_map defined, empty string returned")
+            YLogger.error(
+                client_context,
+                "No value for default_map defined, empty string returned",
+            )
             value = ""
         return value
 
@@ -54,17 +58,31 @@ class TemplateMapNode(TemplateNode):
             value = client_context.brain.dynamics.dynamic_map(client_context, name, var)
         else:
             if client_context.brain.maps.contains(name) is False:
-                YLogger.error(client_context, "No map defined for [%s], using default_map as value", var)
+                YLogger.error(
+                    client_context,
+                    "No map defined for [%s], using default_map as value",
+                    var,
+                )
                 value = self.get_default_value(client_context)
             else:
                 the_map = client_context.brain.maps.map(name)
                 if var in the_map:
                     value = the_map[var]
                 else:
-                    YLogger.error(client_context, "No value defined for [%s], using default_map as value", var)
+                    YLogger.error(
+                        client_context,
+                        "No value defined for [%s], using default_map as value",
+                        var,
+                    )
                     value = self.get_default_value(client_context)
 
-        YLogger.debug(client_context, "MAP [%s] resolved to [%s] = [%s]", self.to_string(), name, value)
+        YLogger.debug(
+            client_context,
+            "MAP [%s] resolved to [%s] = [%s]",
+            self.to_string(),
+            name,
+            value,
+        )
         return value
 
     def to_string(self):
@@ -87,8 +105,8 @@ class TemplateMapNode(TemplateNode):
 
         name_found = False
 
-        if 'name' in expression.attrib:
-            self.name = self.parse_attrib_value_as_word_node(graph, expression, 'name')
+        if "name" in expression.attrib:
+            self.name = self.parse_attrib_value_as_word_node(graph, expression, "name")
             name_found = True
 
         self.parse_text(graph, self.get_text_from_element(expression))
@@ -96,7 +114,7 @@ class TemplateMapNode(TemplateNode):
         for child in expression:
             tag_name = TextUtils.tag_from_text(child.tag)
 
-            if tag_name == 'name':
+            if tag_name == "name":
                 self.name = self.parse_children_as_word_node(graph, child)
                 name_found = True
 

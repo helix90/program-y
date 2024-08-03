@@ -15,10 +15,12 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
+from programy.config.brain.security import (
+    BrainSecurityAccountLinkerConfiguration,
+    BrainSecurityAuthenticationConfiguration,
+    BrainSecurityAuthorisationConfiguration,
+)
 from programy.config.section import BaseSectionConfigurationData
-from programy.config.brain.security import BrainSecurityAuthenticationConfiguration
-from programy.config.brain.security import BrainSecurityAuthorisationConfiguration
-from programy.config.brain.security import BrainSecurityAccountLinkerConfiguration
 from programy.utils.substitutions.substitues import Substitutions
 
 
@@ -42,17 +44,25 @@ class BrainSecuritiesConfiguration(BaseSectionConfigurationData):
     def account_linker(self):
         return self._account_linker
 
-    def load_config_section(self, configuration_file, configuration, bot_root, subs: Substitutions = None):
+    def load_config_section(
+        self, configuration_file, configuration, bot_root, subs: Substitutions = None
+    ):
         securities = configuration_file.get_section(self.section_name, configuration)
         if securities is not None:
             self._authentication = BrainSecurityAuthenticationConfiguration()
-            self._authentication.load_config_section(configuration_file, securities, bot_root, subs=subs)
+            self._authentication.load_config_section(
+                configuration_file, securities, bot_root, subs=subs
+            )
 
             self._authorisation = BrainSecurityAuthorisationConfiguration()
-            self._authorisation.load_config_section(configuration_file, securities, bot_root, subs=subs)
+            self._authorisation.load_config_section(
+                configuration_file, securities, bot_root, subs=subs
+            )
 
             self._account_linker = BrainSecurityAccountLinkerConfiguration()
-            self._account_linker.load_config_section(configuration_file, securities, bot_root, subs=subs)
+            self._account_linker.load_config_section(
+                configuration_file, securities, bot_root, subs=subs
+            )
 
     def to_yaml(self, data, defaults=True):
         self.config_to_yaml(data, BrainSecurityAuthenticationConfiguration(), defaults)

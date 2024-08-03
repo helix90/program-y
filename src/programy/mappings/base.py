@@ -14,13 +14,15 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 import re
-from programy.utils.logging.ylogger import YLogger
+
 from programy.utils.console.console import outputLog
+from programy.utils.logging.ylogger import YLogger
 
 
 class BaseCollection:
-    pass    # pragma: no cover
+    pass  # pragma: no cover
 
 
 class SingleStringCollection(BaseCollection):
@@ -89,7 +91,7 @@ class DoubleStringCharSplitCollection(BaseCollection):
         return None
 
     def get_split_char(self):
-        return ','
+        return ","
 
     def load_from_text(self, text):
         lines = text.split("\n")
@@ -106,7 +108,7 @@ class DoubleStringCharSplitCollection(BaseCollection):
 
 
 class DoubleStringPatternSplitCollection(BaseCollection):
-    RE_OF_SPLIT_PATTERN = re.compile('\"(.*?)\",\"(.*?)\"')
+    RE_OF_SPLIT_PATTERN = re.compile('"(.*?)","(.*?)"')
 
     def __init__(self):
         BaseCollection.__init__(self)
@@ -156,14 +158,16 @@ class DoubleStringPatternSplitCollection(BaseCollection):
                             replacable = pattern.sub(to_replace, replacable)
 
                         else:
-                            replacable = pattern.sub(to_replace+" ", replacable)
+                            replacable = pattern.sub(to_replace + " ", replacable)
 
                         alreadys.append(pair[1])
 
             except Exception as excep:
-                YLogger.exception(self, "Invalid regular expression [%s]", excep, str(pair[0]))
+                YLogger.exception(
+                    self, "Invalid regular expression [%s]", excep, str(pair[0])
+                )
 
-        return re.sub(' +', ' ', replacable.strip())
+        return re.sub(" +", " ", replacable.strip())
 
     def match_case(self, replacable, to_replace):
         count = 0
@@ -176,7 +180,7 @@ class DoubleStringPatternSplitCollection(BaseCollection):
         if count == length:
             return to_replace.upper()
 
-        if float(count) > float(length)/3.0:
+        if float(count) > float(length) / 3.0:
             return to_replace.upper()
 
         return to_replace.lower()
@@ -186,7 +190,9 @@ class DoubleStringPatternSplitCollection(BaseCollection):
         count = 0
         for line in lines:
             line = line.strip()
-            split = self.split_line_by_pattern(line, DoubleStringPatternSplitCollection.RE_OF_SPLIT_PATTERN)
+            split = self.split_line_by_pattern(
+                line, DoubleStringPatternSplitCollection.RE_OF_SPLIT_PATTERN
+            )
             if split is not None:
                 key, value = self.process_key_value(split[0], split[1])
                 self.add_to_lookup(key, value)

@@ -25,10 +25,14 @@ class ThatStarAIMLTests(unittest.TestCase):
         # We need to ask 2 questions, first we get a response which is stored in the <that> clause, we then return it
         # on the second question
 
-        response = self._client_context.bot.ask_question(self._client_context, "HELLO THERE")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "HELLO THERE"
+        )
         self.assertIsNotNone(response)
-        self.assertEqual(response, 'HI THERE.')
+        self.assertEqual(response, "HI THERE.")
 
-        response = self._client_context.bot.ask_question(self._client_context, "I SAID HI THERE")
+        response = self._client_context.bot.ask_question(
+            self._client_context, "I SAID HI THERE"
+        )
         self.assertIsNotNone(response)
-        self.assertEqual(response, 'HEARD YOU SAY HI THERE.')
+        self.assertEqual(response, "HEARD YOU SAY HI THERE.")

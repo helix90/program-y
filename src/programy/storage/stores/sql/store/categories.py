@@ -14,9 +14,10 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.storage.stores.sql.store.sqlstore import SQLStore
+
 from programy.storage.entities.category import CategoryReadWriteStore
 from programy.storage.stores.sql.dao.category import Category
+from programy.storage.stores.sql.store.sqlstore import SQLStore
 
 
 class SQLCategoryStore(CategoryReadWriteStore, SQLStore):
@@ -32,10 +33,19 @@ class SQLCategoryStore(CategoryReadWriteStore, SQLStore):
         self._get_all().delete()
 
     def empty_named(self, name):
-        self._storage_engine.session.query(Category).filter(Category.groupid == name).delete()
+        self._storage_engine.session.query(Category).filter(
+            Category.groupid == name
+        ).delete()
 
     def store_category(self, groupid, userid, topic, that, pattern, template):
-        category = Category(groupid=groupid, userid=userid, topic=topic, that=that, pattern=pattern, template=template)
+        category = Category(
+            groupid=groupid,
+            userid=userid,
+            topic=topic,
+            that=that,
+            pattern=pattern,
+            template=template,
+        )
         self._storage_engine.session.add(category)
         return True
 
@@ -51,24 +61,30 @@ class SQLCategoryStore(CategoryReadWriteStore, SQLStore):
             else:
                 template = category.template
 
-            self._load_category(category.groupid,
-                                category.pattern.strip(),
-                                category.topic.strip(),
-                                category.that.strip(),
-                                template.strip(),
-                                collector)
+            self._load_category(
+                category.groupid,
+                category.pattern.strip(),
+                category.topic.strip(),
+                category.that.strip(),
+                template.strip(),
+                collector,
+            )
 
     def load_categories(self, groupid, parser):
-        categories = self._storage_engine.session.query(Category).filter(Category.groupid == groupid)
+        categories = self._storage_engine.session.query(Category).filter(
+            Category.groupid == groupid
+        )
         for category in categories:
             if category.template is None:
                 template = ""
             else:
                 template = category.template
 
-            self._load_category(category.groupid,
-                                category.pattern.strip(),
-                                category.topic.strip(),
-                                category.that.strip(),
-                                template.strip(),
-                                parser)
+            self._load_category(
+                category.groupid,
+                category.pattern.strip(),
+                category.topic.strip(),
+                category.that.strip(),
+                template.strip(),
+                parser,
+            )

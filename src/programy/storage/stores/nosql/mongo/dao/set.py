@@ -14,10 +14,11 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+
 from programy.storage.stores.utils import DAOUtils
 
 
-class Set():
+class Set:
 
     def __init__(self, name, values):
         self.id = None
@@ -25,19 +26,22 @@ class Set():
         self.values = values
 
     def __repr__(self):
-        return "<Set(id='%s', name='%s', values='%s')>" % (DAOUtils.valid_id(self.id), self.name, ", ".join(self.values))
+        return "<Set(id='%s', name='%s', values='%s')>" % (
+            DAOUtils.valid_id(self.id),
+            self.name,
+            ", ".join(self.values),
+        )
 
     def to_document(self):
-        document = {"name": self.name,
-                    "values": self.values}
+        document = {"name": self.name, "values": self.values}
         if self.id is not None:
-            document['_id'] = self.id
+            document["_id"] = self.id
         return document
 
     @staticmethod
     def from_document(data):
         aset = Set(None, None)
-        aset.id = DAOUtils.get_value_from_data(data, '_id')
-        aset.name = DAOUtils.get_value_from_data(data, 'name')
-        aset.values = DAOUtils.get_value_from_data(data, 'values', [])
+        aset.id = DAOUtils.get_value_from_data(data, "_id")
+        aset.name = DAOUtils.get_value_from_data(data, "name")
+        aset.values = DAOUtils.get_value_from_data(data, "values", [])
         return aset

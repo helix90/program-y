@@ -63,20 +63,31 @@ class ParserException(Exception):
                 msg += " : "
                 msg += self._xml_exception
             else:
-                msg += " at [line(%d), column(%d)]" % (self._xml_exception.position[0],
-                                                       self._xml_exception.position[1])
+                msg += " at [line(%d), column(%d)]" % (
+                    self._xml_exception.position[0],
+                    self._xml_exception.position[1],
+                )
 
         if self._xml_element is not None:
-            if hasattr(self._xml_element, '_end_line_number') and hasattr(self._xml_element, '_end_column_number'):
-                msg += " at [line(%d), column(%d)]" % \
-                       (self._xml_element._end_line_number, # pylint: disable=protected-access
-                        self._xml_element._end_column_number)  # pylint: disable=protected-access
+            if hasattr(self._xml_element, "_end_line_number") and hasattr(
+                self._xml_element, "_end_column_number"
+            ):
+                msg += " at [line(%d), column(%d)]" % (
+                    self._xml_element._end_line_number,  # pylint: disable=protected-access
+                    self._xml_element._end_column_number,
+                )  # pylint: disable=protected-access
         return msg
 
 
 class DuplicateGrammarException(ParserException):
     def __init__(self, message, filename=None, xml_exception=None, xml_element=None):
-        ParserException.__init__(self, message, filename=filename, xml_exception=xml_exception, xml_element=xml_element)
+        ParserException.__init__(
+            self,
+            message,
+            filename=filename,
+            xml_exception=xml_exception,
+            xml_element=xml_element,
+        )
 
 
 class MatcherException(Exception):

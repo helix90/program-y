@@ -14,9 +14,10 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.utils.logging.ylogger import YLogger
+
 from programy.config.base import BaseConfigurationData
 from programy.storage.stores.nosql.mongo.engine import MongoStorageEngine
+from programy.utils.logging.ylogger import YLogger
 from programy.utils.substitutions.substitues import Substitutions
 
 
@@ -25,7 +26,7 @@ class MongoStorageConfiguration(BaseConfigurationData):
     def __init__(self):
         BaseConfigurationData.__init__(self, name="config")
 
-        self._url = 'mongodb://localhost:27017/'
+        self._url = "mongodb://localhost:27017/"
         self._database = "programy"
         self._drop_all_first = False
 
@@ -54,30 +55,36 @@ class MongoStorageConfiguration(BaseConfigurationData):
         self._drop_all_first = drop_all
 
     def create_mongostorage_config(self):
-        return {'url': self._url,
-                'database': self._database,
-                'drop_all_first': self._drop_all_first}
+        return {
+            "url": self._url,
+            "database": self._database,
+            "drop_all_first": self._drop_all_first,
+        }
 
-    def load_config_section(self, configuration_file, configuration, bot_root, subs: Substitutions = None):
+    def load_config_section(
+        self, configuration_file, configuration, bot_root, subs: Substitutions = None
+    ):
         del bot_root
         del subs
         storage = configuration_file.get_section(self._section_name, configuration)
         if storage is not None:
             self._url = configuration_file.get_option(storage, "url")
             self._database = configuration_file.get_option(storage, "database")
-            self._drop_all_first = configuration_file.get_option(storage, "drop_all_first")
+            self._drop_all_first = configuration_file.get_option(
+                storage, "drop_all_first"
+            )
         else:
             YLogger.error(None, "'config' section missing from storage config")
 
     def to_yaml(self, data, defaults=True):
         if defaults is True:
-            data['url'] = 'mongodb://localhost:27017/'
-            data['database'] = "programy"
-            data['drop_all_first'] = True
+            data["url"] = "mongodb://localhost:27017/"
+            data["database"] = "programy"
+            data["drop_all_first"] = True
         else:
-            data['url'] = self._url
-            data['database'] = self._database
-            data['drop_all_first'] = self._drop_all_first
+            data["url"] = self._url
+            data["database"] = self._database
+            data["drop_all_first"] = self._drop_all_first
 
     def create_engine(self):
         engine = MongoStorageEngine(self)

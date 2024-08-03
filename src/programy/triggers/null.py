@@ -14,8 +14,9 @@ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRI
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from programy.triggers.trigger import Trigger
+
 from programy.context import ClientContext
+from programy.triggers.trigger import Trigger
 from programy.utils.console.console import outputLog
 
 
@@ -26,7 +27,7 @@ class NullTrigger(Trigger):
 
     def trigger(self, client_context: ClientContext = None, additional=None):
         if additional is not None:
-            if 'event' in additional:
+            if "event" in additional:
                 outputLog(self, "%s Trigger fired, no action..." % additional["event"])
 
         outputLog(self, "%s Trigger fired, no action...")

@@ -1,10 +1,10 @@
 import unittest
-from unittest.mock import patch
-from unittest.mock import Mock
-from programy.services.base import Service
-from programy.services.base import ServiceException
-from programy.services.config import ServiceConfiguration
+from unittest.mock import Mock, patch
+
 from programytest.client import TestClient
+
+from programy.services.base import Service, ServiceException
+from programy.services.config import ServiceConfiguration
 
 
 class ServiceExceptionTests(unittest.TestCase):
@@ -12,7 +12,7 @@ class ServiceExceptionTests(unittest.TestCase):
     def test_init(self):
         exception = ServiceException("Service failed")
         self.assertIsNotNone(exception)
-        self.assertEquals('Service failed', str(exception))
+        self.assertEquals("Service failed", str(exception))
 
 
 class ServiceTests(unittest.TestCase):
@@ -26,12 +26,16 @@ class ServiceTests(unittest.TestCase):
         self.assertIsNone(service.get_default_aiml_file())
 
     def test_init_defined_config(self):
-        config = ServiceConfiguration.from_data("generic", "test", "category",
-                                                service_class="testclass",
-                                                default_response="default response",
-                                                default_srai="default srai",
-                                                storage="file",
-                                                default_aiml="default.aiml")
+        config = ServiceConfiguration.from_data(
+            "generic",
+            "test",
+            "category",
+            service_class="testclass",
+            default_response="default response",
+            default_srai="default srai",
+            storage="file",
+            default_aiml="default.aiml",
+        )
         service = Service(config)
         self.assertIsNotNone(service)
         self.assertEqual(service.configuration, config)
@@ -46,29 +50,45 @@ class ServiceTests(unittest.TestCase):
 
     @patch("programy.bot.Bot.ask_question", patch_ask_question)
     def test_get_default_response_default_srai(self):
-        config = ServiceConfiguration.from_data("generic", "test", "category", default_srai="TEST SERVICE FAILURE")
+        config = ServiceConfiguration.from_data(
+            "generic", "test", "category", default_srai="TEST SERVICE FAILURE"
+        )
         service = Service(config)
         client = TestClient()
         client_context = client.create_client_context("testuser")
-        self.assertEqual("Default srai response", service._get_default_response(client_context))
+        self.assertEqual(
+            "Default srai response", service._get_default_response(client_context)
+        )
 
     def test_get_default_response_default_response(self):
-        config = ServiceConfiguration.from_data("generic", "test", "category", default_response="This is the default response")
+        config = ServiceConfiguration.from_data(
+            "generic",
+            "test",
+            "category",
+            default_response="This is the default response",
+        )
         service = Service(config)
         client = TestClient()
         client_context = client.create_client_context("testuser")
-        self.assertEqual("This is the default response", service._get_default_response(client_context))
+        self.assertEqual(
+            "This is the default response",
+            service._get_default_response(client_context),
+        )
 
     def test_get_default_response_nothing(self):
         config = ServiceConfiguration.from_data("generic", "test", "category")
         service = Service(config)
         client = TestClient()
         client_context = client.create_client_context("testuser")
-        self.assertEqual("Service failed to return valid response", service._get_default_response(client_context))
+        self.assertEqual(
+            "Service failed to return valid response",
+            service._get_default_response(client_context),
+        )
 
     def test_load_default_aiml_by_config(self):
-        config = ServiceConfiguration.from_data("generic", "test", "category",
-                                                default_aiml="default.aiml")
+        config = ServiceConfiguration.from_data(
+            "generic", "test", "category", default_aiml="default.aiml"
+        )
         service = Service(config)
         self.assertIsNotNone(service)
 
@@ -79,7 +99,10 @@ class ServiceTests(unittest.TestCase):
     def patch_get_default_aiml_file(self):
         return "default.aiml"
 
-    @patch("programy.services.base.Service.get_default_aiml_file", patch_get_default_aiml_file)
+    @patch(
+        "programy.services.base.Service.get_default_aiml_file",
+        patch_get_default_aiml_file,
+    )
     def test_load_default_aiml_by_class(self):
         config = ServiceConfiguration.from_data("generic", "test", "category")
         service = Service(config)
@@ -114,7 +137,7 @@ class ServiceTests(unittest.TestCase):
                 pass
 
             def execute(self):
-                return {'response': {'payload': 'Hi there', 'status': 'success'}}
+                return {"response": {"payload": "Hi there", "status": "success"}}
 
             def aiml_response(self, response):
                 return "Hi there from aiml"
@@ -124,9 +147,7 @@ class ServiceTests(unittest.TestCase):
                 Service.__init__(self, configuration)
 
             def patterns(self) -> list:
-                return [
-                    [r"HELLO", MockQuery]
-                    ]
+                return [[r"HELLO", MockQuery]]
 
         service = MockService(config)
         self.assertIsNotNone(service)
@@ -149,7 +170,7 @@ class ServiceTests(unittest.TestCase):
                 pass
 
             def execute(self):
-                return {'response': {'payload': 'Hi there', 'status': 'success'}}
+                return {"response": {"payload": "Hi there", "status": "success"}}
 
             def aiml_response(self, response):
                 return "Hi there from aiml"
@@ -159,9 +180,7 @@ class ServiceTests(unittest.TestCase):
                 Service.__init__(self, configuration)
 
             def patterns(self) -> list:
-                return [
-                    [r"HELLO", MockQuery]
-                ]
+                return [[r"HELLO", MockQuery]]
 
         service = MockService(config)
         self.assertIsNotNone(service)
@@ -184,7 +203,7 @@ class ServiceTests(unittest.TestCase):
                 pass
 
             def execute(self):
-                return {'response': {'payload': 'Hi there', 'status': 'success'}}
+                return {"response": {"payload": "Hi there", "status": "success"}}
 
             def aiml_response(self, response):
                 return "Hi there from aiml"
@@ -194,15 +213,18 @@ class ServiceTests(unittest.TestCase):
                 Service.__init__(self, configuration)
 
             def patterns(self) -> list:
-                return [
-                    [r"HELLO", MockQuery]
-                    ]
+                return [[r"HELLO", MockQuery]]
 
         mock_service = MockService(config)
         self.assertIsNotNone(mock_service)
 
-        self.assertEqual({'response': {'payload': 'Hi there', 'status': 'success'}}, mock_service.execute_query("HELLO", aiml=False))
-        self.assertEqual("Hi there from aiml", mock_service.execute_query("HELLO", aiml=True))
+        self.assertEqual(
+            {"response": {"payload": "Hi there", "status": "success"}},
+            mock_service.execute_query("HELLO", aiml=False),
+        )
+        self.assertEqual(
+            "Hi there from aiml", mock_service.execute_query("HELLO", aiml=True)
+        )
 
     def test_ask_question_with_response(self):
         config = ServiceConfiguration.from_data("generic", "test", "category")
@@ -238,4 +260,7 @@ class ServiceTests(unittest.TestCase):
         client = TestClient()
         client_context = client.create_client_context("testuser")
 
-        self.assertEqual("Service failed to return valid response", service.ask_question(client_context, "Hello"))
+        self.assertEqual(
+            "Service failed to return valid response",
+            service.ask_question(client_context, "Hello"),
+        )

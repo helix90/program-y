@@ -1,11 +1,14 @@
 import unittest
 
+from programytest.client import TestClient
+
 from programy.bot import Bot
 from programy.config.bot.bot import BotConfiguration
 from programy.config.brain.security import BrainSecurityAuthenticationConfiguration
 from programy.context import ClientContext
-from programy.security.authenticate.passthrough import BasicPassThroughAuthenticationService
-from programytest.client import TestClient
+from programy.security.authenticate.passthrough import (
+    BasicPassThroughAuthenticationService,
+)
 
 
 class BasicPassThroughAuthenticationServiceTests(unittest.TestCase):
@@ -17,7 +20,9 @@ class BasicPassThroughAuthenticationServiceTests(unittest.TestCase):
         client_context.bot.configuration.conversations._max_histories = 3
         client_context.brain = client_context.bot.brain
 
-        service = BasicPassThroughAuthenticationService(BrainSecurityAuthenticationConfiguration("authentication"))
+        service = BasicPassThroughAuthenticationService(
+            BrainSecurityAuthenticationConfiguration("authentication")
+        )
         self.assertIsNotNone(service)
         self.assertIsNotNone(service.configuration)
         client_context._userid = "console"

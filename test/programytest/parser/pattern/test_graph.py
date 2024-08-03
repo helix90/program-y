@@ -1,7 +1,8 @@
 import xml.etree.ElementTree as ET
 
-from programy.parser.exceptions import DuplicateGrammarException
-from programy.parser.exceptions import ParserException
+from programytest.parser.base import ParserTestsBaseClass
+
+from programy.parser.exceptions import DuplicateGrammarException, ParserException
 from programy.parser.pattern.graph import PatternGraph
 from programy.parser.pattern.nodes.bot import PatternBotNode
 from programy.parser.pattern.nodes.iset import PatternISetNode
@@ -16,7 +17,6 @@ from programy.parser.pattern.nodes.word import PatternWordNode
 from programy.parser.pattern.nodes.zeroormore import PatternZeroOrMoreWildCardNode
 from programy.parser.template.nodes.base import TemplateNode
 from programy.parser.template.nodes.word import TemplateWordNode
-from programytest.parser.base import ParserTestsBaseClass
 
 
 class PatternGraphTests(ParserTestsBaseClass):
@@ -75,27 +75,27 @@ class PatternGraphTests(ParserTestsBaseClass):
         self.assertIsInstance(node, PatternWordNode)
 
     def test_node_from_element_invalid(self):
-        set_element = ET.fromstring('<invalid>yes, no</invalid>')
+        set_element = ET.fromstring("<invalid>yes, no</invalid>")
         graph = PatternGraph(self._client_context.brain.aiml_parser)
         with self.assertRaises(ParserException):
             _ = graph.node_from_element(set_element)
 
     def test_node_from_element_iset(self):
-        set_element = ET.fromstring('<iset>yes, no</iset>')
+        set_element = ET.fromstring("<iset>yes, no</iset>")
         graph = PatternGraph(self._client_context.brain.aiml_parser)
         node = graph.node_from_element(set_element)
         self.assertIsNotNone(node)
         self.assertIsInstance(node, PatternISetNode)
 
     def test_node_from_element_set(self):
-        set_element = ET.fromstring('<set>colour</set>')
+        set_element = ET.fromstring("<set>colour</set>")
         graph = PatternGraph(self._client_context.brain.aiml_parser)
         node = graph.node_from_element(set_element)
         self.assertIsNotNone(node)
         self.assertIsInstance(node, PatternSetNode)
 
     def test_node_from_element_bot(self):
-        bot_element = ET.fromstring('<bot>name</bot>')
+        bot_element = ET.fromstring("<bot>name</bot>")
         graph = PatternGraph(self._client_context.brain.aiml_parser)
         node = graph.node_from_element(bot_element)
         self.assertIsNotNone(node)
@@ -164,35 +164,35 @@ class PatternGraphTests(ParserTestsBaseClass):
 
     def get_text_from_element_word(self):
         graph = PatternGraph(self._client_context.brain.aiml_parser)
-        set_element = ET.fromstring('<set>colour</set>')
+        set_element = ET.fromstring("<set>colour</set>")
         text = graph.get_text_from_element(set_element)
         self.assertIsNotNone(text)
         self.assertEqual("colour", text)
 
     def get_text_from_element_whitespaces(self):
         graph = PatternGraph(self._client_context.brain.aiml_parser)
-        set_element = ET.fromstring('<set>colour \n\r\t  eyes</set>')
+        set_element = ET.fromstring("<set>colour \n\r\t  eyes</set>")
         text = graph.get_text_from_element(set_element)
         self.assertIsNotNone(text)
         self.assertEqual("colour set", text)
 
     def get_tail_from_element_word(self):
         graph = PatternGraph(self._client_context.brain.aiml_parser)
-        set_element = ET.fromstring('<set>colour</set>this')
+        set_element = ET.fromstring("<set>colour</set>this")
         text = graph.get_tail_from_element(set_element)
         self.assertIsNotNone(text)
         self.assertEqual("this", text)
 
     def get_tail_from_element_word_whitespaces(self):
         graph = PatternGraph(self._client_context.brain.aiml_parser)
-        set_element = ET.fromstring('<set>colour</set>this \t that \n the \r other')
+        set_element = ET.fromstring("<set>colour</set>this \t that \n the \r other")
         text = graph.get_tail_from_element(set_element)
         self.assertIsNotNone(text)
         self.assertEqual("this that the other", text)
 
     def test_add_pattern_to_node(self):
         graph = PatternGraph(self._client_context.brain.aiml_parser)
-        pattern = ET.fromstring('<pattern>HELLO</pattern>')
+        pattern = ET.fromstring("<pattern>HELLO</pattern>")
         node = graph.add_pattern_to_node(pattern)
         self.assertIsNotNone(node)
         self.assertIsInstance(node, PatternWordNode)
@@ -200,10 +200,12 @@ class PatternGraphTests(ParserTestsBaseClass):
 
     def test_add_pattern_to_node_whitespaces(self):
         graph = PatternGraph(self._client_context.brain.aiml_parser)
-        pattern = ET.fromstring("""
+        pattern = ET.fromstring(
+            """
         <pattern>
             HELLO
-        </pattern>""")
+        </pattern>"""
+        )
         node = graph.add_pattern_to_node(pattern)
         self.assertIsNotNone(node)
         self.assertIsInstance(node, PatternWordNode)
@@ -217,16 +219,20 @@ class PatternGraphTests(ParserTestsBaseClass):
 
     def test_add_topic_to_node_word(self):
         graph = PatternGraph(self._client_context.brain.aiml_parser)
-        pattern = ET.fromstring("""
+        pattern = ET.fromstring(
+            """
         <pattern>
             HELLO
-        </pattern>""")
+        </pattern>"""
+        )
         pattern_node = graph.add_pattern_to_node(pattern)
 
-        topic = ET.fromstring("""
+        topic = ET.fromstring(
+            """
         <topic>
             THERE
-        </topic>""")
+        </topic>"""
+        )
         topic_node = graph.add_topic_to_node(topic, pattern_node)
         self.assertIsNotNone(topic_node)
         self.assertIsInstance(topic_node, PatternWordNode)
@@ -234,32 +240,40 @@ class PatternGraphTests(ParserTestsBaseClass):
 
     def test_add_topic_to_node_word_with_multiple_words(self):
         graph = PatternGraph(self._client_context.brain.aiml_parser)
-        pattern = ET.fromstring("""
+        pattern = ET.fromstring(
+            """
         <pattern>
             HELLO
-        </pattern>""")
+        </pattern>"""
+        )
         pattern_node = graph.add_pattern_to_node(pattern)
 
-        topic = ET.fromstring("""
+        topic = ET.fromstring(
+            """
         <topic>
             THERE *
-        </topic>""")
+        </topic>"""
+        )
         last_node = graph.add_topic_to_node(topic, pattern_node)
         self.assertIsNotNone(last_node)
         self.assertIsInstance(last_node, PatternOneOrMoreWildCardNode)
 
     def test_add_topic_to_node_wildcard(self):
         graph = PatternGraph(self._client_context.brain.aiml_parser)
-        pattern = ET.fromstring("""
+        pattern = ET.fromstring(
+            """
         <pattern>
             HELLO
-        </pattern>""")
+        </pattern>"""
+        )
         pattern_node = graph.add_pattern_to_node(pattern)
 
-        topic = ET.fromstring("""
+        topic = ET.fromstring(
+            """
         <topic>
             *
-        </topic>""")
+        </topic>"""
+        )
         topic_node = graph.add_topic_to_node(topic, pattern_node)
         self.assertIsNotNone(topic_node)
         self.assertIsInstance(topic_node, PatternOneOrMoreWildCardNode)
@@ -267,54 +281,68 @@ class PatternGraphTests(ParserTestsBaseClass):
 
     def test_add_topic_to_node_children(self):
         graph = PatternGraph(self._client_context.brain.aiml_parser)
-        pattern = ET.fromstring("""
+        pattern = ET.fromstring(
+            """
         <pattern>
             HELLO
-        </pattern>""")
+        </pattern>"""
+        )
         pattern_node = graph.add_pattern_to_node(pattern)
 
-        topic = ET.fromstring("""
+        topic = ET.fromstring(
+            """
         <topic>
             <set name="ubertopic" />
-        </topic>""")
+        </topic>"""
+        )
         topic_node = graph.add_topic_to_node(topic, pattern_node)
         self.assertIsNotNone(topic_node)
         self.assertIsInstance(topic_node, PatternSetNode)
 
     def test_add_topic_to_node_multi_children(self):
         graph = PatternGraph(self._client_context.brain.aiml_parser)
-        pattern = ET.fromstring("""
+        pattern = ET.fromstring(
+            """
         <pattern>
             HELLO
-        </pattern>""")
+        </pattern>"""
+        )
         pattern_node = graph.add_pattern_to_node(pattern)
 
-        topic = ET.fromstring("""
+        topic = ET.fromstring(
+            """
         <topic>
             THIS <set name="ubertopic" /> OTHER
-        </topic>""")
+        </topic>"""
+        )
         topic_node = graph.add_topic_to_node(topic, pattern_node)
         self.assertIsNotNone(topic_node)
         self.assertIsInstance(topic_node, PatternWordNode)
 
     def test_add_that_to_node_word(self):
         graph = PatternGraph(self._client_context.brain.aiml_parser)
-        pattern = ET.fromstring("""
+        pattern = ET.fromstring(
+            """
         <pattern>
             HELLO
-        </pattern>""")
+        </pattern>"""
+        )
         pattern_node = graph.add_pattern_to_node(pattern)
 
-        topic = ET.fromstring("""
+        topic = ET.fromstring(
+            """
         <topic>
             THERE
-        </topic>""")
+        </topic>"""
+        )
         topic_node = graph.add_that_to_node(topic, pattern_node)
 
-        that = ET.fromstring("""
+        that = ET.fromstring(
+            """
         <that>
             HERE
-        </that>""")
+        </that>"""
+        )
         that_node = graph.add_that_to_node(that, topic_node)
         self.assertIsNotNone(that_node)
         self.assertIsInstance(that_node, PatternWordNode)
@@ -322,16 +350,20 @@ class PatternGraphTests(ParserTestsBaseClass):
 
     def test_add_that_to_node_word(self):
         graph = PatternGraph(self._client_context.brain.aiml_parser)
-        pattern = ET.fromstring("""
+        pattern = ET.fromstring(
+            """
         <pattern>
             HELLO
-        </pattern>""")
+        </pattern>"""
+        )
         pattern_node = graph.add_pattern_to_node(pattern)
 
-        that = ET.fromstring("""
+        that = ET.fromstring(
+            """
         <that>
             *
-        </that>""")
+        </that>"""
+        )
         that_node = graph.add_that_to_node(that, pattern_node)
         self.assertIsNotNone(that_node)
         self.assertIsInstance(that_node, PatternOneOrMoreWildCardNode)
@@ -339,49 +371,60 @@ class PatternGraphTests(ParserTestsBaseClass):
 
     def test_add_that_to_node_child(self):
         graph = PatternGraph(self._client_context.brain.aiml_parser)
-        pattern = ET.fromstring("""
+        pattern = ET.fromstring(
+            """
         <pattern>
             HELLO
-        </pattern>""")
+        </pattern>"""
+        )
         pattern_node = graph.add_pattern_to_node(pattern)
 
-        that = ET.fromstring("""
+        that = ET.fromstring(
+            """
         <that>
             <set name="other" />
-        </that>""")
+        </that>"""
+        )
         that_node = graph.add_that_to_node(that, pattern_node)
         self.assertIsNotNone(that_node)
         self.assertIsInstance(that_node, PatternSetNode)
 
     def test_add_that_to_node_children(self):
         graph = PatternGraph(self._client_context.brain.aiml_parser)
-        pattern = ET.fromstring("""
+        pattern = ET.fromstring(
+            """
         <pattern>
             HELLO
-        </pattern>""")
+        </pattern>"""
+        )
         pattern_node = graph.add_pattern_to_node(pattern)
 
-        that = ET.fromstring("""
+        that = ET.fromstring(
+            """
         <that>
             THIS <set name="other" /> OTHER
-        </that>""")
+        </that>"""
+        )
         that_node = graph.add_that_to_node(that, pattern_node)
         self.assertIsNotNone(that_node)
         self.assertIsInstance(that_node, PatternWordNode)
 
-
     def test_add_that_to_node_word_multiple_words(self):
         graph = PatternGraph(self._client_context.brain.aiml_parser)
-        pattern = ET.fromstring("""
+        pattern = ET.fromstring(
+            """
         <pattern>
             HELLO
-        </pattern>""")
+        </pattern>"""
+        )
         pattern_node = graph.add_pattern_to_node(pattern)
 
-        that = ET.fromstring("""
+        that = ET.fromstring(
+            """
         <that>
             HERE *
-        </that>""")
+        </that>"""
+        )
         that_node = graph.add_that_to_node(that, pattern_node)
         self.assertIsNotNone(that_node)
         self.assertIsInstance(that_node, PatternOneOrMoreWildCardNode)
@@ -389,22 +432,28 @@ class PatternGraphTests(ParserTestsBaseClass):
 
     def test_add_template_to_node(self):
         graph = PatternGraph(self._client_context.brain.aiml_parser)
-        pattern = ET.fromstring("""
+        pattern = ET.fromstring(
+            """
         <pattern>
             HELLO
-        </pattern>""")
+        </pattern>"""
+        )
         pattern_node = graph.add_pattern_to_node(pattern)
 
-        topic = ET.fromstring("""
+        topic = ET.fromstring(
+            """
         <topic>
             THERE
-        </topic>""")
+        </topic>"""
+        )
         topic_node = graph.add_that_to_node(topic, pattern_node)
 
-        that = ET.fromstring("""
+        that = ET.fromstring(
+            """
         <that>
             *
-        </that>""")
+        </that>"""
+        )
         that_node = graph.add_that_to_node(that, topic_node)
 
         template = TemplateWordNode("TEST")
@@ -463,12 +512,14 @@ class PatternGraphTests(ParserTestsBaseClass):
 
     def test_add_pattern_with_whitepsace(self):
         graph = PatternGraph(self._client_context.brain.aiml_parser)
-        topic_element = ET.fromstring('<topic>*</topic>')
-        that_element = ET.fromstring('<that>*</that>')
+        topic_element = ET.fromstring("<topic>*</topic>")
+        that_element = ET.fromstring("<that>*</that>")
         template_graph_root = None
 
         element = ET.fromstring("<pattern>\nthis\n that\n the other</pattern>")
-        graph.add_pattern_to_graph(element, topic_element, that_element, template_graph_root)
+        graph.add_pattern_to_graph(
+            element, topic_element, that_element, template_graph_root
+        )
 
         root = graph.root
         self.assertIsNotNone(root)
@@ -498,12 +549,14 @@ class PatternGraphTests(ParserTestsBaseClass):
 
     def test_add_pattern_to_graph_basic(self):
         graph = PatternGraph(self._client_context.brain.aiml_parser)
-        topic_element = ET.fromstring('<topic>*</topic>')
-        that_element = ET.fromstring('<that>*</that>')
+        topic_element = ET.fromstring("<topic>*</topic>")
+        that_element = ET.fromstring("<that>*</that>")
         template_graph_root = None
 
         element = ET.fromstring("<pattern>test1</pattern>")
-        graph.add_pattern_to_graph(element, topic_element, that_element, template_graph_root)
+        graph.add_pattern_to_graph(
+            element, topic_element, that_element, template_graph_root
+        )
 
         self.assertIsNotNone(graph.root)
         self.assertIsNotNone(graph.root.children)
@@ -512,7 +565,9 @@ class PatternGraphTests(ParserTestsBaseClass):
         self.assertEqual(graph.root.children[0].word, "test1")
 
         element = ET.fromstring("<pattern>test2</pattern>")
-        graph.add_pattern_to_graph(element, topic_element, that_element, template_graph_root)
+        graph.add_pattern_to_graph(
+            element, topic_element, that_element, template_graph_root
+        )
 
         self.assertIsNotNone(graph.root)
         self.assertIsNotNone(graph.root.children)
@@ -524,12 +579,14 @@ class PatternGraphTests(ParserTestsBaseClass):
 
     def test_add_pattern_to_graph_multi_word(self):
         graph = PatternGraph(self._client_context.brain.aiml_parser)
-        topic_element = ET.fromstring('<topic>*</topic>')
-        that_element = ET.fromstring('<that>*</that>')
+        topic_element = ET.fromstring("<topic>*</topic>")
+        that_element = ET.fromstring("<that>*</that>")
         template_graph_root = None
 
         element1 = ET.fromstring("<pattern>test1 test2</pattern>")
-        graph.add_pattern_to_graph(element1, topic_element, that_element, template_graph_root)
+        graph.add_pattern_to_graph(
+            element1, topic_element, that_element, template_graph_root
+        )
 
         self.assertIsNotNone(graph.root)
         self.assertIsNotNone(graph.root.children)
@@ -542,7 +599,9 @@ class PatternGraphTests(ParserTestsBaseClass):
         self.assertEqual(graph.root.children[0].children[0].word, "test2")
 
         element2 = ET.fromstring("<pattern>test1 test3 test4</pattern>")
-        graph.add_pattern_to_graph(element2, topic_element, that_element, template_graph_root)
+        graph.add_pattern_to_graph(
+            element2, topic_element, that_element, template_graph_root
+        )
 
         self.assertIsNotNone(graph.root)
         self.assertIsNotNone(graph.root.children)
@@ -554,7 +613,9 @@ class PatternGraphTests(ParserTestsBaseClass):
         self.assertIsInstance(graph.root.children[0].children[0], PatternWordNode)
         self.assertEqual(graph.root.children[0].children[0].word, "test3")
         self.assertEqual(len(graph.root.children[0].children[0].children), 1)
-        self.assertIsInstance(graph.root.children[0].children[0].children[0], PatternWordNode)
+        self.assertIsInstance(
+            graph.root.children[0].children[0].children[0], PatternWordNode
+        )
         self.assertEqual(graph.root.children[0].children[0].children[0].word, "test4")
 
         self.assertIsInstance(graph.root.children[0].children[1], PatternWordNode)
@@ -562,14 +623,16 @@ class PatternGraphTests(ParserTestsBaseClass):
 
     def test_add_pattern_to_graph_basic_set_text(self):
         graph = PatternGraph(self._client_context.brain.aiml_parser)
-        topic_element = ET.fromstring('<topic>*</topic>')
-        that_element = ET.fromstring('<that>*</that>')
+        topic_element = ET.fromstring("<topic>*</topic>")
+        that_element = ET.fromstring("<that>*</that>")
         template_graph_root = None
 
         self._client_context.brain.sets._sets["SET1"] = ["VAL1", "VAL2", "VAL3", "VAL5"]
 
-        element = ET.fromstring('<pattern><set>set1</set> IS A VALUE</pattern>')
-        graph.add_pattern_to_graph(element, topic_element, that_element, template_graph_root)
+        element = ET.fromstring("<pattern><set>set1</set> IS A VALUE</pattern>")
+        graph.add_pattern_to_graph(
+            element, topic_element, that_element, template_graph_root
+        )
 
         self.assertIsNotNone(graph.root)
         self.assertIsNotNone(graph.root.children)
@@ -579,14 +642,16 @@ class PatternGraphTests(ParserTestsBaseClass):
 
     def test_add_pattern_to_graph_basic_set_name_attrib(self):
         graph = PatternGraph(self._client_context.brain.aiml_parser)
-        topic_element = ET.fromstring('<topic>*</topic>')
-        that_element = ET.fromstring('<that>*</that>')
+        topic_element = ET.fromstring("<topic>*</topic>")
+        that_element = ET.fromstring("<that>*</that>")
         template_graph_root = None
 
         self._client_context.brain.sets._sets["SET1"] = ["val1", "val2", "val3", "val5"]
 
         element = ET.fromstring('<pattern><set name="set1" /></pattern>')
-        graph.add_pattern_to_graph(element, topic_element, that_element, template_graph_root)
+        graph.add_pattern_to_graph(
+            element, topic_element, that_element, template_graph_root
+        )
 
         self.assertIsNotNone(graph.root)
         self.assertIsNotNone(graph.root.children)
@@ -596,12 +661,16 @@ class PatternGraphTests(ParserTestsBaseClass):
 
     def test_add_pattern_to_graph_basic_iset(self):
         graph = PatternGraph(self._client_context.brain.aiml_parser)
-        topic_element = ET.fromstring('<topic>*</topic>')
-        that_element = ET.fromstring('<that>*</that>')
+        topic_element = ET.fromstring("<topic>*</topic>")
+        that_element = ET.fromstring("<that>*</that>")
         template_graph_root = None
 
-        element = ET.fromstring('<pattern><iset>word1, word2, word3</iset> A VALUE</pattern>')
-        graph.add_pattern_to_graph(element, topic_element, that_element, template_graph_root)
+        element = ET.fromstring(
+            "<pattern><iset>word1, word2, word3</iset> A VALUE</pattern>"
+        )
+        graph.add_pattern_to_graph(
+            element, topic_element, that_element, template_graph_root
+        )
 
         self.assertIsNotNone(graph.root)
         self.assertIsNotNone(graph.root.children)
@@ -610,14 +679,22 @@ class PatternGraphTests(ParserTestsBaseClass):
 
     def test_add_pattern_to_graph_basic_multiple_isets(self):
         graph = PatternGraph(self._client_context.brain.aiml_parser)
-        topic_element = ET.fromstring('<topic>*</topic>')
-        that_element = ET.fromstring('<that>*</that>')
+        topic_element = ET.fromstring("<topic>*</topic>")
+        that_element = ET.fromstring("<that>*</that>")
         template_graph_root = None
 
-        element1 = ET.fromstring('<pattern>IS <iset>word1, word2, word3</iset> A VALUE</pattern>')
-        graph.add_pattern_to_graph(element1, topic_element, that_element, template_graph_root)
-        element2 = ET.fromstring('<pattern>IS <iset>word1, word2, word3</iset> A ANOTHER VALUE</pattern>')
-        graph.add_pattern_to_graph(element2, topic_element, that_element, template_graph_root)
+        element1 = ET.fromstring(
+            "<pattern>IS <iset>word1, word2, word3</iset> A VALUE</pattern>"
+        )
+        graph.add_pattern_to_graph(
+            element1, topic_element, that_element, template_graph_root
+        )
+        element2 = ET.fromstring(
+            "<pattern>IS <iset>word1, word2, word3</iset> A ANOTHER VALUE</pattern>"
+        )
+        graph.add_pattern_to_graph(
+            element2, topic_element, that_element, template_graph_root
+        )
 
         self.assertIsNotNone(graph.root)
         self.assertIsNotNone(graph.root.children)
@@ -628,14 +705,16 @@ class PatternGraphTests(ParserTestsBaseClass):
 
     def test_add_pattern_to_graph_basic_bot_text(self):
         graph = PatternGraph(self._client_context.brain.aiml_parser)
-        topic_element = ET.fromstring('<topic>*</topic>')
-        that_element = ET.fromstring('<that>*</that>')
+        topic_element = ET.fromstring("<topic>*</topic>")
+        that_element = ET.fromstring("<that>*</that>")
         template_graph_root = None
 
-        self._client_context.brain.properties.add_property('bot1', 'val1')
+        self._client_context.brain.properties.add_property("bot1", "val1")
 
-        element = ET.fromstring('<pattern><bot>bot1</bot></pattern>')
-        graph.add_pattern_to_graph(element, topic_element, that_element, template_graph_root)
+        element = ET.fromstring("<pattern><bot>bot1</bot></pattern>")
+        graph.add_pattern_to_graph(
+            element, topic_element, that_element, template_graph_root
+        )
 
         self.assertIsNotNone(graph.root)
         self.assertIsNotNone(graph.root.children)
@@ -645,14 +724,16 @@ class PatternGraphTests(ParserTestsBaseClass):
 
     def test_add_pattern_to_graph_basic_bot_name_attrib(self):
         graph = PatternGraph(self._client_context.brain.aiml_parser)
-        topic_element = ET.fromstring('<topic>*</topic>')
-        that_element = ET.fromstring('<that>*</that>')
+        topic_element = ET.fromstring("<topic>*</topic>")
+        that_element = ET.fromstring("<that>*</that>")
         template_graph_root = None
 
-        self._client_context.brain.properties.add_property('bot1', 'val1')
+        self._client_context.brain.properties.add_property("bot1", "val1")
 
         element = ET.fromstring('<pattern><bot name="bot1" /></pattern>')
-        graph.add_pattern_to_graph(element, topic_element, that_element, template_graph_root)
+        graph.add_pattern_to_graph(
+            element, topic_element, that_element, template_graph_root
+        )
 
         self.assertIsNotNone(graph.root)
         self.assertIsNotNone(graph.root.children)
@@ -662,15 +743,19 @@ class PatternGraphTests(ParserTestsBaseClass):
 
     def test_add_pattern_to_graph_word_set_bot(self):
         graph = PatternGraph(self._client_context.brain.aiml_parser)
-        topic_element = ET.fromstring('<topic>*</topic>')
-        that_element = ET.fromstring('<that>*</that>')
+        topic_element = ET.fromstring("<topic>*</topic>")
+        that_element = ET.fromstring("<that>*</that>")
         template_graph_root = None
 
         self._client_context.brain.sets._sets["SET1"] = ["val1", "val2", "val3", "val5"]
-        self._client_context.brain.properties.add_property('bot1', 'val1')
+        self._client_context.brain.properties.add_property("bot1", "val1")
 
-        element = ET.fromstring('<pattern>test1 test2 <set name="SET1" /> test4 <bot name="bot1" /> test6</pattern>')
-        graph.add_pattern_to_graph(element, topic_element, that_element, template_graph_root)
+        element = ET.fromstring(
+            '<pattern>test1 test2 <set name="SET1" /> test4 <bot name="bot1" /> test6</pattern>'
+        )
+        graph.add_pattern_to_graph(
+            element, topic_element, that_element, template_graph_root
+        )
 
         self.assertIsNotNone(graph.root)
 
@@ -686,92 +771,165 @@ class PatternGraphTests(ParserTestsBaseClass):
 
         self.assertIsNotNone(graph.root.children[0].children[0].children)
         self.assertEqual(len(graph.root.children[0].children[0].children), 1)
-        self.assertIsInstance(graph.root.children[0].children[0].children[0], PatternSetNode)
-        self.assertEqual(graph.root.children[0].children[0].children[0].set_name, "SET1")
+        self.assertIsInstance(
+            graph.root.children[0].children[0].children[0], PatternSetNode
+        )
+        self.assertEqual(
+            graph.root.children[0].children[0].children[0].set_name, "SET1"
+        )
 
         self.assertIsNotNone(graph.root.children[0].children[0].children[0].children)
-        self.assertEqual(len(graph.root.children[0].children[0].children[0].children), 1)
-        self.assertIsInstance(graph.root.children[0].children[0].children[0].children[0], PatternWordNode)
-        self.assertEqual(graph.root.children[0].children[0].children[0].children[0].word, "test4")
+        self.assertEqual(
+            len(graph.root.children[0].children[0].children[0].children), 1
+        )
+        self.assertIsInstance(
+            graph.root.children[0].children[0].children[0].children[0], PatternWordNode
+        )
+        self.assertEqual(
+            graph.root.children[0].children[0].children[0].children[0].word, "test4"
+        )
 
-        self.assertIsNotNone(graph.root.children[0].children[0].children[0].children[0].children)
-        self.assertEqual(len(graph.root.children[0].children[0].children[0].children[0].children), 1)
-        self.assertIsInstance(graph.root.children[0].children[0].children[0].children[0].children[0], PatternBotNode)
-        self.assertEqual(graph.root.children[0].children[0].children[0].children[0].children[0].property, "bot1")
+        self.assertIsNotNone(
+            graph.root.children[0].children[0].children[0].children[0].children
+        )
+        self.assertEqual(
+            len(graph.root.children[0].children[0].children[0].children[0].children), 1
+        )
+        self.assertIsInstance(
+            graph.root.children[0].children[0].children[0].children[0].children[0],
+            PatternBotNode,
+        )
+        self.assertEqual(
+            graph.root.children[0]
+            .children[0]
+            .children[0]
+            .children[0]
+            .children[0]
+            .property,
+            "bot1",
+        )
 
-        self.assertIsNotNone(graph.root.children[0].children[0].children[0].children[0].children[0].children)
-        self.assertEqual(len(graph.root.children[0].children[0].children[0].children[0].children[0].children), 1)
-        self.assertIsInstance(graph.root.children[0].children[0].children[0].children[0].children[0].children[0],
-                              PatternWordNode)
-        self.assertEqual(graph.root.children[0].children[0].children[0].children[0].children[0].children[0].word,
-                         "test6")
+        self.assertIsNotNone(
+            graph.root.children[0]
+            .children[0]
+            .children[0]
+            .children[0]
+            .children[0]
+            .children
+        )
+        self.assertEqual(
+            len(
+                graph.root.children[0]
+                .children[0]
+                .children[0]
+                .children[0]
+                .children[0]
+                .children
+            ),
+            1,
+        )
+        self.assertIsInstance(
+            graph.root.children[0]
+            .children[0]
+            .children[0]
+            .children[0]
+            .children[0]
+            .children[0],
+            PatternWordNode,
+        )
+        self.assertEqual(
+            graph.root.children[0]
+            .children[0]
+            .children[0]
+            .children[0]
+            .children[0]
+            .children[0]
+            .word,
+            "test6",
+        )
 
     def test_add_pattern_to_graph_basic_zero_or_more(self):
         graph = PatternGraph(self._client_context.brain.aiml_parser)
-        topic_element = ET.fromstring('<topic>*</topic>')
-        that_element = ET.fromstring('<that>*</that>')
+        topic_element = ET.fromstring("<topic>*</topic>")
+        that_element = ET.fromstring("<that>*</that>")
         template_graph_root = None
 
-        element = ET.fromstring('<pattern>#</pattern>')
-        graph.add_pattern_to_graph(element, topic_element, that_element, template_graph_root)
+        element = ET.fromstring("<pattern>#</pattern>")
+        graph.add_pattern_to_graph(
+            element, topic_element, that_element, template_graph_root
+        )
 
     def test_add_pattern_to_graph_zero_or_more_front(self):
         graph = PatternGraph(self._client_context.brain.aiml_parser)
-        topic_element = ET.fromstring('<topic>*</topic>')
-        that_element = ET.fromstring('<that>*</that>')
+        topic_element = ET.fromstring("<topic>*</topic>")
+        that_element = ET.fromstring("<that>*</that>")
         template_graph_root = None
 
-        element = ET.fromstring('<pattern># XXX</pattern>')
-        graph.add_pattern_to_graph(element, topic_element, that_element, template_graph_root)
+        element = ET.fromstring("<pattern># XXX</pattern>")
+        graph.add_pattern_to_graph(
+            element, topic_element, that_element, template_graph_root
+        )
 
     def test_add_pattern_to_graph_zero_or_more_middle(self):
         graph = PatternGraph(self._client_context.brain.aiml_parser)
-        topic_element = ET.fromstring('<topic>*</topic>')
-        that_element = ET.fromstring('<that>*</that>')
+        topic_element = ET.fromstring("<topic>*</topic>")
+        that_element = ET.fromstring("<that>*</that>")
         template_graph_root = None
 
-        element = ET.fromstring('<pattern>XXX # YYY</pattern>')
-        graph.add_pattern_to_graph(element, topic_element, that_element, template_graph_root)
+        element = ET.fromstring("<pattern>XXX # YYY</pattern>")
+        graph.add_pattern_to_graph(
+            element, topic_element, that_element, template_graph_root
+        )
 
     def test_add_pattern_to_graph_zero_or_more_last(self):
         graph = PatternGraph(self._client_context.brain.aiml_parser)
-        topic_element = ET.fromstring('<topic>*</topic>')
-        that_element = ET.fromstring('<that>*</that>')
+        topic_element = ET.fromstring("<topic>*</topic>")
+        that_element = ET.fromstring("<that>*</that>")
         template_graph_root = None
 
-        element = ET.fromstring('<pattern>XXX #</pattern>')
-        graph.add_pattern_to_graph(element, topic_element, that_element, template_graph_root)
+        element = ET.fromstring("<pattern>XXX #</pattern>")
+        graph.add_pattern_to_graph(
+            element, topic_element, that_element, template_graph_root
+        )
 
     def test_add_pattern_to_graph_zero_or_more_multiple(self):
         graph = PatternGraph(self._client_context.brain.aiml_parser)
-        topic_element = ET.fromstring('<topic>*</topic>')
-        that_element = ET.fromstring('<that>*</that>')
+        topic_element = ET.fromstring("<topic>*</topic>")
+        that_element = ET.fromstring("<that>*</that>")
         template_graph_root = None
 
-        element = ET.fromstring('<pattern>XXX # YYY # ZZZ</pattern>')
-        graph.add_pattern_to_graph(element, topic_element, that_element, template_graph_root)
+        element = ET.fromstring("<pattern>XXX # YYY # ZZZ</pattern>")
+        graph.add_pattern_to_graph(
+            element, topic_element, that_element, template_graph_root
+        )
 
     def test_add_pattern_to_graph_basic_zero_or_more_with_patterns(self):
         graph = PatternGraph(self._client_context.brain.aiml_parser)
-        topic_element = ET.fromstring('<topic>*</topic>')
-        that_element = ET.fromstring('<that>*</that>')
+        topic_element = ET.fromstring("<topic>*</topic>")
+        that_element = ET.fromstring("<that>*</that>")
 
-        element = ET.fromstring('<pattern># HELLO</pattern>')
+        element = ET.fromstring("<pattern># HELLO</pattern>")
         template_graph_root = TemplateWordNode("RESPONSE1")
-        graph.add_pattern_to_graph(element, topic_element, that_element, template_graph_root)
+        graph.add_pattern_to_graph(
+            element, topic_element, that_element, template_graph_root
+        )
 
-        element = ET.fromstring('<pattern>WELL HI THERE</pattern>')
+        element = ET.fromstring("<pattern>WELL HI THERE</pattern>")
         template_graph_root = TemplateWordNode("RESPONSE2")
-        graph.add_pattern_to_graph(element, topic_element, that_element, template_graph_root)
+        graph.add_pattern_to_graph(
+            element, topic_element, that_element, template_graph_root
+        )
 
     def test_add_pattern_to_graph_basic_one_or_more(self):
         graph = PatternGraph(self._client_context.brain.aiml_parser)
-        topic_element = ET.fromstring('<topic>*</topic>')
-        that_element = ET.fromstring('<that>*</that>')
+        topic_element = ET.fromstring("<topic>*</topic>")
+        that_element = ET.fromstring("<that>*</that>")
         template_graph_root = None
 
-        element = ET.fromstring('<pattern>*</pattern>')
-        graph.add_pattern_to_graph(element, topic_element, that_element, template_graph_root)
+        element = ET.fromstring("<pattern>*</pattern>")
+        graph.add_pattern_to_graph(
+            element, topic_element, that_element, template_graph_root
+        )
 
         self.assertIsNotNone(graph.root)
         self.assertIsNotNone(graph.root._1ormore_star)
@@ -785,68 +943,85 @@ class PatternGraphTests(ParserTestsBaseClass):
 
     def test_add_pattern_to_graph_one_or_more_front(self):
         graph = PatternGraph(self._client_context.brain.aiml_parser)
-        topic_element = ET.fromstring('<topic>*</topic>')
-        that_element = ET.fromstring('<that>*</that>')
+        topic_element = ET.fromstring("<topic>*</topic>")
+        that_element = ET.fromstring("<that>*</that>")
         template_graph_root = None
 
-        element = ET.fromstring('<pattern>* XXX</pattern>')
-        graph.add_pattern_to_graph(element, topic_element, that_element, template_graph_root)
+        element = ET.fromstring("<pattern>* XXX</pattern>")
+        graph.add_pattern_to_graph(
+            element, topic_element, that_element, template_graph_root
+        )
 
     def test_add_pattern_to_graph_one_or_more_middle(self):
         graph = PatternGraph(self._client_context.brain.aiml_parser)
-        topic_element = ET.fromstring('<topic>*</topic>')
-        that_element = ET.fromstring('<that>*</that>')
+        topic_element = ET.fromstring("<topic>*</topic>")
+        that_element = ET.fromstring("<that>*</that>")
         template_graph_root = None
 
-        element = ET.fromstring('<pattern>XXX * YYY</pattern>')
-        graph.add_pattern_to_graph(element, topic_element, that_element, template_graph_root)
+        element = ET.fromstring("<pattern>XXX * YYY</pattern>")
+        graph.add_pattern_to_graph(
+            element, topic_element, that_element, template_graph_root
+        )
 
     def test_add_pattern_to_graph_one_or_more_last(self):
         graph = PatternGraph(self._client_context.brain.aiml_parser)
-        topic_element = ET.fromstring('<topic>*</topic>')
-        that_element = ET.fromstring('<that>*</that>')
+        topic_element = ET.fromstring("<topic>*</topic>")
+        that_element = ET.fromstring("<that>*</that>")
         template_graph_root = None
 
-        element = ET.fromstring('<pattern>XXX *</pattern>')
-        graph.add_pattern_to_graph(element, topic_element, that_element, template_graph_root)
+        element = ET.fromstring("<pattern>XXX *</pattern>")
+        graph.add_pattern_to_graph(
+            element, topic_element, that_element, template_graph_root
+        )
 
     def test_add_pattern_to_graph_duplicate(self):
         graph = PatternGraph(self._client_context.brain.aiml_parser)
-        topic_element = ET.fromstring('<topic>*</topic>')
-        that_element = ET.fromstring('<that>*</that>')
+        topic_element = ET.fromstring("<topic>*</topic>")
+        that_element = ET.fromstring("<that>*</that>")
         template_graph_root = None
 
-        element1 = ET.fromstring('<pattern>XXX *</pattern>')
-        graph.add_pattern_to_graph(element1, topic_element, that_element, template_graph_root)
+        element1 = ET.fromstring("<pattern>XXX *</pattern>")
+        graph.add_pattern_to_graph(
+            element1, topic_element, that_element, template_graph_root
+        )
 
         with self.assertRaises(DuplicateGrammarException):
-            element2 = ET.fromstring('<pattern>XXX *</pattern>')
-            graph.add_pattern_to_graph(element2, topic_element, that_element, template_graph_root)
+            element2 = ET.fromstring("<pattern>XXX *</pattern>")
+            graph.add_pattern_to_graph(
+                element2, topic_element, that_element, template_graph_root
+            )
 
     def test_add_pattern_to_graph_duplicate_on_learn_word(self):
         graph = PatternGraph(self._client_context.brain.aiml_parser)
-        topic_element = ET.fromstring('<topic>*</topic>')
-        that_element = ET.fromstring('<that>*</that>')
+        topic_element = ET.fromstring("<topic>*</topic>")
+        that_element = ET.fromstring("<that>*</that>")
         template_graph_root = None
 
-        element1 = ET.fromstring('<pattern>XXX *</pattern>')
-        graph.add_pattern_to_graph(element1, topic_element, that_element, template_graph_root)
+        element1 = ET.fromstring("<pattern>XXX *</pattern>")
+        graph.add_pattern_to_graph(
+            element1, topic_element, that_element, template_graph_root
+        )
 
-        element2 = ET.fromstring('<pattern>XXX *</pattern>')
-        graph.add_pattern_to_graph(element2, topic_element, that_element, template_graph_root, learn=True)
+        element2 = ET.fromstring("<pattern>XXX *</pattern>")
+        graph.add_pattern_to_graph(
+            element2, topic_element, that_element, template_graph_root, learn=True
+        )
 
     def test_add_pattern_to_graph_duplicate_on_learn_get(self):
         graph = PatternGraph(self._client_context.brain.aiml_parser)
-        topic_element = ET.fromstring('<topic>*</topic>')
-        that_element = ET.fromstring('<that>*</that>')
+        topic_element = ET.fromstring("<topic>*</topic>")
+        that_element = ET.fromstring("<that>*</that>")
         template_graph_root = None
 
         element1 = ET.fromstring('<pattern><bot name="surname" /></pattern>')
-        graph.add_pattern_to_graph(element1, topic_element, that_element, template_graph_root)
+        graph.add_pattern_to_graph(
+            element1, topic_element, that_element, template_graph_root
+        )
 
         element2 = ET.fromstring('<pattern><bot name="surname" /></pattern>')
-        graph.add_pattern_to_graph(element2, topic_element, that_element, template_graph_root, learn=True)
-
+        graph.add_pattern_to_graph(
+            element2, topic_element, that_element, template_graph_root, learn=True
+        )
 
     ##################################################################################################################
     #
@@ -856,7 +1031,7 @@ class PatternGraphTests(ParserTestsBaseClass):
 
         base_node = PatternWordNode("TOPIC_TEST")
 
-        topic_element = ET.fromstring('<topic>*</topic>')
+        topic_element = ET.fromstring("<topic>*</topic>")
 
         end_node = graph.add_topic_to_node(topic_element, base_node)
         self.assertIsNotNone(end_node)
@@ -875,7 +1050,7 @@ class PatternGraphTests(ParserTestsBaseClass):
 
         base_node = PatternWordNode("TOPIC_TEST")
 
-        topic_element = ET.fromstring('<topic>HELLO WORLD</topic>')
+        topic_element = ET.fromstring("<topic>HELLO WORLD</topic>")
 
         end_node = graph.add_topic_to_node(topic_element, base_node)
         self.assertIsNotNone(end_node)
@@ -915,8 +1090,12 @@ class PatternGraphTests(ParserTestsBaseClass):
         self.assertEqual(base_node.topic.children[0].children[0].set_name, "TEST")
 
         self.assertTrue(base_node.topic.children[0].children[0].has_children())
-        self.assertIsInstance(base_node.topic.children[0].children[0].children[0], PatternWordNode)
-        self.assertEqual(base_node.topic.children[0].children[0].children[0].word, "WORLD")
+        self.assertIsInstance(
+            base_node.topic.children[0].children[0].children[0], PatternWordNode
+        )
+        self.assertEqual(
+            base_node.topic.children[0].children[0].children[0].word, "WORLD"
+        )
 
     ##################################################################################################################
     #
@@ -926,7 +1105,7 @@ class PatternGraphTests(ParserTestsBaseClass):
 
         base_node = PatternWordNode("THAT_TEST")
 
-        that_element = ET.fromstring('<that>*</that>')
+        that_element = ET.fromstring("<that>*</that>")
 
         end_node = graph.add_that_to_node(that_element, base_node)
         self.assertIsNotNone(end_node)
@@ -945,7 +1124,7 @@ class PatternGraphTests(ParserTestsBaseClass):
 
         base_node = PatternWordNode("THAT_TEST")
 
-        that_element = ET.fromstring('<that>HELLO WORLD</that>')
+        that_element = ET.fromstring("<that>HELLO WORLD</that>")
 
         end_node = graph.add_that_to_node(that_element, base_node)
         self.assertIsNotNone(end_node)
@@ -985,9 +1164,12 @@ class PatternGraphTests(ParserTestsBaseClass):
         self.assertEqual(base_node.that.children[0].children[0].set_name, "TEST")
 
         self.assertTrue(base_node.that.children[0].children[0].has_children())
-        self.assertIsInstance(base_node.that.children[0].children[0].children[0], PatternWordNode)
-        self.assertEqual(base_node.that.children[0].children[0].children[0].word, "WORLD")
-
+        self.assertIsInstance(
+            base_node.that.children[0].children[0].children[0], PatternWordNode
+        )
+        self.assertEqual(
+            base_node.that.children[0].children[0].children[0].word, "WORLD"
+        )
 
     ##################################################################################################################
     #
@@ -995,17 +1177,21 @@ class PatternGraphTests(ParserTestsBaseClass):
     def test_add_pattern_with_diff_topics_to_graph(self):
         graph = PatternGraph(self._client_context.brain.aiml_parser)
 
-        topic_element = ET.fromstring('<topic>*</topic>')
-        that_element = ET.fromstring('<that>*</that>')
+        topic_element = ET.fromstring("<topic>*</topic>")
+        that_element = ET.fromstring("<that>*</that>")
         template_graph_root = None
         element = ET.fromstring("<pattern>test1</pattern>")
-        graph.add_pattern_to_graph(element, topic_element, that_element, template_graph_root)
+        graph.add_pattern_to_graph(
+            element, topic_element, that_element, template_graph_root
+        )
 
-        topic_element = ET.fromstring('<topic>topic1</topic>')
-        that_element = ET.fromstring('<that>that1</that>')
+        topic_element = ET.fromstring("<topic>topic1</topic>")
+        that_element = ET.fromstring("<that>that1</that>")
         template_graph_root = None
         element = ET.fromstring("<pattern>test1</pattern>")
-        graph.add_pattern_to_graph(element, topic_element, that_element, template_graph_root)
+        graph.add_pattern_to_graph(
+            element, topic_element, that_element, template_graph_root
+        )
 
     ##################################################################################################################
     #
@@ -1018,7 +1204,9 @@ class PatternGraphTests(ParserTestsBaseClass):
         that_element = ET.fromstring("<that>*</that>")
         template_node = TemplateNode()
 
-        graph.add_pattern_to_graph(pattern_element, topic_element, that_element, template_node)
+        graph.add_pattern_to_graph(
+            pattern_element, topic_element, that_element, template_node
+        )
 
         self.assertIsNotNone(graph.root)
         self.assertIsNotNone(graph.root.children)
@@ -1044,17 +1232,21 @@ class PatternGraphTests(ParserTestsBaseClass):
 
     def test_duplicates(self):
         graph = PatternGraph(self._client_context.brain.aiml_parser)
-        topic_element = ET.fromstring('<topic>*</topic>')
-        that_element = ET.fromstring('<that>*</that>')
+        topic_element = ET.fromstring("<topic>*</topic>")
+        that_element = ET.fromstring("<that>*</that>")
         template_graph_root = None
 
         pattern1 = "<pattern>IS A</pattern>"
         pattern2 = "<pattern>IS * <set>article</set> *</pattern>"
 
         element1 = ET.fromstring(pattern1)
-        graph.add_pattern_to_graph(element1, topic_element, that_element, template_graph_root)
+        graph.add_pattern_to_graph(
+            element1, topic_element, that_element, template_graph_root
+        )
         element2 = ET.fromstring(pattern2)
-        graph.add_pattern_to_graph(element2, topic_element, that_element, template_graph_root)
+        graph.add_pattern_to_graph(
+            element2, topic_element, that_element, template_graph_root
+        )
 
     def test_empty(self):
         graph = PatternGraph(self._client_context.brain.aiml_parser)
@@ -1076,5 +1268,3 @@ class PatternGraphTests(ParserTestsBaseClass):
 
         self.assertIsNotNone(graph.root)
         self.assertEquals(0, len(graph.root.children))
-
-
