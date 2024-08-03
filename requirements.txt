@@ -3,7 +3,7 @@ wget==3.2
 
 beautifulsoup4==4.9.3
 lxml==4.9.1
-PyYAML==5.4.1
+PyYAML==6.0.1
 xmljson==0.2.1
 zeep==4.0.0
 fuzzywuzzy==0.18.0
