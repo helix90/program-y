@@ -69,7 +69,7 @@ class XMLConfigurationFileTests(ConfigurationBaseFileTests):
         text = ""
         with open(text_file, "r+") as textfile:
             lines = textfile.readlines()
-	    text = "\n".join(lines)
+            text = "\n".join(lines)
 
         configuration = xml.load_from_text(text, ConsoleConfiguration(), ".")
 
