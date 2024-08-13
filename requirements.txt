@@ -5,7 +5,7 @@ beautifulsoup4==4.9.3
 lxml==4.9.1
 PyYAML==6.0.1
 xmljson==0.2.1
-zeep==4.0.0
+zeep==4.2.1
 fuzzywuzzy==0.18.0
 python-Levenshtein==0.12.2
 

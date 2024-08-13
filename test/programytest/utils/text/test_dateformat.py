@@ -8,7 +8,7 @@ from programy.utils.text.dateformat import DateFormatter
 
 class TextUtilsTests(unittest.TestCase, CustomAssertions):
 
-    DEFAULT_DATETIME_REGEX = "^.{3}\s*.{3}\s*\d{1,}\s\d{2}:\d{2}:\d{2}\s\d{4}"
+    DEFAULT_DATETIME_REGEX = r"^.{3}\s*.{3}\s*\d{1,}\s\d{2}:\d{2}:\d{2}\s\d{4}"
 
     def test_year_month_day(self):
         result = DateFormatter.year_month_day(2017, 7, 7)
@@ -145,42 +145,42 @@ class TextUtilsTests(unittest.TestCase, CustomAssertions):
         self.assertIsNotNone(df)
         result = df.decimal_day_of_month()
         self.assertIsNotNone(result)
-        self.assertRegex(result, "\d{1}|\d{2}")
+        self.assertRegex(result, r"\d{1}|\d{2}")
 
     def test_hour_24_hour_clock(self):
         df = DateFormatter()
         self.assertIsNotNone(df)
         result = df.hour_24_hour_clock()
         self.assertIsNotNone(result)
-        self.assertRegex(result, "\d{1}|\d{2}")
+        self.assertRegex(result, r"\d{1}|\d{2}")
 
     def test_hour_12_hour_clock(self):
         df = DateFormatter()
         self.assertIsNotNone(df)
         result = df.hour_12_hour_clock()
         self.assertIsNotNone(result)
-        self.assertRegex(result, "\d{1}|\d{2}")
+        self.assertRegex(result, r"\d{1}|\d{2}")
 
     def test_decimal_day_of_year(self):
         df = DateFormatter()
         self.assertIsNotNone(df)
         result = df.decimal_day_of_year()
         self.assertIsNotNone(result)
-        self.assertRegex(result, "\d{1}|\d{2}")
+        self.assertRegex(result, r"\d{1}|\d{2}")
 
     def test_decimal_month(self):
         df = DateFormatter()
         self.assertIsNotNone(df)
         result = df.decimal_month()
         self.assertIsNotNone(result)
-        self.assertRegex(result, "\d{1}|\d{2}")
+        self.assertRegex(result, r"\d{1}|\d{2}")
 
     def test_decimal_minute(self):
         df = DateFormatter()
         self.assertIsNotNone(df)
         result = df.decimal_minute()
         self.assertIsNotNone(result)
-        self.assertRegex(result, "\d{1}|\d{2}")
+        self.assertRegex(result, r"\d{1}|\d{2}")
 
     def test_decimal_second(self):
         df = DateFormatter()
@@ -194,21 +194,21 @@ class TextUtilsTests(unittest.TestCase, CustomAssertions):
         self.assertIsNotNone(df)
         result = df.decimal_week_number_sunday_as_first()
         self.assertIsNotNone(result)
-        self.assertRegex(result, "\d{1}|\d{2}")
+        self.assertRegex(result, r"\d{1}|\d{2}")
 
     def test_decimal_week_number_monday_as_first(self):
         df = DateFormatter()
         self.assertIsNotNone(df)
         result = df.decimal_week_number_monday_as_first()
         self.assertIsNotNone(result)
-        self.assertRegex(result, "\d{1}|\d{2}")
+        self.assertRegex(result, r"\d{1}|\d{2}")
 
     def test_decimal_weekday(self):
         df = DateFormatter()
         self.assertIsNotNone(df)
         result = df.decimal_weekday()
         self.assertIsNotNone(result)
-        self.assertRegex(result, "\d{1}|\d{2}")
+        self.assertRegex(result, r"\d{1}|\d{2}")
 
     def test_am_or_pm(self):
         df = DateFormatter()

@@ -10,6 +10,7 @@ from programy.storage.stores.nosql.mongo.store.lookups import MongoLookupStore
 
 
 class TestMongoLookupStore(MongoLookupStore):
+    __test__ = False
 
     def __init__(self, storage_engine):
         MongoLookupStore.__init__(self, storage_engine)
@@ -19,6 +20,7 @@ class TestMongoLookupStore(MongoLookupStore):
 
 
 class TestCollection(DoubleStringPatternSplitCollection):
+    __test__ = False
 
     def __init__(self):
         DoubleStringPatternSplitCollection.__init__(self)

@@ -11,6 +11,7 @@ from programy.storage.stores.sql.store.lookups import SQLPersonStore
 
 
 class TestCollection(DoubleStringPatternSplitCollection):
+    __test__ = False
 
     def __init__(self):
         DoubleStringPatternSplitCollection.__init__(self)

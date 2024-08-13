@@ -14,6 +14,7 @@ from programy.storage.stores.file.store.config import FileStoreConfiguration
 
 
 class TestClient(BotClient):
+    __test__ = False
 
     def __init__(self, debug=False, level=logging.ERROR):
         if debug is True:

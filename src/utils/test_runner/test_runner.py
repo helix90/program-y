@@ -9,6 +9,7 @@ from programy.utils.files.filefinder import FileFinder
 
 
 class TestQuestion(object):
+    __test__ = False
 
     def __init__(self, question, answers, filename, topic=None, that=None):
         self._category = None
@@ -77,6 +78,7 @@ class TestQuestion(object):
 
 
 class TestFileFileFinder(FileFinder):
+    __test__ = False
 
     def __init__(self):
         FileFinder.__init__(self)
@@ -159,6 +161,7 @@ class TestFileFileFinder(FileFinder):
 
 
 class TestRunnerBotClient(BotClient):
+    __test__ = False
 
     def __init__(self):
         BotClient.__init__(self, "TestRunner")

@@ -8,8 +8,9 @@ rm nosetests.xml
 rm -rf ./cover
 rm -rf ./storage
 
-echo "nosetests running..........."
-nosetests --config=nose.cfg
+echo "pytest running..........."
+# nosetests --config=nose.cfg
+pytest
 # --cover-package=programy --with-coverage --cover-html --cover-erase --with-xunit --cover-branches --ignore-files=.*test_runner.* --ignore-files=programytest/clients/restful/asyncio/microsoft/*.py
 
 echo "coverage running..........."

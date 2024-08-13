@@ -6,6 +6,7 @@ from programy.parser.template.nodes.attrib import TemplateAttribNode
 
 
 class TestTemplateAttribNode(TemplateAttribNode):
+    __test__ = False
 
     def __init__(self):
         TemplateAttribNode.__init__(self)
