@@ -39,7 +39,7 @@ PyMySQL==1.0.2
 
 # Uncomment this line on Osx or Linux if you want to use sanic rest client
 # Sanic is not supported on Windows !
-# sanic==19.12.2
+sanic==19.12.2
 
 # Dev tools
 pylint==3.2.6

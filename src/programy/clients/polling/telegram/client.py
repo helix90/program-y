@@ -15,7 +15,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
-from telegram.ext import CommandHandler, Filters, MessageHandler, Updater
+from telegram.ext import CommandHandler, filters, MessageHandler, Updater
 
 from programy.clients.polling.client import PollingBotClient
 from programy.clients.polling.telegram.config import TelegramConfiguration
@@ -61,8 +61,8 @@ class TelegramBotClient(PollingBotClient):
 
     def register_handlers(self):
         start_handler = CommandHandler("start", start)
-        message_handler = MessageHandler(Filters.text, message)
-        unknown_handler = MessageHandler(Filters.command, unknown)
+        message_handler = MessageHandler(filters.text, message)
+        unknown_handler = MessageHandler(filters.command, unknown)
 
         self._updater.dispatcher.add_handler(start_handler)
         self._updater.dispatcher.add_handler(message_handler)
